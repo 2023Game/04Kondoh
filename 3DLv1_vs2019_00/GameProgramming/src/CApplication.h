@@ -13,6 +13,7 @@
 
 #include "CGame.h"
 #include "CSound.h"
+#include "CVector.h"
 
 class CApplication
 {
@@ -39,6 +40,7 @@ private:
 	CMiss* mpMiss;
 	//CCharacterのポインタの可変長配列
 //	std::vector<CCharacter*> mCharacters;
+	CVector mEye;
 public:
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();

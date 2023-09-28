@@ -14,6 +14,7 @@
 #include "CGame.h"
 #include "CSound.h"
 #include "CVector.h"
+#include "CModel.h"
 
 class CApplication
 {
@@ -41,6 +42,7 @@ private:
 	//CCharacterのポインタの可変長配列
 //	std::vector<CCharacter*> mCharacters;
 	CVector mEye;
+	CModel mModel;
 public:
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();

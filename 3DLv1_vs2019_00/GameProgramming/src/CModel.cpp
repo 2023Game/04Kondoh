@@ -82,9 +82,9 @@ void CModel::Load(char* obj, char* mtl)
 			//頂点と法線の番号作成
 			int v[3], n[3];
 			//頂点と法線の番号取得
-			sscanf(str[1], "%d//%d", &v[0], &v[0]);
-			sscanf(str[2], "%d//%d", &v[1], &v[1]);
-			sscanf(str[3], "%d//%d", &v[2], &v[2]);
+			sscanf(str[1], "%d//%d", &v[0], &n[0]);
+			sscanf(str[2], "%d//%d", &v[1], &n[1]);
+			sscanf(str[3], "%d//%d", &v[2], &n[2]);
 			//三角形作成
 			CTriangle t;
 			t.Vertex(vertex[v[0] - 1], vertex[v[1] - 1], vertex[v[2] - 1]);
@@ -94,7 +94,7 @@ void CModel::Load(char* obj, char* mtl)
 	}
 
 	//ファイルのクローズ
-	fclose(fp);
+	//fclose(fp);
 }
 
 //描画

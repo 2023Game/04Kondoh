@@ -26,6 +26,8 @@ void CModel::Load(char* obj, char* mtl)
 	//頂点データの保存(CVector型)
 	std::vector<CVector> vertex;
 
+	std::vector<CVector> normal;
+
 	//ファイルポインタ変数の作成
 	FILE* fp;
 	//ファイルからデータを作成する
@@ -88,13 +90,17 @@ void CModel::Load(char* obj, char* mtl)
 			//三角形作成
 			CTriangle t;
 			t.Vertex(vertex[v[0] - 1], vertex[v[1] - 1], vertex[v[2] - 1]);
+			t.Normal(normal[n[0] - 1], normal[n[1] - 1], normal[n[2] - 1]);
 			//可変長配列mTrianglesに三角形を追加
 			mTriangles.push_back(t);
+		}
+		else if (strcmp(str[0], "vn") == 0) {
+			normal.push_back(CVector(atof(str[1]), atof(str[2]), atof(str[3])));
 		}
 	}
 
 	//ファイルのクローズ
-	//fclose(fp);
+	fclose(fp);
 }
 
 //描画

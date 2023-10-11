@@ -22,6 +22,18 @@ void CTriangle::Normal(const CVector& v0, const CVector& v1, const CVector& v2) 
 	mN[2] = v2;
 }
 
+int CTriangle::MaterialIdx() 
+{
+	//CTriangleクラスのmMaterialIdxの値を返します。
+	return mMaterialIdx;
+}
+
+void CTriangle::MaterialIdx(int idx)
+{
+	//CTriangleクラスのmMaterialIdxに、引数の値を代入します。
+	mMaterialIdx = idx;
+}
+
 //描画
 void CTriangle::Render() {
 	glBegin(GL_TRIANGLES);

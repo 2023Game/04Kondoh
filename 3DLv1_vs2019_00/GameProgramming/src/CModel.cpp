@@ -19,8 +19,8 @@ int strcmp(const char* s1, const char* s2)
 	return s1[i] - s2[i];
 }
 
-//
-//
+//モデルファイル入力
+//Load(ファイル名、マテリアルファイル名)
 void CModel::Load(char* obj, char* mtl)
 {
 	//頂点データの保存(CVector型)
@@ -48,10 +48,35 @@ void CModel::Load(char* obj, char* mtl)
 		return;
 	}
 
+	//マテリアルインデックス
+	int idx = 0;
 	//ファイルから１行入力
 	//fgets(入力エリア,エリアサイズ,ファイルポインタ)
 	//ファイルの最後になるとNULLを返す
 	while (fgets(buf, sizeof(buf), fp) != NULL) {
+		//データを分割
+		char str[4][64] = { "","","","" };
+		//文字列からデータを４つ変数へ代入
+		sscanf(buf, "%s %s %s %s", str[0], str[1], str[2], str[3]);
+		//先頭がnewmtlの時、マテリアルを追加する
+		if (strcmp(str[0], "newmtl") == 0) {
+			CMaterial* pm = new CMaterial();
+			//マテリアル名の設定
+			pm->Name(str[1]);
+			//マテリアルの可変長配列に追加
+			mpMaterials.push_back(pm);
+			//配列の長さを取得
+			idx = mpMaterials.size() - 1;
+		}
+		else if (strcmp(str[0], "Kd") == 0) {
+			mpMaterials[idx]->Diffuse()[0] = atof(str[1]);
+			mpMaterials[idx]->Diffuse()[1] = atof(str[2]);
+			mpMaterials[idx]->Diffuse()[2] = atof(str[3]);
+		}
+		//先頭がdの時、a値を設定する
+		else if (strcmp(str[0], "d") == 0) {
+			mpMaterials[idx]->Diffuse()[3] = atof(str[1]);
+		}
 
 	}
 
@@ -91,11 +116,23 @@ void CModel::Load(char* obj, char* mtl)
 			CTriangle t;
 			t.Vertex(vertex[v[0] - 1], vertex[v[1] - 1], vertex[v[2] - 1]);
 			t.Normal(normal[n[0] - 1], normal[n[1] - 1], normal[n[2] - 1]);
+			//
+			t.MaterialIdx(idx);
 			//可変長配列mTrianglesに三角形を追加
 			mTriangles.push_back(t);
 		}
 		else if (strcmp(str[0], "vn") == 0) {
 			normal.push_back(CVector(atof(str[1]), atof(str[2]), atof(str[3])));
+		}
+		//先頭がusemtlの時、マテリアルインデックスを取得する
+		else if (strcmp(str[0], "usemtl") == 0) {
+			//可変長配列を後から比較
+			for (idx = mpMaterials.size() - 1; idx > 0; idx--) {
+				//同じ名前のマテリアルがあればループ終了
+				if (strcmp(mpMaterials[idx]->Name(), str[1]) == 0) {
+					break; //ループから出る
+				}
+			}
 		}
 	}
 
@@ -107,7 +144,17 @@ void CModel::Load(char* obj, char* mtl)
 void CModel::Render() {
 	//可変長配列の要素数だけ繰り返す
 	for (int i = 0; i < mTriangles.size(); i++) {
+		//
+		mpMaterials[mTriangles[i].MaterialIdx()]->Enabled();
 		//可変長配列に添え字でアクセスする
 		mTriangles[i].Render();
+	}
+}
+
+CModel::~CModel()
+{
+	for (int i = 0; i < mpMaterials.size(); i++)
+	{
+		delete mpMaterials[i];
 	}
 }

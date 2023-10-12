@@ -12,7 +12,9 @@ CCharacterManager CApplication::mCharacterManager;
 #define SOUND_BGM "res\\mario.wav" //BGM音声ファイル
 #define SOUND_OVER "res\\mdai.wav" //ゲームオーバー音声ファイル
 //
-#define MODEL_OBJ "res\\obj.obj","res\\obj.mtl"
+#define MODEL_OBJ "res\\f14.obj","res\\f14.mtl"
+//背景モデルデータの指定
+#define MODEL_BACKGROUND "res\\sky.obj","res\\sky.mtl"
 
 CCharacterManager* CApplication::CharacterManager()
 {
@@ -29,14 +31,11 @@ void CApplication::Start()
 	mEye = CVector(1.0f, 2.0f, 3.0f);
 	//
 	mModel.Load(MODEL_OBJ);
+	mBackGround.Load(MODEL_BACKGROUND);
 }
 
 void CApplication::Update()
 {
-
-
-
-
 
 	if (mInput.Key('J'))
 	{
@@ -70,5 +69,6 @@ void CApplication::Update()
 	gluLookAt(mEye.X(), mEye.Y(), mEye.Z(), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 	mModel.Render();
+	mBackGround.Render();
 
 }

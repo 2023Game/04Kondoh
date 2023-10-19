@@ -4,9 +4,13 @@
 ベクトルクラス
 ベクトルデータを扱います
 */
+#include "CMatrix.h"
 
 class CVector {
 public:
+	//CVector * CMatrixの結果をCVectorで返す
+	CVector operator*(const CMatrix& m);
+
 	//+演算子のオーバーロード
 	//CVector + CVector の演算結果を返す
 	CVector operator+(const CVector& v) const;

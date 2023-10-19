@@ -32,16 +32,16 @@ private:
 		EOVER,	//ゲームオーバー
 	};
 	EState mState;
-//	CCharacter mRectangle;
+//  CCharacter mRectangle;
 	CPlayer* mpPlayer;
 	static CTexture mTexture;
 	CEnemy* mpEnemy;
-//	CBullet* mpBullet;
+//  CBullet* mpBullet;
 	CInput mInput;
 	CFont mFont;
 	CMiss* mpMiss;
-	//CCharacterのポインタの可変長配列
-//	std::vector<CCharacter*> mCharacters;
+    //CCharacterのポインタの可変長配列
+//  std::vector<CCharacter*> mCharacters;
 	CVector mEye;
 	CModel mModel;
 public:

@@ -15,6 +15,7 @@
 #include "CSound.h"
 #include "CVector.h"
 #include "CModel.h"
+#include "CCharacter3.h"
 
 class CApplication
 {
@@ -44,6 +45,8 @@ private:
 //  std::vector<CCharacter*> mCharacters;
 	CVector mEye;
 	CModel mModel;
+	CCharacter3 mCharacter;
+	CCharacter3 mPlayer;
 public:
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();

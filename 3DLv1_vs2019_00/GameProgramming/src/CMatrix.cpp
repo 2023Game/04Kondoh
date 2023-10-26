@@ -117,10 +117,6 @@ CMatrix CMatrix::Translate(float mx, float my, float mz)
 	mM[3][0] = mx;
 	mM[3][1] = my;
 	mM[3][2] = mz;
-	mM[0][0] = 1.0f;
-	mM[1][1] = 1.0f;
-	mM[2][2] = 1.0f;
-	mM[3][3] = 1.0f;
 	//‚±‚Ìs—ñ‚ğ•Ô‚·
 	return *this;
 }

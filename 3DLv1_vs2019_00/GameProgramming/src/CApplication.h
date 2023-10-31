@@ -16,6 +16,7 @@
 #include "CVector.h"
 #include "CModel.h"
 #include "CCharacter3.h"
+#include "CPlayer.h"
 
 class CApplication
 {
@@ -46,7 +47,7 @@ private:
 	CVector mEye;
 	CModel mModel;
 	CCharacter3 mCharacter;
-	CCharacter3 mPlayer;
+	CPlayer mPlayer;
 public:
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();

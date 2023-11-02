@@ -8,6 +8,7 @@
 #include <vector>
 #include "CTriangle.h"
 #include "CMaterial.h"
+#include "CVertex.h"
 
 class CModel {
 public:
@@ -22,6 +23,9 @@ public:
 	void Render();
 
 private:
+	//頂点の配列
+	CVertex* mpVertexes;
+	void CreateVertexBuffer();
 	//三角形の可変長配列
 	std::vector<CTriangle> mTriangles;
 	//マテリアルポインタの可変長配列

@@ -65,6 +65,7 @@
     <ClInclude Include="src\CTriangle.h" />
     <ClInclude Include="src\CUi.h" />
     <ClInclude Include="src\CVector.h" />
+    <ClInclude Include="src\CVertex.h" />
     <ClInclude Include="src\main.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

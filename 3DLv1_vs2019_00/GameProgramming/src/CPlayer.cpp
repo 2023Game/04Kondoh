@@ -29,9 +29,9 @@ void CPlayer::Update() {
 		//X軸の回転値を減少
 		mRotation = mRotation - ROTATION_XV;
 	}
-	//
+	//Wキー入力で下向き
 	if (mInput.Key('W')) {
-		//
+		//X軸の回転値を加算
 		mRotation = mRotation + ROTATION_XV;
 	}
 

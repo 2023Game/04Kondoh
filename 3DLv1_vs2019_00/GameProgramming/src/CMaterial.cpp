@@ -87,7 +87,7 @@ CTexture* CMaterial::Texture()
 
 void CMaterial::VertexNum(int num)
 {
-	int mVertexNum = num;
+	 mVertexNum = num;
 }
 
 int CMaterial::VertexNum()

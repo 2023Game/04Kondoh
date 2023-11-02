@@ -1,7 +1,8 @@
 //プレイヤークラスのインクルード
 #include "CPlayer.h"
 
-#define ROTATION_YV CVector(0.0f,1.0f,0.0f) //回転速度
+#define ROTATION_YV CVector(0.0f,1.0f,0.0f) //Y軸回転速度
+#define ROTATION_XV CVector(1.0f,0.0f,0.0f) //X軸回転速度
 #define VELOCITY CVector(0.0f,0.0f,0.1f) //移動速度
 
 //CPlayer(位置、回転、スケール)
@@ -17,11 +18,23 @@ void CPlayer::Update() {
 		//Y軸の回転値を減少
 		mRotation = mRotation - ROTATION_YV;
 	}
-	//
+	//Aキー入力で回転
 	if (mInput.Key('A')) {
-		//
+		//Y軸の回転値を増加
 		mRotation = mRotation + ROTATION_YV;
 	}
+
+	//Sキー入力で上向き
+	if (mInput.Key('S')) {
+		//X軸の回転値を減少
+		mRotation = mRotation - ROTATION_XV;
+	}
+	//
+	if (mInput.Key('W')) {
+		//
+		mRotation = mRotation + ROTATION_XV;
+	}
+
 	//上キー入力で前進
 	if (mInput.Key(VK_UP)) {
 		//Z軸方向の値を回転させ移動させる

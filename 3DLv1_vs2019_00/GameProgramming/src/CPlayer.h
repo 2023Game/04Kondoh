@@ -4,6 +4,7 @@
 #include "CCharacter3.h"
 #include "CInput.h"
 #include "CBullet.h"
+
 /*
 プレイヤークラス
 キャラクタクラスを継承

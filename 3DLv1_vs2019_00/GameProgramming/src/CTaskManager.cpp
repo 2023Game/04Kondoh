@@ -1,0 +1,54 @@
+#include "CTaskManager.h"
+//デフォルトコンストラクタ
+CTaskManager::CTaskManager()
+{
+	mHead.mpNext = &mTail;
+	mTail.mpPrev = &mHead;
+}
+CTaskManager::~CTaskManager() {
+}
+//リストに追加
+//Add(タスクのポインタ)
+void CTaskManager::Add(CTask* addTask) 
+{
+	//mTailの前にに追加
+	CTask* task = &mTail;
+	//addTaskの次をtask
+	addTask->mpNext = task;
+	//addTaskの前の次をaddTaskに
+	addTask->mpPrev = task->mpPrev;
+	//addTaskの前の次をaddTaskに
+	addTask->mpPrev->mpNext = addTask;
+	//taskの前をaddTaskに
+	task->mpPrev = addTask;
+}
+//更新
+void CTaskManager::Update() {
+	//先頭から最終まで繰り返す
+	CTask* task = mHead.mpNext;
+	while (task->mpNext) {
+		//更新処理を呼ぶ
+		task->Update();
+		//次へ
+		task = task->mpNext;
+	}
+}
+//描画
+void CTaskManager::Render() {
+	//先頭から最終まで繰り返す
+	CTask* task = mHead.mpNext;
+	while (task->mpNext) {
+		//更新処理を呼ぶ
+		task->Render();
+		//次へ
+		task = task->mpNext;
+	}
+}
+
+void CTaskManager::Remove(CTask* task) {
+	//タスクの前の次を、タスクの次にする
+	task->mpPrev->mpNext = task->mpNext;
+	//タスクの次の前を、タスクの前にする
+	task->mpNext->mpPrev = task->mpPrev;
+}
+

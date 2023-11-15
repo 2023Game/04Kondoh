@@ -1,5 +1,6 @@
 //プレイヤークラスのインクルード
 #include "CPlayer.h"
+#include "CApplication.h"
 
 #define ROTATION_YV CVector(0.0f,1.0f,0.0f) //Y軸回転速度
 #define ROTATION_XV CVector(1.0f,0.0f,0.0f) //X軸回転速度
@@ -43,9 +44,12 @@ void CPlayer::Update() {
 
 	//スペースキー入力で弾発射
 	if (mInput.Key(VK_SPACE)) {
-		bullet.Set(0.1f, 1.5f);
-		bullet.Position(CVector(0.0f, 0.0f, 10.0f) * mMatrix);
-		bullet.Rotation(mRotation);
+		CBullet* bullet = new CBullet();
+		bullet->Set(0.1f, 1.5f);
+		bullet->Position(CVector(0.0f, 0.0f, 10.0f) * mMatrix);
+		bullet->Rotation(mRotation);
+		bullet->Update();
+		CApplication::TaskManager()->Add(bullet);
 	}
 
 	//変換行列の更新

@@ -105,6 +105,14 @@ void CApplication::Update()
 	*/
 
 	mBackGround.Render();
-	mPlayer.bullet.Update();
-	mPlayer.bullet.Render();
+	//タスクマネージャーの更新
+	mTaskManager.Update();
+	//タスクマネージャーの描画
+	mTaskManager.Render();
+}
+
+CTaskManager CApplication::mTaskManager;
+CTaskManager* CApplication::TaskManager()
+{
+	return &mTaskManager;
 }

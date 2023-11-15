@@ -17,10 +17,12 @@
 #include "CModel.h"
 #include "CCharacter3.h"
 #include "CPlayer.h"
+#include "CTaskManager.h"
 
 class CApplication
 {
 private:
+	static CTaskManager mTaskManager;
 	CModel mBackGround; //背景モデル
 	CSound mSoundBgm;	//BGM
 	CSound mSoundOver;	//ゲームオーバー
@@ -48,7 +50,9 @@ private:
 	CModel mModel;
 	CCharacter3 mCharacter;
 	CPlayer mPlayer;
+
 public:
+	static CTaskManager* TaskManager();
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();
 	//最初に一度だけ実行するプログラム

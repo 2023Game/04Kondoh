@@ -9,6 +9,8 @@
 */
 class CTaskManager {
 public:
+	//タスクの削除
+	void Delete();
 	//リストから削除
 	//Remove(タスクポイント)
 	void Remove(CTask* task);

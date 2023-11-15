@@ -48,7 +48,7 @@ private:
 //  std::vector<CCharacter*> mCharacters;
 	CVector mEye;
 	CModel mModel;
-	CCharacter3 mCharacter;
+//	CCharacter3 mCharacter;
 	CPlayer mPlayer;
 
 public:

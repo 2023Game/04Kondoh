@@ -14,8 +14,15 @@ void CBullet::Set(float w, float d) {
 //更新
 void CBullet::Update() {
 	CTransform::Update();
-	//位置更新　進行方向へ1進む
-	mPosition = mPosition + CVector(0.0f,0.0f,1.0f) * mMatrixRotate;
+	if (mLife-- > 0) {
+		CTransform::Update();
+		//位置更新　進行方向へ1進む
+		mPosition = mPosition + CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+	}
+	else {
+		//無効にする
+		mEnabled = false;
+	}
 }
 
 //描画
@@ -27,3 +34,7 @@ void CBullet::Render() {
 	mT.Render(mMatrix);
 	//CTransform::Update(
 }
+
+CBullet::CBullet()
+	:mLife(50)
+{}

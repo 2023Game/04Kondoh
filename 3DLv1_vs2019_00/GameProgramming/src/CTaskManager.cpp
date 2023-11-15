@@ -52,3 +52,17 @@ void CTaskManager::Remove(CTask* task) {
 	task->mpNext->mpPrev = task->mpPrev;
 }
 
+void CTaskManager::Delete() {
+	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚µ
+	CTask* task = mHead.mpNext;
+	while (task->mpNext) {
+		CTask* del = task;
+		//Ÿ‚Ö
+		task = task->mpNext;
+		//mEnabled‚ªfalse‚È‚çíœ
+		if (del->mEnabled == false) {
+			delete del;
+		}
+	}
+}
+

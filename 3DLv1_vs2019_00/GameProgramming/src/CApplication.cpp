@@ -14,8 +14,10 @@ CCharacterManager CApplication::mCharacterManager;
 
 #define SOUND_BGM "res\\mario.wav" //BGM音声ファイル
 #define SOUND_OVER "res\\mdai.wav" //ゲームオーバー音声ファイル
-//
+//f14モデル
 #define MODEL_OBJ "res\\f14.obj","res\\f14.mtl"
+//敵輸送機モデル
+#define MODEL_C5 "res\\c5.obj","res\\c5.mtl"
 //背景モデルデータの指定
 #define MODEL_BACKGROUND "res\\sky.obj","res\\sky.mtl"
 
@@ -31,8 +33,14 @@ CTexture* CApplication::Texture()
 
 void CApplication::Start()
 {
+	new CEnemy(&mModelC5, CVector(30.0f, 10.0f, -130.0f),
+		CVector(), CVector(0.1f, 0.1f, 0.1f));
+	//敵機のインスタンス作成
+	new CEnemy(&mModelC5, CVector(0.0f, 10.0f, -100.0f),
+		CVector(), CVector(0.1f, 0.1f, 0.1f));
+	//C5モデルの読み込み
+	mModelC5.Load(MODEL_C5);
 	mEye = CVector(1.0f, 2.0f, 3.0f);
-	//
 	mModel.Load(MODEL_OBJ);
 	mBackGround.Load(MODEL_BACKGROUND);
 	CMatrix matrix;

@@ -1,4 +1,4 @@
-#include "CPlayer2.h"
+//#include "CPlayer2.h"
 #include "CApplication.h"
 
 #define TEXCOORD 168, 188, 158, 128	//テクスチャマッピング

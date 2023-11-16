@@ -22,6 +22,8 @@
 class CApplication
 {
 private:
+	//C5ƒ‚ƒfƒ‹
+	CModel mModelC5;
 	static CTaskManager mTaskManager;
 	CModel mBackGround; //”wŒiƒ‚ƒfƒ‹
 	CSound mSoundBgm;	//BGM

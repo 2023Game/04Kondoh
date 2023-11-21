@@ -5,6 +5,7 @@
 //三角形クラスのインクルード
 #include "CTriangle.h"
 #include "CModel.h"
+#include "CCollider.h"
 
 /*
 弾クラス
@@ -20,12 +21,14 @@ public:
 	//更新
 	void Update();
 	//描画
-	void Render();
+	void CBullet::Render();
+
 private:
 	//生存時間
 	int mLife;
 	//三角形
 	CTriangle mT;
+	CCollider mCollider;
 
 };
 

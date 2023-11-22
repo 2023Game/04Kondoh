@@ -6,6 +6,7 @@
 #include "CTriangle.h"
 #include "CMatrix.h"
 #include "CTransform.h"
+#include "CCollisionManager.h"
 
 
 //クラスのstatic変数
@@ -56,7 +57,7 @@ void CApplication::Start()
 void CApplication::Update()
 {
 	//タスクマネージャーの更新
-	mTaskManager.Update();
+	CTaskManager::Instance()->Update();
 
 	if (mInput.Key('J'))
 	{
@@ -116,13 +117,15 @@ void CApplication::Update()
 
 	mBackGround.Render();
 	//タスクリストの削除
-	mTaskManager.Delete();
+	CTaskManager::Instance()->Delete();
 	//タスクマネージャーの描画
-	mTaskManager.Render();
+	CTaskManager::Instance()->Render();
+	CCollisionManager::Instance()->Render();
 }
-
+/*
 CTaskManager CApplication::mTaskManager;
 CTaskManager* CApplication::TaskManager()
 {
 	return &mTaskManager;
 }
+*/

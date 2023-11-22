@@ -1,8 +1,8 @@
 ﻿  CApplication.cpp
-  CBullet.cpp
-  CEnemy2.cpp
   CPlayer.cpp
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer.cpp(7,1): warning C4005: 'VELOCITY': マクロが再定義されました。
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6): message : 'VELOCITY' の以前の定義を確認してください
   コードを生成中...
+LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+LINK : warning LNK4098: defaultlib 'LIBCMT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

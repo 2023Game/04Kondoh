@@ -9,13 +9,6 @@
 */
 class CEnemy : public CCharacter3 {
 public:
-	//確認用メゾット　削除予定
-	void CEnemy::Render() {
-		CCharacter3::Render();
-		mCollider1.Render();
-		mCollider2.Render();
-		mCollider3.Render();
-	}
 
 	//コンストラスタ
 	//CEnemy(モデル、位置、回転、拡縮)

@@ -5,8 +5,12 @@ class CTaskManager;
 タスククラス
 タスクリストの要素
 */
+
+class CCollisionManager;
+
 class CTask {
 	friend CTaskManager;
+	friend CCollisionManager;
 public:
 	//デフォルトコンストラクタ
 	CTask()

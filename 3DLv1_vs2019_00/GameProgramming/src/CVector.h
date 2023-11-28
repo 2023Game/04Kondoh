@@ -8,6 +8,8 @@
 
 class CVector {
 public:
+	//ƒxƒNƒgƒ‹‚Ì’·‚³‚ð•Ô‚·
+	float Length() const;
 	//CVector * CMatrix‚ÌŒ‹‰Ê‚ðCVector‚Å•Ô‚·
 	CVector operator*(const CMatrix& m);
 

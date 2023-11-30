@@ -22,6 +22,8 @@
 class CApplication
 {
 private:
+	//モデルビューの逆行列
+	static CMatrix mModelViewInverse;
 	//C5モデル
 	CModel mModelC5;
 	CModel mBackGround; //背景モデル
@@ -53,6 +55,7 @@ private:
 	CPlayer mPlayer;
 
 public:
+	static const CMatrix& ModelViewInverse();
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();
 	//最初に一度だけ実行するプログラム

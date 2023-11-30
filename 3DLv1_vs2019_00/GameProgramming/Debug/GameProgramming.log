@@ -1,14 +1,15 @@
-﻿  CApplication.cpp
-  CCharacter3.cpp
-  CEnemy.cpp
-  CEnemy2.cpp
-  CGame.cpp
-  CPlayer.cpp
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer.cpp(7,1): warning C4005: 'VELOCITY': マクロが再定義されました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6): message : 'VELOCITY' の以前の定義を確認してください
-  CPlayer2.cpp
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer2.cpp(12,1): warning C4005: 'VELOCITY': マクロが再定義されました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6): message : 'VELOCITY' の以前の定義を確認してください
+﻿  CMatrix.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(13,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(28,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(43,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+  CModel.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(188,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(241,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(252,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(254,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  CPoint.cpp
   main.cpp
   コードを生成中...
+LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+LINK : warning LNK4098: defaultlib 'LIBCMT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

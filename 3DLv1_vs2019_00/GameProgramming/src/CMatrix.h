@@ -7,6 +7,8 @@
 
 class CMatrix {
 public:
+	//逆行列取得
+	CMatrix Transpose() const;
 	//行列の取得
 	float* M() const;
 	//演算子のオーバーロード

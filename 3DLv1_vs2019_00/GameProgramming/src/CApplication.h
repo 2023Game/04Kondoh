@@ -18,10 +18,15 @@
 #include "CCharacter3.h"
 #include "CPlayer.h"
 #include "CTaskManager.h"
+#include "CColliderTriangle.h"
 
 class CApplication
 {
 private:
+	//三角コライダ２作成
+	CColliderTriangle mColliderTriangle2;
+	//三角コライダ作成
+	CColliderTriangle mColliderTriangle;
 	//モデルビューの逆行列
 	static CMatrix mModelViewInverse;
 	//C5モデル

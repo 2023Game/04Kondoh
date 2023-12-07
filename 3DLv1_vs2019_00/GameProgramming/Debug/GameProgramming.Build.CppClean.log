@@ -1,7 +1,5 @@
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\vc142.pdb
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\vc142.idb
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cplayer2.obj
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cplayer.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cmodel.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cmatrix.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cmaterial.obj
@@ -11,6 +9,8 @@ c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cenemy2.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cenemy.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ceffect.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccollisionmanager.obj
+c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccollidertriangle.obj
+c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccolliderline.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccollider.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccharactermanager.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccharacter3.obj
@@ -31,13 +31,8 @@ c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ctaskmanager.o
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\csound.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\crectangle.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cpoint.obj
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\ccollidertriangle.obj
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\debug\gameprogramming.exe
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\debug\gameprogramming.ilk
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\debug\gameprogramming.pdb
+c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cplayer2.obj
+c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\cplayer.obj
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\gameprogramming.tlog\cl.command.1.tlog
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\gameprogramming.tlog\cl.read.1.tlog
 c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\gameprogramming.tlog\cl.write.1.tlog
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\gameprogramming.tlog\link.command.1.tlog
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\gameprogramming.tlog\link.read.1.tlog
-c:\users\kndu8\git\04kondoh\3dlv1_vs2019_00\gameprogramming\debug\gameprogramming.tlog\link.write.1.tlog

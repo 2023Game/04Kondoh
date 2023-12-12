@@ -8,6 +8,18 @@
 
 class CVector {
 public:
+	//正規化
+	//大きさ１ベクトルを返す
+	CVector Normalize() const;
+	//外積
+	//Cross
+	CVector Cross(const CVector& v)const;
+	//*演算子のオーバーロード
+	//CVector * float の演算結果を返す
+	CVector operator*(const float& f)const;
+	//内積
+	//Dot(ベクトル)
+	float Dot(const CVector& v) const;
 	//ベクトルの長さを返す
 	float Length() const;
 	//CVector * CMatrixの結果をCVectorで返す

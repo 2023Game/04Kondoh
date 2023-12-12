@@ -95,6 +95,35 @@ bool CCollider::CollisionTriangleLine(CCollider* t, CCollider* l, CVector* a) {
 	}
 
 	//線分は面と交差している
+	
+
+	//面と線分の交点を求める
+	//交点の計算
+	CVector cross = sv + (ev - sv) * (abs(dots) / (abs(dote) + abs(dote)));
+
+	//交点が三角形内なら衝突している
+	//頂点１頂点２ベクトルと頂点１交点ベクトルとの外積を求め、
+	//法線との内積がマイナスなら、三角形の外
+	if ((v[1] - v[0]).Cross(cross - v[0]).Dot(normal) < 0.0f) {
+		//衝突しない
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+	//頂点２頂点３ベクトルと頂点２交点ベクトルとの外積を求め、
+	//法線との内積がマイナスなら、三角形外
+	if ((v[2] - v[1]).Cross(cross - v[1]).Dot(normal) < 0.0f) {
+		//
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+	//頂点３頂点１ベクトルと頂点３交点ベクトルとの外積を求め、
+	//法線との内積がマイナスなら、三角形の外
+	if ((v[0] - v[2]).Cross(cross - v[2]).Dot(normal) < 0.0f) {
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+
+	 
 	//調整値計算(衝突しない位置まで戻す)
 	if (dots < 0.0f) {
 		//始点が裏面

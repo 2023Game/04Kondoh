@@ -99,7 +99,7 @@ bool CCollider::CollisionTriangleLine(CCollider* t, CCollider* l, CVector* a) {
 
 	//面と線分の交点を求める
 	//交点の計算
-	CVector cross = sv + (ev - sv) * (abs(dots) / (abs(dote) + abs(dote)));
+	CVector cross = sv + (ev - sv) * (abs(dots) / (abs(dots) + abs(dote)));
 
 	//交点が三角形内なら衝突している
 	//頂点１頂点２ベクトルと頂点１交点ベクトルとの外積を求め、

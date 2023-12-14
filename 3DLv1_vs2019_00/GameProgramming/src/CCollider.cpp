@@ -1,5 +1,6 @@
 #include "CCollider.h"
 #include "CCollisionManager.h"
+#include "CColliderLine.h"
 
 CCollider::CCollider(CCharacter3* parent, CMatrix* matrix,
 	const CVector& position, float radius) 
@@ -134,6 +135,26 @@ bool CCollider::CollisionTriangleLine(CCollider* t, CCollider* l, CVector* a) {
 		*a = normal * -dote;
 	}
 	return true;
+}
+
+//CollisionTriangleSphere(三角コライダ,球コライダ,調整値)
+//retrun:true(衝突している)false(衝突していない)
+//調整値:衝突していない位置まで戻す
+bool CCollider::CollisionTriangleSphere(CCollider* t, CCollider* s, CVector* a)
+{
+	CVector v[3], sv, ev;
+	//
+	v[0] = t->mV[0] * *t->mpMatrix;
+	v[1] = t->mV[1] * *t->mpMatrix;
+	v[2] = t->mV[2] * *t->mpMatrix;
+	//
+	CVector normal = (v[1] - v[0]).Cross(v[2] - v[0]).Normalize();
+	//
+	sv = s->mPosition * *s->mpMatrix + normal * s->mRadius;
+	ev = s->mPosition * *s->mpMatrix - normal * s->mRadius;
+	CColliderLine line(nullptr, nullptr, sv, ev);
+	//
+	return CollisionTriangleLine(t, &line, a);
 }
 
 CCollider::EType CCollider::Type()

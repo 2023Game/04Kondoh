@@ -30,12 +30,27 @@ void CEnemy::Update() {
 //衝突処理
 //CCollision(コライダ１,コライダ２)
 void CEnemy::Collision(CCollider* m, CCollider* o) {
-	//コライダのmとoが衝突しているか判定
-	if (CCollider::Collision(m, o)) {
-		//エフェクト生成
-		new CEffect(o->Parent()->Position(), 1.0f, 1.0f, "exp.tga", 4, 4, 2);
-		//衝突している時は無効
-		//mEnabled = false;
+	//相手のコライダタイプの判定
+	switch (o->Type())
+	{
+	case CCollider::EType::ESPHERE: //球コライダの時
+		//コライダのmとoが衝突しているか判定
+		if (CCollider::Collision(m, o)) {
+			//エフェクト生成
+			new CEffect(o->Parent()->Position(), 1.0f, 1.0f, "exp.tga", 4, 4, 2);
+			//衝突している時は無効
+			//mEnabled = false;
+		}
+		break;
+
+	case CCollider::EType::ETRIANGLE: //三角コライダの時
+		CVector adjust; //調整値
+		//三角コライダと球コライダの衝突判定
+		if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+		{   //衝突しない位置まで戻す
+			mPosition = mPosition + adjust;
+		}
+		break;
 	}
 }
 

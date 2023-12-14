@@ -33,7 +33,7 @@ CTexture* CApplication::Texture()
 
 void CApplication::Start()
 {
-	//
+	/*
 	mColliderTriangle2.Set(nullptr, nullptr
 		, CVector(50.0f, 0.0f, 50.0f)
 		, CVector(50.0f, 0.0f, -50.0f)
@@ -43,6 +43,8 @@ void CApplication::Start()
 		, CVector(-50.0f, 0.0f, -50.0f)
 		, CVector(-50.0f, 0.0f, 50.0f)
 		, CVector(50.0f, 0.0f, -50.0f));
+		*/
+
 	new CEnemy(&mModelC5, CVector(30.0f, 10.0f, -130.0f),
 		CVector(), CVector(0.1f, 0.1f, 0.1f));
 	//敵機のインスタンス作成
@@ -63,6 +65,9 @@ void CApplication::Start()
 	mPlayer.Scale(CVector(0.1f, 0.1f, 0.1f));
 	//ビルボードの生成
 	new CBillBoard(CVector(-6.0f, 3.0f, -10.0f), 1.0f, 1.0f);
+	//背景モデルから三角コライダを生成
+//親インスタンスと親行列
+	mColliderMesh.Set(nullptr, nullptr, &mBackGround);
 }
 
 void CApplication::Update()

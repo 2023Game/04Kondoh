@@ -19,14 +19,17 @@
 #include "CPlayer.h"
 #include "CTaskManager.h"
 #include "CColliderTriangle.h"
+#include "CColliderMesh.h"
 
 class CApplication
 {
 private:
+	//モデルからコライダを生成
+	CColliderMesh mColliderMesh;
 	//三角コライダ２作成
-	CColliderTriangle mColliderTriangle2;
+	// CColliderTriangle mColliderTriangle2;
 	//三角コライダ作成
-	CColliderTriangle mColliderTriangle;
+	// CColliderTriangle mColliderTriangle;
 	//モデルビューの逆行列
 	static CMatrix mModelViewInverse;
 	//C5モデル

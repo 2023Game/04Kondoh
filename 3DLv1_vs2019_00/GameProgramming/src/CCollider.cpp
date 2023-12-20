@@ -162,6 +162,7 @@ CCollider::EType CCollider::Type()
 	return mType;
 }
 
+/*
 void CCollider::ChangePriority(int priority)
 {
 	mPriority = priority;
@@ -169,6 +170,7 @@ void CCollider::ChangePriority(int priority)
 	CCollisionManager::Instance()->Add(this); //追加
 }
 
+//優先度の変更
 void CCollider::ChangePriority() 
 {
 	//自分の座標×親の変換行列を掛けてワールド座標を求める
@@ -176,3 +178,4 @@ void CCollider::ChangePriority()
 	//ベクトルの長さが優先度
 	CCollider::ChangePriority(pos.Length());
 }
+*/

@@ -8,6 +8,8 @@
 class CColliderLine : public CCollider
 {
 public:
+	//優先度の変更
+	void ChangePriority();
 	CColliderLine(){}
 	//コンストラクタ(線分コライダ)
 	//CColllider(親,親行列,頂点1,頂点2)

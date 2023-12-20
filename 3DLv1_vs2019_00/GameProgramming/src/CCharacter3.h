@@ -16,6 +16,8 @@ class CCharacter3 : public CTransform ,public CTask{
 
 
 public:
+	//コントラクタ
+	CCharacter3(int priority);
 	//衝突処理
 	virtual void Collision(CCollider *m,CCollider *o){}
 	//コンストラクタ

@@ -9,6 +9,8 @@
 
 class CBillBoard : public CCharacter3 {
 public:
+	//CBillBoard(位置,幅,高さ,優先度)
+	CBillBoard(CVector pos, float w, float h, int priority);
 	//コンストラクタ
 	CBillBoard();
 	//CBillBoard(位置,幅,高さ)

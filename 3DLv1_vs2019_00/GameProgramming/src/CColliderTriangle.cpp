@@ -53,7 +53,7 @@ void CColliderTriangle::Render()
 	glPopMatrix();
 }
 
-/*
+
 //優先度の変更
 void CColliderTriangle::ChangePriority()
 {
@@ -63,4 +63,4 @@ void CColliderTriangle::ChangePriority()
 	//ベクトルの長さが優先度
 	CCollider::ChangePriority(pos.Length());
 }
-*/
+

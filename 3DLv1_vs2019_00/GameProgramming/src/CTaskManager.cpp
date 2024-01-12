@@ -92,3 +92,16 @@ CTaskManager* CTaskManager::Instance()
 	}
 	return mpInstance;
 }
+
+//Õ“Ëˆ—
+void CTaskManager::Collision()
+{
+	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚·
+	CTask* task = mHead.mpNext;
+	while (task->mpNext) {
+		//Õ“Ëˆ—‚ðŒÄ‚Ô
+		task->Collision();
+		//ŽŸ‚Ö
+		task = task->mpNext;
+	}
+}

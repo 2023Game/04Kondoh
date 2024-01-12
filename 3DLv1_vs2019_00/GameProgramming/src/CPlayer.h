@@ -5,6 +5,7 @@
 #include "CInput.h"
 #include "CBullet.h"
 #include "CColliderLine.h"
+#include "CCollisionManager.h"
 
 /*
 プレイヤークラス
@@ -13,6 +14,8 @@
 
 class CPlayer : public CCharacter3 {
 public:
+	//衝突処理
+	void Collision();
 	//衝突判定
 	void Collision(CCollider* m, CCollider* o);
 	//CBullet bullet;

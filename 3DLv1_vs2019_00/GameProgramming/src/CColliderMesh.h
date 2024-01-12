@@ -10,7 +10,7 @@ class CColliderMesh
 {
 public:
 	//優先度の変更
-	//void ChangePriority();
+	void ChangePriority();
 	CColliderMesh();
 	~CColliderMesh();
 	//Set(親,親行列,モデル)

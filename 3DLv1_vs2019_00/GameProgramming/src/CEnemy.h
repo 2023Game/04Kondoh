@@ -3,12 +3,15 @@
 //キャラクタークラスのインクルード
 #include "CCharacter3.h"
 #include "CCollider.h"
+#include "CCollisionManager.h"
 /*
 エネミークラス
 キャラクタクラスを継承
 */
 class CEnemy : public CCharacter3 {
 public:
+	//衝突処理
+	void Collision();
 	//衝突処理
 	//Collision(コライダ１,コライダ２)
 	void Collision(CCollider* m, CCollider* o);

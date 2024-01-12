@@ -75,7 +75,8 @@ void CApplication::Update()
 	//タスクマネージャーの更新
 	CTaskManager::Instance()->Update();
 	//コリジョンマネージャの衝突処理
-	CCollisionManager::Instance()->Collision();
+	//CCollisionManager::Instance()->Collision();
+	CTaskManager::Instance()->Collision();
 
 	if (mInput.Key('J'))
 	{

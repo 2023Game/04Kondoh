@@ -162,7 +162,7 @@ CCollider::EType CCollider::Type()
 	return mType;
 }
 
-/*
+
 void CCollider::ChangePriority(int priority)
 {
 	mPriority = priority;
@@ -178,4 +178,3 @@ void CCollider::ChangePriority()
 	//ベクトルの長さが優先度
 	CCollider::ChangePriority(pos.Length());
 }
-*/

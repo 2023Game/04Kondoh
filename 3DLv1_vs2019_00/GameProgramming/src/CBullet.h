@@ -6,6 +6,7 @@
 #include "CTriangle.h"
 #include "CModel.h"
 #include "CCollider.h"
+#include "CCollisionManager.h"
 
 /*
 弾クラス
@@ -14,6 +15,8 @@
 
 class CBullet : public CCharacter3 {
 public:
+	//衝突処理
+	void Collision();
 	//衝突処理
 	//Collision(コライダ１,コライダ２)
 	void Collision(CCollider* m, CCollider* o);

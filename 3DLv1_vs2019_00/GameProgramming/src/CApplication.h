@@ -24,6 +24,7 @@
 class CApplication
 {
 private:
+	static CUi* spUi;    //UIクラスのポインタ
 	//モデルからコライダを生成
 	CColliderMesh mColliderMesh;
 	//三角コライダ２作成
@@ -63,6 +64,8 @@ private:
 	CPlayer mPlayer;
 
 public:
+	~CApplication();
+	static CUi* Ui();   //UIクラスのインスタンスを取得
 	static const CMatrix& ModelViewInverse();
 	static CCharacterManager* CharacterManager();
 	static CTexture* Texture();

@@ -1,19 +1,49 @@
 ﻿  CApplication.cpp
   CBillBoard.cpp
+  CBlock.cpp
   CBullet.cpp
+  CCamera.cpp
+  CCharacter.cpp
   CCharacter3.cpp
+  CCharacterManager.cpp
   CCollider.cpp
+  CColliderLine.cpp
+  CColliderMesh.cpp
   CColliderTriangle.cpp
   CCollisionManager.cpp
+  CEffect.cpp
   CEnemy.cpp
   CEnemy2.cpp
+  CFont.cpp
   CGame.cpp
+  CMaterial.cpp
+  CMatrix.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(13,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(28,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(43,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+  コードを生成中...
+  コンパイル中...
+  CModel.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(188,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(241,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(252,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(254,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
   CPlayer.cpp
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer.cpp(7,1): warning C4005: 'VELOCITY': マクロが再定義されました。
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6): message : 'VELOCITY' の以前の定義を確認してください
   CPlayer2.cpp
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer2.cpp(12,1): warning C4005: 'VELOCITY': マクロが再定義されました。
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6): message : 'VELOCITY' の以前の定義を確認してください
+  CPoint.cpp
+  CRectangle.cpp
+  CSound.cpp
+  CTaskManager.cpp
+  CTexture.cpp
+  CInput.cpp
+  CTransform.cpp
+  CTriangle.cpp
+  CUi.cpp
+  CVector.cpp
   main.cpp
   コードを生成中...
 LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。

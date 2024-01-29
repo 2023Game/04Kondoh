@@ -1,5 +1,6 @@
 #include "CEnemy3.h"
 #include "CEffect.h"
+#include "CPlayer.h"
 
 #define OBJ "res\\f16.obj"
 #define MTL "res\\f16.mtl"
@@ -36,6 +37,38 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation,
 //更新処理
 void CEnemy3::Update()
 {
+	//プレイヤーのポインタが０以外の時
+	CPlayer *player = CPlayer::Instance();
+	if (player != nullptr)
+	{
+		//プレイヤーまでのベクトルを求める
+		CVector vp = player->Position() - mPosition;
+		//左ベクトルとの内積を求める
+		float dx = vp.Dot(mMatrixRotate.VectorX());
+		//上ベクトルとの内積を求める
+		float dy = vp.Dot(mMatrixRotate.VectorY());
+		//前ベクトルとの内積を求める
+		float dz = vp.Dot(mMatrixRotate.VectorZ());
+
+		//X軸のズレが2.0以下
+		if (-2.0f < dx && dx < 2.0f)
+		{
+			//Y軸のズレが2.0以下
+			if (-2.0f < dy && dy < 2.0f)
+			{
+				if (0.0f < dz && dz < 30.0f)
+				{
+					//弾を発射します
+					CBullet* bullet = new CBullet();
+					bullet->Set(0.1f, 1.5f);
+					bullet->Position(
+						CVector(0.0f, 0.0f, 10.0f) * mMatrix);
+					bullet->Rotation(mRotation);
+					bullet->Update();
+				}
+			}
+		}
+	}
 }
 
 //衝突処理

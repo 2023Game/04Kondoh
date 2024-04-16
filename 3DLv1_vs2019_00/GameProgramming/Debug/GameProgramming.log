@@ -1,2 +1,19 @@
-﻿  CEnemy3.cpp
+﻿  CApplication.cpp
+  CBillBoard.cpp
+  CCharacter3.cpp
+  CEnemy2.cpp
+  CEnemy3.cpp
+  CGame.cpp
+  CPlayer.cpp
+  CPlayer2.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer.cpp(7,1): warning C4005: 'VELOCITY': マクロが再定義されました。
+  C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6,1):
+  'VELOCITY' の以前の定義を確認してください
+  
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CPlayer2.cpp(12,1): warning C4005: 'VELOCITY': マクロが再定義されました。
+  C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CCharacter.h(6,1):
+  'VELOCITY' の以前の定義を確認してください
+  
+  main.cpp
+  コードを生成中...
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

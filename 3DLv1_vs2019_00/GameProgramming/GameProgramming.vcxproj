@@ -28,6 +28,7 @@
     <ClCompile Include="src\CMaterial.cpp" />
     <ClCompile Include="src\CMatrix.cpp" />
     <ClCompile Include="src\CModel.cpp" />
+    <ClCompile Include="src\CModelX.cpp" />
     <ClCompile Include="src\CPlayer.cpp" />
     <ClCompile Include="src\CSound.cpp" />
     <ClCompile Include="src\CTaskManager.cpp" />
@@ -40,6 +41,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CModelX.h" />
     <ClInclude Include="src\CApplication.h" />
     <ClInclude Include="src\CBillBoard.h" />
     <ClInclude Include="src\CBullet.h" />

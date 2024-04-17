@@ -10,6 +10,8 @@
 
 void CApplication::Start()
 {
+	//3Dƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+	mModelX.Load(MODEL_FILE);
 	mFont.Load("FontG.png", 1, 4096 / 64);
 }
 

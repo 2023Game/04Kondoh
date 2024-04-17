@@ -1,6 +1,2 @@
-﻿  CApplication.cpp
-  main.cpp
-  コードを生成中...
-LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
-LINK : warning LNK4098: defaultlib 'LIBCMT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+﻿  CModelX.cpp
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

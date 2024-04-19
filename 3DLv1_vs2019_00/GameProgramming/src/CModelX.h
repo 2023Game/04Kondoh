@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CMODELX_H  //インクルードガード
 #define CMODELX_H
 
@@ -13,14 +14,18 @@ Xファイル形式の3Dモデルデータをプログラムで認識する
 class CModelX
 {
 public:
+	//単語の取り出し
+	char* GetToken();
 	CModelX();
 	//ファイル読み込み
 	void Load(char* file);
 
 private:
+	//cが区切り文字ならtrueを返す
+	bool IsDelimiter(cher c);
 	char* mpPointer;     //読み込み位置
 	char mToken[1024];   //取り出した単語の領域
 };
-#endif // !1
+#endif // CMODELX_H
 
 

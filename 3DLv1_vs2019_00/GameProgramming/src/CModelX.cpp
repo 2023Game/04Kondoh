@@ -44,7 +44,7 @@ void CModelX::Load(char* file) {
 
 }
 
-bool CModelX::IsDelimiter(cher c)
+bool CModelX::IsDelimiter(char c)
 {
 	return false;
 }

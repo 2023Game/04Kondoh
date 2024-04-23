@@ -22,7 +22,7 @@ public:
 
 private:
 	//c‚ª‹æØ‚è•¶š‚È‚çtrue‚ğ•Ô‚·
-	bool IsDelimiter(cher c);
+	bool IsDelimiter(char c);
 	char* mpPointer;     //“Ç‚İ‚İˆÊ’u
 	char mToken[1024];   //æ‚èo‚µ‚½’PŒê‚Ì—Ìˆæ
 };

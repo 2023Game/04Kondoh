@@ -123,3 +123,31 @@ char* CModelX::GetToken() {
 	}
 	return mToken;
  }
+
+CModelX::~CModelX()
+{
+	if (mFrame.size() > 0)
+	{
+		delete mFrame[0];
+	}
+}
+
+CModelXFrame::~CModelXFrame()
+{
+	//子フレームを全て開放
+	std::vector<CModelXFrame*>::iterator itr;
+	for (itr = mChild.begin(); itr != mChild.end(); itr++) {
+		delete* itr;
+	}
+	//名前のエリアを開放
+	SAFE_DELETE_ARRAY(mpName);
+}
+
+/*
+SkipNode
+ノードを読み飛ばす
+*/
+void CModelX::SkipNode(){
+	//
+
+}

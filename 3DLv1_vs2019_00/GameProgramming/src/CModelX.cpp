@@ -186,7 +186,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 	//文字が無くなったら終わり
 	while (*model->mpPointer != '\0') {
 		//次の単語取得
-		model->GetToken();  //Frame
+		//model->GetToken();  //Frame
 		//}かっこの場合は終了
 		if (strchr(model->mToken, '}')) break;
 		//新たなフレームの場合は、子フレームに追加
@@ -198,7 +198,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 		else
 		{
 			//上記以外の要素は読み飛ばす
-			//model->SkipNode();
+			model->SkipNode();
 		}
 	}
 	//デバッグバージョンのみ有効

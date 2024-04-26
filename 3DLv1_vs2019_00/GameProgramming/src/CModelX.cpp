@@ -200,6 +200,13 @@ CModelXFrame::CModelXFrame(CModelX* model)
 			//上記以外の要素は読み飛ばす
 			model->SkipNode();
 		}
+		//
+		if (strcmp(model->mToken, "mTransformMatrix"))
+		{
+			//
+			mChild.push_back(new CModelXFrame(model));
+		}
+		else if ()
 	}
 	//デバッグバージョンのみ有効
 #ifdef _DEBUG

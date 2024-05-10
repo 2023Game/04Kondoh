@@ -24,7 +24,7 @@ bool CModelX::IsDelimiter(char c)
 	見つからなかったらNULLを返す
 	*/
 	if (strchr(",;\"", c) != NULL)
-		return false;
+		return true;
 }
 
 CModelX::CModelX()
@@ -186,11 +186,11 @@ CModelXFrame::CModelXFrame(CModelX* model)
 	//文字が無くなったら終わり
 	while (*model->mpPointer != '\0') {
 		//次の単語取得
-		//model->GetToken();  //Frame
+		model->GetToken();  //Frame
 		//}かっこの場合は終了
 		if (strchr(model->mToken, '}')) break;
 		//新たなフレームの場合は、子フレームに追加
-		if (strcmp(mpName, "Frame") == 0) {
+		if (strcmp(model->mToken, "Frame") == 0) {
 			//フレームを作成し、子フレームの配列に追加
 			mChild.push_back(
 				new CModelXFrame(model));

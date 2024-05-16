@@ -8,6 +8,9 @@
 
 class CVector {
 public:
+	void CVector::X(float f);
+	void CVector::Y(float f);
+	void CVector::Z(float f);
 	//³‹K‰»
 	//‘å‚«‚³‚PƒxƒNƒgƒ‹‚ğ•Ô‚·
 	CVector Normalize() const;

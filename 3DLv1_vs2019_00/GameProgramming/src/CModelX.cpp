@@ -135,6 +135,11 @@ CModelXFrame::~CModelXFrame()
 	}
 	//名前のエリアを開放
 	SAFE_DELETE_ARRAY(mpName);
+
+	if (mpMesh != nullptr)
+	{
+		delete mpMesh;
+	}
 }
 
 /*
@@ -168,7 +173,7 @@ model:CModelXインスタンスへのポインタ
 */
 CModelXFrame::CModelXFrame(CModelX* model)
 	:mpName(nullptr)
-	, mIndex(0)
+	,mIndex(0)
 	,mpMesh(nullptr)
 {
 	//現在のフレーム配列の要素数を取得設定する
@@ -260,5 +265,10 @@ void CMesh::Init(CModelX* model) {
 		mpVertex[i].Z(atof(model->GetToken()));
 	}
 	printf("VertexNum:%d\n", mVertexNum);
-	printf("%10f,%10f,%10f\n", mpVertex[0].X(), mpVertex[0].Y(), mpVertex[0].Z());
+	for (int i = 0; i < mVertexNum; i++)
+	{
+		printf("%10f", mpVertex[i].X());
+		printf("%10f", mpVertex[i].Y());
+		printf("%10f\n", mpVertex[i].Z());
+	}
 }

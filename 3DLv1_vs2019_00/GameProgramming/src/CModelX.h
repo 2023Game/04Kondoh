@@ -66,6 +66,8 @@ public:
 	void Init(CModelX* model);
 
 private:
+	int mNormalNum;  //法線数
+	CVector* mpNormal;  //法線ベクトル
 	int mFaceNum;  //面数
 	int* mpVertexIndex;  //面を構成する頂点インデックス
 	int mVertexNum;  //頂点数

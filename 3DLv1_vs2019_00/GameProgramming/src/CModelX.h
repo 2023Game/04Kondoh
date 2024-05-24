@@ -20,6 +20,7 @@ Xファイル形式の3Dモデルデータをプログラムで認識する
 class CModelX{
 	friend CModelXFrame;
 public:
+	void Render();
 	char* Token();
 	~CModelX();
 	//ノードの読み飛ばし
@@ -43,6 +44,7 @@ private:
 class CModelXFrame {
 	friend CModelX;
 public:
+	void Render();
 	//コンストラクタ
 	CModelXFrame(CModelX* model);
 	//デストラクタ
@@ -58,6 +60,7 @@ private:
 
 class CMesh {
 public:
+	void Render();
 	//コンストラクタ
 	CMesh();
 	//デストラクタ

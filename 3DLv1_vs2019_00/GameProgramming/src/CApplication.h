@@ -22,14 +22,11 @@
 class CApplication
 {
 private:
+	CMatrix mMatrix;
 	CModelX mModelX;
 	static CUi* spUi;    //UIクラスのポインタ
 	//モデルからコライダを生成
 	CColliderMesh mColliderMesh;
-	//三角コライダ２作成
-	// CColliderTriangle mColliderTriangle2;
-	//三角コライダ作成
-	// CColliderTriangle mColliderTriangle;
 	//モデルビューの逆行列
 	static CMatrix mModelViewInverse;
 	//C5モデル
@@ -45,18 +42,15 @@ private:
 		EOVER,	//ゲームオーバー
 	};
 	EState mState;
-//  CCharacter mRectangle;
 	CPlayer* mpPlayer;
 	static CTexture mTexture;
 	CEnemy* mpEnemy;
-//  CBullet* mpBullet;
 	CInput mInput;
 	CFont mFont;
     //CCharacterのポインタの可変長配列
-//  std::vector<CCharacter*> mCharacters;
+    //std::vector<CCharacter*> mCharacters;
 	CVector mEye;
 	CModel mModel;
-//	CCharacter3 mCharacter;
 	CPlayer mPlayer;
 
 public:

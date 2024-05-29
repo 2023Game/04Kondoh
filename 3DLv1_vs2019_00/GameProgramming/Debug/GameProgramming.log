@@ -1,9 +1,12 @@
 ﻿  CApplication.cpp
-  CBillBoard.cpp
-  CCharacter3.cpp
-  CModelX.cpp
-  CPlayer.cpp
+  CMaterial.cpp
+  CMatrix.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(14,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(29,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(44,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+  CSound.cpp
   main.cpp
   コードを生成中...
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(29,1): warning C4715: 'CModelX::IsDelimiter': 値を返さないコントロール パスがあります。
+LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+LINK : warning LNK4098: defaultlib 'LIBCMT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

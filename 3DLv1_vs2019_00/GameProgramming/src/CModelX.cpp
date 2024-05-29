@@ -1,7 +1,8 @@
 ﻿#include <stdio.h>
 #include <string.h>
 #include "CModelX.h"
-#include "CVector.h"
+#include "CVector.h" 
+#include "CMaterial.h"
 #include "glut.h"
 #include "cmodelx.h"
 #include <ctype.h>  //isspace関数の宣言
@@ -239,6 +240,9 @@ CMesh::CMesh()
 	,mpVertexIndex(nullptr)
 	,mNormalNum(0)
 	,mpNormal(nullptr)
+	,mMaterialNum(0)
+	,mMaterialIndexNum(0)
+	,mpMaterialIndex(nullptr)
 {}
 
 //デストラクタ
@@ -246,6 +250,7 @@ CMesh::~CMesh() {
 	SAFE_DELETE_ARRAY(mpVertex);
 	SAFE_DELETE_ARRAY(mpVertexIndex);
 	SAFE_DELETE_ARRAY(mpNormal);
+	SAFE_DELETE_ARRAY(mpMaterialIndex);
 }
 
 /*
@@ -281,37 +286,67 @@ void CMesh::Init(CModelX* model) {
 		mpVertexIndex[i + 2] = atoi(model->GetToken());
 	}
 
-	model->GetToken();  //Mesh Normals
-	if (strcmp(model->Token(), "MeshNormals") == 0) {
-		model->GetToken();  //{
-		//法線データ数を取得
-		mNormalNum = atoi(model->GetToken());
-		//法線のデータを配列に取り込む
-		CVector* pNormal = new CVector[mNormalNum];
-		for (int i = 0; i < mNormalNum; i++) {
-			pNormal[i].X(atof(model->GetToken()));
-			pNormal[i].Y(atof(model->GetToken()));
-			pNormal[i].Z(atof(model->GetToken()));
-		}
-		//法線数＝面数×３
-		mNormalNum = atoi(model->GetToken()) * 3;  //
-		int ni;
-		//頂点毎に法線データを設定する
-		mpNormal = new CVector[mNormalNum];
-		for (int i = 0; i < mNormalNum; i += 3) {
-			model->GetToken();  //３
-			ni = atoi(model->GetToken());
-			mpNormal[i] = pNormal[ni];
+	//単語がある間繰り返し
+	while (!model->EOT()) {
 
-			ni = atoi(model->GetToken());
-			mpNormal[i + 1] = pNormal[ni];
+		model->GetToken();  //Mesh Normals
+		// }かっこの場合は終了
+		if (strchr(model->Token(), '}'))
+			break;
 
-			ni = atoi(model->GetToken());
-			mpNormal[i + 2] = pNormal[ni];
-		}
-		delete[] pNormal;
-		model->GetToken();  //}
-	}  //End of MeshNormals
+		if (strcmp(model->Token(), "MeshNormals") == 0) {
+			model->GetToken();  //{
+			//法線データ数を取得
+			mNormalNum = atoi(model->GetToken());
+			//法線のデータを配列に取り込む
+			CVector* pNormal = new CVector[mNormalNum];
+			for (int i = 0; i < mNormalNum; i++) {
+				pNormal[i].X(atof(model->GetToken()));
+				pNormal[i].Y(atof(model->GetToken()));
+				pNormal[i].Z(atof(model->GetToken()));
+			}
+			//法線数＝面数×３
+			mNormalNum = atoi(model->GetToken()) * 3;  //
+			int ni;
+			//頂点毎に法線データを設定する
+			mpNormal = new CVector[mNormalNum];
+			for (int i = 0; i < mNormalNum; i += 3) {
+				model->GetToken();  //３
+				ni = atoi(model->GetToken());
+				mpNormal[i] = pNormal[ni];
+
+				ni = atoi(model->GetToken());
+				mpNormal[i + 1] = pNormal[ni];
+
+				ni = atoi(model->GetToken());
+				mpNormal[i + 2] = pNormal[ni];
+			}
+			delete[] pNormal;
+			model->GetToken();  // }
+		} //End of MeshNormals
+
+		//MeshMaterialListの時
+		else if (strcmp(model->Token(), "MeshMaterialList") == 0) {
+			model->GetToken();  // {
+			//Materialの数
+			mMaterialNum = atoi(model->GetToken());
+			//FaceNum
+			mMaterialIndexNum = atoi(model->GetToken());
+			//マテリアルインデックスの作成
+			mpMaterialIndex = new int[mMaterialIndexNum];
+			for (int i = 0; i < mMaterialIndexNum; i++) {
+				mpMaterialIndex[i] = atoi(model->GetToken());
+			}
+			//マテリアルデータの作成
+			for (int i = 0; i < mMaterialNum; i++) {
+				model->GetToken();  // Material
+				if (strcmp(model->Token(), "Material") == 0) {
+					mMaterial.push_back(new CMaterial(model));
+				}
+			}
+			model->GetToken();  // } //End of MeshMaterialList
+		} // End of MeshMaterialList
+	}
 
 	printf("NormalNum:%d\n", mNormalNum);
 	for (int i = 0; i < mNormalNum; i++)
@@ -355,8 +390,12 @@ void CMesh::Render() {
 	glNormalPointer(GL_FLOAT, 0, mpNormal);
 
 	/*　頂点のインデックスの場所を指定して図形を描画する　*/
-	glDrawElements(GL_TRIANGLES, 3 * mFaceNum,
-		GL_UNSIGNED_INT, mpVertexIndex);
+	for (int i = 0; i < mFaceNum; i++) {
+		//マテリアルを適用
+		mMaterial[mpMaterialIndex[i]]->Enabled();
+		glDrawElements(GL_TRIANGLES, 3,
+			GL_UNSIGNED_INT, mpVertexIndex + i * 3);
+	}
 
 	/*　頂点データ、法線データの配列を無効化にする　*/
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -378,4 +417,9 @@ void CModelX::Render() {
 	for (size_t i = 0; i < mFrame.size(); i++) {
 		mFrame[i]->Render();
 	}
+}
+
+bool CModelX::EOT()
+{
+	return *mpPointer == '\0';
 }

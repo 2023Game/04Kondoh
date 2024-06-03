@@ -42,7 +42,7 @@ CBullet::CBullet()
 	//, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.1f)
 {}
 
-
+/*
 //衝突処理
 //Collision(コライダ１,コライダ２)
 void CBullet::Collision(CCollider* m, CCollider* o) {
@@ -61,3 +61,4 @@ void CBullet::Collision()
 	//衝突処理を実行
 	CCollisionManager::Instance()->Collision(&mCollider, COLLISIONRANGE);
 }
+*/

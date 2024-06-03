@@ -347,7 +347,7 @@ void CApplication::Update()
 	CTaskManager::Instance()->Render();
 	CCollisionManager::Instance()->Render();
 
-	spUi->Render();   //UI‚Ì•`‰æ
+	//spUi->Render();   //UI‚Ì•`‰æ
 }
 /*
 CTaskManager CApplication::mTaskManager;

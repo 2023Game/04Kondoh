@@ -11,7 +11,7 @@
 
 CPlayer::CPlayer()
 	:mLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.0f), CVector(0.0f, 0.0f, -1.0f))
-	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.3f, 0.0f))
+	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
 	, mLine3(this, &mMatrix, CVector(1.5f, 0.0f, 0.0f), CVector(-1.5f, 0.0f, 0.0f))
 	, mLine4(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
 	,JumpV(0)
@@ -66,6 +66,14 @@ void CPlayer::Update() {
 			mPState = EPState::EJUMP;
 		}
 
+		JumpV -= GRAVITY;
+		mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
+
+		if (mInput.Key(VK_LBUTTON))
+		{
+
+		}
+
 		break;
 
 	case EPState::EJUMP:
@@ -73,8 +81,6 @@ void CPlayer::Update() {
 		JumpV -= GRAVITY;
 
 	}
-	//JumpV -= GRAVITY;
-	//mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
 
 	//変換行列の更新
 	CTransform::Update();
@@ -92,19 +98,18 @@ void CPlayer::Collision(CCollider* m, CCollider* o) {
 			{
 				//位置更新
 				mPosition = mPosition + adjust;
-				mPState = EPState::EMOVE;
-				JumpV = 0;
 				//行列更新
 				CTransform::Update();
-			}
-			if (CCollider::CollisionTriangleLine(o, &mLine4, &adjust))
-			{
-				//位置更新
-				mPosition = mPosition + adjust;
-				mPState = EPState::EMOVE;
-				JumpV = 0;
-				//行列更新
-				CTransform::Update();
+				if (CCollider::CollisionTriangleLine(o, &mLine4, &adjust))
+				{
+					//位置更新
+					mPosition = mPosition + adjust;
+					mPState = EPState::EMOVE;
+					JumpV = 0;
+					//行列更新
+					CTransform::Update();
+				}
+
 			}
 		}
 		break;

@@ -13,9 +13,14 @@ class CCollider;
 */
 
 class CCharacter3 : public CTransform ,public CTask{
-
-
 public:
+	enum class EState
+	{
+		EMOVE,  //移動
+		EJUMP,  //ジャンプ
+		EIDEL,  //止まる
+	};
+	  EState mState;
 	//コントラクタ
 	CCharacter3(int priority);
 	//衝突処理
@@ -29,6 +34,7 @@ public:
 	void Model(CModel* m);
 	//描画処理
 	void Render();
+	void Update();
 protected:
 	CModel* mpModel; //モデルのポインタ
 

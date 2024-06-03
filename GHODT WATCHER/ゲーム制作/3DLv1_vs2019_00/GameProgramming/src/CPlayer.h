@@ -14,6 +14,16 @@
 
 class CPlayer : public CCharacter3 {
 public:
+
+	enum class EPState  //プレイヤー行動ステート
+	{
+		EMOVE,  //移動
+		EJUMP,  //ジャンプ
+		EIDEL,  //待機
+	};
+	EPState mPState;
+	float JumpV;  //ジャンプ変数
+
 	//インスタンスのポイントの取得
 	static CPlayer* Instance();
 	//衝突処理
@@ -29,9 +39,10 @@ public:
 private:
 	//プレイヤーのインスタンス
 	static CPlayer* spInstance; 
-	CColliderLine mLine; //線分コライダ
+	CColliderLine mLine;  //線分コライダ
 	CColliderLine mLine2;
 	CColliderLine mLine3;
+	CColliderLine mLine4;
 	CInput mInput;
 };
 

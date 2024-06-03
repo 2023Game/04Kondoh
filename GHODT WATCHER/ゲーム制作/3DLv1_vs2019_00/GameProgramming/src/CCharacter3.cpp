@@ -6,6 +6,11 @@ void CCharacter3::Model(CModel* m)
 	mpModel = m;
 }
 
+void CCharacter3::Update()
+{
+
+}
+
 //描画処理
 void CCharacter3::Render()
 {
@@ -22,6 +27,8 @@ CCharacter3::CCharacter3()
 {
 	//タスクリストに追加
 	CTaskManager::Instance()->Add(this);
+	//プレイヤーの行動ステート
+	mState = EState::EIDEL;
 }
 
 CCharacter3::CCharacter3(int priority)

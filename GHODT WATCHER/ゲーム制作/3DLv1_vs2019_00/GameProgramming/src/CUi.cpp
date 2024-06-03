@@ -54,24 +54,6 @@ void CUi::Render()
 	//文字列編集エリアの作成
 	char buf[64];
 
-	//X軸回転値の表示
-	//文字列の設定
-	sprintf(buf, "PY:%7.2f", mPosY);
-	//文字列の描画
-	mFont.Draw(500, 330, 8, 16, buf);
-
-	//X軸回転の表示
-	//文字列の設定
-	sprintf(buf, "RX:%7.2f", mRotX);
-	//文字列の描画
-	mFont.Draw(500, 300, 8, 16, buf);
-
-	//Y軸回転の表示
-	//文字列の設定
-	sprintf(buf, "RY:%7.2f", mRotY);
-	//文字列の描画
-	mFont.Draw(500, 200, 8, 16, buf);
-
 	CCamera::End();     //2D描画終了
 }
 

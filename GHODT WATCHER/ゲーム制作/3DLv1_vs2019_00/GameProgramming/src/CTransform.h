@@ -27,7 +27,7 @@ public:
 	void Update();
 	//Update(位置、回転、スケール)
 	void Update(const CVector& pos, const CVector& rot, const CVector& scale);
-protected:
+    protected: //子クラスはアクセス可能
 	CVector mPosition; //位置
 	CVector mRotation; //回転
 	CVector mScale;    //拡大縮小

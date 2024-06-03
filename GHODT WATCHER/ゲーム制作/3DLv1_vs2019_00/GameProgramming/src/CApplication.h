@@ -21,10 +21,25 @@
 #include "CColliderTriangle.h"
 #include "CColliderMesh.h"
 #include "CEnemy3.h"
+#include "CBackGround.h"
 
 class CApplication
 {
 private:
+	enum class ECamera
+	{
+		View1,  //一人称
+		View2,  //二人称
+		View3,  //三人称
+	};
+	ECamera mCamera;
+	float VX;  //縦視点移動の値
+	float VY;  //横視点移動の値
+
+	//前回のマウス座標
+	int mMx, mMy;
+
+	int ViewNumber;
 	static CUi* spUi;    //UIクラスのポインタ
 	//モデルからコライダを生成
 	CColliderMesh mColliderMesh;
@@ -35,20 +50,22 @@ private:
 	//モデルビューの逆行列
 	static CMatrix mModelViewInverse;
 	//C5モデル
-	CModel mModelC5;
-	CModel mBackGround; //背景モデル
+	CModel mModelC5;  //C5のモデル
+	CModel mModel;    //プレイヤーのモデル
+	CModel mModelBG;  //ステージのモデル
+	CBackGround mBackGround; //背景モデル
 	CSound mSoundBgm;	//BGM
 	CSound mSoundOver;	//ゲームオーバー
 	CGame* mpGame;
 	static CCharacterManager mCharacterManager;
-	enum class EState
+	enum class EGame
 	{
 		ESTART,	//ゲーム開始
 		EPLAY,	//ゲーム中
 		ECLEAR,	//ゲームクリア
 		EOVER,	//ゲームオーバー
 	};
-	EState mState;
+	EGame mGame;
 //  CCharacter mRectangle;
 	CPlayer* mpPlayer;
 	static CTexture mTexture;
@@ -60,7 +77,6 @@ private:
     //CCharacterのポインタの可変長配列
 //  std::vector<CCharacter*> mCharacters;
 	CVector mEye;
-	CModel mModel;
 //	CCharacter3 mCharacter;
 	CPlayer mPlayer;
 

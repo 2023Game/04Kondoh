@@ -6,6 +6,7 @@
 //文字列s1と文字列s2の比較
 //s1とs2が等しければ０を
 //等しくなければ０以外を返す
+/*
 int strcmp(const char* s1, const char* s2)
 {
 	int i = 0;
@@ -18,6 +19,7 @@ int strcmp(const char* s1, const char* s2)
 	//同じなら引いて０
 	return s1[i] - s2[i];
 }
+*/
 
 //モデルファイル入力
 //Load(ファイル名、マテリアルファイル名)

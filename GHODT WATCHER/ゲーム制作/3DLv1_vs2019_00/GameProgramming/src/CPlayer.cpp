@@ -11,9 +11,9 @@
 
 CPlayer::CPlayer()
 	:mLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.0f), CVector(0.0f, 0.0f, -1.0f))
-	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
+	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.3f, 0.0f))
 	, mLine3(this, &mMatrix, CVector(1.5f, 0.0f, 0.0f), CVector(-1.5f, 0.0f, 0.0f))
-	, mLine4(this, &mMatrix, CVector(0.0f, 1.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
+	, mLine4(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
 	,JumpV(0)
 {
 	//インスタンスの設定

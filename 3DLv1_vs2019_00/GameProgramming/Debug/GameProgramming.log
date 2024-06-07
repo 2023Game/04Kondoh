@@ -1,42 +1,7 @@
-﻿  CApplication.cpp
-  CBillBoard.cpp
-  CBullet.cpp
-  CCamera.cpp
-  CCharacter3.cpp
-  CCollider.cpp
-  CColliderLine.cpp
-  CColliderMesh.cpp
-  CColliderTriangle.cpp
-  CCollisionManager.cpp
-  CEffect.cpp
-  CEnemy.cpp
-  CEnemy3.cpp
-  CFont.cpp
-  CMaterial.cpp
-  CMatrix.cpp
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(14,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(29,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CMatrix.cpp(44,12): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-  CModel.cpp
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(188,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(241,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(252,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(254,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-  CModelX.cpp
-  CPlayer.cpp
-  CSound.cpp
-  コードを生成中...
+﻿  CModelX.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(505,45): warning C4474: 'printf': 書式文字列に渡された引数の数が多すぎます
+  C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(505,45):
+  プレースホルダーとそのパラメーターには 1 の可変個引数が必要ですが、2 が指定されています。
+  
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(30,1): warning C4715: 'CModelX::IsDelimiter': 値を返さないコントロール パスがあります。
-  コンパイル中...
-  CTaskManager.cpp
-  CTexture.cpp
-  CInput.cpp
-  CTransform.cpp
-  CTriangle.cpp
-  CUi.cpp
-  CVector.cpp
-  main.cpp
-  コードを生成中...
-LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
-LINK : warning LNK4098: defaultlib 'LIBCMT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

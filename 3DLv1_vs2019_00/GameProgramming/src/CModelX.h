@@ -10,11 +10,14 @@ class CMaterial;      //マテリアルの宣言
 class CSkinWeights;   //スキンウェイトクラス
 class CAnimationSet;  //アニメーションセットクラス
 class CAnimation;     //アニメーションクラス
+class CAnimationKey;  //アニメーションキークラス
 
 #define MODEL_FILE "res\\sample.blend.x"   //入力ファイル名　
 
 //領域開放をマクロ化
 #define SAFE_DELETE_ARRAY(a) { if(a) delete[] a; a = nullptr;}
+//配列のサイズ取得をマクロ化
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
 /*
 CModelX
@@ -144,11 +147,26 @@ public:
 	~CAnimation();
 
 private:
+	int mKeyNum;   //キー数（時間数）
+	CAnimationKey* mpKey; //キーの配列
 	char* mpFrameName;  //フレーム名
 	int mFrameIndex;    //フレーム番号
 
 };
 
+/*
+CAnimationKey
+アニメーションキークラス
+*/
+class CAnimationKey {
+	friend CAnimation;
+	friend CAnimationSet;
+private:
+	//時間
+	float mTime;
+	//行列
+	CMatrix mMatrix;
+};
 
 #endif // CMODELX_H
 

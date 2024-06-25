@@ -1,8 +1,9 @@
 ﻿  CApplication.cpp
+  CCamera.cpp
   CPlayer.cpp
   コード生成しています。
-  4 of 446 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
+  4 of 460 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    14 functions had inline decision re-evaluated but remain unchanged
+    17 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\GHODT WATCHER\ゲーム制作\3DLv1_vs2019_00\Release\GameProgramming.exe

@@ -53,7 +53,6 @@ void CColliderTriangle::Render()
 	glPopMatrix();
 }
 
-
 //—Dæ“x‚Ì•ÏX
 void CColliderTriangle::ChangePriority()
 {

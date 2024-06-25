@@ -2,6 +2,7 @@
 #define CEFFECT_H
 //ビルボードクラスのインクルード
 #include "CBillBoard.h"
+#include "CCamera.h"
 /*
 エフェクトクラス
 テクスチャのアニメーション

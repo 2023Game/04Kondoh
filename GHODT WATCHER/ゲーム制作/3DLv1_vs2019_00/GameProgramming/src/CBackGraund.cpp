@@ -1,7 +1,6 @@
 #include "CBackGround.h"
 
 CBackGround::CBackGround()
-
 {
 	spInstance = this;
 }
@@ -21,6 +20,7 @@ void CBackGround::ColliderMesh()
 {
 	mColliderMesh.Set(this, &mMatrix, mpModel);
 }
+
 
 
 CBackGround* CBackGround::spInstance = nullptr;

@@ -152,9 +152,67 @@ bool CCollider::CollisionTriangleSphere(CCollider* t, CCollider* s, CVector* a)
 	//
 	sv = s->mPosition * *s->mpMatrix + normal * s->mRadius;
 	ev = s->mPosition * *s->mpMatrix - normal * s->mRadius;
-	CColliderLine line(nullptr, nullptr, sv, ev);
-	//
-	return CollisionTriangleLine(t, &line, a);
+
+	//面の法線を、外積を正規化して求める
+	//三角の頂点から線分始点へのベクトルを求める
+	CVector v0sv = sv - v[0];
+	//三角形の頂点から線分終点へのベクトルを求める
+	CVector v0ev = ev - v[0];
+
+	//線分が面と交差しているか内積で確認する
+	float dots = v0sv.Dot(normal);
+	float dote = v0ev.Dot(normal);
+	//プラスは交差してない
+	if (dots * dote >= 0.0f) {
+		//衝突していない(調整不要)
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+
+	//線分は面と交差している
+
+
+	//面と線分の交点を求める
+	//交点の計算
+	CVector cross = sv + (ev - sv) * (abs(dots) / (abs(dots) + abs(dote)));
+
+	//交点が三角形内なら衝突している
+	//頂点１頂点２ベクトルと頂点１交点ベクトルとの外積を求め、
+	//法線との内積がマイナスなら、三角形の外
+	if ((v[1] - v[0]).Cross(cross - v[0]).Dot(normal) < 0.0f) {
+		//衝突しない
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+	//頂点２頂点３ベクトルと頂点２交点ベクトルとの外積を求め、
+	//法線との内積がマイナスなら、三角形外
+	if ((v[2] - v[1]).Cross(cross - v[1]).Dot(normal) < 0.0f) {
+		//
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+	//頂点３頂点１ベクトルと頂点３交点ベクトルとの外積を求め、
+	//法線との内積がマイナスなら、三角形の外
+	if ((v[0] - v[2]).Cross(cross - v[2]).Dot(normal) < 0.0f) {
+		*a = CVector(0.0f, 0.0f, 0.0f);
+		return false;
+	}
+
+
+	//調整値計算(衝突しない位置まで戻す)
+	if (dots < 0.0f) {
+		//始点が裏面
+		*a = normal * -dots;
+	}
+	else {
+		//終点が裏面
+		*a = normal * -dote;
+	}
+	return true;
+
+	//CColliderLine line(nullptr, nullptr, sv, ev);
+	////
+	//return CollisionTriangleLine(t, &line, a);
 }
 
 CCollider::EType CCollider::Type()

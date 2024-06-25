@@ -54,7 +54,6 @@ void CUi::Render()
 	//文字列編集エリアの作成
 	char buf[64];
 
-	CCamera::End();     //2D描画終了
 }
 
 void CUi::PosY(float f)

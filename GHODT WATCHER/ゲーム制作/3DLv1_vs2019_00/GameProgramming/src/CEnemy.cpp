@@ -1,24 +1,37 @@
 #include "CEnemy.h"
 #include "CEffect.h"
 
+#define OBJ "res\\BoxMan_No3.obj"
+#define MTL "res\\BoxMan_No3.mtl"
 //移動速度
 #define VELOCITY CVector(0.0f,0.0f,0.09f)
 
-//コンストラクタ
-//CEnemy(モデル、位置、回転、拡縮)
-CEnemy::CEnemy(CModel* model, const CVector& position,
-	const CVector& rotation, const CVector& scale)
-	/*
-	:mCollider1(this,&mMatrix,CVector(0.0f,5.0f,0.0f),0.8f)
-	,mCollider2(this, &mMatrix, CVector(0.0f, 5.0f, 20.0f), 0.8f)
-	,mCollider3(this, &mMatrix, CVector(0.0f, 5.0f, -20.0f), 0.8f)
-	*/
+CModel CEnemy::sModel;
+
+//デフォルトコンストラクタ
+CEnemy::CEnemy()
+	:CCharacter3(1)
+	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.5f)
 {
-	//モデル、位置、回転、拡縮
-	mpModel = model;      //モデルの設定
+	//モデルが無いときは読み込む
+	if (sModel.Triangles().size() == 0)
+	{
+		sModel.Load(OBJ, MTL);
+	}
+	//モデルのポインタ設定
+	mpModel = &sModel;
+}
+
+//CEnemy(位置、回転、拡縮)
+CEnemy::CEnemy(const CVector& position,
+	const CVector& rotation, const CVector& scale)
+	:CEnemy()
+{
+	//位置、回転、拡縮
 	mPosition = position; //位置の設定
 	mRotation = rotation; //回転の設定
 	mScale = scale;       //拡縮の設定
+	CTransform::Update(); //行列の設定
 }
 
 //更新処理
@@ -26,10 +39,10 @@ void CEnemy::Update() {
 	//行列を更新
 	CTransform::Update();
 	//位置を移動
-	mPosition = mPosition + VELOCITY * mMatrixRotate;
+	//mPosition = mPosition + VELOCITY * mMatrixRotate;
 }
 
-/*
+
 //衝突処理
 //CCollision(コライダ１,コライダ２)
 void CEnemy::Collision(CCollider* m, CCollider* o) {
@@ -61,12 +74,8 @@ void CEnemy::Collision(CCollider* m, CCollider* o) {
 void CEnemy::Collision()
 {
 	//コライダの優先度
-	mCollider1.ChangePriority();
-	mCollider2.ChangePriority();
-	mCollider3.ChangePriority();
+	mCollider.ChangePriority();
 	//衝突処理を実行
-	CCollisionManager::Instance()->Collision(&mCollider1, COLLISIONRANGE);
-	CCollisionManager::Instance()->Collision(&mCollider2, COLLISIONRANGE);
-	CCollisionManager::Instance()->Collision(&mCollider3, COLLISIONRANGE);
+	CCollisionManager::Instance()->Collision(&mCollider, COLLISIONRANGE);
 }
-*/
+

@@ -1,5 +1,6 @@
 #include "CBillBoard.h"
 #include "CApplication.h"
+#include "CCamera.h"
 
 CBillBoard::CBillBoard()
 {
@@ -44,7 +45,7 @@ void CBillBoard::Render(CMaterial* mpMaterial)
 	//行列の保存
 	glPushMatrix();
 	//拡縮,回転,移動させる
-	glMultMatrixf((CApplication::ModelViewInverse() * mMatrix).M());
+	glMultMatrixf((CCamera::ModelViewInverse() * mMatrix).M());
 	//ライトオフ
 	glDisable(GL_LIGHTING);
 	//描画色の設定

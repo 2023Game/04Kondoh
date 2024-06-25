@@ -30,7 +30,6 @@ void CGame::Over()
 	CameraSet();
 	//ƒQ[ƒ€‚Ì•`‰æ
 	CApplication::CharacterManager()->Render();
-	CCamera::End();
 	//UIˆ—
 	mpUi->Hp(CPlayer2::Hp());
 	mpUi->Enemy(CEnemy2::Num());
@@ -60,7 +59,6 @@ void CGame::Clear()
 	CameraSet();
 	//ƒQ[ƒ€‚Ì•`‰æ
 	CApplication::CharacterManager()->Render();
-	CCamera::End();
 	//UIˆ—
 	mpUi->Hp(CPlayer2::Hp());
 	mpUi->Enemy(CEnemy2::Num());
@@ -160,7 +158,6 @@ void CGame::Update()
 	CApplication::CharacterManager()->Delete();
 	CameraSet();
 	CApplication::CharacterManager()->Render();
-	CCamera::End();
 	//UI
 	mpUi->Time(mTime++);
 	mpUi->Hp(CPlayer2::Hp());

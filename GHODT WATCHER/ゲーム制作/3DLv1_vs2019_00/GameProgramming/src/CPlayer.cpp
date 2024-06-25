@@ -4,17 +4,33 @@
 
 #define ROTATION_YV CVector(0.0f,1.0f,0.0f) //Y軸回転速度
 #define ROTATION_XV CVector(1.0f,0.0f,0.0f) //X軸回転速度
-#define VELOCITYZ CVector(0.0f,0.0f,0.2f)  //移動速度(前後)
-#define VELOCITYX CVector(0.2f,0.0f,0.0f)  //移動速度(左右)
+
+#define RanZ CVector(0.0f,0.0f,0.2f)  //移動速度(前後)
+#define RanX CVector(0.2f,0.0f,0.0f)  //移動速度(左右)
+#define JRanZ CVector(0.0f,0.0f,0.1f)  //
+#define JRanX CVector(0.1f,0.0f,0.0f)
+
 #define VELOCITYY CVector(0.0f,0.2f,0.0f)  //ジャンプ初速
-#define GRAVITY 0.05    //重力
+#define GRAVITY 0.1    //重力
 
 CPlayer::CPlayer()
-	:mLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.0f), CVector(0.0f, 0.0f, -1.0f))
-	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
-	, mLine3(this, &mMatrix, CVector(1.5f, 0.0f, 0.0f), CVector(-1.5f, 0.0f, 0.0f))
-	, mLine4(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, -1.2f, 0.0f))
-	,JumpV(0)
+	: mLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.5f), CVector(0.0f, 0.0f, -1.5f))
+	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.0f, 0.0f))
+	, mLine3(this, &mMatrix, CVector(2.0f, 0.5f, 0.0f), CVector(-2.0f, 0.5f, 0.0f))
+	//
+	, mLine4(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, -1.0f, 0.0f))
+	//
+	, mLine5(this, &mMatrix, CVector(1.2f, -1.0f, -1.2f), CVector(-1.2f, -1.0f, -1.2f))
+	, mLine6(this, &mMatrix, CVector(1.2f, -1.0f, 1.2f), CVector(-1.2f, -1.0f, 1.2f))
+	, mLine7(this, &mMatrix, CVector(1.2f, -1.0f, 1.2f), CVector(1.2f, -1.0f, -1.2f))
+	, mLine8(this, &mMatrix, CVector(-1.2f, -1.0f, 1.2f), CVector(-1.2f, -1.0f, -1.2f))
+	//
+	, mLine9(this, &mMatrix, CVector(1.2f, -1.0f, 1.2f), CVector(-1.2f, -1.0f, -1.2f))
+	, mLine10(this, &mMatrix, CVector(-1.2f, -1.0f, 1.2f), CVector(1.2f, -1.0f, -1.2f))
+	, mLine11(this, &mMatrix, CVector(0.0f, -1.0f, 1.2f), CVector(0.0f, -1.0f, -1.2f))
+	, mLine12(this, &mMatrix, CVector(1.2f, -1.0f, 0.0f), CVector(-1.2f, -1.0f, 0.0f))
+	, JumpV(0)
+	, ShootTime(0)
 {
 	//インスタンスの設定
 	spInstance = this;
@@ -40,25 +56,26 @@ void CPlayer::Update() {
 
 		//左キー入力で左に進む
 		if (mInput.Key('A')) {
-			//Y軸の回転値を減少
-			mPosition = mPosition + VELOCITYX * mMatrixRotate;
+
+			mPosition = mPosition + RanX * mMatrixRotate;
 		}
 		//右キー入力で右に進む
 		if (mInput.Key('D')) {
-			//Y軸の回転値を増加
-			mPosition = mPosition - VELOCITYX * mMatrixRotate;
+
+			mPosition = mPosition - RanX * mMatrixRotate;
 		}
 
 		//上キー入力で前進
 		if (mInput.Key('W')) {
-			//Z軸方向の値を回転させ移動させる
-			mPosition = mPosition + VELOCITYZ * mMatrixRotate;
+
+			mPosition = mPosition + RanZ * mMatrixRotate;
 		}
 		//下キー入力で後退
 		if (mInput.Key('S'))
 		{
-			mPosition = mPosition - VELOCITYZ * mMatrixRotate;
+			mPosition = mPosition - RanZ * mMatrixRotate;
 		}
+
 		
 		//スペースキー入力でジャンプ
 		if (mInput.Key(VK_SPACE)) {
@@ -71,7 +88,20 @@ void CPlayer::Update() {
 
 		if (mInput.Key(VK_LBUTTON))
 		{
-
+			if (ShootTime == 10)
+			{
+				CBullet* bullet = new CBullet();
+				bullet->Set(0.1f, 1.5f);
+				bullet->Position(CVector(0.0f, 0.0f, 10.0f) * mMatrix);
+				bullet->Rotation(mRotation);
+				bullet->Update();
+				ShootTime = 0;
+			}
+			ShootTime++;
+		}
+		else
+		{
+				ShootTime = 0;
 		}
 
 		break;
@@ -79,6 +109,12 @@ void CPlayer::Update() {
 	case EPState::EJUMP:
 		mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
 		JumpV -= GRAVITY;
+		break;
+
+	case EPState::ESHOOT:
+		mPState = EPState::EMOVE;
+
+		break;
 
 	}
 
@@ -103,13 +139,12 @@ void CPlayer::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::CollisionTriangleLine(o, &mLine4, &adjust))
 				{
 					//位置更新
-					mPosition = mPosition + adjust;
+					//mPosition = mPosition + adjust;
 					mPState = EPState::EMOVE;
 					JumpV = 0;
 					//行列更新
-					CTransform::Update();
+					//CTransform::Update();
 				}
-
 			}
 		}
 		break;

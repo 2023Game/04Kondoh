@@ -20,9 +20,14 @@ public:
 		EMOVE,  //移動
 		EJUMP,  //ジャンプ
 		EIDEL,  //待機
+		ESHOOT, //攻撃
 	};
 	EPState mPState;
+	CVector RanX;   //横移動
+	CVector RanZ;   //縦移動
 	float JumpV;  //ジャンプ変数
+
+	float ShootTime;
 
 	//インスタンスのポイントの取得
 	static CPlayer* Instance();
@@ -42,7 +47,18 @@ private:
 	CColliderLine mLine;  //線分コライダ
 	CColliderLine mLine2;
 	CColliderLine mLine3;
+
 	CColliderLine mLine4;
+	//四角
+	CColliderLine mLine5;
+	CColliderLine mLine6;
+	CColliderLine mLine7;
+	CColliderLine mLine8;
+	//
+	CColliderLine mLine9;
+	CColliderLine mLine10;
+	CColliderLine mLine11;
+	CColliderLine mLine12;
 	CInput mInput;
 };
 

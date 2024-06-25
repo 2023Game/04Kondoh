@@ -2,8 +2,8 @@
 #include "CEffect.h"
 #include "CPlayer.h"
 
-#define OBJ "res\\f16.obj"
-#define MTL "res\\f16.mtl"
+#define OBJ "res\\BoxMan_No3.obj"
+#define MTL "res\\BoxMan_No3.mtl"
 #define HP 3 //耐久値
 #define VELOCITY 0.11f  //速度
 
@@ -12,13 +12,13 @@ CModel CEnemy3::sModel;
 //デフォルトコンストラクタ
 CEnemy3::CEnemy3()
 	: CCharacter3(1)
-	  //, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.4f)
+//	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.4f)
 	,mHp(HP)
 {
 	//モデルが無いときは読み込む
 	if (sModel.Triangles().size() == 0)
 	{
-		//sModel.Load(OBJ, MTL);
+		sModel.Load(OBJ, MTL);
 	}
 	//モデルのポインタ設定
 	mpModel = &sModel;

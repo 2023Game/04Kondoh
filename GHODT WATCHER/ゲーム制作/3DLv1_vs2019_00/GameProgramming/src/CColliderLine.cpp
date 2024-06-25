@@ -33,7 +33,7 @@ void CColliderLine::Render()
 	glDisable(GL_LIGHTING);
 
 	//DIFFUSEê‘êFê›íË
-	float c[] = { 1.0f,0.0f,0.0f,1.0f };
+	float c[] = { 1.0f,1.0f,0.0f,1.0f };
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, c);
 	glColor4fv(c);
 

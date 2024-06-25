@@ -1,7 +1,7 @@
 #ifndef CCOLLISIONMANAGER_H
 #define CCOLLISIONMANAGER_H
 //Õ“Ëˆ—”ÍˆÍ‚æ‚è—£‚ê‚Ä‚¢‚éƒRƒ‰ƒCƒ_‚ÍÕ“Ëˆ—‚µ‚È‚¢
-#define COLLISIONRANGE 100
+#define COLLISIONRANGE 200
 
 #include "CTaskManager.h"
 

@@ -798,7 +798,7 @@ void CModelX::AnimateFrame() {
 	for (size_t i = 0; i < mAnimationSet.size(); i++) {
 		CAnimationSet* animSet = mAnimationSet[i];
 		//重みが０は飛ばす
-		if (animSet->mWeight == 0)continue;
+		if (animSet->mWeight == 0) continue;
 		//フレーム分（Animation分）繰り返す
 		for (size_t j = 0; j < animSet->Animation().size(); j++)
 		{
@@ -828,3 +828,21 @@ void CModelX::AnimateFrame() {
 
 #endif // _DEBUG
 }
+
+///*
+//AnimateCombined
+//合成行列の作成
+//*/
+//void CModelXFrame::AnimateCombined(CMatrix* parent) {
+//	//自分の変換行列に、親からの変換行列を掛ける
+//	mCombinedMatrix = mTransformMatrix * (*parent);
+//	//子フレームの合成行列を作成する
+//	for (size_t i = 0; i < mChild.size(); i++) {
+//		mChild[i]->AnimateCombined(&mCombinedMatrix);
+//	}
+//}
+//
+//std::vector<CModelXFrame*>& CModelX::Frames()
+//{
+//	return mFrame;
+//}

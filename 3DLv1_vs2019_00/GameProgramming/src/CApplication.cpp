@@ -17,6 +17,10 @@ void CApplication::Start()
 
 void CApplication::Update()
 {
+	//フレームの変換行列をアニメーションで更新
+	mModelX.AnimateFrame();
+	//フレームの合成行列を計算する
+	//mModelX.Frames()[0]->AnimateCombined(&mMatrix);
 	//最初のアニメーションの現在時間を 45 にする
 	mModelX.AnimationSet()[0]->Time(45);
 	//最初のアニメーションの重みを 1.0(100%) にする
@@ -71,13 +75,6 @@ void CApplication::Update()
 	//2Dの描画終了
 	CCamera::End();
 }
-/*
-CTaskManager CApplication::mTaskManager;
-CTaskManager* CApplication::TaskManager()
-{
-	return &mTaskManager;
-}
-*/
 
 CMatrix CApplication::mModelViewInverse;
 

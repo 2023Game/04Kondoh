@@ -197,7 +197,7 @@ CMatrix CMatrix::Quaternion(float x, float y, float z, float w) {
 	mM[0][3] = 0;
 	mM[1][0] = 2 * x * y + 2 * w * z;
 	mM[1][1] = -x * x + y * y - z * z + w * w;
-	mM[1][2] = 2 * y * z + 2 * w * x;
+	mM[1][2] = 2 * y * z - 2 * w * x;
 	mM[1][3] = 0;
 	mM[2][0] = 2 * x * z - 2 * w * y;
 	mM[2][1] = 2 * y * z + 2 * w * x;
@@ -213,9 +213,9 @@ CMatrix CMatrix::Quaternion(float x, float y, float z, float w) {
 CMatrix CMatrix::operator*(const float& x) const
 {
 	CMatrix tmp;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < 4; ++j)
 		{
 			tmp.mM[i][j] = mM[i][j] * x;
 		}
@@ -226,9 +226,9 @@ CMatrix CMatrix::operator*(const float& x) const
 CMatrix CMatrix::operator+(const CMatrix& m) const
 {
 	CMatrix tmp;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < 4; ++j)
 		{
 			tmp.mM[i][j] = mM[i][j] + m.mM[i][j];
 		}
@@ -238,12 +238,11 @@ CMatrix CMatrix::operator+(const CMatrix& m) const
 
 void CMatrix::operator += (const CMatrix& m) 
 {
-	CMatrix tmp;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < 4; ++j)
 		{
-			tmp.mM[i][j] += mM[i][j];
+			mM[i][j] += m.mM[i][j];
 		}
 	}
 }

@@ -236,11 +236,6 @@ CModelXFrame::CModelXFrame(CModelX* model)
 			model->SkipNode();
 		}
 	}
-	//デバッグバージョンのみ有効
-#ifdef _DEBUG
-	printf("%s\n", mpName);
-	mTransformMatrix.Print();
-#endif // _DEBUG
 }
 
 char* CModelX::Token()
@@ -384,36 +379,7 @@ void CMesh::Init(CModelX* model) {
 			model->SkipNode();
 		}
 
-
 	}
-
-	printf("NormalNum:%d\n", mNormalNum);
-	for (int i = 0; i < mNormalNum; i++)
-	{
-		printf("%10f", mpNormal[i].X());
-		printf("%10f", mpNormal[i].Y());
-		printf("%10f\n", mpNormal[i].Z());
-	}
-
-#ifndef _DEBUG
-	printf("FaceNum:%d\n", mFaceNum);
-	for (int i = 0; i < mFaceNum * 3; i += 3) {
-		printf("%3d", mpVertexIndex[i]);
-		printf("%3d", mpVertexIndex[i + 1]);
-		printf("%3d\n", mpVertexIndex[i + 2]);
-	}
-#endif // !_DEBUG
-
-#ifndef _DEBUG
-	printf("VertexNum:%d\n", mVertexNum);
-	for (int i = 0; i < mVertexNum; i++)
-	{
-		printf("%10f", mpVertex[i].X());
-		printf("%10f", mpVertex[i].Y());
-		printf("%10f\n", mpVertex[i].Z());
-	}
-#endif // !_DEBUG
-
 }
 
 
@@ -515,32 +481,6 @@ CSkinWeights::CSkinWeights(CModelX *model)
 	}
 	model->GetToken();   // }
 
-#ifdef _DEBUG
-
-	printf("SkinWeights:%s\n", mpFrameName);
-	for (int i = 0; i < mIndexNum; i++)
-	{
-		printf("%3d 10f\n", mpIndex[i], mpWeight[i]);
-	}
-	mOffset.Print();
-
-	/*
-	for (int i = 0; i < mIndexNum; i++)
-	{
-		printf("%3d", mpIndex[i]);
-		printf("%10f\n", mpWeight[i]);
-	}
-	for (int i = 0; i < 16; i += 4)
-	{
-		printf("%10f", mOffset.M()[i]);
-		printf("%10f", mOffset.M()[i + 1]);
-		printf("%10f", mOffset.M()[i + 2]);
-		printf("%10f\n", mOffset.M()[i + 3]);
-	}
-	*/
-
-#endif // _DEBUG
-
 }
 
 
@@ -570,12 +510,6 @@ CAnimationSet::CAnimationSet(CModelX* model)
 
 	//終了時間設定
 	mMaxTime = mAnimation[0]->mpKey[mAnimation[0]->mKeyNum - 1].mTime;
-
-#ifdef _DEBUG
-
-	//printf("Animation%s\n", mpName);
-
-#endif // _DEBUG
 }
 
 CAnimationSet::~CAnimationSet()
@@ -711,13 +645,6 @@ CAnimation::CAnimation(CModelX* model)
 		SAFE_DELETE_ARRAY(time[i]);
 		SAFE_DELETE_ARRAY(key[i]);
 	}
-
-#ifdef _DEBUG
-
-	printf("Animation:%s\n", mpFrameName);
-	mpKey[0].mMatrix.Print();
-
-#endif // _DEBUG
 }
 
 CAnimation::~CAnimation() {
@@ -832,15 +759,6 @@ void CModelX::AnimateFrame() {
 		if (animSet->mWeight == 0) continue;
 		animSet->AnimateMatrix(this);
 	}
-
-#ifdef _DEBUG
-	for (size_t i = 0; i < mFrame.size(); i++) {
-		printf("Frame:%s\n", mFrame[i]->mpName);
-		mFrame[i]->mTransformMatrix.Print();
-	}
-
-
-#endif // _DEBUG
 }
 
 /*
@@ -854,13 +772,6 @@ void CModelXFrame::AnimateCombined(CMatrix* parent) {
 	for (size_t i = 0; i < mChild.size(); i++) {
 		mChild[i]->AnimateCombined(&mCombinedMatrix);
 	}
-
-#ifdef _DEBUG
-
-	printf("Frame::%s\n", mpName);
-	mCombinedMatrix.Print();
-
-#endif // _DEBUG
 }
 
 std::vector<CModelXFrame*>& CModelX::Frames()

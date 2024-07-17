@@ -79,6 +79,13 @@ CVector CVector::operator*(const float& f)const {
 	return CVector(mX * f, mY * f, mZ * f);
 }
 
+void CVector::operator+=(const CVector& v)
+{
+	mX += v.mX;
+	mY += v.mY;
+	mZ += v.mZ;
+}
+
 void CVector::X(float f)
 {
 	mX = f;

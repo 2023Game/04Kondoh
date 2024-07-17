@@ -1,2 +1,10 @@
-﻿  CApplication.cpp
+﻿  CModelX.cpp
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(523,45): warning C4474: 'printf': 書式文字列に渡された引数の数が多すぎます
+  C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(523,45):
+  プレースホルダーとそのパラメーターには 1 の可変個引数が必要ですが、2 が指定されています。
+  
+  CPlayer.cpp
+  main.cpp
+  コードを生成中...
+C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(31,1): warning C4715: 'CModelX::IsDelimiter': 値を返さないコントロール パスがあります。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

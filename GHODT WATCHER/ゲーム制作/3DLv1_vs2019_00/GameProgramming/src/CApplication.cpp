@@ -37,17 +37,17 @@ CTexture* CApplication::Texture()
 void CApplication::Start()
 {
 
-	new CEnemy(CVector(11.0f, -2.0f, -50.0), CVector(), CVector(0.2f, 0.2f, 0.2f));
+	new CEnemy(CVector(18.0f, -6.04f, -65.0), CVector(), CVector(0.2f, 0.2f, 0.2f));
 	mModel.Load(MODEL_OBJ);
 	mModelBG.Load(MODEL_BACKGROUND);
 	CMatrix matrix;
 	matrix.Print();
 	mBackGround.Model(&mModelBG);
-	mBackGround.Scale(CVector(2.5f, 2.5f, 2.5f));
+	mBackGround.Scale(CVector(4.0f, 4.0f, 4.0f));
 	mPlayer.Model(&mModel);
-	mPlayer.Position(CVector(11.0f, -3.0f, -53.0f));
+	mPlayer.Position(CVector(18.0f, -6.04f, -85.0f));
 	mPlayer.Rotation(CVector(0.0f, 0.0f, 0.0f));
-	mPlayer.Scale(CVector(0.2f, 0.2f, 0.2f));
+	mPlayer.Scale(CVector(0.3f, 0.3f, 0.3f));
 	//ビルボードの生成
 	new CBillBoard(CVector(-6.0f, 3.0f, -10.0f), 1.0f, 1.0f);
 	//背景モデルから三角コライダを生成
@@ -101,12 +101,9 @@ void CApplication::Update()
 
 #pragma endregion 
 
-
-
 	//タスクマネージャーの更新
 	CTaskManager::Instance()->Update();
 	//コリジョンマネージャの衝突処理
-//	CCollisionManager::Instance()->Collision();
 	CTaskManager::Instance()->Collision();
 
 
@@ -118,13 +115,6 @@ void CApplication::Update()
 
 	//spUi->Render();   //UIの描画
 }
-/*
-CTaskManager CApplication::mTaskManager;
-CTaskManager* CApplication::TaskManager()
-{
-	return &mTaskManager;
-}
-*/
 
 
 CUi* CApplication::spUi = nullptr;

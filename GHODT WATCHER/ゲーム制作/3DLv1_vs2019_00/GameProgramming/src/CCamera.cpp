@@ -34,7 +34,7 @@ CCamera::CCamera()
 	, CZ(10.0f)
 	, mEye(1.0f, 2.0f, 3.0f)
 	, mLine(this, &mMatrix, CVector(0.0f, -0.1f, 0.0f), CVector(0.0f, -0.1f, 10.0f))
-	, mCollider(this, &mMatrix, CVector(), 0.8f)
+	, mCollider(this, &mMatrix, CVector(), 1.5f)
 {
 	mCamera = ECamera::View1;
 	CInput::GetMousePosD(&mMx, &mMy);
@@ -53,8 +53,9 @@ CCamera::CCamera(const CVector& pos, const CVector& rot, const CVector& scale)
 void CCamera::Update() {
 
 	mpPlayer = CPlayer::Instance();
-	mPosition = mpPlayer->Position();
+	mPosition = mpPlayer->Position() + CVector(0.0f, 1.1f, 0.0f);
 	mRotation = CVector(VX, VY, 0.0f);
+
 
 #pragma region [DisPlay]  
 	int mx, my;  //マウスカーソル座標取得用
@@ -176,7 +177,6 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 			//if (CCollider::CollisionTriangleLine(o, m, &adjust))
 			//{
 			//}
-			//
 		}
 		break;
 	case CCollider::EType::ESPHERE:
@@ -308,5 +308,10 @@ void CCamera::Render()
 
 	CTransform::Update();
 
+}
+
+CMatrix CCamera::CameraMatrix()
+{
+	return mMatrix;
 }
 

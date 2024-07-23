@@ -43,22 +43,13 @@ public:
 	void Update();
 private:
 	//プレイヤーのインスタンス
-	static CPlayer* spInstance; 
+	static CPlayer* spInstance;
+
 	CColliderLine mLine;  //線分コライダ
 	CColliderLine mLine2;
 	CColliderLine mLine3;
-
 	CColliderLine mLine4;
-	//四角
-	CColliderLine mLine5;
-	CColliderLine mLine6;
-	CColliderLine mLine7;
-	CColliderLine mLine8;
-	//
-	CColliderLine mLine9;
-	CColliderLine mLine10;
-	CColliderLine mLine11;
-	CColliderLine mLine12;
+
 	CInput mInput;
 };
 

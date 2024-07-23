@@ -15,6 +15,7 @@
 */
 class CCamera : public CCharacter3 {
 public:
+	CMatrix CameraMatrix();
 	void Render();
 	static void Start(double left, double right, double bottom, double top);
 	void Update();
@@ -35,7 +36,10 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 
 	CVector e, c, u; //視点,注視点,上方向
+	float VX;  //縦視点移動の値
+	float VY;  //横視点移動の値
 	float CZ;
+	float ShootTime;
 
 private:
 	enum class ECamera
@@ -45,8 +49,6 @@ private:
 		View3,  //三人称
 	};
 	ECamera mCamera;
-	float VX;  //縦視点移動の値
-	float VY;  //横視点移動の値
 	int ViewNumber;
 	CVector mEye;
 	

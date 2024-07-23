@@ -11,7 +11,7 @@ CModel CEnemy::sModel;
 //デフォルトコンストラクタ
 CEnemy::CEnemy()
 	:CCharacter3(1)
-	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.5f)
+	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.1f)
 {
 	//モデルが無いときは読み込む
 	if (sModel.Triangles().size() == 0)
@@ -53,7 +53,7 @@ void CEnemy::Collision(CCollider* m, CCollider* o) {
 		//コライダのmとoが衝突しているか判定
 		if (CCollider::Collision(m, o)) {
 			//エフェクト生成
-			new CEffect(o->Parent()->Position(), 1.0f, 1.0f, "exp.tga", 4, 4, 2);
+//			new CEffect(o->Parent()->Position(), 1.0f, 1.0f, "exp.tga", 4, 4, 2);
 			//衝突している時は無効
 			//mEnabled = false;
 		}

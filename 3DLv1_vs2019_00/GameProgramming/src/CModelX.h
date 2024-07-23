@@ -106,6 +106,8 @@ public:
 	void Init(CModelX* model);
 
 private:
+	//テクスチャ座標データ
+	float* mpTextureCoords;
 	CVector *mpAnimateVertex;  //アニメーション用頂点
 	CVector *mpAnimateNormal;  //アニメーション用法線
 	//スキンウェイト

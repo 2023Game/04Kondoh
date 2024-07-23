@@ -18,6 +18,8 @@ void CBackGround::Update()
 
 void CBackGround::ColliderMesh()
 {
+	//•ÏŠ·s—ñ‚ÌXV
+	CTransform::Update();
 	mColliderMesh.Set(this, &mMatrix, mpModel);
 }
 

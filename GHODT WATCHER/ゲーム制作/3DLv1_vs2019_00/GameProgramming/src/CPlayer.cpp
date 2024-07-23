@@ -1,6 +1,8 @@
 //プレイヤークラスのインクルード
 #include "CPlayer.h"
 #include "CApplication.h"
+#include "CCamera.h"
+#include "CMatrix.h"
 
 #define ROTATION_YV CVector(0.0f,1.0f,0.0f) //Y軸回転速度
 #define ROTATION_XV CVector(1.0f,0.0f,0.0f) //X軸回転速度
@@ -11,26 +13,16 @@
 #define JRanX CVector(0.1f,0.0f,0.0f)
 
 #define VELOCITYY CVector(0.0f,0.2f,0.0f)  //ジャンプ初速
-#define GRAVITY 0.1    //重力
+#define GRAVITY 0.01    //重力
 
 CPlayer::CPlayer()
 	: mLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.5f), CVector(0.0f, 0.0f, -1.5f))
 	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.0f, 0.0f))
 	, mLine3(this, &mMatrix, CVector(2.0f, 0.5f, 0.0f), CVector(-2.0f, 0.5f, 0.0f))
 	//
-	, mLine4(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, -1.0f, 0.0f))
-	//
-	, mLine5(this, &mMatrix, CVector(1.2f, -1.0f, -1.2f), CVector(-1.2f, -1.0f, -1.2f))
-	, mLine6(this, &mMatrix, CVector(1.2f, -1.0f, 1.2f), CVector(-1.2f, -1.0f, 1.2f))
-	, mLine7(this, &mMatrix, CVector(1.2f, -1.0f, 1.2f), CVector(1.2f, -1.0f, -1.2f))
-	, mLine8(this, &mMatrix, CVector(-1.2f, -1.0f, 1.2f), CVector(-1.2f, -1.0f, -1.2f))
-	//
-	, mLine9(this, &mMatrix, CVector(1.2f, -1.0f, 1.2f), CVector(-1.2f, -1.0f, -1.2f))
-	, mLine10(this, &mMatrix, CVector(-1.2f, -1.0f, 1.2f), CVector(1.2f, -1.0f, -1.2f))
-	, mLine11(this, &mMatrix, CVector(0.0f, -1.0f, 1.2f), CVector(0.0f, -1.0f, -1.2f))
-	, mLine12(this, &mMatrix, CVector(1.2f, -1.0f, 0.0f), CVector(-1.2f, -1.0f, 0.0f))
+	, mLine4(this, &mMatrix, CVector(0.0f, 0.5f, 0.0f), CVector(0.0f, -1.1f, 0.0f))
 	, JumpV(0)
-	, ShootTime(0)
+	, ShootTime(30)
 {
 	//インスタンスの設定
 	spInstance = this;
@@ -79,21 +71,18 @@ void CPlayer::Update() {
 		
 		//スペースキー入力でジャンプ
 		if (mInput.Key(VK_SPACE)) {
-			JumpV = 0.5;
+			JumpV = 0.2;
 			mPState = EPState::EJUMP;
 		}
 
-		JumpV -= GRAVITY;
-		mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
-
 		if (mInput.Key(VK_LBUTTON))
 		{
-			if (ShootTime == 10)
+			if (ShootTime >= 30)
 			{
 				CBullet* bullet = new CBullet();
 				bullet->Set(0.1f, 1.5f);
-				bullet->Position(CVector(0.0f, 0.0f, 10.0f) * mMatrix);
-				bullet->Rotation(mRotation);
+				bullet->Position(CVector(0.0f, 1.0f, 10.0f) * CCamera::Instance()->CameraMatrix());
+				bullet->Rotation(CCamera::Instance()->Rotation());
 				bullet->Update();
 				ShootTime = 0;
 			}
@@ -101,8 +90,10 @@ void CPlayer::Update() {
 		}
 		else
 		{
-				ShootTime = 0;
+				ShootTime = 30;
 		}
+
+		mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
 
 		break;
 
@@ -145,6 +136,11 @@ void CPlayer::Collision(CCollider* m, CCollider* o) {
 					//行列更新
 					//CTransform::Update();
 				}
+				/*else
+				{
+					mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
+					JumpV -= GRAVITY;
+				}*/
 			}
 		}
 		break;
@@ -165,6 +161,7 @@ void CPlayer::Collision()
 	CCollisionManager::Instance()->Collision(&mLine, COLLISIONRANGE);
 	CCollisionManager::Instance()->Collision(&mLine2, COLLISIONRANGE);
 	CCollisionManager::Instance()->Collision(&mLine3, COLLISIONRANGE);
+
 }
 
 CPlayer* CPlayer::spInstance = nullptr;

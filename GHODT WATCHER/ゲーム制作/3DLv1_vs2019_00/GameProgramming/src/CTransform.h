@@ -10,6 +10,8 @@ class CTransform {
 public:
 	//位置の取得
 	const CVector& Position() const;
+	//角度の取得
+	const CVector& Rotation() const;
 	//位置の設定
 	//Position(位置)
 	void Position(const CVector& v);

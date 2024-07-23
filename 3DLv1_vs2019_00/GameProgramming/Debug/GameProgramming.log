@@ -1,3 +1,2 @@
-﻿  CModelX.cpp
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(31,1): warning C4715: 'CModelX::IsDelimiter': 値を返さないコントロール パスがあります。
+﻿  CMaterial.cpp
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

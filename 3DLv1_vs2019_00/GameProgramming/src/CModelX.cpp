@@ -16,6 +16,10 @@
 */
 bool CModelX::IsDelimiter(char c)
 {
+	//ｃが０より小さい時、falseを返す
+	if (c < 0)
+		return false;
+
 	//isspace(c)
 	//cが空白文字なら0以外を返す
 	if (isspace(c) != 0)
@@ -35,6 +39,24 @@ CModelX::CModelX()
 {
 	//mTokenを初期化
 	memset(mToken, 0, sizeof(mToken));
+}
+
+CModelX::~CModelX()
+{
+	if (mFrame[0] != nullptr)
+	{
+		delete mFrame[0];
+	}
+
+	for (size_t i = 0; i < mAnimationSet.size(); i++)
+	{
+		delete mAnimationSet[i];
+	}
+	//マテリアルの解放
+	for (size_t i = 0; i < mMaterial.size(); i++) {
+		delete mMaterial[i];
+	}
+
 }
 
 void CModelX::Load(char* file) {
@@ -68,8 +90,16 @@ void CModelX::Load(char* file) {
 	//文字列の最後まで繰り返し
 	while (*mpPointer != '\0') {
 		GetToken();  //単語の取得
+		//template 読み飛ばし
+		if (strcmp(mToken, "template") == 0) {
+			SkipNode();
+		}
+		//Material の時
+		else if (strcmp(mToken, "Material") == 0) {
+			new CMaterial(this);
+		}
 		//単語がFrameの場合
-		if (strcmp(mToken, "Frame") == 0) {
+		else if (strcmp(mToken, "Frame") == 0) {
 			//フレームを作成
 			new CModelXFrame(this);
 		}
@@ -127,35 +157,6 @@ char* CModelX::GetToken() {
 	}
 	return mToken;
  }
-
-CModelX::~CModelX()
-{
-	if (mFrame[0] != nullptr)
-	{
-		delete mFrame[0];
-	}
-	for (size_t i = 0; i < mAnimationSet.size(); i++) 
-	{
-		delete mAnimationSet[i];
-	}
-
-}
-
-CModelXFrame::~CModelXFrame()
-{
-	//子フレームを全て開放
-	std::vector<CModelXFrame*>::iterator itr;
-	for (itr = mChild.begin(); itr != mChild.end(); itr++) {
-		delete* itr;
-	}
-	//名前のエリアを開放
-	SAFE_DELETE_ARRAY(mpName);
-
-	if (mpMesh != nullptr)
-	{
-		delete mpMesh;
-	}
-}
 
 
 /*
@@ -235,6 +236,22 @@ CModelXFrame::CModelXFrame(CModelX* model)
 			//上記以外の要素は読み飛ばす
 			model->SkipNode();
 		}
+	}
+}
+
+CModelXFrame::~CModelXFrame()
+{
+	//子フレームを全て開放
+	std::vector<CModelXFrame*>::iterator itr;
+	for (itr = mChild.begin(); itr != mChild.end(); itr++) {
+		delete* itr;
+	}
+	//名前のエリアを開放
+	SAFE_DELETE_ARRAY(mpName);
+
+	if (mpMesh != nullptr)
+	{
+		delete mpMesh;
 	}
 }
 
@@ -365,6 +382,13 @@ void CMesh::Init(CModelX* model) {
 				if (strcmp(model->Token(), "Material") == 0) {
 					mMaterial.push_back(new CMaterial(model));
 				}
+				else {
+					// { 既出
+					model->GetToken();   //MaterialName
+					mMaterial.push_back(
+						model->FindMaterial(model->Token()));
+					model->GetToken();   // }
+				}
 			}
 			model->GetToken();  // } //End of MeshMaterialList
 		} // End of MeshMaterialList
@@ -435,12 +459,6 @@ bool CModelX::EOT()
 	return *mpPointer == '\0';
 }
 
-CSkinWeights::~CSkinWeights()
-{
-	SAFE_DELETE_ARRAY(mpFrameName);
-	SAFE_DELETE_ARRAY(mpIndex);
-	SAFE_DELETE_ARRAY(mpWeight);
-}
 
 
 /*
@@ -481,6 +499,13 @@ CSkinWeights::CSkinWeights(CModelX *model)
 	}
 	model->GetToken();   // }
 
+}
+
+CSkinWeights::~CSkinWeights()
+{
+	SAFE_DELETE_ARRAY(mpFrameName);
+	SAFE_DELETE_ARRAY(mpIndex);
+	SAFE_DELETE_ARRAY(mpWeight);
 }
 
 
@@ -852,4 +877,22 @@ float CAnimationSet::Time() {
 
 float CAnimationSet::MaxTime() {
 	return mMaxTime;
+}
+
+CMaterial* CModelX::FindMaterial(char* name) {
+	//マテリアル配列を先頭から順に検索
+	std::vector<CMaterial*>::iterator itr;
+	//名前が一致すればマテリアルのポインタを返却
+	for (itr = mMaterial.begin(); itr != mMaterial.end(); itr++) {
+		if (strcmp(name, (*itr)->Name()) == 0) {
+			return *itr;
+		}
+	}
+	//無いときはnullptrを返却
+	return nullptr;
+}
+
+std::vector<CMaterial*>& CModelX::Material()
+{
+	return mMaterial;
 }

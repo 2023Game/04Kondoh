@@ -116,7 +116,6 @@ void CModelX::Load(char* file) {
 
 }
 
-
 /*
 GetToken
 文字列データから、単語を１つ取得する
@@ -158,7 +157,6 @@ char* CModelX::GetToken() {
 	return mToken;
  }
 
-
 /*
 SkipNode
 ノードを読み飛ばす
@@ -180,7 +178,6 @@ void CModelX::SkipNode(){
 		else if (strchr(mToken, '}')) count--;
 	}
 }
-
 
 /*
 CModelXFrame
@@ -291,7 +288,6 @@ CMesh::~CMesh() {
 		delete mSkinWeights[i];
 	}
 }
-
 
 /*
 Init
@@ -422,7 +418,6 @@ void CMesh::Init(CModelX* model) {
 	}
 }
 
-
 /*
 Render
 画面に描画する
@@ -453,7 +448,6 @@ void CMesh::Render() {
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-
 /*
 Render
 メッシュが存在すれば描画する
@@ -462,7 +456,6 @@ void CModelXFrame::Render() {
 	if (mpMesh != nullptr)
 		mpMesh->Render();
 }
-
 
 /*
 Render
@@ -478,8 +471,6 @@ bool CModelX::EOT()
 {
 	return *mpPointer == '\0';
 }
-
-
 
 /*
 CSkinWeights
@@ -528,7 +519,6 @@ CSkinWeights::~CSkinWeights()
 	SAFE_DELETE_ARRAY(mpWeight);
 }
 
-
 /*
 CAnimationSet
 */
@@ -575,8 +565,6 @@ void CAnimationSet::Weight(float weight)
 {
 	mWeight = weight;
 }
-
-
 
 CAnimation::CAnimation(CModelX* model) 
 	:mpFrameName(nullptr)
@@ -696,7 +684,6 @@ CAnimation::~CAnimation() {
 	SAFE_DELETE_ARRAY(mpFrameName);
 	SAFE_DELETE_ARRAY(mpKey);
 }
-
 
 /*
 FindFrame(フレーム)

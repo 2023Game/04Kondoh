@@ -1,25 +1,5 @@
 ﻿  CApplication.cpp
-  CBillBoard.cpp
-  CBullet.cpp
-  CCharacter3.cpp
-  CCollider.cpp
-  CColliderLine.cpp
-  CColliderMesh.cpp
-  CColliderTriangle.cpp
-  CCollisionManager.cpp
-  CEffect.cpp
-  CEnemy.cpp
-  CEnemy3.cpp
-  CMaterial.cpp
-  CModel.cpp
   CModelX.cpp
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(188,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(241,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(252,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModel.cpp(254,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-  CPlayer.cpp
-  CTaskManager.cpp
-  main.cpp
   コードを生成中...
 C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\GameProgramming\src\CModelX.cpp(35,1): warning C4715: 'CModelX::IsDelimiter': 値を返さないコントロール パスがあります。
   GameProgramming.vcxproj -> C:\Users\kndu8\Git\04Kondoh\3DLv1_vs2019_00\Debug\GameProgramming.exe

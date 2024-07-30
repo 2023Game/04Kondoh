@@ -19,10 +19,13 @@
 #include "CUi.h"
 #include "CModelX.h"
 #include "CXCharacter.h"
+#include "CXPlayer.h"
 
 class CApplication
 {
 private:
+	//キャラクタのインスタンス
+	CXPlayer mXPlayer;
 	CXCharacter mCharacter;
 	CMatrix mMatrix;
 	CModelX mModelX;

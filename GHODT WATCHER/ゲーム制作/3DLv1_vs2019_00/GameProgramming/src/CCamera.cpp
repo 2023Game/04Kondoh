@@ -39,6 +39,7 @@ CCamera::CCamera()
 	mCamera = ECamera::View1;
 	CInput::GetMousePosD(&mMx, &mMy);
 	//mScale = CVector(0.1f, 0.1f, 0.1f);
+	mScale = CVector(1.f, 1.f, 1.f);
 	//インスタンスの設定
 	spInstance = this;
 }

@@ -16,11 +16,10 @@
 #define GRAVITY 0.01    //重力
 
 CPlayer::CPlayer()
-	: mLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.5f), CVector(0.0f, 0.0f, -1.5f))
-	, mLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.0f, 0.0f))
-	, mLine3(this, &mMatrix, CVector(2.0f, 0.5f, 0.0f), CVector(-2.0f, 0.5f, 0.0f))
-	//
-	, mLine4(this, &mMatrix, CVector(0.0f, 0.5f, 0.0f), CVector(0.0f, -1.1f, 0.0f))
+	: mPLine(this, &mMatrix, CVector(0.0f, 0.0f, 1.5f), CVector(0.0f, 0.0f, -1.5f))
+	, mPLine2(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -1.1f, 0.0f))
+	, mPLine3(this, &mMatrix, CVector(2.0f, 0.5f, 0.0f), CVector(-2.0f, 0.5f, 0.0f))
+	, mPLine4(this, &mMatrix, CVector(0.0f, 0.5f, 0.0f), CVector(0.0f, -1.1f, 0.0f))
 	, JumpV(0)
 	, ShootTime(30)
 {
@@ -81,7 +80,7 @@ void CPlayer::Update() {
 			{
 				CBullet* bullet = new CBullet();
 				bullet->Set(0.1f, 1.5f);
-				bullet->Position(CVector(0.0f, 1.0f, 10.0f) * CCamera::Instance()->CameraMatrix());
+				bullet->Position(CVector(0.0f, 0.0f, 1.0f) * CCamera::Instance()->CameraMatrix());
 				bullet->Rotation(CCamera::Instance()->Rotation());
 				bullet->Update();
 				ShootTime = 0;
@@ -114,12 +113,22 @@ void CPlayer::Update() {
 }
 
 void CPlayer::Collision(CCollider* m, CCollider* o) {
+
 	//自身のコライダタイプの判定
 	switch (m->Type()) {
+
 	case CCollider::EType::ELINE:
 		//相手のコライダが三角形コライダの時
 		if (o->Type() == CCollider::EType::ETRIANGLE) {
 			CVector adjust; //調整用ベクトル
+
+			if (CCollider::CollisionTriangleLine(o, &mPLine2, &adjust) && JumpV != 0)
+			{
+				mPState = EPState::EMOVE;
+				JumpV = 0;
+				//CTransform::Update();
+			}
+
 			//三角形と線分の衝突判定
 			if (CCollider::CollisionTriangleLine(o, m, &adjust))
 			{
@@ -127,20 +136,6 @@ void CPlayer::Collision(CCollider* m, CCollider* o) {
 				mPosition = mPosition + adjust;
 				//行列更新
 				CTransform::Update();
-				if (CCollider::CollisionTriangleLine(o, &mLine4, &adjust))
-				{
-					//位置更新
-					//mPosition = mPosition + adjust;
-					mPState = EPState::EMOVE;
-					JumpV = 0;
-					//行列更新
-					//CTransform::Update();
-				}
-				/*else
-				{
-					mPosition = mPosition + CVector(0.0f, JumpV, 0.0f);
-					JumpV -= GRAVITY;
-				}*/
 			}
 		}
 		break;
@@ -151,16 +146,16 @@ void CPlayer::Collision(CCollider* m, CCollider* o) {
 void CPlayer::Collision()
 {
 	//コライダの優先度変更
-	mLine4.ChangePriority();
-	mLine.ChangePriority();
-	mLine2.ChangePriority();
-	mLine3.ChangePriority();
+	mPLine4.ChangePriority();
+	mPLine.ChangePriority();
+	mPLine2.ChangePriority();
+	mPLine3.ChangePriority();
 
 	//衝突処理を実行
-	CCollisionManager::Instance()->Collision(&mLine4, COLLISIONRANGE);
-	CCollisionManager::Instance()->Collision(&mLine, COLLISIONRANGE);
-	CCollisionManager::Instance()->Collision(&mLine2, COLLISIONRANGE);
-	CCollisionManager::Instance()->Collision(&mLine3, COLLISIONRANGE);
+	CCollisionManager::Instance()->Collision(&mPLine4, COLLISIONRANGE);
+	CCollisionManager::Instance()->Collision(&mPLine, COLLISIONRANGE);
+	CCollisionManager::Instance()->Collision(&mPLine2, COLLISIONRANGE);
+	CCollisionManager::Instance()->Collision(&mPLine3, COLLISIONRANGE);
 
 }
 

@@ -37,7 +37,7 @@ CTexture* CApplication::Texture()
 void CApplication::Start()
 {
 
-	new CEnemy(CVector(18.0f, -6.04f, -65.0), CVector(), CVector(0.2f, 0.2f, 0.2f));
+	new CEnemy(CVector(18.0f, -6.0f, -65.0), CVector(), CVector(0.3f, 0.3f, 0.3f));
 	mModel.Load(MODEL_OBJ);
 	mModelBG.Load(MODEL_BACKGROUND);
 	CMatrix matrix;

@@ -41,14 +41,16 @@ public:
 	CPlayer(const CVector& pos, const CVector& rot, const CVector& scale);
 	//更新処理
 	void Update();
+
+	CColliderLine mPLine;  //線分コライダ
+
 private:
 	//プレイヤーのインスタンス
 	static CPlayer* spInstance;
 
-	CColliderLine mLine;  //線分コライダ
-	CColliderLine mLine2;
-	CColliderLine mLine3;
-	CColliderLine mLine4;
+	CColliderLine mPLine2;
+	CColliderLine mPLine3;
+	CColliderLine mPLine4;
 
 	CInput mInput;
 };

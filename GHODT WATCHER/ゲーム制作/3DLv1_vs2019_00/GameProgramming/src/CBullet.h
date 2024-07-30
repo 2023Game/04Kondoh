@@ -15,6 +15,7 @@
 
 class CBullet : public CCharacter3 {
 public:
+	float JumpV;
 	//Õ“Ëˆ—
 	void Collision();
 	//Õ“Ëˆ—

@@ -1,5 +1,7 @@
 #include "CBullet.h"
 
+#define GRAVITY 0.01
+
 //幅と奥行きの設定
 //Set(幅,奥行き)
 void CBullet::Set(float w, float d) {
@@ -17,7 +19,8 @@ void CBullet::Update() {
 	if (mLife-- > 0) {
 		CTransform::Update();
 		//位置更新　進行方向へ1進む
-		mPosition = mPosition + CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+		mPosition = mPosition + CVector(0.0f, JumpV, 1.0f) * mMatrixRotate;
+		JumpV -= GRAVITY;
 	}
 	else {
 		//無効にする
@@ -33,23 +36,31 @@ void CBullet::Render() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, c);
 	//三角形描画
 	mT.Render(mMatrix);
-	//CTransform::Update()
 }
 
 
 CBullet::CBullet()
 	:mLife(50)
 	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.1f)
+	,JumpV(0.0f)
 {}
 
 
 //衝突処理
 //Collision(コライダ１,コライダ２)
 void CBullet::Collision(CCollider* m, CCollider* o) {
-	//コライダのmとoが衝突しているか判定
-	if (CCollider::Collision(m, o)) {
-		//衝突している時は無効にする
-		mEnabled = false;
+	switch (m->Type()) {
+	case CCollider::EType::ESPHERE:
+
+		if (o->Type() == CCollider::EType::ETRIANGLE) {
+			CVector adjust; //調整用ベクトル
+			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+			{
+				mEnabled = false;
+			}
+		}
+		break;
+
 	}
 }
 

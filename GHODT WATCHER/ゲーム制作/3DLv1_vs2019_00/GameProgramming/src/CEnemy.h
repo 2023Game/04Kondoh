@@ -4,6 +4,8 @@
 //キャラクタークラスのインクルード
 #include "CCharacter3.h"
 #include "CCollider.h"
+#include "CColliderLine.h"
+#include "CColliderMesh.h"
 #include "CCollisionManager.h"
 /*
 エネミークラス
@@ -11,6 +13,14 @@
 */
 class CEnemy : public CCharacter3 {
 public:  
+	enum class EneState  //プレイヤー行動ステート
+	{
+		EIDEL,   //待機
+		EWANING, //警戒
+		ECHASE,  //追跡
+		ERETUM   //戻る
+	};
+	EneState mEneState;
 	//コンストラスタ
 	CEnemy();
 	//CEnemy(位置、回転、拡縮)
@@ -23,9 +33,18 @@ public:
 	//Collision(コライダ１,コライダ２)
 	void Collision(CCollider* m, CCollider* o);
 
+	float JumpV;  //ジャンプ変数
+//	bool 
+
 private:
-	//コライダ
-	CCollider mCollider;
+
+	CCollider mSphere;  //球コライダ
+
+	CColliderLine mELine;  //線分コライダ
+	CColliderLine mELine2;
+	CColliderLine mELine3;
+	CColliderLine mELine4;
+
 	static CModel sModel;
 };
 

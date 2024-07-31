@@ -15,16 +15,23 @@ public:
 	virtual void ChangePriority();
 	//優先度の変更
 	void ChangePriority(int priority);
+
+	//CollisionSphaereLine(球コライダ,線分コライダ,調整値)
+	//return:true(衝突している)false(衝突していない)
+	//調整値:衝突してない位置まで戻す
+	static bool CollisionSphereLine(CCollider* sphere, CCollider* line, CVector* adjust);
 	
 	//CollisionTriangleSphere(三角コライダ,球コライダ,調整値)
 	//retrun:true(衝突している)false(衝突していない)
 	//調整値:衝突しない位置まで戻す値
 	static bool CollisionTriangleSphere(CCollider* triangle, CCollider* sphere,
 		CVector* adjust);
+
 	//CollisionTriangleLine(三角コライダ,線分コライダ,調整値)
 	//return:true(衝突している)false(衝突していない)
 	//調整値：衝突しない位置まで戻す
 	static bool CollisionTriangleLine(CCollider* triangle, CCollider* line, CVector* adjust);
+
 	//コライダタイプ
 	enum class EType {
 		ESPHERE,   //球コライダ

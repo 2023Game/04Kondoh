@@ -17,6 +17,7 @@ void CXPlayer::Update() {
 		{
 			ChangeAnimation(0, true, 60);
 		}
+		break;
 	default:
 
 		if (mInput.Key('A')) {

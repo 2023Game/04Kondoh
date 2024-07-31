@@ -14,7 +14,7 @@ void CXPlayer::Update() {
 	}
 	if (mInput.Key('W')) {
 		ChangeAnimation(1, true, 60);
-		Position(Position() + mMatrixRotate.VectorZ() * 1.0);
+		Position(Position() + mMatrixRotate.VectorZ() * 0.1);
 	}
 	else
 	{

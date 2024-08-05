@@ -23,6 +23,7 @@ void CApplication::Start()
 
 void CApplication::Update()
 {
+
 	//キャラクタークラスの更新
 	mXPlayer.Update();
 	//敵の更新
@@ -69,7 +70,7 @@ void CApplication::Update()
 
 	//モデル描画
 	mXPlayer.Render();
-
+	                  //描画はカメラ設定の後で！！！！！//
 	//コライダの描画
 	CCollisionManager::Instance()->Render();
 	//敵描画
@@ -82,6 +83,10 @@ void CApplication::Update()
 
 	//2Dの描画終了
 	CCamera::End();
+
+	//衝突処理
+	CCollisionManager::Instance()->Collision();
+
 }
 
 CMatrix CApplication::mModelViewInverse;

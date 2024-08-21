@@ -13,7 +13,7 @@ class CAnimation;     //アニメーションクラス
 class CAnimationKey;  //アニメーションキークラス
 
 #define MODEL_FILE "res\\ラグナ.x"   //入力ファイル名　
-#define MODEL_KNIGHT "res\\knight\\knight_low.x"
+#define MODEL_KNIGHT "res\\knight\\knight_low.x" //kinghtファイル
 
 //領域開放をマクロ化
 #define SAFE_DELETE_ARRAY(a) { if(a) delete[] a; a = nullptr;}

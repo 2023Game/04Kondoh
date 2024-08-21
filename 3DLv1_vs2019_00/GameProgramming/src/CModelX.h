@@ -13,6 +13,7 @@ class CAnimation;     //アニメーションクラス
 class CAnimationKey;  //アニメーションキークラス
 
 #define MODEL_FILE "res\\ラグナ.x"   //入力ファイル名　
+#define MODEL_KNIGHT "res\\knight\\knight_low.x"
 
 //領域開放をマクロ化
 #define SAFE_DELETE_ARRAY(a) { if(a) delete[] a; a = nullptr;}
@@ -73,6 +74,7 @@ class CModelXFrame {
 	friend CAnimation;
 	friend CAnimationSet;
 public:
+	CModelXFrame();
 	const CMatrix& CombinedMatrix();
 	//合成行列
 	void AnimateCombined(CMatrix* parent);

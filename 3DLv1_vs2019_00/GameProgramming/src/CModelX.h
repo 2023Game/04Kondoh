@@ -30,6 +30,16 @@ class CModelX{
 	friend CAnimationSet;
 	friend CAnimation;
 public:
+	/*
+	アニメーションを抜き出す
+	idx:分割したいアニメーションセットの番号
+	start:分割したいアニメーションの開始時間
+	end:分割したいアニメーションの終了時間
+	name:追加するアニメーションセットの名前
+	*/
+	void CModelX::SeparateAnimationSet(
+		int idx, int start, int end, char* name);
+
 	void AnimateVertex(CMatrix*);
 	//マテリアル配列の取得
 	std::vector<CMaterial*>& Material();
@@ -163,6 +173,7 @@ public:
 	std::vector<CAnimation*>& Animation();
 	void Time(float time);      //時間の設定
 	void Weight(float weight);  //重みの設定
+	CAnimationSet();
 	CAnimationSet(CModelX* model);
 	~CAnimationSet();
 private:
@@ -183,6 +194,7 @@ class CAnimation {
 	friend CAnimationSet;
 	friend CModelX;
 public:
+	CAnimation();
 	CAnimation(CModelX* model);
 	~CAnimation();
 
@@ -199,6 +211,7 @@ CAnimationKey
 アニメーションキークラス
 */
 class CAnimationKey {
+	friend CModelX;
 	friend CAnimation;
 	friend CAnimationSet;
 private:

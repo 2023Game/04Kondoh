@@ -16,10 +16,11 @@ public:
 	//優先度の変更
 	void ChangePriority(int priority);
 
-	//CollisionSphaereLine(球コライダ,線分コライダ,調整値)
-	//return:true(衝突している)false(衝突していない)
-	//調整値:衝突してない位置まで戻す
-	static bool CollisionSphereLine(CCollider* sphere, CCollider* line, CVector* adjust);
+	//CalcCalcPointLineDist(点,始点,終点,線上の最短点,割合)
+	//点と線(始点、終点を通る直線)の最短距離を求める
+	//float CalcPointLineDist(const CVector& p, const CVector& s, const CVector e, CVector* mp, float* t);
+
+	static bool CCollider::CollisionSphereLine(CCollider* s, CCollider* l, CVector* a);
 	
 	//CollisionTriangleSphere(三角コライダ,球コライダ,調整値)
 	//retrun:true(衝突している)false(衝突していない)

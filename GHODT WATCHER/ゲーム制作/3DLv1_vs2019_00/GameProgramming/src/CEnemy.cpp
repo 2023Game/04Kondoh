@@ -44,6 +44,7 @@ CEnemy::CEnemy(const CVector& position,
 void CEnemy::Update() {
 	//行列を更新
 	CTransform::Update();
+
 	switch (mEneState)
 	{
 	case EneState::EIDEL:
@@ -62,34 +63,16 @@ void CEnemy::Update() {
 void CEnemy::Collision(CCollider* m, CCollider* o) {
 
 	//自身のコライダタイプの判定
-	switch (o->Type())
+	switch (m->Type())
 	{
 	case CCollider::EType::ESPHERE: //線コライダの時
 		//相手のコライダが三角形コライダの時
 		if (o->Type() == CCollider::EType::ELINE) {
 			CVector adjust; //調整用ベクトル
 
-			//コライダのmとoが衝突しているか判定
-			if (CCollider::Collision(&mSphere, &CPlayer::Instance()->mPLine)) {
+			/*if (CCollider::CollisionSphereLine(&mSphere, &CPlayer::Instance()->mPLine, &adjust)) {
 				mPosition = mPosition + CVector(0.0f, 0.0f, 10.0f);
-			}
-			/*
-			if (CCollider::CollisionTriangleSphere(&CPlayer::Instance()->mPLine, m, &adjust) && JumpV != 0)
-			{
-				JumpV = 0;
-				//CTransform::Update();
-			}
-
-			
-			//三角形と線分の衝突判定
-			if (CCollider::CollisionTriangleLine(o, m, &adjust))
-			{
-				//位置更新
-				mPosition = mPosition + adjust;
-				//行列更新
-				CTransform::Update();
-			}
-			*/
+			}*/
 			
 		}
 		break;

@@ -215,12 +215,42 @@ bool CCollider::CollisionTriangleSphere(CCollider* t, CCollider* s, CVector* a)
 	//return CollisionTriangleLine(t, &line, a);
 }
 
-//CollisionSphaereLine(球コライダ,線分コライダ,調整値)
-//return:true(衝突している)false(衝突していない)
-//調整値:衝突してない位置まで戻す
-bool CCollider::CollisionSphereLine(CCollider* s, CCollider* l, CVector* a) 
+//CalcCalcPointLineDist(点,始点,終点,線上の最短点,割合)
+	//点と線(始点、終点を通る直線)の最短距離を求める
+float CalcPointLineDist(const CVector& p, const CVector& s, const CVector e, CVector* mp, float* t) 
 {
 
+	*t = 0.0f;  //割合の初期化
+	CVector v = e - s;  //始点から終点へのベクトルを求める
+	float dvv = v.Dot(v);  //ベクトルの長さの２乗を求める
+	if (dvv > 0.0f) {
+		*t = v.Dot(p - s) / dvv;  //線上の垂線となる割合を求める
+		//上の式の説明
+		//dot(v,p-sp)は|v| |p-sp|conΘ
+		//dvvは|vの2乗|
+		//上の計算で、tは|p-sp|cosΘ / |v|となる
+		//つまりtは「dotで投影した長さ÷vの長さ」という割合になる
+	}
+	*mp = s + v * *t;  //線上の垂線となる点を求める
+	return (p - *mp).Length();  //垂線の長さを返す
+
+}
+
+bool CCollider::CollisionSphereLine(CCollider* s, CCollider* l, CVector* a) 
+{
+	CVector v[1], sv, ev;
+	CVector mp;
+	float t;
+	v[0] = s->mV[0] * *s->mpMatrix;
+	sv = l->mV[0] * *l->mpMatrix;
+	ev = l->mV[1] * *l->mpMatrix;
+
+	float dist = CalcPointLineDist(v[0], sv, ev, &mp, &t);
+
+	if (s->mRadius > dist && 0.0f <= t && t <= 1.0f) {
+		return true;
+	}
+	return false;
 }
 
 CCollider::EType CCollider::Type()

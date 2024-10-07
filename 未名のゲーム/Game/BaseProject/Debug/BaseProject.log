@@ -1,0 +1,164 @@
+﻿  BGMData.cpp
+  CBGMManager.cpp
+  CBillBoard.cpp
+  CBillBoardImage.cpp
+  CBounds.cpp
+  CButton.cpp
+  CCamera.cpp
+  CCollider.cpp
+  CColliderCapsule.cpp
+  CColliderLine.cpp
+  CColliderMesh.cpp
+  CColliderSphere.cpp
+  CColliderTriangle.cpp
+  CCollisionManager.cpp
+  CColor.cpp
+  CDebugCamera.cpp
+  CDebugInput.cpp
+  CDebugPrint.cpp
+  CDebugProfiler.cpp
+  CDebugTimer.cpp
+  コードを生成中...
+  コンパイル中...
+  CEffect.cpp
+  CExpandButton.cpp
+  CFade.cpp
+  CFont.cpp
+  CCharaBase.cpp
+  CGamePause.cpp
+  CInput.cpp
+  CLineEffect.cpp
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CLineEffect.cpp(94,28): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CLineEffect.cpp(110,28): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CLineEffect.cpp(117,28): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  CMaterial.cpp
+  CMatrix.cpp
+  CModel.cpp
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CModel.cpp(222,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CModel.cpp(244,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CModel.cpp(399,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CModel.cpp(401,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  CModelX.cpp
+  CMyShader.cpp
+  CRect.cpp
+  CResource.cpp
+  CResourceManager.cpp
+  CSoundManager.cpp
+  CTrailEffect.cpp
+  CUIManager.cpp
+  Easing.cpp
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(105,50): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(111,49): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(117,39): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(188,26): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(192,77): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(214,26): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(217,76): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(239,26): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(244,95): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\Easing.cpp(248,76): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+  コードを生成中...
+  コンパイル中...
+  Primitive.cpp
+  CQuaternion.cpp
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CQuaternion.cpp(128,13): warning C4305: '=': 'double' から 'float' へ切り詰めます。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CQuaternion.cpp(134,14): warning C4305: '=': 'double' から 'float' へ切り詰めます。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CQuaternion.cpp(242,20): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+  CSceneBase.cpp
+  CSceneManager.cpp
+  CShader.cpp
+  CSound.cpp
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CSound.cpp(113,25): warning C4101: 'hr': ローカル変数は 1 度も使われていません。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CSound.cpp(256,13): warning C4018: '>=': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CSound.cpp(298,13): warning C4018: '>=': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CSound.cpp(354,27): warning C4018: '>=': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CSound.cpp(377,13): warning C4018: '>=': signed と unsigned の数値を比較しようとしました。
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\BaseSystem\CSound.cpp(411,28): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  CTask.cpp
+  CTaskManager.cpp
+  CText.cpp
+  CTexture.cpp
+  CTextureFont.cpp
+  CTransform.cpp
+  CTriangle.cpp
+  CUIBase.cpp
+  CVector.cpp
+  CObjectBase.cpp
+  Maths.cpp
+  System.cpp
+  CApplication.cpp
+  CBullet.cpp
+  コードを生成中...
+  コンパイル中...
+  CEnemy.cpp
+  CField.cpp
+  CFlame.cpp
+  CFlamethrower.cpp
+  CGameCamera.cpp
+  CGameCamera2.cpp
+  CGameMenu.cpp
+C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\BaseProject\src\Game\CGameMenu.cpp(119,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  CGameScene.cpp
+  CImage.cpp
+  CMoveFloor.cpp
+  CPlayer.cpp
+  CRideabeObject.cpp
+  CRotateFloor.cpp
+  CSlash.cpp
+  CTitleScene.cpp
+  CTitleUI.cpp
+  CXCharacter.cpp
+  main.cpp
+  CBootMenuScene.cpp
+  CColBase.cpp
+  コードを生成中...
+  コンパイル中...
+  CColCapsule.cpp
+  CColLine.cpp
+  CCollisionTestScene.cpp
+  CColQuad.cpp
+  CColSphere.cpp
+  CColTriangle.cpp
+  CMeasure.cpp
+  コードを生成中...
+LINK : warning LNK4098: defaultlib 'MSVCRT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+LINK : warning LNK4098: defaultlib 'LIBCMT' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+LINK : warning LNK4098: defaultlib 'LIBCMTD' は他のライブラリの使用と競合しています。/NODEFAULTLIB:library を使用してください。
+ftgl_static_D.lib(FTCharmap.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTCharmap.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTFace.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTFace.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTFont.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTFont.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTPixmapFont.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTPixmapFont.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTGlyphContainer.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTGlyphContainer.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTGlyph.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTGlyph.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTPixmapGlyph.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTPixmapGlyph.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTLayout.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTLayout.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTSimpleLayout.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTSimpleLayout.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTLibrary.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTLibrary.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(FTSize.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(FTSize.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftsystem.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftsystem.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftdebug.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftdebug.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(winfnt.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(winfnt.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(type42.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(type42.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(type1.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(type1.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(truetype.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(truetype.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(svg.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(svg.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(sdf.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(sdf.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(smooth.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(smooth.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(sfnt.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(sfnt.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(raster.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(raster.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(psmodule.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(psmodule.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(pshinter.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(pshinter.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(psaux.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(psaux.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(pfr.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(pfr.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(pcf.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(pcf.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftlzw.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftlzw.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftgzip.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftgzip.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(type1cid.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(type1cid.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(cff.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(cff.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(bdf.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(bdf.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftmm.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftmm.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftinit.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftinit.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftbitmap.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftbitmap.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(ftbase.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(ftbase.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+ftgl_static_D.lib(autofit.obj) : warning LNK4099: PDB '' が 'ftgl_static_D.lib(autofit.obj)' で、または '' に見つかりません。デバッグ情報がないものとして、オブジェクトにリンクします。
+  BaseProject.vcxproj -> C:\Users\kndu8\Git\04Kondoh\未名のゲーム\未名\Debug\BaseProject.exe

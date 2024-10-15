@@ -64,7 +64,7 @@ CPlayer::CPlayer()
 	Init(model);
 
 	// 最初は待機アニメーションを再生
-	ChangeAnimation(EAnimType::eIdle);
+	ChangeAnimation(EAnimType::eTPose);
 
 	mpColliderLine = new CColliderLine
 	(

@@ -1,13 +1,16 @@
 #include "CEnemyA.h"
 #include "CEffect.h"
 #include "CCollisionManager.h"
+#include "CInput.h"
 
 
 // プレイヤーのアニメーションデータのテーブル
 const CEnemyA::AnimData CEnemyA::ANIM_DATA[] =
 {
 	{ "",										true,	0.0f	},	// Tポーズ
-	{ "素材入れ\\EnamyA\\Idle.x",		        true,	88.0f	},	// 待機
+	{ "Character\\EnamyA\\Idle.x",		        true,	126.0f	},	// 待機
+	{ "Character\\EnamyA\\walk.x",		true,	42.0f	},	// 歩行
+	{ "Character\\EnamyA\\Run.x",		true,	23.0f	},	// 走る
 
 };
 
@@ -15,6 +18,7 @@ const CEnemyA::AnimData CEnemyA::ANIM_DATA[] =
 // コンストラクタ
 CEnemyA::CEnemyA()
 	: CXCharacter(ETag::eEnemy, ETaskPriority::eDefault)
+	,mState(EState::eIdle)
 {
 	// モデルデータ取得
 	CModelX* model = CResourceManager::Get<CModelX>("EnemyA");
@@ -34,9 +38,21 @@ CEnemyA::CEnemyA()
 	ChangeAnimation(EAnimType::eIdle);
 }
 
+CEnemyA::~CEnemyA()
+{
+}
+
 //更新処理
 void CEnemyA::Update()
 {
+
+	if (CInput::Key('U')) {
+		ChangeAnimation(EAnimType::eWalk);
+	}
+	else if (CInput::Key('L')) {
+		ChangeAnimation(EAnimType::eRun);
+	}
+
 	CXCharacter::Update(); 
 }
 

@@ -33,10 +33,11 @@ void CGameScene::Load()
 	//ここでゲーム中に必要な
 	//リソースの読み込みやクラスの生成を行う
 
-	CResourceManager::Load<CModel>("Field", "Field\\field.obj");
+	CResourceManager::Load<CModel>("Field", "Field\\field 1.obj");
 	CResourceManager::Load<CModel>("FieldCube", "Field\\Object\\cube.obj");
 	CResourceManager::Load<CModel>("FieldCylinder", "Field\\Object\\cylinder.obj");
 	CResourceManager::Load<CModelX>("Player", "Character\\Player\\player.x");
+	CResourceManager::Load<CModelX>("EnemyA","Character\\EnamyA\\enemyA.x");
 	CResourceManager::Load<CTexture>("Laser", "Effect\\laser.png");
 	CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
 	CResourceManager::Load<CModel>("Slash", "Effect\\slash.obj");
@@ -50,7 +51,9 @@ void CGameScene::Load()
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
 
-	CEnemyA* enemy = new CEnemyA();
+	CEnemyA* enemyA = new CEnemyA();
+	enemyA->Scale(1.0f, 1.0f, 1.0f);
+	enemyA->Position(100.0f, 0.0f, 0.0f);
 
 	// CGameCameraのテスト
 	//CGameCamera* mainCamera = new CGameCamera

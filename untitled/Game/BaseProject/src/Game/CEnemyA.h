@@ -19,7 +19,11 @@ public:
 	void Update() override;
 	// 描画
 	void Render() override;
+
 private:
+
+	// 待機状態
+	void UpdateIdle();
 
 	// アニメーションの種類
 	enum class EAnimType
@@ -29,6 +33,7 @@ private:
 		eTPose,		// Tポーズ
 		eIdle,		// 待機
 		eWalk,		// 歩行
+		eRun,		// 走り
 
 		Num
 	};
@@ -44,6 +49,15 @@ private:
 	};
 	// アニメーションデータのテーブル
 	static const AnimData ANIM_DATA[];
+
+	// プレイヤーの状態
+	enum class EState
+	{
+		eIdle,		// 待機
+	};
+	EState mState;	// 敵の状態
+
+
 };
 
 #endif

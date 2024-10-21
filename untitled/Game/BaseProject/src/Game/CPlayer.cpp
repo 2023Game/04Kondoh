@@ -14,9 +14,9 @@ CPlayer* CPlayer::spInstance = nullptr;
 const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 {
 	{ "",										true,	0.0f	},	// Tポーズ
-	{ "Character\\Player\\anim\\idle.x",		true,	153.0f	},	// 待機
-	{ "Character\\Player\\anim\\walk.x",		true,	66.0f	},	// 歩行
-	{ "Character\\Player\\anim\\attack.x",		false,	91.0f	},	// 攻撃
+	{ "Character\\New Player\\anim\\Idle.x",	true,	101.0f	},	// 待機
+	{ "Character\\New Player\\anim\\Walk.x",	true,	34.0f	},	// 歩行
+	{ "Character\\New Player\\anim\\Attack Down.x",		false,	37.0f	},	// 攻撃
 	{ "Character\\Player\\anim\\jump_start.x",	false,	25.0f	},	// ジャンプ開始
 	{ "Character\\Player\\anim\\jump.x",		true,	1.0f	},	// ジャンプ中
 	{ "Character\\Player\\anim\\jump_end.x",	false,	26.0f	},	// ジャンプ終了

@@ -10,9 +10,11 @@ CField::CField()
 {
 	mpModel = CResourceManager::Get<CModel>("Field");
 
-	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);
 
-	CreateFieldObjects();
+	CModel* colModel = CResourceManager::Get<CModel>("FieldCol");
+	mpColliderMesh = new CColliderMesh(this, ELayer::eField, colModel, true);
+
+	//CreateFieldObjects();
 }
 
 CField::~CField()

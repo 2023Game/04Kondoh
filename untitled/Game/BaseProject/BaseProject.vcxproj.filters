@@ -352,6 +352,9 @@
     <ClCompile Include="src\BaseSystem\CExpandButton.cpp">
       <Filter>ソース ファイル\BaseSystem\UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\BaseSystem\Blend.cpp">
+      <Filter>ソース ファイル\BaseSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -638,6 +641,9 @@
     </ClInclude>
     <ClInclude Include="src\BaseSystem\CExpandButton.h">
       <Filter>ソース ファイル\BaseSystem\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BaseSystem\Blend.h">
+      <Filter>ソース ファイル\BaseSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

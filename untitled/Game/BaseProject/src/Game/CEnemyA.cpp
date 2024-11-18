@@ -444,7 +444,7 @@ void CEnemyA::UpdateAttack()
 		{
 			// 攻撃アニメーションが移動開始フレームを超えた場合
 			float frame = GetAnimationFrame();
-			if (!AttackRangeMin()) {
+			/*if (!AttackRangeMin()) {*/
 				if (frame >= ATTACK_MOVE_START)
 				{
 					// 移動終了フレームまで到達してない場合
@@ -463,7 +463,7 @@ void CEnemyA::UpdateAttack()
 						mStateStep++;
 					}
 				}
-			}
+			/*}*/
 			else
 			{
 				mStateStep++;

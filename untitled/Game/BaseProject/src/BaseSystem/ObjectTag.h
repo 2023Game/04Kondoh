@@ -19,6 +19,8 @@ enum class ETag
 
 	eCamera,// カメラ
 
+	eDebug, // デバッグ用のオブジェクト
+
 	Num
 };
 // オブジェクト識別用のタグの初期化リスト

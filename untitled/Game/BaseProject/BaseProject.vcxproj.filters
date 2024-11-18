@@ -89,6 +89,9 @@
     <Filter Include="ソース ファイル\Game\UI\Title">
       <UniqueIdentifier>{a594cb69-7b77-4a90-8304-3ec10f740063}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Debug">
+      <UniqueIdentifier>{39cb4993-a79c-410a-961b-56b7be3c3ee6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -354,6 +357,9 @@
     </ClCompile>
     <ClCompile Include="src\BaseSystem\Blend.cpp">
       <Filter>ソース ファイル\BaseSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CDebugFieldOfView.cpp">
+      <Filter>ソース ファイル\Game\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -644,6 +650,9 @@
     </ClInclude>
     <ClInclude Include="src\BaseSystem\Blend.h">
       <Filter>ソース ファイル\BaseSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CDebugFieldOfView.h">
+      <Filter>ソース ファイル\Game\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

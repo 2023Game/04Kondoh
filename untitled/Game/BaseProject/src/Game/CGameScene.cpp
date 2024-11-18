@@ -33,12 +33,12 @@ void CGameScene::Load()
 	//ここでゲーム中に必要な
 	//リソースの読み込みやクラスの生成を行う
 
-	CResourceManager::Load<CModel>("Field", "Field\\field0.obj");
+	CResourceManager::Load<CModel>("Field", "Field\\field1.obj");
 	CResourceManager::Load<CModel>("FieldCol", "Field\\field0Col.obj");
 	CResourceManager::Load<CModel>("FieldCube", "Field\\Object\\cube.obj");
 	CResourceManager::Load<CModel>("FieldCylinder", "Field\\Object\\cylinder.obj");
 	CResourceManager::Load<CModelX>("Player", "Character\\New Player\\Playre T-Pose.x");
-	CResourceManager::Load<CModelX>("EnemyA","Character\\EnamyA\\enemyA.x");
+	CResourceManager::Load<CModelX>("EnemyA","Character\\EnemyA\\enemyA.x");
 	CResourceManager::Load<CTexture>("Laser", "Effect\\laser.png");
 	CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
 	CResourceManager::Load<CModel>("Slash", "Effect\\slash.obj");
@@ -52,7 +52,15 @@ void CGameScene::Load()
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
 
-	CEnemyA* enemyA = new CEnemyA();
+	CEnemyA* enemyA = new CEnemyA
+	(
+		{
+			CVector(100.0f,0.94f,  0.0f),
+			CVector(  0.0f,0.94f,  0.0f),
+			CVector(  0.0f,0.94f,100.0f),
+			CVector(100.0f,0.94f,100.0f),
+		}
+	);
 	enemyA->Scale(1.0f, 1.0f, 1.0f);
 	enemyA->Position(100.0f, 0.0f, 0.0f);
 

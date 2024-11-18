@@ -13,13 +13,13 @@ CPlayer* CPlayer::spInstance = nullptr;
 // プレイヤーのアニメーションデータのテーブル
 const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 {
-	{ "",										true,	0.0f	},	// Tポーズ
-	{ "Character\\New Player\\anim\\Idle.x",	true,	101.0f	},	// 待機
-	{ "Character\\New Player\\anim\\Walk.x",	true,	34.0f	},	// 歩行
-	{ "Character\\New Player\\anim\\Attack Down.x",		false,	37.0f	},	// 攻撃
-	{ "Character\\Player\\anim\\jump_start.x",	false,	25.0f	},	// ジャンプ開始
-	{ "Character\\Player\\anim\\jump.x",		true,	1.0f	},	// ジャンプ中
-	{ "Character\\Player\\anim\\jump_end.x",	false,	26.0f	},	// ジャンプ終了
+	{ "",										        true,	0.0f	},	// Tポーズ
+	{ "Character\\New Player\\anim\\Idle.x",	        true,	170.0f	},	// 待機
+	{ "Character\\New Player\\anim\\Walk.x",	        true,	34.0f	},	// 歩行
+	{ "Character\\New Player\\anim\\DwonAttackS.x",		false,	50.0f	},	// 攻撃
+	{ "Character\\Player\\anim\\jump_start.x",	        false,	25.0f	},	// ジャンプ開始
+	{ "Character\\Player\\anim\\jump.x",		        true,	1.0f	},	// ジャンプ中
+	{ "Character\\Player\\anim\\jump_end.x",	        false,	26.0f	},	// ジャンプ終了
 };
 
 #define PLAYER_HEIGHT 16.0f
@@ -91,6 +91,8 @@ CPlayer::~CPlayer()
 		delete mpColliderLine;
 		mpColliderLine = nullptr;
 	}
+
+	spInstance = nullptr;
 }
 
 CPlayer* CPlayer::Instance()

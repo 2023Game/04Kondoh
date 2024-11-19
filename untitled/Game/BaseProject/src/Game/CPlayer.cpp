@@ -22,7 +22,8 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ "Character\\Player\\anim\\jump_end.x",	        false,	26.0f	},	// ジャンプ終了
 };
 
-#define PLAYER_HEIGHT 16.0f
+#define PLAYER_HEIGHT 16.0f  // プレイヤーの高さ
+#define PLAYER_WIDTH 10.0f    // プレイヤーの幅
 #define MOVE_SPEED 0.375f * 2.0f
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
@@ -66,14 +67,34 @@ CPlayer::CPlayer()
 	// 最初は待機アニメーションを再生
 	ChangeAnimation(EAnimType::eTPose);
 
+	// 縦方向のコライダー作成
 	mpColliderLine = new CColliderLine
 	(
-		this, ELayer::eField,
+		this, ELayer::ePlayer,
 		CVector(0.0f, 0.0f, 0.0f),
 		CVector(0.0f, PLAYER_HEIGHT, 0.0f)
 	);
 	mpColliderLine->SetCollisionLayers({ ELayer::eField });
 
+	float width = PLAYER_WIDTH * 0.5f;
+	float posY = PLAYER_HEIGHT * 0.5f;
+	// 横方向（X軸）のコライダー作成
+	mpColliderLineX = new CColliderLine
+	(
+		this, ELayer::ePlayer,
+		CVector(-width, posY, 0.0f),
+		CVector( width, posY, 0.0f)
+	);
+	mpColliderLineX->SetCollisionLayers({ ELayer::eField });
+
+	// 横方向（Z軸）のコライダー作成
+	mpColliderLineZ = new CColliderLine
+	(
+		this, ELayer::ePlayer,
+		CVector(0.0f, posY, -width),
+		CVector(0.0f, posY,  width)
+	);
+	mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
 
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
@@ -88,11 +109,10 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
-	if (mpColliderLine != nullptr)
-	{
-		delete mpColliderLine;
-		mpColliderLine = nullptr;
-	}
+	// コライダーを破棄
+	SAFE_DELETE(mpColliderLine);
+	SAFE_DELETE(mpColliderLineX);
+	SAFE_DELETE(mpColliderLineZ);
 
 	spInstance = nullptr;
 }
@@ -433,6 +453,7 @@ void CPlayer::Update()
 // 衝突処理
 void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
+	// 縦方向の衝突処理
 	if (self == mpColliderLine)
 	{
 		if (other->Layer() == ELayer::eField)
@@ -477,6 +498,21 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 					mMoveSpeedY = 0.0f;
 				}
 			}
+		}
+	}
+
+	// 横方向（X軸とZ軸）の衝突処理
+	else if (self == mpColliderLineX || self == mpColliderLineZ)
+	{
+		if (other->Layer() == ELayer::eField)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			adjust.Y(0.0f);
+
+			// 押し戻しベクトルの分座標を移動
+			Position(Position() + adjust * hit.weight);
+
 		}
 	}
 }

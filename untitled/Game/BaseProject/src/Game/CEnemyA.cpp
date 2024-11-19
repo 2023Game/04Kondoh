@@ -6,9 +6,13 @@
 #include "CPlayer.h"
 #include "Maths.h"
 #include "Primitive.h"
+#include "CField.h"
 
+#define ENEMY_HEIGHT 16.0f      // 敵の高さ
+#define ENEMY_WIDTH 10.0f       // 敵の幅
 #define FOV_ANGLE 45.0f         // 視野範囲の角度
 #define FOV_LENGTH 100.0f       // 視野範囲の距離
+#define EYE_HEIGHT 10.0f        // 視点の高さ
 #define WALK_SPEED 10.0f        // 歩きの速度
 #define RUN_SPEED 20.0f         // 走っている時の速度
 #define ROTATE_SPEED 6.0f       // 回転速度
@@ -66,12 +70,45 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	// 最初は待機アニメーションを再生
 	ChangeAnimation(EAnimType::eIdle);
 
+	// 縦方向のコライダー作成
+	mpColliderLine = new CColliderLine
+	(
+		this, ELayer::ePlayer,
+		CVector(0.0f, 0.0f, 0.0f),
+		CVector(0.0f, ENEMY_HEIGHT, 0.0f)
+	);
+	mpColliderLine->SetCollisionLayers({ ELayer::eField });
+
+	float width = ENEMY_WIDTH * 0.5f;
+	float posY = ENEMY_HEIGHT * 0.5f;
+	// 横方向（X軸）のコライダー作成
+	mpColliderLineX = new CColliderLine
+	(
+		this, ELayer::ePlayer,
+		CVector(-width, posY, 0.0f),
+		CVector(width, posY, 0.0f)
+	);
+	mpColliderLineX->SetCollisionLayers({ ELayer::eField });
+
+	// 横方向（Z軸）のコライダー作成
+	mpColliderLineZ = new CColliderLine
+	(
+		this, ELayer::ePlayer,
+		CVector(0.0f, posY, -width),
+		CVector(0.0f, posY, width)
+	);
+	mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
 }
 
 CEnemyA::~CEnemyA()
 {
+	// コライダーを破棄
+	SAFE_DELETE(mpColliderLine);
+	SAFE_DELETE(mpColliderLineX);
+	SAFE_DELETE(mpColliderLineZ);
+
 	// 視野範囲のデバッグ表示がせ存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
 	{
@@ -152,14 +189,81 @@ void CEnemyA::Render()
 		m.Translate(mLostPlayerPos + CVector(0.0f, rad, 0.0f));
 		Primitive::DrawWireSphere(m, rad, CColor::blue);
 	}
+
+	// レイコライダーのデバッグ表示
+	CPlayer* player = CPlayer::Instance();
+	CField* field = CField::Instance();
+	if (player != nullptr && field != nullptr)
+	{
+		CVector offsetPos = CVector(0.0f, EYE_HEIGHT, 0.0f);
+		CVector playerPos = player->Position() + offsetPos;
+		CVector selfPos = Position() + offsetPos;
+
+		// プレイヤーとの間に遮蔽物が存在する場合
+		CHitInfo hit;
+		if (field->CollisionRay(selfPos, playerPos, &hit))
+		{
+			// 衝突した位置までの線を描画
+			Primitive::DrawLine
+			(
+				selfPos, hit.cross,
+				CColor::red,
+				2.0f
+			);
+		}
+		// 遮蔽物が存在しなかった場合
+		else
+		{
+			// プレイヤーの位置までの緑線を描画
+			Primitive::DrawLine
+			(
+				selfPos, playerPos,
+				CColor::green,
+				2.0f
+			);
+		}
+	}
 }
 
-void CEnemyA::ChangeAnimation(EAnimType type)
+// 衝突処理
+void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
+{
+	// 縦方向の衝突処理
+	if (self == mpColliderLine)
+	{
+		if (other->Layer() == ELayer::eField)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			adjust.X(0.0f);
+			adjust.Z(0.0f);
+
+			Position(Position() + adjust * hit.weight);
+		}
+	}
+
+	// 横方向（X軸とZ軸）の衝突処理
+	else if (self == mpColliderLineX || self == mpColliderLineZ)
+	{
+		if (other->Layer() == ELayer::eField)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			adjust.Y(0.0f);
+
+			// 押し戻しベクトルの分座標を移動
+			Position(Position() + adjust * hit.weight);
+
+		}
+	}
+}
+
+void CEnemyA::ChangeAnimation(EAnimType type, bool restart)
 {
 	int index = (int)type;
 	if (!(0 <= index && index < (int)EAnimType::Num)) return; 
 	const AnimData& data = ANIM_DATA[index];
-	CXCharacter::ChangeAnimation(index, data.loop, data.frameLength);
+	CXCharacter::ChangeAnimation(index, data.loop, data.frameLength, restart);
 }
 
 //状態切り替え
@@ -210,10 +314,35 @@ bool CEnemyA::IsFoundPlayer() const
 	if (dist > mFovLength) return false;
 
 
-	// TODO:プレイヤーとの間に遮蔽物がないか判定する
+	// プレイヤーとの間に遮蔽物がないか判定する
+	if (!IsLookPlayer()) return false;
 
 
 	// 全ての条件をクリアしたので、視野範囲内である
+	return true;
+}
+
+// 現在位置からプレイヤーが見えているかどうか
+bool CEnemyA::IsLookPlayer() const
+{
+	// プライヤーが存在しない場合は、見えていない
+	CPlayer* player = CPlayer::Instance();
+	if (player == nullptr) return false;
+	// フィールドが存在しない場合は、遮蔽物がないので見える
+	CField* field = CField::Instance();
+	if (field == nullptr) return true;
+
+	CVector offsetPos = CVector(0.0f, EYE_HEIGHT, 0.0f);
+	// プレイヤーの座標を取得
+	CVector playerPos = player->Position() + offsetPos;
+	// 自分自身の座標を取得
+	CVector selfPos = Position() + offsetPos;
+
+	CHitInfo hit;
+	// フィールドとレイ判定を行い、遮蔽物が存在した場合は、プレイヤーが見えない
+	if (field->CollisionRay(selfPos, playerPos, &hit)) return false;
+
+	// プレイヤーとの間に遮蔽物がないので、プレイヤーが見えている
 	return true;
 }
 
@@ -459,7 +588,7 @@ void CEnemyA::UpdateAttack()
 			// 攻撃開始位置と攻撃終了位置の設定
 			mAttackStartPos = Position();
 			mAttackEndPos = mAttackStartPos + VectorZ() * ATTACK_MOVE_DIST;
-			ChangeAnimation(EAnimType::eRightAttack);
+			ChangeAnimation(EAnimType::eRightAttack,true);
 			mStateStep++;
 			break;
 		// ステップ1 : 攻撃時の移動処理
@@ -467,7 +596,7 @@ void CEnemyA::UpdateAttack()
 		{
 			// 攻撃アニメーションが移動開始フレームを超えた場合
 			float frame = GetAnimationFrame();
-			if (AttackRangeMin()) {
+			if (!AttackRangeMin()) {
 				if (frame >= ATTACK_MOVE_START)
 				{
 					// 移動終了フレームまで到達してない場合

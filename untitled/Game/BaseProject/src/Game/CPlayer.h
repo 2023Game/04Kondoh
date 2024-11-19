@@ -108,7 +108,9 @@ private:
 	bool mIsGrounded;	// 接地しているかどうか
 	CVector mGroundNormal;	// 接地している地面の法線
 
-	CColliderLine* mpColliderLine;
+	CColliderLine* mpColliderLine;  // 縦方向の線分コライダー
+	CColliderLine* mpColliderLineX; // 横方向（X軸）の線分コライダー
+	CColliderLine* mpColliderLineZ; // 横方向（Z軸）の線分コライダー
 	CTransform* mpRideObject;
 
 	CSound* mpSlashSE;

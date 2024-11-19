@@ -83,6 +83,8 @@
     <ClCompile Include="src\Game\CGameScene.cpp" />
     <ClCompile Include="src\Game\CImage.cpp" />
     <ClCompile Include="src\Game\CMoveFloor.cpp" />
+    <ClCompile Include="src\Game\CNavManager.cpp" />
+    <ClCompile Include="src\Game\CNavNode.cpp" />
     <ClCompile Include="src\Game\CPlayer.cpp" />
     <ClCompile Include="src\Game\CRideabeObject.cpp" />
     <ClCompile Include="src\Game\CRotateFloor.cpp" />
@@ -184,6 +186,8 @@
     <ClInclude Include="src\Game\CGameScene.h" />
     <ClInclude Include="src\Game\CImage.h" />
     <ClInclude Include="src\Game\CMoveFloor.h" />
+    <ClInclude Include="src\Game\CNavManager.h" />
+    <ClInclude Include="src\Game\CNavNode.h" />
     <ClInclude Include="src\Game\CPlayer.h" />
     <ClInclude Include="src\Game\CRideableObject.h" />
     <ClInclude Include="src\Game\CRotateFloor.h" />

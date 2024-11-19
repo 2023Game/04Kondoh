@@ -92,6 +92,9 @@
     <Filter Include="ソース ファイル\Game\Debug">
       <UniqueIdentifier>{39cb4993-a79c-410a-961b-56b7be3c3ee6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Navigation">
+      <UniqueIdentifier>{302d246b-b520-48de-8b1c-ae704a963a5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -363,6 +366,12 @@
     </ClCompile>
     <ClCompile Include="src\Game\CWall.cpp">
       <Filter>ソース ファイル\Game\Field\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CNavNode.cpp">
+      <Filter>ソース ファイル\Game\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CNavManager.cpp">
+      <Filter>ソース ファイル\Game\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -659,6 +668,12 @@
     </ClInclude>
     <ClInclude Include="src\Game\CWall.h">
       <Filter>ソース ファイル\Game\Field\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CNavNode.h">
+      <Filter>ソース ファイル\Game\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CNavManager.h">
+      <Filter>ソース ファイル\Game\Navigation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

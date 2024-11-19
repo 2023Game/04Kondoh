@@ -4,11 +4,23 @@
 #include "CRotateFloor.h"
 #include "CLineEffect.h"
 #include "CWall.h"
+#include <assert.h>
+
+// フィールドのインスタンス
+CField* CField::spInstance = nullptr;
+
+CField* CField::Instance()
+{
+	return spInstance;
+}
 
 CField::CField()
 	: CObjectBase(ETag::eField, ETaskPriority::eBackground)
 	, mEffectAnimData(1, 11, true, 11, 0.03f)
 {
+	assert(spInstance == nullptr);
+	spInstance = this;
+
 	mpModel = CResourceManager::Get<CModel>("Field");
 
 
@@ -21,6 +33,7 @@ CField::CField()
 
 CField::~CField()
 {
+	spInstance = nullptr;
 	if (mpColliderMesh != nullptr)
 	{
 		delete mpColliderMesh;
@@ -37,6 +50,15 @@ void CField::CreateWalls()
 		CVector(0.0f, 90.0f, 0.0f),
 		CVector(5.0f, 5.0f, 5.0f)
 
+	);
+	mWalls.push_back(wall);
+
+	// 壁生成
+	wall = new CWall
+	(
+		CVector(-50.0f, 0.94f, -50.0f),
+		CVector(  0.0f,  0.0f,  0.0f),
+		CVector(  5.0f,  5.0f,  5.0f)
 	);
 	mWalls.push_back(wall);
 }
@@ -127,6 +149,40 @@ void CField::CreateFieldObjects()
 		CVector pos = CVector::Lerp(startPos, endPos, alpha);
 		le->AddPoint(pos, width, width);
 	}
+}
+
+// レイとのフィールドオブジェクト衝突判定
+bool CField::CollisionRay(const CVector& start, const CVector& end, CHitInfo* hit)
+{
+	// 衝突情報保存用
+	CHitInfo tHit;
+	// 衝突したかどうかのフラグ
+	bool isHit = false;
+
+	//　フィールドのオブジェクトとの衝突判定
+	if (CCollider::CollisionRay(mpColliderMesh, start, end, &tHit))
+	{
+		*hit = tHit;
+		isHit = true;
+	}
+
+	// 壁との衝突判定
+	for (CWall* wall : mWalls)
+	{
+		if (wall->CollisionRay(start, end, &tHit))
+		{
+			// まだ他に衝突していない場合か
+			// すでに衝突しているコライダーより近い場合は
+			if (!isHit || tHit.dist < hit->dist)
+			{
+				// 衝突情報を更新
+				*hit = tHit;
+				isHit = true;
+			}
+		}
+	}
+
+	return isHit;
 }
 
 void CField::Update()

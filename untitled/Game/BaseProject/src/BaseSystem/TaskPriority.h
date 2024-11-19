@@ -8,6 +8,7 @@ enum class ETaskPriority
 	// 3D関連
 	eBackground,// 背景
 	eDebugFov,  // 視野範囲のデバッグ表示
+	eNavigation,// 経路探索関連のデバッグ表示
 	eDefault,	// デフォルト
 	ePlayer,	// プレイヤー
 

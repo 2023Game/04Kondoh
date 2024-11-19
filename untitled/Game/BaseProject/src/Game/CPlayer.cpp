@@ -74,6 +74,8 @@ CPlayer::CPlayer()
 	);
 	mpColliderLine->SetCollisionLayers({ ELayer::eField });
 
+
+
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
 
 	mpFlamethrower = new CFlamethrower

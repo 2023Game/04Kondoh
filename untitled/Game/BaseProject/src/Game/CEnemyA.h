@@ -53,7 +53,7 @@ private:
 	// アニメーションデータのテーブル
 	static const AnimData ANIM_DATA[];
 
-	// プレイヤーの状態
+	// 敵の状態
 	enum class EState
 	{
 		eIdle,		// 待機
@@ -112,5 +112,5 @@ private:
 	// 巡回ポイントのリスト
 	std::vector<CVector> mPatrolPoints;
 	int mNextPatrolIndex; // 次に巡回するポイントの番号
-
+};
 #endif

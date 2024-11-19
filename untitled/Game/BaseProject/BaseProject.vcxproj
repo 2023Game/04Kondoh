@@ -89,6 +89,7 @@
     <ClCompile Include="src\Game\CSlash.cpp" />
     <ClCompile Include="src\Game\CTitleScene.cpp" />
     <ClCompile Include="src\Game\CTitleUI.cpp" />
+    <ClCompile Include="src\Game\CWall.cpp" />
     <ClCompile Include="src\Game\CXCharacter.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Test\CBootMenuScene.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="src\Game\CSlash.h" />
     <ClInclude Include="src\Game\CTitleUI.h" />
     <ClInclude Include="src\Game\CTitleScene.h" />
+    <ClInclude Include="src\Game\CWall.h" />
     <ClInclude Include="src\Game\CXCharacter.h" />
     <ClInclude Include="src\Test\CBootMenuScene.h" />
     <ClInclude Include="src\Test\CColBase.h" />

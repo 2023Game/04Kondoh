@@ -37,6 +37,8 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>("FieldCol", "Field\\field0Col.obj");
 	CResourceManager::Load<CModel>("FieldCube", "Field\\Object\\cube.obj");
 	CResourceManager::Load<CModel>("FieldCylinder", "Field\\Object\\cylinder.obj");
+	CResourceManager::Load<CModel>("Wall",       "Field\\Object\\Wall\\Wall.obj");
+	CResourceManager::Load<CModel>("WallCol",    "Field\\Object\\Wall\\WallCol.obj");
 	CResourceManager::Load<CModelX>("Player", "Character\\New Player\\Playre T-Pose.x");
 	CResourceManager::Load<CModelX>("EnemyA","Character\\EnemyA\\enemyA.x");
 	CResourceManager::Load<CTexture>("Laser", "Effect\\laser.png");
@@ -51,6 +53,7 @@ void CGameScene::Load()
 
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
+	player->Position(-50.0f, 0.94, 0.0f);
 
 	CEnemyA* enemyA = new CEnemyA
 	(

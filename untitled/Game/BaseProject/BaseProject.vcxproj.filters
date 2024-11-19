@@ -361,6 +361,9 @@
     <ClCompile Include="src\Game\CDebugFieldOfView.cpp">
       <Filter>ソース ファイル\Game\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\CWall.cpp">
+      <Filter>ソース ファイル\Game\Field\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -653,6 +656,9 @@
     </ClInclude>
     <ClInclude Include="src\Game\CDebugFieldOfView.h">
       <Filter>ソース ファイル\Game\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CWall.h">
+      <Filter>ソース ファイル\Game\Field\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@
 #define ATTACK_MOVE_END 24.0f   // 攻撃時の移動終了フレーム
 #define ATTACK_WAIT_TIME 1.0f   // 攻撃終了時の待ち時間
 #define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
+#define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
 #define IDLE_TIME 5.0f          // 待機状態の時間
 
 // プレイヤーのアニメーションデータのテーブル
@@ -127,6 +128,21 @@ void CEnemyA::Render()
 {
 	CXCharacter::Render();
 
+	// 巡回中であれば
+	if (mState == EState::ePatrol)
+	{
+		float rad = 1.0f;
+		// 巡回ポイントを全て描画
+		int size = mPatrolPoints.size();
+		for (int i = 0; i < size; i++)
+		{
+			CMatrix m;
+			m.Translate(mPatrolPoints[i] + CVector(0.0f, rad * 2.0f, 0.0f));
+			CColor c = i == mNextPatrolIndex ? CColor::red : CColor::cyan;
+			Primitive::DrawWireSphere(m, rad, c);
+		}
+	}
+
 	// 見失ったとき
 	if (mState == EState::eLost)
 	{
@@ -217,7 +233,7 @@ bool CEnemyA::CanAttackPlayer() const
 	return true;
 }
 
-// 攻撃時に移動する距離か
+ //攻撃時に移動する距離か
 bool CEnemyA::AttackRangeMin()
 {
 	// プレイヤーがいない場合は、攻撃できない
@@ -281,11 +297,11 @@ bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
 void CEnemyA::ChangePatrolPoint()
 {
 	// 巡回ポイントが設定されていない場合は、処理しない
-	int size = mPatrolPoint.size();
+	int size = mPatrolPoints.size();
 	if (size == 0) return;
 
 	// 巡回開始時であれば、一番近い巡回ポイントを選択
-	if (mNextPatrolPoint == -1)
+	if (mNextPatrolIndex == -1)
 	{
 		int nearIndex = -1;     // 一番近い巡回ポイントの番号
 		float nearDist = 0.0f;  // 一番近い巡回ポイントまでの距離
@@ -296,13 +312,15 @@ void CEnemyA::ChangePatrolPoint()
 			CVector vec = point - Position();
 			vec.Y(0.0f);
 			float dist = vec.Length();
+			// 巡回ポイントが近すぎる場合は、スルー
+			if (dist < PATROL_NEAR_DIST) continue;
 			// 一番近い巡回ポイントもしくは、
 			// 現在一番近い巡回ポイントよりさらに近い場合は、
 			// 巡回ポイントの番号を置き換える
 			if (nearIndex < 0 || dist < nearDist)
 			{
 				nearIndex = i;
-				nearDist = dest;
+				nearDist = dist;
 			}
 		}
 		mNextPatrolIndex = nearIndex;
@@ -348,6 +366,8 @@ void CEnemyA::UpdatePatrol()
 		ChangeState(EState::eChase);
 		return;
 	}
+
+	// ステップごとに処理を切り替える
 	switch (mStateStep)
 	{
 		// ステップ0：巡回ポイントを求める
@@ -358,6 +378,7 @@ void CEnemyA::UpdatePatrol()
 		break;
 		// ステップ1：巡回ポイントまで移動
 	case 1:
+		ChangeAnimation(EAnimType::eWalk);
 		if (MoveTo(mPatrolPoints[mNextPatrolIndex], WALK_SPEED))
 		{
 			mStateStep++;
@@ -365,6 +386,7 @@ void CEnemyA::UpdatePatrol()
 		break;
 		// ステップ2：移動後の待機
 	case 2:
+		ChangeAnimation(EAnimType::eIdle);
 		if (mElapsedTime < PATROL_INTERVAL)
 		{
 			mElapsedTime += Times::DeltaTime();
@@ -373,6 +395,7 @@ void CEnemyA::UpdatePatrol()
 		{
 			ChangePatrolPoint();
 			mStateStep = 1;
+			mElapsedTime = 0.0f;
 		}
 		break;
 	}
@@ -444,7 +467,7 @@ void CEnemyA::UpdateAttack()
 		{
 			// 攻撃アニメーションが移動開始フレームを超えた場合
 			float frame = GetAnimationFrame();
-			/*if (!AttackRangeMin()) {*/
+			if (AttackRangeMin()) {
 				if (frame >= ATTACK_MOVE_START)
 				{
 					// 移動終了フレームまで到達してない場合
@@ -463,7 +486,7 @@ void CEnemyA::UpdateAttack()
 						mStateStep++;
 					}
 				}
-			/*}*/
+			}
 			else
 			{
 				mStateStep++;

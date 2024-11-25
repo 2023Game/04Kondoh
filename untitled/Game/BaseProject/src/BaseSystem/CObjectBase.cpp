@@ -1,6 +1,7 @@
 #include "CObjectBase.h"
 #include "CCollider.h"
 #include "Maths.h"
+#include "CNavNode.h"
 
 // コンストラクタ
 CObjectBase::CObjectBase(ETag tag, ETaskPriority prio, int sortOrder, ETaskPauseType pause)
@@ -9,6 +10,7 @@ CObjectBase::CObjectBase(ETag tag, ETaskPriority prio, int sortOrder, ETaskPause
 	, mIsEnableCol(true)
 	, mDepth(0.0f)
 	, mColor(CColor::white)
+	, mpNavNode(nullptr)
 {
 }
 
@@ -103,6 +105,13 @@ void CObjectBase::AttackStart()
 // 攻撃終了
 void CObjectBase::AttackEnd()
 {
+}
+
+// 経路探索用のノードを取得
+CNavNode* CObjectBase::GetNavNode() const
+{
+
+	return mpNavNode;
 }
 
 // 攻撃がヒットしたオブジェクトを追加

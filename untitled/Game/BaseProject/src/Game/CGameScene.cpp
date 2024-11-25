@@ -9,6 +9,7 @@
 #include "CGameMenu.h"
 #include "CBGMManager.h"
 #include "CLineEffect.h"
+#include "CNavManager.h"
 
 //コンストラクタ
 CGameScene::CGameScene()
@@ -39,6 +40,7 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>("FieldCylinder", "Field\\Object\\cylinder.obj");
 	CResourceManager::Load<CModel>("Wall",       "Field\\Object\\Wall\\Wall.obj");
 	CResourceManager::Load<CModel>("WallCol",    "Field\\Object\\Wall\\WallCol.obj");
+	CResourceManager::Load<CModel>("WallNavCol", "Field\\Object\\Wall\\WallNavCol.obj");
 	CResourceManager::Load<CModelX>("Player", "Character\\New Player\\Playre T-Pose.x");
 	CResourceManager::Load<CModelX>("EnemyA","Character\\EnemyA\\enemyA.x");
 	CResourceManager::Load<CTexture>("Laser", "Effect\\laser.png");
@@ -48,6 +50,9 @@ void CGameScene::Load()
 
 	// ゲームBGMを読み込み
 	CBGMManager::Instance()->Play(EBGMType::eGame);
+
+	// 経路探索管理クラスを作成
+	new CNavManager();
 
 	new CField();
 

@@ -22,13 +22,24 @@ public:
 	bool CollisionRay(const CVector& start, const CVector& end,
 		CHitInfo* hit) override;
 
+	/// <summary>
+	/// レイとの壁との衝突判定（経路探索用）
+	/// </summary>
+	/// <param name="start">レイの開始位置</param>
+	/// <param name="end">レイの終了位置</param>
+	/// <param name="hit">衝突情報返却用</param>
+	/// <returns>衝突していたら、trueを返す</returns>
+	bool NavCollisionRay(const CVector& start, const CVector& end,
+		CHitInfo* hit);
+
 	// 更新
 	void Update();
 	// 描画
 	void Render();
 
 private:
-	CModel* mpModel;    // 壁のモデルデータ
-	CColliderMesh* mpColliderMesh;  // 壁のコリジョンデータ
+	CModel* mpModel;                    // 壁のモデルデータ
+	CColliderMesh* mpColliderMesh;      // 壁のコリジョンデータ
+	CColliderMesh* mpNavColliderMesh;   // 壁の経路探索用のコリジョンデータ
 
 };

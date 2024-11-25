@@ -5,6 +5,8 @@
 #include "CCollider.h"
 #include "CColor.h"
 
+class CNavNode;
+
 /// <summary>
 /// 3D空間に配置するオブジェクトのベースクラス
 /// </summary>
@@ -74,6 +76,9 @@ public:
 	/// </summary>
 	virtual void AttackEnd();
 
+	// 経路探索用のノードを取得
+	CNavNode* GetNavNode() const;
+
 private:
 	ETag mTag;			// オブジェクト識別用のタグ
 	bool mIsEnableCol;	// 衝突判定を行うかどうか
@@ -96,4 +101,7 @@ protected:
 
 	// 攻撃がヒットしたオブジェクトのリスト
 	std::list<CObjectBase*> mAttackHitObjects;
+
+	CNavNode* mpNavNode;  // 経路探索用のノードのポインタ
+
 };

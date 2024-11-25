@@ -6,6 +6,8 @@
 #include "CFlamethrower.h"
 #include "CSlash.h"
 #include "Maths.h"
+#include "CNavNode.h"
+#include "CNavManager.h"
 
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
@@ -105,6 +107,10 @@ CPlayer::CPlayer()
 		CVector(0.0f, 14.0f, -1.0f),
 		CQuaternion(0.0f, 90.0f, 0.0f).Matrix()
 	);
+
+	// 経路探索用のノードを作成
+	mpNavNode = new CNavNode(Position(), true);
+	mpNavNode->SetColor(CColor::red);
 }
 
 CPlayer::~CPlayer()
@@ -113,6 +119,13 @@ CPlayer::~CPlayer()
 	SAFE_DELETE(mpColliderLine);
 	SAFE_DELETE(mpColliderLineX);
 	SAFE_DELETE(mpColliderLineZ);
+
+	// 経路探索用のノードを破棄
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr != nullptr)
+	{
+		SAFE_DELETE(mpNavNode);
+	}
 
 	spInstance = nullptr;
 }
@@ -441,6 +454,12 @@ void CPlayer::Update()
 
 	// キャラクターの更新
 	CXCharacter::Update();
+
+	// 経路探索用のノードが存在すれば、座標を更新
+	if (mpNavNode != nullptr)
+	{
+		mpNavNode->SetPos(Position());
+	}
 
 	CDebugPrint::Print("Grounded:%s\n", mIsGrounded ? "true" : "false");
 	CDebugPrint::Print("State:%d\n", mState);

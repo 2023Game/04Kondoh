@@ -4,13 +4,24 @@
 
 // ノードのY座標のオフセット値
 #define NODE_OFFSET_Y 5.0f
+// 探すノードの距離の限界値
+#define FIND_NODE_DISTANCE 70.0f
 
 // コンストラクタ
 CNavNode::CNavNode(const CVector& pos, bool isDestNode)
 	:mIsDestNode(isDestNode)
 	, mPosition(pos)
+	, mCalcMoveCost(-1.0f)
+	, mpCalcFromNode(nullptr)
 	, mColor(0.0f, 1.0f, 0.0f, 1.0f)
 {
+	// 管理クラスに自身を追加
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr != nullptr)
+	{
+		navMgr->AddNode(this);
+	}
+
 	// 座標設定
 	SetPos(mPosition);
 }
@@ -18,6 +29,19 @@ CNavNode::CNavNode(const CVector& pos, bool isDestNode)
 // デストラクタ
 CNavNode::~CNavNode()
 {
+	// 管理クラスに自身を取り除く
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr != nullptr)
+	{
+		navMgr->RemoveNode(this);
+	}
+}
+
+// 最短経路計算用のデータをリセット
+void CNavNode::ResetCalcData()
+{
+	mCalcMoveCost = -1.0f;
+	mpCalcFromNode = nullptr;
 }
 
 // ノードの座標を取得
@@ -40,6 +64,58 @@ void CNavNode::SetPos(const CVector& pos)
 	mPosition = pos;
 
 	// TODO: ノードの座標が変わったので、接続しているノードを調べ直す
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr != nullptr)
+	{
+		navMgr->FindConnectNavNode(this, FIND_NODE_DISTANCE);
+	}
+
+}
+
+// 接続するノードを追加
+void CNavNode::AddConnect(CNavNode* node)
+{
+	// 既に接続リストに登録してあるノードは、スルー
+	for (CNavConnectData& connect : mConnectData)
+	{
+		if (connect.node == node) return;
+	}
+
+	// 接続するノードまでの距離をコストとする
+	float cost = (node->GetPos() - mPosition).Length();
+
+	// 自身と相手それぞれの接続しているノードリストに接続
+	mConnectData.push_back(CNavConnectData(node, cost));
+	node->mConnectData.push_back(CNavConnectData(this, cost));
+}
+
+// 接続しているノードを削除
+void CNavNode::RemeveConnect(CNavNode* node)
+{
+	auto itr = mConnectData.begin();
+	auto end = mConnectData.end();
+	while (itr != end)
+	{
+		// 一致するノードが見つかれば、リストから取り除く
+		if (itr->node == node)
+		{
+			itr = mConnectData.erase(itr);
+			continue;
+		}
+		itr++;
+	}
+}
+
+// 接続している全てのノードを解除
+void CNavNode::ClearConnects()
+{
+	// 接続相手の接続リストから自身を取り除く
+	for (CNavConnectData& connect : mConnectData)
+	{
+		connect.node->RemeveConnect(this);
+	}
+	// 自身の接続リストをクリア
+	mConnectData.clear();
 }
 
 // ノードの色設定
@@ -51,8 +127,22 @@ void CNavNode::SetColor(const CColor& color)
 // ノードを描画（デバッグ用）
 void CNavNode::Render()
 {
+	// 
+	for (CNavConnectData& connect : mConnectData)
+	{
+		Primitive::DrawLine
+		(
+			GetOffsetPos(),
+			connect.node->GetOffsetPos(),
+			CColor(0.1f, 0.1f, 0.1f, 1.0f),
+			2.0f
+		);
+	}
+
 	// ノードの座標に球を描画
 	CMatrix m;
 	m.Translate(GetOffsetPos());
 	Primitive::DrawWireSphere(m, 1.0f, mColor);
 }
+
+

@@ -7,6 +7,8 @@
 #include "Maths.h"
 #include "Primitive.h"
 #include "CField.h"
+#include "CNavNode.h"
+#include "CNavManager.h"
 
 #define ENEMY_HEIGHT 16.0f      // 敵の高さ
 #define ENEMY_WIDTH 10.0f       // 敵の幅
@@ -50,8 +52,8 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mLostPlayerPos(CVector::zero)
 	, mAttackStartPos(CVector::zero)
 	, mAttackEndPos(CVector::zero)
-	, mPatrolPoints(patrolPoints)
 	, mNextPatrolIndex(-1)
+	, mNextMoveIndex(0)
 {
 	// モデルデータ取得
 	CModelX* model = CResourceManager::Get<CModelX>("EnemyA");
@@ -70,50 +72,79 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	// 最初は待機アニメーションを再生
 	ChangeAnimation(EAnimType::eIdle);
 
-	// 縦方向のコライダー作成
-	mpColliderLine = new CColliderLine
-	(
-		this, ELayer::ePlayer,
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(0.0f, ENEMY_HEIGHT, 0.0f)
-	);
-	mpColliderLine->SetCollisionLayers({ ELayer::eField });
+	//// 縦方向のコライダー作成
+	//mpColliderLine = new CColliderLine
+	//(
+	//	this, ELayer::ePlayer,
+	//	CVector(0.0f, 0.0f, 0.0f),
+	//	CVector(0.0f, ENEMY_HEIGHT, 0.0f)
+	//);
+	//mpColliderLine->SetCollisionLayers({ ELayer::eField });
 
-	float width = ENEMY_WIDTH * 0.5f;
-	float posY = ENEMY_HEIGHT * 0.5f;
-	// 横方向（X軸）のコライダー作成
-	mpColliderLineX = new CColliderLine
-	(
-		this, ELayer::ePlayer,
-		CVector(-width, posY, 0.0f),
-		CVector(width, posY, 0.0f)
-	);
-	mpColliderLineX->SetCollisionLayers({ ELayer::eField });
+	//float width = ENEMY_WIDTH * 0.5f;
+	//float posY = ENEMY_HEIGHT * 0.5f;
+	//// 横方向（X軸）のコライダー作成
+	//mpColliderLineX = new CColliderLine
+	//(
+	//	this, ELayer::ePlayer,
+	//	CVector(-width, posY, 0.0f),
+	//	CVector(width, posY, 0.0f)
+	//);
+	//mpColliderLineX->SetCollisionLayers({ ELayer::eField });
 
-	// 横方向（Z軸）のコライダー作成
-	mpColliderLineZ = new CColliderLine
-	(
-		this, ELayer::ePlayer,
-		CVector(0.0f, posY, -width),
-		CVector(0.0f, posY, width)
-	);
-	mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
+	//// 横方向（Z軸）のコライダー作成
+	//mpColliderLineZ = new CColliderLine
+	//(
+	//	this, ELayer::ePlayer,
+	//	CVector(0.0f, posY, -width),
+	//	CVector(0.0f, posY, width)
+	//);
+	//mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
+
+
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
+
+	// 経路探索用のノードを作成
+	mpNavNode = new CNavNode(Position(), true);
+	mpNavNode->SetColor(CColor::red);
+
+	for (CVector point : patrolPoints)
+	{
+		CNavNode* node = new CNavNode(point, true);
+		mPatrolPoints.push_back(node);
+	}
 }
 
 CEnemyA::~CEnemyA()
 {
 	// コライダーを破棄
-	SAFE_DELETE(mpColliderLine);
+	/*SAFE_DELETE(mpColliderLine);
 	SAFE_DELETE(mpColliderLineX);
-	SAFE_DELETE(mpColliderLineZ);
+	SAFE_DELETE(mpColliderLineZ);*/
 
 	// 視野範囲のデバッグ表示がせ存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
 	{
 		mpDebugFov->SetOwner(nullptr);
 		mpDebugFov->Kill();
+	}
+
+	// 経路探索用のノードを破棄
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr != nullptr)
+	{
+		SAFE_DELETE(mpNavNode);
+
+		//	巡回ポイントに配置したノードも全て削除
+		auto itr = mPatrolPoints.begin();
+		auto end = mPatrolPoints.end();
+		while (itr != end)
+		{
+			CNavNode* del = *itr;
+			itr = mPatrolPoints.erase(itr);
+			delete del;
+		}
 	}
 }
 
@@ -154,6 +185,12 @@ void CEnemyA::Update()
 
 	CXCharacter::Update(); 
 
+	// 経路探索用のノードが存在すれば、座標を更新
+	if (mpNavNode != nullptr)
+	{
+		mpNavNode->SetPos(Position());
+	}
+
 	// 現在の状態に合わせて視野範囲の色を変更
 	mpDebugFov->SetColor(GetStateColor(mState));
 
@@ -174,7 +211,7 @@ void CEnemyA::Render()
 		for (int i = 0; i < size; i++)
 		{
 			CMatrix m;
-			m.Translate(mPatrolPoints[i] + CVector(0.0f, rad * 2.0f, 0.0f));
+			m.Translate(mPatrolPoints[i]->GetPos() + CVector(0.0f, rad * 2.0f, 0.0f));
 			CColor c = i == mNextPatrolIndex ? CColor::red : CColor::cyan;
 			Primitive::DrawWireSphere(m, rad, c);
 		}
@@ -228,34 +265,34 @@ void CEnemyA::Render()
 // 衝突処理
 void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
-	// 縦方向の衝突処理
-	if (self == mpColliderLine)
-	{
-		if (other->Layer() == ELayer::eField)
-		{
-			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-			CVector adjust = hit.adjust;
-			adjust.X(0.0f);
-			adjust.Z(0.0f);
+	//// 縦方向の衝突処理
+	//if (self == mpColliderLine)
+	//{
+	//	if (other->Layer() == ELayer::eField)
+	//	{
+	//		// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+	//		CVector adjust = hit.adjust;
+	//		adjust.X(0.0f);
+	//		adjust.Z(0.0f);
 
-			Position(Position() + adjust * hit.weight);
-		}
-	}
+	//		Position(Position() + adjust * hit.weight);
+	//	}
+	//}
 
-	// 横方向（X軸とZ軸）の衝突処理
-	else if (self == mpColliderLineX || self == mpColliderLineZ)
-	{
-		if (other->Layer() == ELayer::eField)
-		{
-			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-			CVector adjust = hit.adjust;
-			adjust.Y(0.0f);
+	//// 横方向（X軸とZ軸）の衝突処理
+	//else if (self == mpColliderLineX || self == mpColliderLineZ)
+	//{
+	//	if (other->Layer() == ELayer::eField)
+	//	{
+	//		// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+	//		CVector adjust = hit.adjust;
+	//		adjust.Y(0.0f);
 
-			// 押し戻しベクトルの分座標を移動
-			Position(Position() + adjust * hit.weight);
+	//		// 押し戻しベクトルの分座標を移動
+	//		Position(Position() + adjust * hit.weight);
 
-		}
-	}
+	//	}
+	//}
 }
 
 void CEnemyA::ChangeAnimation(EAnimType type, bool restart)
@@ -437,7 +474,7 @@ void CEnemyA::ChangePatrolPoint()
 		// 全ての巡回ポイントを調べ、一番近い巡回ポイントを探す
 		for (int i = 0; i < size; i++)
 		{
-			CVector point = mPatrolPoints[i];
+			CVector point = mPatrolPoints[i]->GetPos();
 			CVector vec = point - Position();
 			vec.Y(0.0f);
 			float dist = vec.Length();
@@ -461,6 +498,19 @@ void CEnemyA::ChangePatrolPoint()
 		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
 	}
 
+	// 
+	if (mNextPatrolIndex >= 0)
+	{
+		CNavManager* navMgr = CNavManager::Instance();
+		if (navMgr != nullptr)
+		{
+			// 
+			if (navMgr->Navigate(mpNavNode, mPatrolPoints[mNextPatrolIndex], mMoveRoute))
+			{
+
+			}
+		}
+	}
 }
 
 // 待機状態の更新処理
@@ -546,15 +596,31 @@ void CEnemyA::UpdateChase()
 		return;
 	}
 
+	// 走るアニメーションを再生
 	ChangeAnimation(EAnimType::eRun);
 
 	// プレイヤーの座標へ向けて移動する
 	CPlayer* player = CPlayer::Instance();
-	CVector playerPos = player->Position();
-	mLostPlayerPos = playerPos; // プレイヤーを最後に見た座標を更新
-	if (MoveTo(playerPos, RUN_SPEED))
-	{
+	CVector targetPos = player->Position();
+	mLostPlayerPos = targetPos; // プレイヤーを最後に見た座標を更新
 
+	// 経路探索管理クラスが存在すれば、
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr != nullptr)
+	{
+		// 自身のノードからプレイヤーのノードまでの最短距離を求める
+		CNavNode* playerNode = player->GetNavNode();
+		if (navMgr->Navigate(mpNavNode, playerNode, mMoveRoute))
+		{
+			// 自身のノードからプレイヤーのノードまで繋がっていたら、
+			// 移動する位置を次のノードの位置に設定
+			targetPos = mMoveRoute[1]->GetPos();
+		}
+	}
+
+	// 移動処理
+	if (MoveTo(targetPos, RUN_SPEED))
+	{
 	}
 }
 

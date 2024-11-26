@@ -261,3 +261,8 @@ CCollider* CField::GetFieldCol() const
 {
 	return mpColliderMesh;
 }
+
+std::list<CWall*> CField::GetWalls() const
+{
+	return mWalls;
+}

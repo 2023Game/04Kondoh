@@ -35,8 +35,10 @@ public:
 	void Update();
 	void Render();
 
-	// カメラとの当たり判定取得処理
+	// コライダ取得処理
 	CCollider* GetFieldCol()const;
+	// 生成した壁のリストを取得
+	std::list<CWall*> GetWalls() const;
 
 private:
 	// 壁を生成

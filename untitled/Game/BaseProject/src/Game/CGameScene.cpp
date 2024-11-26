@@ -90,6 +90,11 @@ void CGameScene::Load()
 	);
 
 	mainCamera->AddCollider(field->GetFieldCol());
+	std::list<CWall*> walls = field->GetWalls();
+	for (CWall* wall : walls)
+	{
+		mainCamera->AddCollider(wall->GetFieldCol());
+	}
 
 	mainCamera->SetFollowTargetTf(player);
 

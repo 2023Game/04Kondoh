@@ -25,7 +25,9 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 };
 
 #define PLAYER_HEIGHT 16.0f  // プレイヤーの高さ
-#define PLAYER_WIDTH 10.0f    // プレイヤーの幅
+#define PLAYER_CAP_UP 13.5f  // プレイヤカプセルコライダの上
+#define PLAYER_CAP_DWON 2.5f // プレイヤカプセルコライダの下
+#define PLAYER_WIDTH 10.0f   // プレイヤーの幅
 #define MOVE_SPEED 0.375f * 2.0f
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
@@ -69,35 +71,45 @@ CPlayer::CPlayer()
 	// 最初は待機アニメーションを再生
 	ChangeAnimation(EAnimType::eTPose);
 
-	// 縦方向のコライダー作成
-	mpColliderLine = new CColliderLine
+
+	//// 縦方向のコライダー作成
+	//mpColliderLine = new CColliderLine
+	//(
+	//	this, ELayer::ePlayer,
+	//	CVector(0.0f, 0.0f, 0.0f),
+	//	CVector(0.0f, PLAYER_HEIGHT, 0.0f)
+	//);
+	//mpColliderLine->SetCollisionLayers({ ELayer::eField });
+
+	//float width = PLAYER_WIDTH * 0.5f;
+	//float posY = PLAYER_HEIGHT * 0.5f;
+	//// 横方向（X軸）のコライダー作成
+	//mpColliderLineX = new CColliderLine
+	//(
+	//	this, ELayer::ePlayer,
+	//	CVector(-width, posY, 0.0f),
+	//	CVector( width, posY, 0.0f)
+	//);
+	//mpColliderLineX->SetCollisionLayers({ ELayer::eField });
+
+	//// 横方向（Z軸）のコライダー作成
+	//mpColliderLineZ = new CColliderLine
+	//(
+	//	this, ELayer::ePlayer,
+	//	CVector(0.0f, posY, -width),
+	//	CVector(0.0f, posY,  width)
+	//);
+	//mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
+
+	// カプセルコライダー作成
+	mpColliderCapsule = new CColliderCapsule
 	(
 		this, ELayer::ePlayer,
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(0.0f, PLAYER_HEIGHT, 0.0f)
+		CVector(0.0f, PLAYER_CAP_DWON, 0.0f),
+		CVector(0.0f, PLAYER_CAP_UP, 0.0f),
+		2.0f,true
 	);
-	mpColliderLine->SetCollisionLayers({ ELayer::eField });
-
-	float width = PLAYER_WIDTH * 0.5f;
-	float posY = PLAYER_HEIGHT * 0.5f;
-	// 横方向（X軸）のコライダー作成
-	mpColliderLineX = new CColliderLine
-	(
-		this, ELayer::ePlayer,
-		CVector(-width, posY, 0.0f),
-		CVector( width, posY, 0.0f)
-	);
-	mpColliderLineX->SetCollisionLayers({ ELayer::eField });
-
-	// 横方向（Z軸）のコライダー作成
-	mpColliderLineZ = new CColliderLine
-	(
-		this, ELayer::ePlayer,
-		CVector(0.0f, posY, -width),
-		CVector(0.0f, posY,  width)
-	);
-	mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
-
+	mpColliderCapsule->SetCollisionLayers({ ELayer::eField, ELayer::eWall});
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
 
@@ -116,9 +128,10 @@ CPlayer::CPlayer()
 CPlayer::~CPlayer()
 {
 	// コライダーを破棄
-	SAFE_DELETE(mpColliderLine);
-	SAFE_DELETE(mpColliderLineX);
-	SAFE_DELETE(mpColliderLineZ);
+	//SAFE_DELETE(mpColliderLine);
+	//SAFE_DELETE(mpColliderLineX);
+	//SAFE_DELETE(mpColliderLineZ);
+	SAFE_DELETE(mpColliderCapsule);
 
 	// 経路探索用のノードを破棄
 	CNavManager* navMgr = CNavManager::Instance();
@@ -473,6 +486,7 @@ void CPlayer::Update()
 void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
 	// 縦方向の衝突処理
+	/*
 	if (self == mpColliderLine)
 	{
 		if (other->Layer() == ELayer::eField)
@@ -532,6 +546,66 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			// 押し戻しベクトルの分座標を移動
 			Position(Position() + adjust * hit.weight);
 
+		}
+	}
+	*/
+
+	// 当たり判定
+	if (self == mpColliderCapsule)
+	{
+		if (other->Layer() == ELayer::eField)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			//adjust.X(0.0f);
+			//adjust.Z(0.0f);
+
+			Position(Position() + adjust * hit.weight);
+
+			// 衝突した地面が床か天井かを内積で判定
+			CVector normal = hit.adjust.Normalized();
+			float dot = CVector::Dot(normal, CVector::up);
+			float sideX = CVector::Dot(normal, CVector::right);
+			float sideZ = CVector::Dot(normal, CVector::forward);
+			// 内積の結果がプラスであれば、床と衝突した
+			if (dot >= 0.0f)
+			{
+				// 落下などで床に上から衝突した時（下移動）のみ
+				// 上下の移動速度を0にする
+				if (mMoveSpeedY < 0.0f)
+				{
+					mMoveSpeedY = 0.0f;
+				}
+
+				// 接地した
+				mIsGrounded = true;
+				// 接地した地面の法線を記憶しておく
+				mGroundNormal = hit.adjust.Normalized();
+
+				if (other->Tag() == ETag::eRideableObject)
+				{
+					mpRideObject = other->Owner();
+				}
+			}
+			// 内積の結果がマイナスであれば、天井と衝突した
+			else
+			{
+				// ジャンプなどで天井に下から衝突した時（上移動）のみ
+				// 上下の移動速度を0にする
+				if (mMoveSpeedY > 0.0f)
+				{
+					mMoveSpeedY = 0.0f;
+				}
+			}
+		}
+		else if (other->Layer() == ELayer::eWall)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			//adjust.Y(0.0f);
+
+			// 押し戻しベクトルの分座標を移動
+			Position(Position() + adjust * hit.weight);
 		}
 	}
 }

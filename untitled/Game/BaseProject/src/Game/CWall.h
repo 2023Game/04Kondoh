@@ -37,6 +37,9 @@ public:
 	// 描画
 	void Render();
 
+	// カメラとの当たり判定取得処理
+	CCollider* GetFieldCol()const;
+
 private:
 	CModel* mpModel;                    // 壁のモデルデータ
 	CColliderMesh* mpColliderMesh;      // 壁のコリジョンデータ

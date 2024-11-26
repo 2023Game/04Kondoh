@@ -49,7 +49,6 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mFovAngle(FOV_ANGLE)
 	, mFovLength(FOV_LENGTH)
 	, mpDebugFov(nullptr)
-	, mLostPlayerPos(CVector::zero)
 	, mAttackStartPos(CVector::zero)
 	, mAttackEndPos(CVector::zero)
 	, mNextPatrolIndex(-1)
@@ -109,6 +108,9 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpNavNode = new CNavNode(Position(), true);
 	mpNavNode->SetColor(CColor::red);
 
+	// プレイヤーを見失った位置のノードを作成
+	mpLostPlayerNode = new CNavNode(CVector::zero, true);
+
 	for (CVector point : patrolPoints)
 	{
 		CNavNode* node = new CNavNode(point, true);
@@ -135,6 +137,7 @@ CEnemyA::~CEnemyA()
 	if (navMgr != nullptr)
 	{
 		SAFE_DELETE(mpNavNode);
+		SAFE_DELETE(mpLostPlayerNode);
 
 		//	巡回ポイントに配置したノードも全て削除
 		auto itr = mPatrolPoints.begin();
@@ -223,7 +226,7 @@ void CEnemyA::Render()
 		//プレイヤーを見失った位置にデバッグ表示
 		float rad = 2.0f;
 		CMatrix m;
-		m.Translate(mLostPlayerPos + CVector(0.0f, rad, 0.0f));
+		m.Translate(mpLostPlayerNode->GetPos() + CVector(0.0f, rad, 0.0f));
 		Primitive::DrawWireSphere(m, rad, CColor::blue);
 	}
 
@@ -498,16 +501,24 @@ void CEnemyA::ChangePatrolPoint()
 		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
 	}
 
-	// 
+	// 次に巡回するポイントが決まった場合
 	if (mNextPatrolIndex >= 0)
 	{
 		CNavManager* navMgr = CNavManager::Instance();
 		if (navMgr != nullptr)
 		{
-			// 
+			// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
+			// 各ノードへの接続情報を更新
+			for (CNavNode* node : mPatrolPoints)
+			{
+				node->SetPos(node->GetPos());
+			}
+
+			// 巡回ポイントまでの最短経路を求める
 			if (navMgr->Navigate(mpNavNode, mPatrolPoints[mNextPatrolIndex], mMoveRoute))
 			{
-
+				// 次の目的地のインデックスを設定
+				mNextMoveIndex = 1;
 			}
 		}
 	}
@@ -557,12 +568,22 @@ void CEnemyA::UpdatePatrol()
 		break;
 		// ステップ1：巡回ポイントまで移動
 	case 1:
+	{
 		ChangeAnimation(EAnimType::eWalk);
-		if (MoveTo(mPatrolPoints[mNextPatrolIndex], WALK_SPEED))
+		// 最短経路の次のノードまで移動
+		CNavNode* moveNode = mMoveRoute[mNextMoveIndex];
+		if (MoveTo(moveNode->GetPos(), WALK_SPEED))
 		{
-			mStateStep++;
+			// 移動が終われば、次のノードへ切り替え
+			mNextMoveIndex++;
+			// 最後のノード（目的地のノード）だった場合は、次のステップへ進める
+			if (mNextMoveIndex >= mMoveRoute.size())
+			{
+				mStateStep++;
+			}
 		}
 		break;
+	}
 		// ステップ2：移動後の待機
 	case 2:
 		ChangeAnimation(EAnimType::eIdle);
@@ -583,9 +604,14 @@ void CEnemyA::UpdatePatrol()
 // 追跡中の更新処理
 void CEnemyA::UpdateChase()
 {
-	// プレイヤーが視野範囲外に出たら、見失った状態に戻す
-	if (!IsFoundPlayer())
+	// プレイヤーの座標へ向けて移動する
+	CPlayer* player = CPlayer::Instance();
+	CVector targetPos = player->Position();
+
+	// プレイヤーが見えなくなったら、見失った状態に戻す
+	if (!IsLookPlayer())
 	{
+		mpLostPlayerNode->SetPos(targetPos);
 		ChangeState(EState::eLost);
 		return;
 	}
@@ -598,11 +624,6 @@ void CEnemyA::UpdateChase()
 
 	// 走るアニメーションを再生
 	ChangeAnimation(EAnimType::eRun);
-
-	// プレイヤーの座標へ向けて移動する
-	CPlayer* player = CPlayer::Instance();
-	CVector targetPos = player->Position();
-	mLostPlayerPos = targetPos; // プレイヤーを最後に見た座標を更新
 
 	// 経路探索管理クラスが存在すれば、
 	CNavManager* navMgr = CNavManager::Instance();
@@ -627,20 +648,50 @@ void CEnemyA::UpdateChase()
 // 見失った時の更新処理
 void CEnemyA::UpdateLost()
 {
-	// プレイヤーが視野範囲内に入ったら、追跡状態へ移行
-	if (IsFoundPlayer()) 
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr == nullptr)
+	{
+		ChangeState(EState::eIdle);
+		return;
+	}
+	// プレイヤーが見えたら、追跡状態へ移行
+	if (IsLookPlayer()) 
 	{
 		ChangeState(EState::eChase);
 		return;
 	}
 
-	// 歩くアニメーションを再生
+	// 走るアニメーションを再生
 	ChangeAnimation(EAnimType::eRun);
-	// プレイヤーを見失った位置まで移動
-	if (MoveTo(mLostPlayerPos, RUN_SPEED))
+
+	switch (mStateStep)
 	{
-		// 移動が終われば、待機状態へ移動
-		ChangeState(EState::eIdle);
+		// ステップ0：見失った位置までの最短経路を求める
+	case 0:
+		if (navMgr->Navigate(mpNavNode, mpLostPlayerNode, mMoveRoute))
+		{
+			// 見失った位置まで経路が繋がっていたら、次のステップへ
+			mNextMoveIndex = 1;
+			mStateStep++;
+		}
+		else
+		{
+			// 経路が繋がっていなければ、待機状態へ戻す
+			ChangeState(EState::eIdle);
+		}
+		break;
+	case 1:
+		// プレイヤーを見失った位置まで移動
+		if (MoveTo(mMoveRoute[mNextMoveIndex]->GetPos(), RUN_SPEED))
+		{
+			mNextMoveIndex++;
+			if (mNextMoveIndex >= mMoveRoute.size())
+			{
+				// 移動が終われば、待機状態へ移行
+				ChangeState(EState::eIdle);
+			}
+		}
+		break;
 	}
 }
 

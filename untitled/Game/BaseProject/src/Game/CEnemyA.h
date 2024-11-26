@@ -115,7 +115,7 @@ private:
 	float mFovAngle;                // 視野範囲の角度
 	float mFovLength;                // 視野範囲の距離
 
-	CVector mLostPlayerPos; // プレイヤーを見失った座標
+	CNavNode* mpLostPlayerNode;  // プレイヤーを見失った位置のノード
 
 	CVector mAttackStartPos; // 攻撃開始時の位置
 	CVector mAttackEndPos;   // 攻撃終了時の位置

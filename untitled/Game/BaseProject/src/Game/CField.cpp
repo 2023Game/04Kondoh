@@ -66,6 +66,8 @@ void CField::CreateWalls()
 		CVector(  5.0f,  5.0f,  5.0f)
 	);
 	mWalls.push_back(wall);
+
+
 }
 
 void CField::CreateFieldObjects()
@@ -253,4 +255,9 @@ void CField::Update()
 void CField::Render()
 {
 	mpModel->Render(Matrix());
+}
+
+CCollider* CField::GetFieldCol() const
+{
+	return mpColliderMesh;
 }

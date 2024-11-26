@@ -8,11 +8,11 @@ CWall::CWall(const CVector& pos, const CVector& angle, const CVector& size)
 
 	// 壁のコライダーを作成
 	CModel* colModel = CResourceManager::Get<CModel>("WallCol");
-	mpColliderMesh = new CColliderMesh(this, ELayer::eField, colModel, true);
+	mpColliderMesh = new CColliderMesh(this, ELayer::eWall, colModel, true);
 
 	// 壁の経路探索用のコライダーを作成
 	CModel* navColModel = CResourceManager::Get<CModel>("WallNavCol");
-	mpNavColliderMesh = new CColliderMesh(this, ELayer::eNone, navColModel, true);
+	mpNavColliderMesh = new CColliderMesh(this, ELayer::eWall, navColModel, true);
 
 	// 位置と向きとサイズを設定
 	Position(pos);
@@ -52,4 +52,9 @@ void CWall::Update()
 void CWall::Render()
 {
 	mpModel->Render(Matrix());
+}
+
+CCollider* CWall::GetFieldCol() const
+{
+	return mpColliderMesh;
 }

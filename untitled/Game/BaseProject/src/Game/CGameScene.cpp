@@ -1,6 +1,7 @@
 #include "CGameScene.h"
 #include "CSceneManager.h"
 #include "CField.h"
+#include "CWall.h"
 #include "CPlayer.h"
 #include "CEnemyA.h"
 #include "CGameCamera.h"
@@ -54,7 +55,7 @@ void CGameScene::Load()
 	// Œo˜H’TõŠÇ—ƒNƒ‰ƒX‚ðì¬
 	new CNavManager();
 
-	new CField();
+	CField* field = new CField();
 
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
@@ -87,6 +88,8 @@ void CGameScene::Load()
 		atPos + CVector(0.0f, 0.0f, 40.0f),
 		atPos
 	);
+
+	mainCamera->AddCollider(field->GetFieldCol());
 
 	mainCamera->SetFollowTargetTf(player);
 

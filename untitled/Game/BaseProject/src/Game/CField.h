@@ -35,6 +35,9 @@ public:
 	void Update();
 	void Render();
 
+	// ƒJƒƒ‰‚Æ‚Ì“–‚½‚è”»’èæ“¾ˆ—
+	CCollider* GetFieldCol()const;
+
 private:
 	// •Ç‚ğ¶¬
 	void CreateWalls();

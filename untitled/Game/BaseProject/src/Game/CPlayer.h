@@ -2,6 +2,7 @@
 //キャラクタクラスのインクルード
 #include "CXCharacter.h"
 #include "CColliderLine.h"
+#include "CColliderCapsule.h"
 #include "CRideableObject.h"
 #include "CSound.h"
 
@@ -111,6 +112,7 @@ private:
 	CColliderLine* mpColliderLine;  // 縦方向の線分コライダー
 	CColliderLine* mpColliderLineX; // 横方向（X軸）の線分コライダー
 	CColliderLine* mpColliderLineZ; // 横方向（Z軸）の線分コライダー
+	CColliderCapsule* mpColliderCapsule;  //カプセルコライダー
 	CTransform* mpRideObject;
 
 	CSound* mpSlashSE;

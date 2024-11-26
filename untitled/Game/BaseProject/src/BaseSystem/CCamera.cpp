@@ -16,7 +16,7 @@ CCamera::CCamera(const CVector& eye, const CVector& center, bool isMainCamera)
 	, mFovy(CAMERA_FOVY)
 	, mZNear(CAMERA_ZNEAR)
 	, mZFar(CAMERA_ZFAR)
-	, mHitColRatio(1.0f)
+	, mHitColRatio(0.9f)
 {
 	mTargetEye = eye;
 	LookAt(eye, center, CVector::up);

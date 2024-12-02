@@ -24,9 +24,8 @@ CField::CField()
 	spInstance = this;
 
 	mpModel = CResourceManager::Get<CModel>("Field");
-
-
 	CModel* colModel = CResourceManager::Get<CModel>("FieldCol");
+
 	mpColliderMesh = new CColliderMesh(this, ELayer::eField, colModel, true);
 
 	CreateWalls();
@@ -74,6 +73,7 @@ void CField::CreateFieldObjects()
 {
 	mpCubeModel = CResourceManager::Get<CModel>("FieldCube");
 	mpCylinderModel = CResourceManager::Get<CModel>("FieldCylinder");
+
 
 	new CMoveFloor
 	(

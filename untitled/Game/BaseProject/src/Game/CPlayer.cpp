@@ -18,7 +18,7 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ "",										        true,	0.0f	},	// Tポーズ
 	{ "Character\\New Player\\anim\\Idle.x",	        true,	170.0f	},	// 待機
 	{ "Character\\New Player\\anim\\Walk.x",	        true,	34.0f	},	// 歩行
-	{ "Character\\New Player\\anim\\DwonAttackS.x",		false,	50.0f	},	// 攻撃
+	{ "Character\\New Player\\anim\\UpAttackM.x",	    false,	69.0f	},	// 攻撃
 	{ "Character\\Player\\anim\\jump_start.x",	        false,	25.0f	},	// ジャンプ開始
 	{ "Character\\Player\\anim\\jump.x",		        true,	1.0f	},	// ジャンプ中
 	{ "Character\\Player\\anim\\jump_end.x",	        false,	26.0f	},	// ジャンプ終了
@@ -214,7 +214,7 @@ void CPlayer::UpdateAttackWait()
 			100.0f
 		);
 		// 斬撃エフェクトの色設定
-		slash->SetColor(CColor(0.15f, 0.5f, 0.5f));
+		slash->SetColor(CColor(0.15f, 1.0f, 0.5f));
 
 		mIsSpawnedSlashEffect = true;
 	}
@@ -414,7 +414,7 @@ void CPlayer::Update()
 	CVector target = moveSpeed;
 	target.Y(0.0f);
 	target.Normalize();
-	CVector forward = CVector::Slerp(current, target, 0.125f);
+	CVector forward = CVector::Slerp(current, target, 0.15f); // 0.125f
 	Rotation(CQuaternion::LookRotation(forward));
 
 	// 右クリックで弾丸発射

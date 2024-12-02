@@ -1,0 +1,7 @@
+強攻撃　80～90
+中攻撃　60～70
+小攻撃　40～50
+
+DwonAttackS 50.0f
+UpAttackL 92.0f
+UpAttackS 61.0f

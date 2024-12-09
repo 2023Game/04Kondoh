@@ -156,10 +156,10 @@ private:
 		eAttackS,   // ãUŒ‚
 		eAttackM,   // ’†UŒ‚
 		eAttackL,   // ‹­UŒ‚
+
+		Num,        // UŒ‚‚Ì‹­‚³‚Ì”
 	};
 	EAttackPower mAttackPower; // UŒ‚‚Ì‹­‚³
-
-	void ChangePower(EAttackPower power);
 
 	// ƒ‚[ƒh‘I‘ğ
 	enum class EMode

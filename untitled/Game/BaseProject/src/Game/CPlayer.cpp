@@ -174,11 +174,6 @@ void CPlayer::ChangeAnimation(EAnimType type)
 	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength);
 }
 
-void CPlayer::ChangePower(EAttackPower power)
-{
-	
-}
-
 // 非戦闘時の待機状態
 void CPlayer::UpdateIdle()
 {
@@ -199,15 +194,18 @@ void CPlayer::UpdateAttackIdle()
 	// 接地していれば、
 	if (mIsGrounded)
 	{
-		// 左クリックとAキーを同時押しで右攻撃状態へ移行
-		if (CInput::PushKey(VK_LBUTTON) && CInput::Key('A'))
+		if (mAttackPower == EAttackPower::eAttackS)
 		{
-			mMoveSpeed = CVector::zero;
-			mState = EState::eAttack;
-			mAttackWay = EAttackWay::eRightAttackS;
+			// 左クリックとAキーを同時押しで右攻撃状態へ移行
+			if (CInput::PushKey(VK_LBUTTON) && CInput::Key('A'))
+			{
+				mMoveSpeed = CVector::zero;
+				mState = EState::eAttack;
+				mAttackWay = EAttackWay::eRightAttackS;
+			}
 		}
 		// SPACEキーでジャンプ開始へ移行
-		else if (CInput::PushKey(VK_SPACE))
+		if (CInput::PushKey(VK_SPACE))
 		{
 			mState = EState::eJumpStart;
 		}
@@ -424,27 +422,19 @@ void CPlayer::Update()
 
 	// マウスホイールの回転量の差分
 	int WheelDelta = CInput::GetDeltaMouseWheel();
-	// 攻撃威力の変更
-	switch (mAttackPower)
+	int powerNum = (int)EAttackPower::Num;
+	// マウスホイールが上にスクロールされていたら、攻撃威力をアップ
+	if (WheelDelta > 0)
 	{
-	case EAttackPower::eAttackL:
-		if (WheelDelta <= -3)
-			 mAttackPower = EAttackPower::eAttackM;
-		CInput::AddMouseWheel(WheelDelta);
-		break;
-	case EAttackPower::eAttackM:
-		if (WheelDelta >= 5)
-			mAttackPower = EAttackPower::eAttackL;
-		else if (WheelDelta <= -5)
-			mAttackPower = EAttackPower::eAttackS;
-		CInput::AddMouseWheel(WheelDelta);
-		break;
-	case EAttackPower::eAttackS:
-		if (WheelDelta >=  3)
-			mAttackPower = EAttackPower::eAttackM;
-		CInput::AddMouseWheel(WheelDelta);
-		break;
-	};
+		int power = ((int)mAttackPower + 1) % powerNum;
+		mAttackPower = (EAttackPower)power;
+	}
+	// マウスホイールが下にスクロールされていたら、攻撃威力ダウン
+	else if (WheelDelta < 0)
+	{
+		int power = ((int)mAttackPower + powerNum - 1) % powerNum;
+		mAttackPower = (EAttackPower)power;
+	}
 
 	// 状態に合わせて、更新処理を切り替える
 	switch (mState)

@@ -33,6 +33,8 @@ CTaskManager::CTaskManager()
 // デストラクタ
 CTaskManager::~CTaskManager()
 {
+	// 三項演算子
+	// 条件式 ? tureの時の処理 : falseの時の処理
 	for (int i = 0; i < 2; i++)
 	{
 		std::list<CTask*>& list = i == 0 ? m3dTasks : m2dTasks;

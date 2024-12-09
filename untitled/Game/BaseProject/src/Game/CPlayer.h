@@ -41,12 +41,18 @@ private:
 	// キーの入力情報から移動ベクトルを求める
 	CVector CalcMoveVec() const;
 
-	// 待機状態
+	// 非戦闘時の待機状態
 	void UpdateIdle();
+
+	// 戦闘時の待機状態
+	void UpdateAttackIdle();
 	// 攻撃
 	void UpdateAttack();
 	// 攻撃終了待ち
 	void UpdateAttackWait();
+
+	// TODO：防御と回避を追加する
+
 	// ジャンプ開始
 	void UpdateJumpStart();
 	// ジャンプ中
@@ -65,13 +71,29 @@ private:
 	{
 		None = -1,
 
-		eTPose,		// Tポーズ
-		eIdle,		// 待機
-		eWalk,		// 歩行
-		eAttack,	// 攻撃
-		eJumpStart,	// ジャンプ開始
-		eJump,		// ジャンプ中
-		eJumpEnd,	// ジャンプ終了
+		eAttackTPose,  // 戦闘時のTポーズ
+		eAttackIdle,   // 戦闘時の待機アニメーション
+		eAttackWalk,   // 戦闘時の歩行アニメーション
+
+		eUpAttackS,	   // 弱上攻撃アニメーション
+		eUpAttackM,	   // 中上攻撃アニメーション
+		eUpAttackL,	   // 強上攻撃アニメーション
+
+		eDwonAttackS,  // 弱下攻撃アニメーション
+		eDwonAttackM,  // 中下攻撃アニメーション
+//		eDwonAttackL,  // 強下攻撃アニメーション
+
+		eRightAttackS, // 弱右攻撃アニメーション
+		eRightAttackM, // 中右攻撃アニメーション
+		eRightAttackL, // 強右攻撃アニメーション
+
+		eLeftAttackS,  // 弱左攻撃アニメーション
+		eLeftAttackM,  // 中左攻撃アニメーション
+		eLeftAttackL,  // 強左攻撃アニメーション
+
+		eJumpStart,	   // ジャンプ開始
+		eJump,		   // ジャンプ中
+		eJumpEnd,	   // ジャンプ終了
 
 		Num
 	};
@@ -95,13 +117,59 @@ private:
 	enum class EState
 	{
 		eIdle,		// 待機
+
 		eAttack,	// 攻撃
 		eAttackWait,// 攻撃終了待ち
+
 		eJumpStart,	// ジャンプ開始
 		eJump,		// ジャンプ中
 		eJumpEnd,	// ジャンプ終了
 	};
 	EState mState;	// プレイヤーの状態
+
+	// 攻撃方向
+	enum class EAttackWay
+	{
+		eIdle,         // 待機
+
+		eUpAttackS,	   // 弱上攻撃
+		eUpAttackM,	   // 中上攻撃
+		eUpAttackL,	   // 強上攻撃
+
+		eDwonAttackS,  // 弱下攻撃
+		eDwonAttackM,  // 中下攻撃
+		eDwonAttackL,  // 強下攻撃
+
+		eRightAttackS, // 弱右攻撃
+		eRightAttackM, // 中右攻撃
+		eRightAttackL, // 強右攻撃
+
+		eLeftAttackS,  // 弱左攻撃
+		eLeftAttackM,  // 中左攻撃
+		eLeftAttackL,  // 強左攻撃,
+	};
+	EAttackWay mAttackWay; // 攻撃方向
+
+	// 攻撃の強さ
+	enum class EAttackPower
+	{
+		eAttackS,   // 弱攻撃
+		eAttackM,   // 中攻撃
+		eAttackL,   // 強攻撃
+	};
+	EAttackPower mAttackPower; // 攻撃の強さ
+
+	void ChangePower(EAttackPower power);
+
+	// モード選択
+	enum class EMode
+	{
+		eNotBattle, // 非戦闘モード
+		eBattle,    // 戦闘モード
+	};
+	EMode mMode;  //モード選択
+
+	bool IsBattleMode;
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度

@@ -15,10 +15,26 @@ CPlayer* CPlayer::spInstance = nullptr;
 // プレイヤーのアニメーションデータのテーブル
 const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 {
-	{ "",										        true,	0.0f	},	// Tポーズ
-	{ "Character\\New Player\\anim\\Idle.x",	        true,	170.0f	},	// 待機
-	{ "Character\\New Player\\anim\\Walk.x",	        true,	34.0f	},	// 歩行
-	{ "Character\\New Player\\anim\\UpAttackM.x",	    false,	69.0f	},	// 攻撃
+	{ "",										        true,	0.0f	},	// 戦闘時のTポーズ
+	{ "Character\\New Player\\anim\\AttackIdle.x",	    true,	170.0f	},	// 戦闘時の待機
+	{ "Character\\New Player\\anim\\AttackWalk.x",	    true,	34.0f	},	// 戦闘時の歩行
+
+	{ "Character\\New Player\\anim\\UpAttackS.x",	    false,	54.0f	},	// 弱上攻撃
+	{ "Character\\New Player\\anim\\UpAttackM.x",	    false,	69.0f	},	// 中上攻撃
+	{ "Character\\New Player\\anim\\UpAttackL.x",	    false,	92.0f	},	// 強上攻撃
+
+	{ "Character\\New Player\\anim\\DwonAttackS.x",	    false,	50.0f	},	// 弱下攻撃
+	{ "Character\\New Player\\anim\\DwonAttackM.x",	    false,	55.0f	},	// 中下攻撃
+//	{ "Character\\New Player\\anim\\DwonAttackL.x",	    false,	69.0f	},	// 強下攻撃
+
+	{ "Character\\New Player\\anim\\RightAttackS.x",	false,	60.0f	},	// 弱右攻撃
+	{ "Character\\New Player\\anim\\RightAttackM.x",	false,	65.0f	},	// 中右攻撃
+	{ "Character\\New Player\\anim\\RightAttackL.x",	false,	86.0f	},	// 強右攻撃
+
+	{ "Character\\New Player\\anim\\LeftAttackS.x",	    false,	50.0f	},	// 弱左攻撃
+	{ "Character\\New Player\\anim\\LeftAttackM.x",	    false,	60.0f	},	// 中左攻撃
+	{ "Character\\New Player\\anim\\LeftAttackL.x",	    false,	99.0f	},	// 強左攻撃
+
 	{ "Character\\Player\\anim\\jump_start.x",	        false,	25.0f	},	// ジャンプ開始
 	{ "Character\\Player\\anim\\jump.x",		        true,	1.0f	},	// ジャンプ中
 	{ "Character\\Player\\anim\\jump_end.x",	        false,	26.0f	},	// ジャンプ終了
@@ -44,6 +60,9 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 CPlayer::CPlayer()
 	: CXCharacter(ETag::ePlayer, ETaskPriority::ePlayer)
 	, mState(EState::eIdle)
+	, mAttackWay(EAttackWay::eIdle)
+	, mAttackPower(EAttackPower::eAttackM)
+	, mMode(EMode::eBattle)
 	, mMoveSpeedY(0.0f)
 	, mIsGrounded(false)
 	, mpRideObject(nullptr)
@@ -68,9 +87,8 @@ CPlayer::CPlayer()
 	// CXCharacterの初期化
 	Init(model);
 
-	// 最初は待機アニメーションを再生
-	ChangeAnimation(EAnimType::eTPose);
-
+		// 最初は待機アニメーションを再生
+		ChangeAnimation(EAnimType::eAttackTPose);
 
 	//// 縦方向のコライダー作成
 	//mpColliderLine = new CColliderLine
@@ -156,17 +174,37 @@ void CPlayer::ChangeAnimation(EAnimType type)
 	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength);
 }
 
-// 待機
+void CPlayer::ChangePower(EAttackPower power)
+{
+	
+}
+
+// 非戦闘時の待機状態
 void CPlayer::UpdateIdle()
 {
 	// 接地していれば、
 	if (mIsGrounded)
 	{
-		// 左クリックで攻撃状態へ移行
-		if (CInput::PushKey(VK_LBUTTON))
+		// SPACEキーでジャンプ開始へ移行
+		if (CInput::PushKey(VK_SPACE))
+		{
+			mState = EState::eJumpStart;
+		}
+	}
+}
+
+// 戦闘時の待機状態
+void CPlayer::UpdateAttackIdle()
+{
+	// 接地していれば、
+	if (mIsGrounded)
+	{
+		// 左クリックとAキーを同時押しで右攻撃状態へ移行
+		if (CInput::PushKey(VK_LBUTTON) && CInput::Key('A'))
 		{
 			mMoveSpeed = CVector::zero;
 			mState = EState::eAttack;
+			mAttackWay = EAttackWay::eRightAttackS;
 		}
 		// SPACEキーでジャンプ開始へ移行
 		else if (CInput::PushKey(VK_SPACE))
@@ -179,10 +217,13 @@ void CPlayer::UpdateIdle()
 // 攻撃
 void CPlayer::UpdateAttack()
 {
-	// 攻撃アニメーションを開始
-	ChangeAnimation(EAnimType::eAttack);
-	// 攻撃終了待ち状態へ移行
-	mState = EState::eAttackWait;
+	if (mState == EState::eAttack && mAttackWay == EAttackWay::eRightAttackS)
+	{
+		// 攻撃アニメーションを開始
+		ChangeAnimation(EAnimType::eRightAttackS);
+		// 攻撃終了待ち状態へ移行
+		mState = EState::eAttackWait;
+	}
 
 	// 斬撃SEの再生済みフラグを初期化
 	mIsPlayedSlashSE = false;
@@ -214,7 +255,7 @@ void CPlayer::UpdateAttackWait()
 			100.0f
 		);
 		// 斬撃エフェクトの色設定
-		slash->SetColor(CColor(0.15f, 1.0f, 0.5f));
+		slash->SetColor(CColor(0.15f, 0.5f, 0.5f));
 
 		mIsSpawnedSlashEffect = true;
 	}
@@ -224,7 +265,8 @@ void CPlayer::UpdateAttackWait()
 	{
 		// 待機状態へ移行
 		mState = EState::eIdle;
-		ChangeAnimation(EAnimType::eIdle);
+		mAttackWay = EAttackWay::eIdle;
+		ChangeAnimation(EAnimType::eAttackIdle);
 	}
 }
 
@@ -297,6 +339,7 @@ CVector CPlayer::CalcMoveVec() const
 	return move;
 }
 
+
 // 移動の更新処理
 void CPlayer::UpdateMove()
 {
@@ -312,7 +355,7 @@ void CPlayer::UpdateMove()
 		// 待機状態であれば、歩行アニメーションに切り替え
 		if (mState == EState::eIdle)
 		{
-			ChangeAnimation(EAnimType::eWalk);
+			ChangeAnimation(EAnimType::eAttackWalk);
 		}
 	}
 	// 移動キーを入力していない
@@ -321,7 +364,7 @@ void CPlayer::UpdateMove()
 		// 待機状態であれば、待機アニメーションに切り替え
 		if (mState == EState::eIdle)
 		{
-			ChangeAnimation(EAnimType::eIdle);
+			ChangeAnimation(EAnimType::eAttackIdle);
 		}
 	}
 }
@@ -365,12 +408,57 @@ void CPlayer::Update()
 	SetParent(mpRideObject);
 	mpRideObject = nullptr;
 
+	if (CInput::PushKey('T'))
+	{
+		IsBattleMode = !IsBattleMode;
+	}
+
+	if (IsBattleMode)
+	{
+		mMode = EMode::eBattle;
+	}
+	else
+	{
+		mMode = EMode::eNotBattle;
+	}
+
+	// マウスホイールの回転量の差分
+	int WheelDelta = CInput::GetDeltaMouseWheel();
+	// 攻撃威力の変更
+	switch (mAttackPower)
+	{
+	case EAttackPower::eAttackL:
+		if (WheelDelta <= -3)
+			 mAttackPower = EAttackPower::eAttackM;
+		CInput::AddMouseWheel(WheelDelta);
+		break;
+	case EAttackPower::eAttackM:
+		if (WheelDelta >= 5)
+			mAttackPower = EAttackPower::eAttackL;
+		else if (WheelDelta <= -5)
+			mAttackPower = EAttackPower::eAttackS;
+		CInput::AddMouseWheel(WheelDelta);
+		break;
+	case EAttackPower::eAttackS:
+		if (WheelDelta >=  3)
+			mAttackPower = EAttackPower::eAttackM;
+		CInput::AddMouseWheel(WheelDelta);
+		break;
+	};
+
 	// 状態に合わせて、更新処理を切り替える
 	switch (mState)
 	{
 		// 待機状態
 		case EState::eIdle:
-			UpdateIdle();
+			if (mMode == EMode::eBattle)
+			{
+				UpdateAttackIdle();
+			}
+			else 
+			{
+				UpdateIdle();
+			}
 			break;
 		// 攻撃
 		case EState::eAttack:
@@ -409,26 +497,33 @@ void CPlayer::Update()
 	// 移動
 	Position(Position() + moveSpeed);
 
-	// プレイヤーを移動方向へ向ける
-	CVector current = VectorZ();
-	CVector target = moveSpeed;
-	target.Y(0.0f);
-	target.Normalize();
-	CVector forward = CVector::Slerp(current, target, 0.15f); // 0.125f
-	Rotation(CQuaternion::LookRotation(forward));
+	if (!(mMode == EMode::eBattle))
+	{
+		// プレイヤーを移動方向へ向ける
+		CVector current = VectorZ();
+		CVector target = moveSpeed;
+		target.Y(0.0f);
+		target.Normalize();
+		CVector forward = CVector::Slerp(current, target, 0.15f); // 0.125f
+		Rotation(CQuaternion::LookRotation(forward));
+	}
+	else
+	{
+		Rotation(CVector(0.0f, -90.0f, 0.0f));
+	}
 
 	// 右クリックで弾丸発射
 	if (CInput::PushKey(VK_RBUTTON))
 	{
 		// 弾丸を生成
-		new CBullet
-		(
-			// 発射位置
-			Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
-			VectorZ(),	// 発射方向
-			1000.0f,	// 移動距離
-			1000.0f		// 飛距離
-		);
+		//new CBullet
+		//(
+		//	// 発射位置
+		//	Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
+		//	VectorZ(),	// 発射方向
+		//	1000.0f,	// 移動距離
+		//	1000.0f		// 飛距離
+		//);
 	}
 
 	// 「E」キーで炎の発射をオンオフする
@@ -475,7 +570,8 @@ void CPlayer::Update()
 	}
 
 	CDebugPrint::Print("Grounded:%s\n", mIsGrounded ? "true" : "false");
-	CDebugPrint::Print("State:%d\n", mState);
+//	CDebugPrint::Print("Mode:%d\n",(int)mMode);
+	CDebugPrint::Print("Power:%d\n", (int)mAttackPower);
 
 	mIsGrounded = false;
 

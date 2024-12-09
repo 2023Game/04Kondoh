@@ -27,6 +27,8 @@ public:
 	// マウスホイールの回転量の差分を取得
 	static int GetDeltaMouseWheel();
 
+
+
 	/// <summary>
 	/// キーが入力されているか
 	/// </summary>

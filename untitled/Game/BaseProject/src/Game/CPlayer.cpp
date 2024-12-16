@@ -55,6 +55,8 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
 #define JUMP_END_Y 1.0f
+#define EVA_MOVE_PLUS  10.0f    // 回避のプラスの移動距離
+#define EVA_MOVE_MINUS -10.0f   // 回避のマイナスの移動距離
 
 // モーションブラーを掛ける時間
 #define MOTION_BLUR_TIME 3.0f
@@ -287,10 +289,15 @@ void CPlayer::UpdateAttackIdle()
 			}
 		}
 
-		//右クリックで防御
+		// 右クリックで防御
 		if (CInput::PushKey(VK_RBUTTON))
 		{
 			mState = EState::eDefense;
+		}
+		// シフトで回避
+		if (CInput::PushKey(SHIFT_PRESSED))
+		{
+			mState = EState::eEvasion;
 		}
 		// SPACEキーでジャンプ開始へ移行
 		if (CInput::PushKey(VK_SPACE))
@@ -439,6 +446,58 @@ void CPlayer::UpdateAttackWait()
 	}
 }
 
+// 回避
+void CPlayer::UpdateEvasion()
+{
+	mMoveSpeed = CVector::zero;
+	//float moveFrame = _MOVE_END - ATTACK_MOVE_START;
+    //float percent = (frame - ATTACK_MOVE_START) / moveFrame;
+	if (CInput::PushKey('A') && CInput::Key(SHIFT_PRESSED))
+	{
+		mEvaStartPos = Position();
+		mEvaEndPos = mEvaStartPos + VectorX() * EVA_MOVE_MINUS;
+		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
+		Position(pos);
+	}
+	else if (CInput::PushKey('D') && CInput::Key(SHIFT_PRESSED))
+	{
+		mEvaStartPos = Position();
+		mEvaEndPos = mEvaStartPos + VectorX() * EVA_MOVE_PLUS;
+		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
+		Position(pos);
+	}
+	else if (CInput::PushKey('W') && CInput::Key(SHIFT_PRESSED))
+	{
+		mEvaStartPos = Position();
+		mEvaEndPos = mEvaStartPos + VectorZ() * EVA_MOVE_PLUS;
+		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
+		Position(pos);
+	}
+	else if (CInput::PushKey('S') && CInput::Key(SHIFT_PRESSED))
+	{
+		mEvaStartPos = Position();
+		mEvaEndPos = mEvaStartPos + VectorZ() * EVA_MOVE_MINUS;
+		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
+		Position(pos);
+	}
+	else if (CInput::PullKey(SHIFT_PRESSED))
+	{
+		mState = EState::eIdle;
+	}
+	
+}
+
+// 防御
+void CPlayer::UpdateDefense()
+{
+	mMoveSpeed = CVector::zero;
+	ChangeAnimation(EAnimType::eDefense);
+	if (CInput::PullKey(VK_RBUTTON))
+	{
+		mState = EState::eIdle;
+	}
+}
+
 // ジャンプ開始
 void CPlayer::UpdateJumpStart()
 {
@@ -557,16 +616,6 @@ void CPlayer::UpdateMove()
 	}
 }
 
-// ガード
-void CPlayer::UpdateDefense()
-{
-	ChangeAnimation(EAnimType::eDefense);
-	if (CInput::PullKey(VK_RBUTTON))
-	{
-		mState = EState::eIdle;
-	}
-}
-
 // モーションブラーの更新処理
 void CPlayer::UpdateMotionBlur()
 {
@@ -661,6 +710,10 @@ void CPlayer::Update()
 		// 防御
 	case EState::eDefense:
 		UpdateDefense();
+		break;
+		// 回避
+	case EState::eEvasion:
+		UpdateEvasion();
 		break;
 		// ジャンプ開始
 	case EState::eJumpStart:

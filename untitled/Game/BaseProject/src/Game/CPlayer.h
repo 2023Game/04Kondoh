@@ -51,7 +51,8 @@ private:
 	// 攻撃終了待ち
 	void UpdateAttackWait();
 
-	// TODO：回避を追加する
+	// 回避
+	void UpdateEvasion();
 
 	// 防御
 	void UpdateDefense();
@@ -99,6 +100,7 @@ private:
 		eLeftAttackL,  // 強左攻撃アニメーション
 
 		eDefense,      // 防御
+		eEvasion,      // 回避
 
 		eJumpStart,	   // ジャンプ開始
 		eJump,		   // ジャンプ中
@@ -131,6 +133,7 @@ private:
 		eAttackWait,// 攻撃終了待ち
 
 		eDefense,   // 防御
+		eEvasion,   // 回避
 
 		eJumpStart,	// ジャンプ開始
 		eJump,		// ジャンプ中
@@ -193,6 +196,9 @@ private:
 	CColliderLine* mpColliderLineZ; // 横方向（Z軸）の線分コライダー
 	CColliderCapsule* mpColliderCapsule;  //カプセルコライダー
 	CTransform* mpRideObject;
+
+	CVector mEvaStartPos; // 回避開始時の位置
+	CVector mEvaEndPos;   // 回避終了時の位置
 
 	CSound* mpSlashSE;
 	bool mIsPlayedSlashSE;

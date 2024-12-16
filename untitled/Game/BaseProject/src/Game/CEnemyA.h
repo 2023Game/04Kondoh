@@ -15,6 +15,7 @@ class CNavNode;
 */
 class CEnemyA : public CXCharacter
 {
+
 public:
 	// コンストラクタ
 	CEnemyA(std::vector<CVector> patrolPoints);

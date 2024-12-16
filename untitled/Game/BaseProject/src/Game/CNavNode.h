@@ -17,7 +17,8 @@ public:
 // 経路探索ノードクラス
 class CNavNode
 {
-
+	// friend を使うと CMavManager は CNavNode の 
+	// private の変数や関数を使う事が出来る様になる
 	friend CNavManager;
 
 public:

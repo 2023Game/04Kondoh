@@ -51,7 +51,10 @@ private:
 	// 攻撃終了待ち
 	void UpdateAttackWait();
 
-	// TODO：防御と回避を追加する
+	// TODO：回避を追加する
+
+	// 防御
+	void UpdateDefense();
 
 	// ジャンプ開始
 	void UpdateJumpStart();
@@ -71,9 +74,13 @@ private:
 	{
 		None = -1,
 
-		eAttackTPose,  // 戦闘時のTポーズ
-		eAttackIdle,   // 戦闘時の待機アニメーション
-		eAttackWalk,   // 戦闘時の歩行アニメーション
+		eAttackTPose,    // 戦闘時のTポーズ
+		eAttackIdle,     // 戦闘時の待機アニメーション
+
+		eAttackWalk,     // 歩行
+		eAttackBackWalk, // 後ろ方向への歩行
+		eAttackLeftWalk,     // 左方向への歩行
+		eAttackRightWalk,    // 右方向への歩行
 
 		eUpAttackS,	   // 弱上攻撃アニメーション
 		eUpAttackM,	   // 中上攻撃アニメーション
@@ -81,7 +88,7 @@ private:
 
 		eDwonAttackS,  // 弱下攻撃アニメーション
 		eDwonAttackM,  // 中下攻撃アニメーション
-//		eDwonAttackL,  // 強下攻撃アニメーション
+		eDwonAttackL,  // 強下攻撃アニメーション
 
 		eRightAttackS, // 弱右攻撃アニメーション
 		eRightAttackM, // 中右攻撃アニメーション
@@ -90,6 +97,8 @@ private:
 		eLeftAttackS,  // 弱左攻撃アニメーション
 		eLeftAttackM,  // 中左攻撃アニメーション
 		eLeftAttackL,  // 強左攻撃アニメーション
+
+		eDefense,      // 防御
 
 		eJumpStart,	   // ジャンプ開始
 		eJump,		   // ジャンプ中
@@ -120,6 +129,8 @@ private:
 
 		eAttack,	// 攻撃
 		eAttackWait,// 攻撃終了待ち
+
+		eDefense,   // 防御
 
 		eJumpStart,	// ジャンプ開始
 		eJump,		// ジャンプ中

@@ -13,39 +13,7 @@
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
 
-// プレイヤーのアニメーションデータのテーブル
-const CPlayer::AnimData CPlayer::ANIM_DATA[] =
-{
-	{ "",										        true,	0.0f	},	// 戦闘時のTポーズ
-	{ "Character\\New Player\\anim\\AttackIdle.x",	    true,	170.0f	},	// 戦闘時の待機
 
-	{ "Character\\New Player\\anim\\AttackWalk.x",	    true,	34.0f	},	// 歩行
-	{ "Character\\New Player\\anim\\BackWalk.x",	    true,	39.0f	},	// 後ろ方向歩行
-	{ "Character\\New Player\\anim\\LeftWalk.x",	    true,	40.0f	},	// 左方向歩行
-	{ "Character\\New Player\\anim\\RightWalk.x",	    true,	35.0f	},	// 右方向歩行
-
-	{ "Character\\New Player\\anim\\UpAttackS.x",	    false,	54.0f	},	// 弱上攻撃
-	{ "Character\\New Player\\anim\\UpAttackM.x",	    false,	69.0f	},	// 中上攻撃
-	{ "Character\\New Player\\anim\\UpAttackL.x",	    false,	92.0f	},	// 強上攻撃
-
-	{ "Character\\New Player\\anim\\DwonAttackS.x",	    false,	50.0f	},	// 弱下攻撃
-	{ "Character\\New Player\\anim\\DwonAttackM.x",	    false,	55.0f	},	// 中下攻撃
-	{ "Character\\New Player\\anim\\DwonAttackL.x",	    false,	90.0f	},	// 強下攻撃
-
-	{ "Character\\New Player\\anim\\RightAttackS.x",	false,	60.0f	},	// 弱右攻撃
-	{ "Character\\New Player\\anim\\RightAttackM.x",	false,	65.0f	},	// 中右攻撃
-	{ "Character\\New Player\\anim\\RightAttackL.x",	false,	86.0f	},	// 強右攻撃
-
-	{ "Character\\New Player\\anim\\LeftAttackS.x",	    false,	50.0f	},	// 弱左攻撃
-	{ "Character\\New Player\\anim\\LeftAttackM.x",	    false,	60.0f	},	// 中左攻撃
-	{ "Character\\New Player\\anim\\LeftAttackL.x",	    false,	99.0f	},	// 強左攻撃
-
-	{ "Character\\New Player\\anim\\Defense.x",	        true,	43.0f	},  // 防御
-
-	{ "Character\\Player\\anim\\jump_start.x",	        false,	25.0f	},	// ジャンプ開始
-	{ "Character\\Player\\anim\\jump.x",		        true,	1.0f	},	// ジャンプ中
-	{ "Character\\Player\\anim\\jump_end.x",	        false,	26.0f	},	// ジャンプ終了
-};
 
 #define PLAYER_HEIGHT 16.0f  // プレイヤーの高さ
 #define PLAYER_CAP_UP 13.5f  // プレイヤカプセルコライダの上
@@ -54,9 +22,12 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 #define MOVE_SPEED 0.375f * 2.0f
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
-#define JUMP_END_Y 1.0f
-#define EVA_MOVE_PLUS  10.0f    // 回避のプラスの移動距離
-#define EVA_MOVE_MINUS -10.0f   // 回避のマイナスの移動距離
+#define JUMP_END_Y 1.0f  
+#define EVA_MOVE_PLUS    5.0f  // 回避時のプラス移動距離
+#define EVA_MOVE_MINUS  -5.0f  // 回避時のマイナス移動距離
+#define EVA_MOVE_START   8.0f  // 回避時の移動開始フレーム 
+#define EVA_MOVE_END    24.0f  // 回避時の移動終了フレーム
+#define EVA_WAIT_TIME    1.0f  // 回避終了時の待機時間
 
 // モーションブラーを掛ける時間
 #define MOTION_BLUR_TIME 3.0f
@@ -65,10 +36,49 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 // モーションブラーの反復回数
 #define MOTION_BLUR_COUNT 5
 
+#define PLAYER_ANIM_PATH "Character\\New Player\\anim\\"
+// プレイヤーのアニメーションデータのテーブル
+const CPlayer::AnimData CPlayer::ANIM_DATA[] =
+{
+	{ "",							    true,	0.0f	},	// 戦闘時のTポーズ
+	{ PLAYER_ANIM_PATH"AttackIdle.x",	    true,	170.0f	},	// 戦闘時の待機
+
+	{ PLAYER_ANIM_PATH"AttackWalk.x",	    true,	34.0f	},	// 歩行
+	{ PLAYER_ANIM_PATH"BackWalk.x",	        true,	39.0f	},	// 後ろ方向歩行
+	{ PLAYER_ANIM_PATH"LeftWalk.x",	        true,	40.0f	},	// 左方向歩行
+	{ PLAYER_ANIM_PATH"RightWalk.x",	        true,	35.0f	},	// 右方向歩行
+
+	{ PLAYER_ANIM_PATH"UpAttackS.x",	       false,	54.0f	},	// 弱上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackM.x",	       false,	69.0f	},	// 中上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackL.x",	       false,	92.0f	},	// 強上攻撃
+
+	{ PLAYER_ANIM_PATH"DwonAttackS.x",	   false,	50.0f	},	// 弱下攻撃
+	{ PLAYER_ANIM_PATH"DwonAttackM.x",	   false,	55.0f	},	// 中下攻撃
+	{ PLAYER_ANIM_PATH"DwonAttackL.x",	   false,	90.0f	},	// 強下攻撃
+
+	{ PLAYER_ANIM_PATH"RightAttackS.x",	   false,	60.0f	},	// 弱右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackM.x",	   false,	65.0f	},	// 中右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackL.x",	   false,	86.0f	},	// 強右攻撃
+
+	{ PLAYER_ANIM_PATH"LeftAttackS.x",	   false,	50.0f	},	// 弱左攻撃
+	{ PLAYER_ANIM_PATH"LeftAttackM.x",	   false,	60.0f	},	// 中左攻撃
+	{ PLAYER_ANIM_PATH"LeftAttackL.x",	   false,	99.0f	},	// 強左攻撃
+
+	{ PLAYER_ANIM_PATH"Defense.x",	        true,	43.0f	},  // 防御
+	{ PLAYER_ANIM_PATH"Evasion.x",	       false,	50.0f	},  // 回避
+
+	{ PLAYER_ANIM_PATH"jump_start.x",	   false,	25.0f	},	// ジャンプ開始
+	{ PLAYER_ANIM_PATH"jump.x",		        true,	1.0f	},	// ジャンプ中
+	{ PLAYER_ANIM_PATH"jump_end.x",	       false,	26.0f	},	// ジャンプ終了
+};
+
+
 // コンストラクタ
 CPlayer::CPlayer()
 	: CXCharacter(ETag::ePlayer, ETaskPriority::ePlayer)
 	, mState(EState::eIdle)
+	, mStateStep(0)
+	, mElapsedTime(0.0f)
 	, mAttackWay(EAttackWay::eIdle)
 	, mAttackPower(EAttackPower::eAttackM)
 	, mMode(EMode::eBattle)
@@ -183,6 +193,16 @@ void CPlayer::ChangeAnimation(EAnimType type)
 	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength);
 }
 
+void CPlayer::ChangeState(EState state)
+{
+	// すでに同じ状態であれば、処理しない
+	if (state == mState) return;
+
+	mState = state;
+	mStateStep = 0;
+	mElapsedTime = 0.0f;
+}
+
 // 非戦闘時の待機状態
 void CPlayer::UpdateIdle()
 {
@@ -294,15 +314,15 @@ void CPlayer::UpdateAttackIdle()
 		{
 			mState = EState::eDefense;
 		}
-		// シフトで回避
-		if (CInput::PushKey(SHIFT_PRESSED))
-		{
-			mState = EState::eEvasion;
-		}
 		// SPACEキーでジャンプ開始へ移行
 		if (CInput::PushKey(VK_SPACE))
 		{
 			mState = EState::eJumpStart;
+		}
+		// シフトで回避
+		if (CInput::Key(SHIFT_PRESSED))
+		{
+			mState = EState::eEvasion;
 		}
 	}
 }
@@ -449,43 +469,118 @@ void CPlayer::UpdateAttackWait()
 // 回避
 void CPlayer::UpdateEvasion()
 {
-	mMoveSpeed = CVector::zero;
-	//float moveFrame = _MOVE_END - ATTACK_MOVE_START;
-    //float percent = (frame - ATTACK_MOVE_START) / moveFrame;
-	if (CInput::PushKey('A') && CInput::Key(SHIFT_PRESSED))
-	{
-		mEvaStartPos = Position();
-		mEvaEndPos = mEvaStartPos + VectorX() * EVA_MOVE_MINUS;
-		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
-		Position(pos);
-	}
-	else if (CInput::PushKey('D') && CInput::Key(SHIFT_PRESSED))
-	{
-		mEvaStartPos = Position();
-		mEvaEndPos = mEvaStartPos + VectorX() * EVA_MOVE_PLUS;
-		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
-		Position(pos);
-	}
-	else if (CInput::PushKey('W') && CInput::Key(SHIFT_PRESSED))
-	{
-		mEvaStartPos = Position();
-		mEvaEndPos = mEvaStartPos + VectorZ() * EVA_MOVE_PLUS;
-		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
-		Position(pos);
-	}
-	else if (CInput::PushKey('S') && CInput::Key(SHIFT_PRESSED))
-	{
-		mEvaStartPos = Position();
-		mEvaEndPos = mEvaStartPos + VectorZ() * EVA_MOVE_MINUS;
-		CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, 1.0f);
-		Position(pos);
-	}
-	else if (CInput::PullKey(SHIFT_PRESSED))
-	{
-		mState = EState::eIdle;
-	}
 	
+	switch (mStateStep)
+	{
+	case 0:
+		if (CInput::PushKey('W'))
+		{
+			mEvaDist = VectorZ() * EVA_MOVE_PLUS;
+			mStateStep++;
+		}
+		else if (CInput::PushKey('S'))
+		{
+			mEvaDist = VectorZ() * EVA_MOVE_MINUS;
+			mStateStep++;
+		}
+		else if (CInput::PushKey('A'))
+		{
+			mEvaDist = VectorX() * EVA_MOVE_PLUS;
+			mStateStep++;
+		}
+		else if (CInput::PushKey('D'))
+		{
+			mEvaDist = VectorX() * EVA_MOVE_MINUS;
+			mStateStep++;
+		}
+		if (CInput::PullKey(SHIFT_PRESSED))
+		{
+			ChangeState(EState::eIdle);
+		}
+		break;
+	case 1:
+		
+		mEvaStartPos = Position();
+		mEvaEndPos = mEvaStartPos + mEvaDist;
+		ChangeAnimation(EAnimType::eEvasion);
+		mStateStep++;
+		break;
+	case 2:
+	{
+		float frame = GetAnimationFrame();
+		if (frame >= EVA_MOVE_START)
+		{
+			if (frame < EVA_MOVE_END)
+			{
+
+				// 線形補間で移動開始位置から移動終了位置まで移動する
+				float moveFrame = EVA_MOVE_END - EVA_MOVE_START;
+				float percent = (frame - EVA_MOVE_START) / moveFrame;
+				CVector pos = CVector::Lerp(mEvaStartPos, mEvaEndPos, percent);
+				Position(pos);
+			}
+			//
+			else
+			{
+				Position(mEvaEndPos);
+				mStateStep++;
+			}
+		}
+		break;
+	}
+	case 3:
+		if (IsAnimationFinished())
+		{
+			mStateStep++;
+		}
+		break;
+	case 4:
+		if (mElapsedTime < EVA_WAIT_TIME)
+		{
+			mElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			// 時間が経過したら、待機状態へ移行
+			ChangeState(EState::eIdle);
+		}
+		break;
+
+	}
+	//mMoveSpeed = CVector::zero;
+	//float moveFrame = _MOVE_END - ATTACK_MOVE_START;
+	//float percent = (frame - ATTACK_MOVE_START) / moveFrame;
+
 }
+
+//void CPlayer::UpEvasion()
+//{
+//	
+//}
+//
+//void CPlayer::DwonEvasion()
+//{
+//	for (int i = 0; i < 10; i++)
+//	{
+//		mMoveSpeed += VectorZ() * EVA_MOVE_MINUS;
+//	}
+//}
+//
+//void CPlayer::LeftEvasion()
+//{
+//	for (int i = 0; i <= 20; i++)
+//	{
+//		mMoveSpeed += VectorX() * EVA_MOVE_MINUS;
+//	}
+//}
+//
+//void CPlayer::RightEvasion()
+//{
+//	for (int i = 0; i <= 10; i++)
+//	{
+//		mMoveSpeed += VectorX() * EVA_MOVE_PLUS;
+//	}
+//}
 
 // 防御
 void CPlayer::UpdateDefense()
@@ -736,6 +831,12 @@ void CPlayer::Update()
 		|| mState == EState::eJumpEnd)
 	{
 		UpdateMove();
+	}
+
+	// 回避
+	if (CInput::Key(SHIFT_PRESSED))
+	{
+		UpdateEvasion();
 	}
 
 	mMoveSpeedY -= GRAVITY;

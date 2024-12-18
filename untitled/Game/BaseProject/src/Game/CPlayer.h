@@ -54,6 +54,15 @@ private:
 	// 回避
 	void UpdateEvasion();
 
+	// 前回避
+	void UpEvasion();
+	// 後ろ回避
+	void DwonEvasion();
+	// 左回避
+	void LeftEvasion();
+	// 右回避
+	void RightEvasion();
+
 	// 防御
 	void UpdateDefense();
 
@@ -140,6 +149,8 @@ private:
 		eJumpEnd,	// ジャンプ終了
 	};
 	EState mState;	// プレイヤーの状態
+	//状態切り替え
+	void ChangeState(EState state);
 
 	// 攻撃方向
 	enum class EAttackWay
@@ -199,6 +210,10 @@ private:
 
 	CVector mEvaStartPos; // 回避開始時の位置
 	CVector mEvaEndPos;   // 回避終了時の位置
+	CVector mEvaDist;     // 回避方向と距離
+
+	int mStateStep;     // 状態内のステップ管理用
+	float mElapsedTime; // 経過時間計測用
 
 	CSound* mpSlashSE;
 	bool mIsPlayedSlashSE;

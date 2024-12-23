@@ -9,6 +9,7 @@ enum class ELayer
 	eField,
 	eWall,
 	ePlayer,
+	eEnemy,
 
 	eAttackCol,
 };

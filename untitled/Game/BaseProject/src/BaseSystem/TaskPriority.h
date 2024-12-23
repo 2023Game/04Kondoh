@@ -8,12 +8,15 @@ enum class ETaskPriority
 	// 3D関連
 	eBackground,// 背景
 	eDebugFov,  // 視野範囲のデバッグ表示
-	eNavigation,// 経路探索関連のデバッグ表示
 	eDefault,	// デフォルト
+	eNavigation,// 経路探索関連のデバッグ表示
 	ePlayer,	// プレイヤー
+	eEnemy,		// 敵
+	eWeapon,	// 武器
 
 	eEffect,	// エフェクト
 	eBillboard,	// ビルボードイメージ
+	eUI3D,		// 3D空間に配置するUI
 
 	eCamera,	// カメラ
 

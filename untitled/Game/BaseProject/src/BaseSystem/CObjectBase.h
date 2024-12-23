@@ -21,7 +21,9 @@ public:
 	CObjectBase(ETag tag = ETag::eNone,
 		ETaskPriority prio = ETaskPriority::eDefault,
 		int sortOrder = 0,
-		ETaskPauseType pause = ETaskPauseType::eDefault);
+		ETaskPauseType pause = ETaskPauseType::eDefault,
+		bool dontDelete = false,
+		bool addTaskList = true);
 
 	// デストラクタ
 	virtual ~CObjectBase();
@@ -67,6 +69,8 @@ public:
 	/// <returns></returns>
 	virtual bool CollisionRay(const CVector& start, const CVector& end, CHitInfo* hit);
 
+	// 攻撃中か
+	virtual bool IsAttacking() const;
 	/// <summary>
 	/// 攻撃開始
 	/// </summary>
@@ -103,5 +107,4 @@ protected:
 	std::list<CObjectBase*> mAttackHitObjects;
 
 	CNavNode* mpNavNode;  // 経路探索用のノードのポインタ
-
 };

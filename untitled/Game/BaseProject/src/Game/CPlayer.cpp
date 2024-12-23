@@ -23,11 +23,11 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
 #define JUMP_END_Y 1.0f  
-#define EVA_MOVE_PLUS    5.0f  // 回避時のプラス移動距離
-#define EVA_MOVE_MINUS  -5.0f  // 回避時のマイナス移動距離
+#define EVA_MOVE_PLUS    30.0f  // 回避時のプラス移動距離
+#define EVA_MOVE_MINUS  -30.0f  // 回避時のマイナス移動距離
 #define EVA_MOVE_START   8.0f  // 回避時の移動開始フレーム 
 #define EVA_MOVE_END    24.0f  // 回避時の移動終了フレーム
-#define EVA_WAIT_TIME    1.0f  // 回避終了時の待機時間
+#define EVA_WAIT_TIME    0.1f  // 回避終了時の待機時間
 
 // モーションブラーを掛ける時間
 #define MOTION_BLUR_TIME 3.0f
@@ -40,17 +40,17 @@ CPlayer* CPlayer::spInstance = nullptr;
 // プレイヤーのアニメーションデータのテーブル
 const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 {
-	{ "",							    true,	0.0f	},	// 戦闘時のTポーズ
+	{ "",							        true,	0.0f	},	// 戦闘時のTポーズ
 	{ PLAYER_ANIM_PATH"AttackIdle.x",	    true,	170.0f	},	// 戦闘時の待機
 
 	{ PLAYER_ANIM_PATH"AttackWalk.x",	    true,	34.0f	},	// 歩行
 	{ PLAYER_ANIM_PATH"BackWalk.x",	        true,	39.0f	},	// 後ろ方向歩行
 	{ PLAYER_ANIM_PATH"LeftWalk.x",	        true,	40.0f	},	// 左方向歩行
-	{ PLAYER_ANIM_PATH"RightWalk.x",	        true,	35.0f	},	// 右方向歩行
+	{ PLAYER_ANIM_PATH"RightWalk.x",	    true,	35.0f	},	// 右方向歩行
 
-	{ PLAYER_ANIM_PATH"UpAttackS.x",	       false,	54.0f	},	// 弱上攻撃
-	{ PLAYER_ANIM_PATH"UpAttackM.x",	       false,	69.0f	},	// 中上攻撃
-	{ PLAYER_ANIM_PATH"UpAttackL.x",	       false,	92.0f	},	// 強上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackS.x",	    false,	54.0f	},	// 弱上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackM.x",	    false,	69.0f	},	// 中上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackL.x",	    false,	92.0f	},	// 強上攻撃
 
 	{ PLAYER_ANIM_PATH"DwonAttackS.x",	   false,	50.0f	},	// 弱下攻撃
 	{ PLAYER_ANIM_PATH"DwonAttackM.x",	   false,	55.0f	},	// 中下攻撃
@@ -315,12 +315,12 @@ void CPlayer::UpdateAttackIdle()
 			mState = EState::eDefense;
 		}
 		// SPACEキーでジャンプ開始へ移行
-		if (CInput::PushKey(VK_SPACE))
+		else if (CInput::PushKey(VK_SPACE))
 		{
 			mState = EState::eJumpStart;
 		}
 		// シフトで回避
-		if (CInput::Key(SHIFT_PRESSED))
+		else if (CInput::Key(SHIFT_PRESSED))
 		{
 			mState = EState::eEvasion;
 		}
@@ -473,30 +473,31 @@ void CPlayer::UpdateEvasion()
 	switch (mStateStep)
 	{
 	case 0:
-		if (CInput::PushKey('W'))
+		if (CInput::Key('W'))
 		{
 			mEvaDist = VectorZ() * EVA_MOVE_PLUS;
 			mStateStep++;
 		}
-		else if (CInput::PushKey('S'))
+		else if (CInput::Key('S'))
 		{
 			mEvaDist = VectorZ() * EVA_MOVE_MINUS;
 			mStateStep++;
 		}
-		else if (CInput::PushKey('A'))
-		{
-			mEvaDist = VectorX() * EVA_MOVE_PLUS;
-			mStateStep++;
-		}
-		else if (CInput::PushKey('D'))
+		else if (CInput::Key('A'))
 		{
 			mEvaDist = VectorX() * EVA_MOVE_MINUS;
+			mStateStep++;
+		}
+		else if (CInput::Key('D'))
+		{
+			mEvaDist = VectorX() * EVA_MOVE_PLUS;
 			mStateStep++;
 		}
 		if (CInput::PullKey(SHIFT_PRESSED))
 		{
 			ChangeState(EState::eIdle);
 		}
+		mMoveSpeed = CVector::zero;
 		break;
 	case 1:
 		
@@ -531,6 +532,7 @@ void CPlayer::UpdateEvasion()
 	case 3:
 		if (IsAnimationFinished())
 		{
+			mMoveSpeed = CVector::zero;
 			mStateStep++;
 		}
 		break;
@@ -833,12 +835,6 @@ void CPlayer::Update()
 		UpdateMove();
 	}
 
-	// 回避
-	if (CInput::Key(SHIFT_PRESSED))
-	{
-		UpdateEvasion();
-	}
-
 	mMoveSpeedY -= GRAVITY;
 	CVector moveSpeed = mMoveSpeed + CVector(0.0f, mMoveSpeedY, 0.0f);
 
@@ -863,19 +859,19 @@ void CPlayer::Update()
 	}
 
 
-	// 右クリックで弾丸発射
-	if (CInput::PushKey(VK_RBUTTON))
-	{
-		// 弾丸を生成
-		//new CBullet
-		//(
-		//	// 発射位置
-		//	Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
-		//	VectorZ(),	// 発射方向
-		//	1000.0f,	// 移動距離
-		//	1000.0f		// 飛距離
-		//);
-	}
+	//// 右クリックで弾丸発射
+	//if (CInput::PushKey(VK_RBUTTON))
+	//{
+	//	 //弾丸を生成
+	//	new CBullet
+	//	(
+	//		// 発射位置
+	//		Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
+	//		VectorZ(),	// 発射方向
+	//		1000.0f,	// 移動距離
+	//		1000.0f		// 飛距離
+	//	);
+	//}
 
 	// 「E」キーで炎の発射をオンオフする
 	if (CInput::PushKey('E'))

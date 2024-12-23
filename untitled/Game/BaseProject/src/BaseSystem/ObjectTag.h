@@ -17,9 +17,11 @@ enum class ETag
 	eFlame,	// 炎
 	eSlash,	// 斬撃
 
+	eUI,
+
 	eCamera,// カメラ
 
-	eDebug, // デバッグ用のオブジェクト
+	eDebug, // デバッグ用のタグ
 
 	Num
 };

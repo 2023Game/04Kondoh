@@ -38,6 +38,7 @@
     <ClCompile Include="src\BaseSystem\CFont.cpp" />
     <ClCompile Include="src\BaseSystem\CCharaBase.cpp" />
     <ClCompile Include="src\BaseSystem\CGamePause.cpp" />
+    <ClCompile Include="src\BaseSystem\CImage3D.cpp" />
     <ClCompile Include="src\BaseSystem\CInput.cpp" />
     <ClCompile Include="src\BaseSystem\CLineEffect.cpp" />
     <ClCompile Include="src\BaseSystem\CMaterial.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="src\BaseSystem\CFont.h" />
     <ClInclude Include="src\BaseSystem\CCharaBase.h" />
     <ClInclude Include="src\BaseSystem\CGamePause.h" />
+    <ClInclude Include="src\BaseSystem\CImage3D.h" />
     <ClInclude Include="src\BaseSystem\CInput.h" />
     <ClInclude Include="src\BaseSystem\CLineEffect.h" />
     <ClInclude Include="src\BaseSystem\CMaterial.h" />

@@ -11,7 +11,8 @@
 #include "CNavManager.h"
 
 #define ENEMY_HEIGHT 16.0f      // “G‚Ì‚‚³
-#define ENEMY_WIDTH 10.0f       // “G‚Ì•
+#define ENEMY_SOLE   5.0f       // “G‚Ì’ê
+#define ENEMY_WIDTH  5.0f       // “G‚Ì”¼Œa
 #define FOV_ANGLE 45.0f         // ‹–ì”ÍˆÍ‚ÌŠp“x
 #define FOV_LENGTH 100.0f       // ‹–ì”ÍˆÍ‚Ì‹——£
 #define EYE_HEIGHT 10.0f        // ‹“_‚Ì‚‚³
@@ -100,6 +101,16 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	//);
 	//mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
 
+	// 
+	mpColliderCapsule = new CColliderCapsule
+	(
+		this, ELayer::eEnemy,
+		CVector(0.0f, ENEMY_HEIGHT, 0.0f),
+		CVector(0.0f,   ENEMY_SOLE, 0.0f),
+		ENEMY_WIDTH
+	);
+	mpColliderCapsule->SetCollisionLayers({ ELayer::eField });
+
 
 	// ‹–ì”ÍˆÍ‚ÌƒfƒoƒbƒO•\¦‚ğì¬
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
@@ -145,9 +156,10 @@ CEnemyA::~CEnemyA()
 		while (itr != end)
 		{
 			CNavNode* del = *itr;
-			itr = mPatrolPoints.erase(itr);
 			delete del;
+			itr++;
 		}
+		mPatrolPoints.clear();
 	}
 }
 
@@ -296,6 +308,8 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 
 	//	}
 	//}
+
+
 }
 
 void CEnemyA::ChangeAnimation(EAnimType type, bool restart)
@@ -761,6 +775,8 @@ void CEnemyA::UpdateAttack()
 	}
 	
 }
+
+
 
 // ó‘Ô‚Ì•¶š—ñ‚ğæ“¾
 std::string CEnemyA::GetStateStr(EState state) const

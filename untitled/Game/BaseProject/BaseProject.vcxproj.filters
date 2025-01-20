@@ -373,6 +373,9 @@
     <ClCompile Include="src\Game\CNavManager.cpp">
       <Filter>ソース ファイル\Game\Navigation</Filter>
     </ClCompile>
+    <ClCompile Include="src\BaseSystem\CImage3D.cpp">
+      <Filter>ソース ファイル\BaseSystem\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -674,6 +677,9 @@
     </ClInclude>
     <ClInclude Include="src\Game\CNavManager.h">
       <Filter>ソース ファイル\Game\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BaseSystem\CImage3D.h">
+      <Filter>ソース ファイル\BaseSystem\Effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

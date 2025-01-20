@@ -128,6 +128,7 @@ private:
 	//CColliderLine* mpColliderLine;  // 縦方向の線分コライダー
 	//CColliderLine* mpColliderLineX; // 横方向（X軸）の線分コライダー
 	//CColliderLine* mpColliderLineZ; // 横方向（Z軸）の線分コライダー
+	CColliderCapsule* mpColliderCapsule;  // カプセルコライダー
 
 	std::vector<CNavNode*> mMoveRoute; // 求めた最短経路記憶用
 	int mNextMoveIndex;                // 次に移動するノードのインデックス値

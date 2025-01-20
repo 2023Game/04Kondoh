@@ -3,6 +3,7 @@
 #include "CXCharacter.h"
 #include "CColliderLine.h"
 #include "CColliderCapsule.h"
+#include "CColliderSphere.h"
 #include "CRideableObject.h"
 #include "CSound.h"
 
@@ -15,6 +16,44 @@ class CFlamethrower;
 class CPlayer : public CXCharacter
 {
 public:
+
+	// プレイヤーの状態
+	enum class EState
+	{
+		eIdle,		// 待機
+
+		eAttack,	// 攻撃
+		eAttackWait,// 攻撃終了待ち
+
+		eDefense,   // 防御
+		eEvasion,   // 回避
+
+		eJumpStart,	// ジャンプ開始
+		eJump,		// ジャンプ中
+		eJumpEnd,	// ジャンプ終了
+	};
+
+	// 攻撃方向
+	enum class EAttackWay
+	{
+		eIdle,         // 待機
+
+		eUpAttack,    // 上攻撃
+		eDwonAttack,  // 下攻撃
+		eRightAttack, // 右攻撃
+		eLeftAttack,  // 左攻撃
+	};
+
+	// 攻撃の強さ
+	enum class EAttackPower
+	{
+		eAttackS,   // 弱攻撃
+		eAttackM,   // 中攻撃
+		eAttackL,   // 強攻撃
+
+		Num,        // 攻撃の強さの数
+	};
+
 	//インスタンスのポインタの取得
 	static CPlayer* Instance();
 
@@ -22,6 +61,13 @@ public:
 	CPlayer();
 	// デストラクタ
 	~CPlayer();
+
+	// 現在の状態を取得
+	EState GetState();
+	// 攻撃の方向を取得
+	EAttackWay GetAttackWay();
+	// 攻撃の威力を取得
+	EAttackPower GetAttackPower();
 
 	// 更新
 	void Update();
@@ -39,7 +85,7 @@ public:
 
 private:
 	// キーの入力情報から移動ベクトルを求める
-	CVector CalcMoveVec() const;
+	CVector CalcMoveVec(bool force = false) const;
 
 	// 非戦闘時の待機状態
 	void UpdateIdle();
@@ -53,15 +99,6 @@ private:
 
 	// 回避
 	void UpdateEvasion();
-
-	// 前回避
-	void UpEvasion();
-	// 後ろ回避
-	void DwonEvasion();
-	// 左回避
-	void LeftEvasion();
-	// 右回避
-	void RightEvasion();
 
 	// 防御
 	void UpdateDefense();
@@ -78,6 +115,7 @@ private:
 
 	// モーションブラーの更新処理
 	void UpdateMotionBlur();
+
 
 	// アニメーションの種類
 	enum class EAnimType
@@ -119,6 +157,9 @@ private:
 	};
 	// アニメーション切り替え
 	void ChangeAnimation(EAnimType type);
+	// 攻撃方向や、攻撃の威力によって
+	// 切り替えるアニメーションの種類を取得
+	EAnimType GetAttackAnimType() const;
 
 	// プレイヤーのインスタンス
 	static CPlayer* spInstance;
@@ -133,58 +174,21 @@ private:
 	// アニメーションデータのテーブル
 	static const AnimData ANIM_DATA[];
 
-	// プレイヤーの状態
-	enum class EState
-	{
-		eIdle,		// 待機
 
-		eAttack,	// 攻撃
-		eAttackWait,// 攻撃終了待ち
-
-		eDefense,   // 防御
-		eEvasion,   // 回避
-
-		eJumpStart,	// ジャンプ開始
-		eJump,		// ジャンプ中
-		eJumpEnd,	// ジャンプ終了
-	};
 	EState mState;	// プレイヤーの状態
 	//状態切り替え
 	void ChangeState(EState state);
+	// 回避状態へ切り替え
+	void ChangeEvasion();
+	// 攻撃状態へ切り替え
+	void ChangeAttack();
 
-	// 攻撃方向
-	enum class EAttackWay
-	{
-		eIdle,         // 待機
-
-		eUpAttackS,	   // 弱上攻撃
-		eUpAttackM,	   // 中上攻撃
-		eUpAttackL,	   // 強上攻撃
-
-		eDwonAttackS,  // 弱下攻撃
-		eDwonAttackM,  // 中下攻撃
-		eDwonAttackL,  // 強下攻撃
-
-		eRightAttackS, // 弱右攻撃
-		eRightAttackM, // 中右攻撃
-		eRightAttackL, // 強右攻撃
-
-		eLeftAttackS,  // 弱左攻撃
-		eLeftAttackM,  // 中左攻撃
-		eLeftAttackL,  // 強左攻撃,
-	};
+	
 	EAttackWay mAttackWay; // 攻撃方向
 
-	// 攻撃の強さ
-	enum class EAttackPower
-	{
-		eAttackS,   // 弱攻撃
-		eAttackM,   // 中攻撃
-		eAttackL,   // 強攻撃
-
-		Num,        // 攻撃の強さの数
-	};
-	EAttackPower mAttackPower; // 攻撃の強さ
+	
+	EAttackPower mAttackPower;     // 攻撃の強さ
+	EAttackPower mCurrAttackPower; // 現在の攻撃の強さ
 
 	// モード選択
 	enum class EMode
@@ -203,14 +207,18 @@ private:
 	CVector mGroundNormal;	// 接地している地面の法線
 
 	CColliderLine* mpColliderLine;  // 縦方向の線分コライダー
-	CColliderLine* mpColliderLineX; // 横方向（X軸）の線分コライダー
-	CColliderLine* mpColliderLineZ; // 横方向（Z軸）の線分コライダー
-	CColliderCapsule* mpColliderCapsule;  //カプセルコライダー
+	CColliderCapsule* mpColliderCapsule;  // カプセルコライダー
+	// 攻撃用のコライダ１（剣の刃の部分）
+	CColliderCapsule* mpAttackCollider1;
+	// 攻撃用のコライダ２（剣の持ち手の部分）
+	CColliderCapsule* mpAttackCollider2;
+	// 攻撃用のコライダ３（盾の部分）
+	CColliderSphere* mpAttackCollider3;
+
+
 	CTransform* mpRideObject;
 
-	CVector mEvaStartPos; // 回避開始時の位置
-	CVector mEvaEndPos;   // 回避終了時の位置
-	CVector mEvaDist;     // 回避方向と距離
+	CVector mEvaDir;    // 回避方向
 
 	int mStateStep;     // 状態内のステップ管理用
 	float mElapsedTime; // 経過時間計測用

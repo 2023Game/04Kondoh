@@ -164,6 +164,9 @@ protected:
 	CTransform* mFollowTargetTf;	// 追従するターゲットのCTransfrom
 	CVector mFollowOffsetPos;		// 追従ターゲットの位置から視点までのオフセット値
 
+	CTransform* mpLookAtTargetTf;	// 視点を向けるターゲット
+	CVector mLookOffsetPos;			// 視点を向けるターゲットの座標
+
 private:
 	// カメラを削除
 	void DeleteCamera();

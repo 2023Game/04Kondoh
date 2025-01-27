@@ -852,29 +852,32 @@ void CPlayer::Update()
 	}
 	else
 	{
-		if ()
 		// カメラにプレイヤーの向きを追従する
 		// メインカメラを取得
 		CCamera* camera = CCamera::MainCamera();
 		// 注視点を取得
 		CVector atPos = camera->GetAtPos();
+		// 注視点とカメラの位置の差を求める
 		CVector vec = atPos - camera->Position();
 		vec.Y(0.0f);
+		// 方向ベクトルにする
 		CVector targetPos = vec.Normalized();
 		Rotation(CQuaternion::LookRotation(targetPos));
-
-		//if (mIsLockOn)
-		//{
-		//	// メインカメラ取得
-		//	CCamera* camera = CCamera::MainCamera();
-		//	CVector targetPos = mpLockOnTarget->Position();
-		//	targetPos.Y(0.0f);
-		//	targetPos.Normalize();
-		//	camera->Rotation(CQuaternion::LookRotation(targetPos));
-		//}
-		
 		// TODO：プレイヤーを敵に向ける
 		// TODO：敵に視点をボタンを押してロックするか、自動で敵に向くようにする
+
+
+	//if (mIsLockOn)
+	//{
+	//	// メインカメラ取得
+	//	CCamera* camera = CCamera::MainCamera();
+	//	CVector targetPos = mpLockOnTarget->Position();
+	//	targetPos.Y(0.0f);
+	//	targetPos.Normalize();
+	//	camera->Rotation(CQuaternion::LookRotation(targetPos));
+	//}
+
+
 	}
 
 	CDebugPrint::Print("LockOn:%s\n",mIsLockOn?"ON":"OFF");

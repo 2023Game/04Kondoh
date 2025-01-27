@@ -3,6 +3,7 @@
 #include "CEnemyA.h"
 #include "CInput.h"
 #include "CCamera.h"
+#include "CGameCamera2.h"
 #include "CBullet.h"
 #include "CFlamethrower.h"
 #include "CSlash.h"
@@ -359,7 +360,8 @@ void CPlayer::LockOnTarget()
 	if (mIsLockOn)
 	{
 		// ロックオンする敵を取得
-		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 100);
+		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 300);
+		mpLockOnTarget = target;
 		// ロックオンする敵が存在する
 		if (mpLockOnTarget != nullptr)
 		{
@@ -850,6 +852,26 @@ void CPlayer::Update()
 	}
 	else
 	{
+		if ()
+		// カメラにプレイヤーの向きを追従する
+		// メインカメラを取得
+		CCamera* camera = CCamera::MainCamera();
+		// 注視点を取得
+		CVector atPos = camera->GetAtPos();
+		CVector vec = atPos - camera->Position();
+		vec.Y(0.0f);
+		CVector targetPos = vec.Normalized();
+		Rotation(CQuaternion::LookRotation(targetPos));
+
+		//if (mIsLockOn)
+		//{
+		//	// メインカメラ取得
+		//	CCamera* camera = CCamera::MainCamera();
+		//	CVector targetPos = mpLockOnTarget->Position();
+		//	targetPos.Y(0.0f);
+		//	targetPos.Normalize();
+		//	camera->Rotation(CQuaternion::LookRotation(targetPos));
+		//}
 		
 		// TODO：プレイヤーを敵に向ける
 		// TODO：敵に視点をボタンを押してロックするか、自動で敵に向くようにする

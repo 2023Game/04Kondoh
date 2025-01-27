@@ -84,12 +84,12 @@ void CGameScene::Load()
 
 	// CGameCamera2‚ÌƒeƒXƒg
 	CVector atPos = player->Position() + CVector(0.0f, 10.0f, 0.0f);
+
 	CGameCamera2* mainCamera = new CGameCamera2
 	(
 		atPos + CVector(0.0f, 0.0f, 40.0f),
 		atPos
 	);
-
 	mainCamera->AddCollider(field->GetFieldCol());
 	std::list<CWall*> walls = field->GetWalls();
 	for (CWall* wall : walls)

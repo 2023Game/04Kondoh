@@ -418,3 +418,8 @@ void CCamera::End2DCamera()
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
+
+CVector CCamera::GetAtPos()
+{
+	return CCamera::mAt;
+}

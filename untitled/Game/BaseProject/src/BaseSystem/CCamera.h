@@ -148,6 +148,9 @@ public:
 	// 3D用のカメラ行列へ戻す
 	static void End2DCamera();
 
+	// 注視点を取得
+	CVector GetAtPos();
+
 protected:
 	// 設定されているコライダーとの衝突結果を反映する
 	void ApplyCollision();

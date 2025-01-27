@@ -157,9 +157,12 @@ private:
 	};
 	// アニメーション切り替え
 	void ChangeAnimation(EAnimType type);
+
 	// 攻撃方向や、攻撃の威力によって
 	// 切り替えるアニメーションの種類を取得
 	EAnimType GetAttackAnimType() const;
+
+	
 
 	// プレイヤーのインスタンス
 	static CPlayer* spInstance;
@@ -186,7 +189,6 @@ private:
 	
 	EAttackWay mAttackWay; // 攻撃方向
 
-	
 	EAttackPower mAttackPower;     // 攻撃の強さ
 	EAttackPower mCurrAttackPower; // 現在の攻撃の強さ
 
@@ -198,7 +200,14 @@ private:
 	};
 	EMode mMode;  //モード選択
 
-	bool IsBattleMode;
+	// ロックオンするターゲットを変更
+	void ChangeLockOnTarget();
+	// ターゲットをロックオンする
+	void LockOnTarget();
+	bool mIsBattleMode;				// バトルモードか
+	bool mIsLockOn;					// ロックオンしているか
+	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
+
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度

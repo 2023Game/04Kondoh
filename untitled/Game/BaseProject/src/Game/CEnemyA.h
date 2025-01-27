@@ -2,6 +2,7 @@
 #define CENEMYA_H
 #include "CXCharacter.h"
 #include "CCharaBase.h"
+#include "CEnemyBase.h"
 #include "CCollider.h"
 #include "CModel.h"
 
@@ -13,7 +14,7 @@ class CNavNode;
 エネミークラス
 キャラクタクラスを継承
 */
-class CEnemyA : public CXCharacter
+class CEnemyA : public CEnemyBase
 {
 
 public:
@@ -26,6 +27,13 @@ public:
 	void Update() override;
 	// 描画
 	void Render() override;
+
+	// 攻撃中か
+	bool IsAttacking() const override;
+	// 攻撃開始
+	void AttackStart() override;
+	// 攻撃終了
+	void AttackEnd() override;
 
 	/// <summary>
 	/// 衝突処理
@@ -51,17 +59,7 @@ private:
 		Num
 	};
 	// アニメーション切り替え
-	void ChangeAnimation(EAnimType type, bool restart = false);
-
-	// アニメーションデータ
-	struct AnimData
-	{
-		std::string path;	// アニメーションデータのパス
-		bool loop;			// ループするかどうか
-		float frameLength;	// アニメーションのフレーム数
-	};
-	// アニメーションデータのテーブル
-	static const AnimData ANIM_DATA[];
+	/*void ChangeAnimation(EAnimType type, bool restart = false);*/
 
 	// 敵の状態
 	enum class EState
@@ -73,7 +71,7 @@ private:
 		eAttack     // 攻撃
 	};
 	//状態切り替え
-	void ChangeState(EState state);
+	void ChangeState(int state) override;
 
 	// プレイヤーが視野範囲内に入ったかどうか
 	bool IsFoundPlayer() const;
@@ -104,13 +102,10 @@ private:
 	void UpdateAttack();
 
 	// 状態の文字列を取得
-	std::string GetStateStr(EState state)const;
+	std::string GetStateStr(int state) const;
 	// 状態の色を取得
-	CColor GetStateColor(EState state) const;
+	CColor GetStateColor(int state) const;
 
-	EState mState;	// 敵の状態
-	int mStateStep; // 状態内のステップ管理用
-	float mElapsedTime; // 経過時間計測用
 
 	CDebugFieldOfView* mpDebugFov;  // 視野範囲のデバッグ表示
 	float mFovAngle;                // 視野範囲の角度

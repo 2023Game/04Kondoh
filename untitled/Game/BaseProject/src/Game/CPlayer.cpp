@@ -10,6 +10,9 @@
 #include "CNavNode.h"
 #include "CNavManager.h"
 
+#include "CEnemyManager.h"
+#include "CEnemyA.h"
+
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
 
@@ -79,18 +82,20 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 CPlayer::CPlayer()
 	: CXCharacter(ETag::ePlayer, ETaskPriority::ePlayer)
 	, mState(EState::eIdle)
-	, mStateStep(0)
-	, mElapsedTime(0.0f)
 	, mAttackWay(EAttackWay::eIdle)
 	, mAttackPower(EAttackPower::eAttackM)
 	, mCurrAttackPower(EAttackPower::eAttackM)
 	, mMode(EMode::eBattle)
+	, mStateStep(0)
+	, mElapsedTime(0.0f)
 	, mMoveSpeedY(0.0f)
-	, mIsGrounded(false)
+	, mMotionBlurRemainTime(0.0f)
 	, mpRideObject(nullptr)
+	, mpLockOnTarget(nullptr)
+	, mIsGrounded(false)
 	, mIsPlayedSlashSE(false)
 	, mIsSpawnedSlashEffect(false)
-	, mMotionBlurRemainTime(0.0f)
+	, mIsLockOn(false)
 {
 	//インスタンスの設定
 	spInstance = this;
@@ -343,6 +348,41 @@ void CPlayer::ChangeAttack()
 	}
 }
 
+void CPlayer::ChangeLockOnTarget()
+{
+
+}
+
+void CPlayer::LockOnTarget()
+{
+	// ロックオン開始
+	if (mIsLockOn)
+	{
+		// ロックオンする敵を取得
+		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 100);
+		// ロックオンする敵が存在する
+		if (mpLockOnTarget != nullptr)
+		{
+			if (CInput::PushKey('B'))
+			{
+				// TODO:ロックオンする敵を変更
+			}
+			// ロックオン処理
+			target->Position();
+		}
+		// ロックオンする敵が存在しなかったら、
+		// バトルモードフラグをオフにする
+		else
+		{
+			mIsLockOn = false;
+		}
+	}
+	else
+	{
+		mpLockOnTarget = nullptr;
+	}
+}
+
 // 非戦闘時の待機状態
 void CPlayer::UpdateIdle()
 {
@@ -382,6 +422,11 @@ void CPlayer::UpdateAttackIdle()
 		else if (CInput::Key(VK_SHIFT))
 		{
 			ChangeEvasion();
+		}
+		else if (CInput::PushKey('R'))
+		{
+			mIsLockOn = !mIsLockOn;
+			LockOnTarget();
 		}
 	}
 }
@@ -704,10 +749,10 @@ void CPlayer::Update()
 
 	if (CInput::PushKey('T'))
 	{
-		IsBattleMode = !IsBattleMode;
+		mIsBattleMode = !mIsBattleMode;
 	}
-
-	if (IsBattleMode)
+	// バトルモードかどうか
+	if (mIsBattleMode)
 	{
 		mMode = EMode::eBattle;
 	}
@@ -719,6 +764,7 @@ void CPlayer::Update()
 	// マウスホイールの回転量の差分
 	int WheelDelta = CInput::GetDeltaMouseWheel();
 	int powerNum = (int)EAttackPower::Num;
+
 	// マウスホイールが上にスクロールされていたら、現在の攻撃威力をアップ
 	if (WheelDelta > 0)
 	{
@@ -791,6 +837,7 @@ void CPlayer::Update()
 	// 移動
 	Position(Position() + moveSpeed);
 
+	// ロックオンと移動の仕方とバトルモード
 	if (!(mMode == EMode::eBattle))
 	{
 		// プレイヤーを移動方向へ向ける
@@ -803,11 +850,23 @@ void CPlayer::Update()
 	}
 	else
 	{
-		/*Rotation(0.0f, 90.0f, 0.0f);*/
+		
 		// TODO：プレイヤーを敵に向ける
 		// TODO：敵に視点をボタンを押してロックするか、自動で敵に向くようにする
 	}
 
+	CDebugPrint::Print("LockOn:%s\n",mIsLockOn?"ON":"OFF");
+	if (mpLockOnTarget != nullptr)
+	{
+		CVector p = mpLockOnTarget->Position();
+		CDebugPrint::Print("NearEnemy: %f, %f, %f\n", p.X(), p.Y(), p.Z());
+	}
+
+	// 「P」キーを押したら、ゲームを終了
+	if (CInput::PushKey('P'))
+	{
+		System::ExitGame();
+	}
 
 	//// 右クリックで弾丸発射
 	//if (CInput::PushKey(VK_RBUTTON))
@@ -824,7 +883,7 @@ void CPlayer::Update()
 	//}
 
 	// 「E」キーで炎の発射をオンオフする
-	if (CInput::PushKey('E'))
+	/*if (CInput::PushKey('E'))
 	{
 		if (!mpFlamethrower->IsThrowing())
 		{
@@ -834,25 +893,19 @@ void CPlayer::Update()
 		{
 			mpFlamethrower->Stop();
 		}
-	}
-
-	// 「P」キーを押したら、ゲームを終了
-	if (CInput::PushKey('P'))
-	{
-		System::ExitGame();
-	}
+	}*/
 
 	// 「B」キーを押したら、モーションブラー開始
-	if (CInput::PushKey('B'))
-	{
-		// モーションブラーを掛けている最中であれば、
-		// 新しくモーションブラーを掛け直さない
-		if (mMotionBlurRemainTime <= 0.0f)
-		{
-			System::SetEnableMotionBlur(true);
-			mMotionBlurRemainTime = MOTION_BLUR_TIME;
-		}
-	}
+	//if (CInput::PushKey('B'))
+	//{
+	//	// モーションブラーを掛けている最中であれば、
+	//	// 新しくモーションブラーを掛け直さない
+	//	if (mMotionBlurRemainTime <= 0.0f)
+	//	{
+	//		System::SetEnableMotionBlur(true);
+	//		mMotionBlurRemainTime = MOTION_BLUR_TIME;
+	//	}
+	//}
 
 	// モーションブラーの更新処理
 	UpdateMotionBlur();

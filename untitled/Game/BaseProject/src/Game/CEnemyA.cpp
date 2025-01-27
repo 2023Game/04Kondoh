@@ -10,6 +10,8 @@
 #include "CNavNode.h"
 #include "CNavManager.h"
 
+#define ANIM_PATH "Character\\EnemyA\\"
+
 #define ENEMY_HEIGHT 16.0f      // 敵の高さ
 #define ENEMY_SOLE   5.0f       // 敵の底
 #define ENEMY_WIDTH  5.0f       // 敵の半径
@@ -30,24 +32,19 @@
 #define IDLE_TIME 5.0f          // 待機状態の時間
 
 // プレイヤーのアニメーションデータのテーブル
-const CEnemyA::AnimData CEnemyA::ANIM_DATA[] =
+const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 {
-	{ "",										true,	0.0f	},	// Tポーズ
-	{ "Character\\EnemyA\\Idle.x",		        true,	126.0f	},	// 待機
-	{ "Character\\EnemyA\\walk.x",		        true,	42.0f	},	// 歩行
-	{ "Character\\EnemyA\\Run.x",		        true,	23.0f	},	// 走る
-	{ "Character\\EnemyA\\RightAttackS.x",      false,   58.0f   },  // 右攻撃
-
+	{ "",								true,	0.0f,	1.0f},	// Tポーズ
+	{ ANIM_PATH"Idle.x",		        true,	126.0f,	1.0f},	// 待機
+	{ ANIM_PATH"walk.x",		        true,	42.0f,	1.0f},	// 歩行
+	{ ANIM_PATH"Run.x",					true,	23.0f,	1.0f},	// 走る
+	{ ANIM_PATH"RightAttackS.x",		false,	58.0f,	1.0f},  // 右攻撃
 };
 
 
 // コンストラクタ
 CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
-	: CXCharacter(ETag::eEnemy, ETaskPriority::eDefault)
-	, mState(EState::eIdle)
-	, mStateStep(0)
-	, mElapsedTime(0.0f)
-	, mFovAngle(FOV_ANGLE)
+	: mFovAngle(FOV_ANGLE)
 	, mFovLength(FOV_LENGTH)
 	, mpDebugFov(nullptr)
 	, mAttackStartPos(CVector::zero)
@@ -55,61 +52,25 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mNextPatrolIndex(-1)
 	, mNextMoveIndex(0)
 {
-	// モデルデータ取得
-	CModelX* model = CResourceManager::Get<CModelX>("EnemyA");
 
-	// テーブル内のアニメーションデータを読み込み
-	int size = ARRAY_SIZE(ANIM_DATA);
-	for (int i = 0; i < size; i++)
-	{
-		const AnimData& data = ANIM_DATA[i];
-		if (data.path.empty()) continue;
-		model->AddAnimationSet(data.path.c_str());
-	}
-	// CXCharacterの初期化
-	Init(model);
+	// 敵を初期化
+	InitEnemy("EnemyA", &ANIM_DATA);
 
 	// 最初は待機アニメーションを再生
-	ChangeAnimation(EAnimType::eIdle);
+	ChangeAnimation((int)EAnimType::eIdle);
 
-	//// 縦方向のコライダー作成
-	//mpColliderLine = new CColliderLine
-	//(
-	//	this, ELayer::ePlayer,
-	//	CVector(0.0f, 0.0f, 0.0f),
-	//	CVector(0.0f, ENEMY_HEIGHT, 0.0f)
-	//);
-	//mpColliderLine->SetCollisionLayers({ ELayer::eField });
 
-	//float width = ENEMY_WIDTH * 0.5f;
-	//float posY = ENEMY_HEIGHT * 0.5f;
-	//// 横方向（X軸）のコライダー作成
-	//mpColliderLineX = new CColliderLine
-	//(
-	//	this, ELayer::ePlayer,
-	//	CVector(-width, posY, 0.0f),
-	//	CVector(width, posY, 0.0f)
-	//);
-	//mpColliderLineX->SetCollisionLayers({ ELayer::eField });
-
-	//// 横方向（Z軸）のコライダー作成
-	//mpColliderLineZ = new CColliderLine
-	//(
-	//	this, ELayer::ePlayer,
-	//	CVector(0.0f, posY, -width),
-	//	CVector(0.0f, posY, width)
-	//);
-	//mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
-
-	// 
-	mpColliderCapsule = new CColliderCapsule
+	// 本体のコライダー
+	mpBodyCol = new CColliderCapsule
 	(
 		this, ELayer::eEnemy,
 		CVector(0.0f, ENEMY_HEIGHT, 0.0f),
 		CVector(0.0f,   ENEMY_SOLE, 0.0f),
 		ENEMY_WIDTH
 	);
-	mpColliderCapsule->SetCollisionLayers({ ELayer::eField });
+	// フィールドと、プレイヤーの攻撃コライダーとヒットするように設定
+	mpBodyCol->SetCollisionTags({ ETag::eField, ETag::ePlayer });
+	mpBodyCol->SetCollisionLayers({ ELayer::eField, ELayer::ePlayer, ELayer::eAttackCol });
 
 
 	// 視野範囲のデバッグ表示を作成
@@ -132,11 +93,9 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 CEnemyA::~CEnemyA()
 {
 	// コライダーを破棄
-	/*SAFE_DELETE(mpColliderLine);
-	SAFE_DELETE(mpColliderLineX);
-	SAFE_DELETE(mpColliderLineZ);*/
 
-	// 視野範囲のデバッグ表示がせ存在したら、一緒に削除する
+
+	// 視野範囲のデバッグ表示が存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
 	{
 		mpDebugFov->SetOwner(nullptr);
@@ -179,22 +138,22 @@ void CEnemyA::Update()
 {
 
 	if (CInput::Key('U')) {
-		ChangeState(EState::eChase);
+		ChangeState(2);
 		//ChangeAnimation(EAnimType::eWalk);
 	}
 	else if (CInput::Key('L')) {
-		ChangeState(EState::ePatrol);
+		ChangeState((int)EState::ePatrol);
 		//ChangeAnimation(EAnimType::eRun);
 	}
 
 	// 現在の状態に合わせて更新処理を切り替える
 	switch (mState)
 	{
-	case EState::eIdle:    UpdateIdle();   break;
-	case EState::ePatrol:  UpdatePatrol(); break;
-	case EState::eChase:   UpdateChase();  break;
-	case EState::eLost:    UpdateLost();   break;
-	case EState::eAttack:  UpdateAttack(); break;
+	case (int)EState::eIdle:    UpdateIdle();   break;
+	case (int)EState::ePatrol:  UpdatePatrol(); break;
+	case (int)EState::eChase:   UpdateChase();  break;
+	case (int)EState::eLost:    UpdateLost();   break;
+	case (int)EState::eAttack:  UpdateAttack(); break;
 	}
 
 
@@ -218,7 +177,7 @@ void CEnemyA::Render()
 	CXCharacter::Render();
 
 	// 巡回中であれば
-	if (mState == EState::ePatrol)
+	if (mState == (int)EState::ePatrol)
 	{
 		float rad = 1.0f;
 		// 巡回ポイントを全て描画
@@ -233,7 +192,7 @@ void CEnemyA::Render()
 	}
 
 	// 見失ったとき
-	if (mState == EState::eLost)
+	if (mState == (int)EState::eLost)
 	{
 		//プレイヤーを見失った位置にデバッグ表示
 		float rad = 2.0f;
@@ -277,6 +236,33 @@ void CEnemyA::Render()
 	}
 }
 
+bool CEnemyA::IsAttacking() const
+{
+	if (mState == (int)EState::eAttack) return true;
+	return false;
+}
+
+void CEnemyA::AttackStart()
+{
+	// ベースクラスの攻撃開始処理を呼び出し
+	CEnemyBase::AttackStart();
+
+	// パンチ攻撃中であれば、パンチ攻撃のコライダーをオンにする
+	if (mState == (int)EState::eAttack)
+	{
+		//mpAttack1Col->SetEnable(true);
+	}
+}
+
+void CEnemyA::AttackEnd()
+{
+	// ベースクラスの攻撃終了処理を呼び出し
+	CEnemyBase::AttackEnd();
+
+	// 攻撃コライダーをオフ
+	//mpAttack1Col->SetEnable(false);
+}
+
 // 衝突処理
 void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
@@ -312,23 +298,26 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 
 }
 
-void CEnemyA::ChangeAnimation(EAnimType type, bool restart)
-{
-	int index = (int)type;
-	if (!(0 <= index && index < (int)EAnimType::Num)) return; 
-	const AnimData& data = ANIM_DATA[index];
-	CXCharacter::ChangeAnimation(index, data.loop, data.frameLength, restart);
-}
+//void CEnemyA::ChangeAnimation(EAnimType type, bool restart)
+//{
+//	int index = (int)type;
+//	if (!(0 <= index && index < (int)EAnimType::Num)) return; 
+//	const AnimData& data = ANIM_DATA[index];
+//	CXCharacter::ChangeAnimation(index, data.loop, data.frameLength, restart);
+//}
 
 //状態切り替え
-void CEnemyA::ChangeState(EState state)
+void CEnemyA::ChangeState(int state)
 {
-	// すでに同じ状態であれば、処理しない
-	if (state == mState) return;
+	// 攻撃中に他の状態へ移行する場合は
+	// 攻撃終了処理を呼び出す
+	if (mState != state && IsAttacking())
+	{
+		AttackEnd();
+	}
 
-	mState = state;
-	mStateStep = 0;
-	mElapsedTime = 0.0f;
+	// 状態切り替え
+	CEnemyBase::ChangeState(state);
 }
 
 // プレイヤーが視野範囲内に入ったかどうか
@@ -544,12 +533,12 @@ void CEnemyA::UpdateIdle()
 	// プレイヤーが視野範囲内に入ったら、追跡状態へ移行
 	if (IsFoundPlayer())
 	{
-		ChangeState(EState::eChase);
+		ChangeState((int)EState::eChase);
 		return;
 	}
 
 	// 待機アニメーションを再生
-	ChangeAnimation(EAnimType::eIdle);
+	ChangeAnimation((int)EAnimType::eIdle);
 
 	if (mElapsedTime < IDLE_TIME)
 	{
@@ -558,7 +547,7 @@ void CEnemyA::UpdateIdle()
 	else
 	{
 		// 待機時間が経過したら、巡回状態へ移行
-		ChangeState(EState::ePatrol);
+		ChangeState((int)EState::ePatrol);
 	}
 }
 
@@ -567,7 +556,7 @@ void CEnemyA::UpdatePatrol()
 {
 	if (IsFoundPlayer())
 	{
-		ChangeState(EState::eChase);
+		ChangeState((int)EState::eChase);
 		return;
 	}
 
@@ -583,7 +572,7 @@ void CEnemyA::UpdatePatrol()
 		// ステップ1：巡回ポイントまで移動
 	case 1:
 	{
-		ChangeAnimation(EAnimType::eWalk);
+		ChangeAnimation((int)EAnimType::eWalk);
 		// 最短経路の次のノードまで移動
 		CNavNode* moveNode = mMoveRoute[mNextMoveIndex];
 		if (MoveTo(moveNode->GetPos(), WALK_SPEED))
@@ -600,7 +589,7 @@ void CEnemyA::UpdatePatrol()
 	}
 		// ステップ2：移動後の待機
 	case 2:
-		ChangeAnimation(EAnimType::eIdle);
+		ChangeAnimation((int)EAnimType::eIdle);
 		if (mElapsedTime < PATROL_INTERVAL)
 		{
 			mElapsedTime += Times::DeltaTime();
@@ -626,18 +615,18 @@ void CEnemyA::UpdateChase()
 	if (!IsLookPlayer())
 	{
 		mpLostPlayerNode->SetPos(targetPos);
-		ChangeState(EState::eLost);
+		ChangeState((int)EState::eLost);
 		return;
 	}
 	// プレイヤーに攻撃できるならば、攻撃状態へ移行
 	if (CanAttackPlayer())
 	{
-		ChangeState(EState::eAttack);
+		ChangeState((int)EState::eAttack);
 		return;
 	}
 
 	// 走るアニメーションを再生
-	ChangeAnimation(EAnimType::eRun);
+	ChangeAnimation((int)EAnimType::eRun);
 
 	// 経路探索管理クラスが存在すれば、
 	CNavManager* navMgr = CNavManager::Instance();
@@ -665,18 +654,18 @@ void CEnemyA::UpdateLost()
 	CNavManager* navMgr = CNavManager::Instance();
 	if (navMgr == nullptr)
 	{
-		ChangeState(EState::eIdle);
+		ChangeState((int)EState::eIdle);
 		return;
 	}
 	// プレイヤーが見えたら、追跡状態へ移行
 	if (IsLookPlayer()) 
 	{
-		ChangeState(EState::eChase);
+		ChangeState((int)EState::eChase);
 		return;
 	}
 
 	// 走るアニメーションを再生
-	ChangeAnimation(EAnimType::eRun);
+	ChangeAnimation((int)EAnimType::eRun);
 
 	switch (mStateStep)
 	{
@@ -691,7 +680,7 @@ void CEnemyA::UpdateLost()
 		else
 		{
 			// 経路が繋がっていなければ、待機状態へ戻す
-			ChangeState(EState::eIdle);
+			ChangeState((int)EState::eIdle);
 		}
 		break;
 	case 1:
@@ -702,7 +691,7 @@ void CEnemyA::UpdateLost()
 			if (mNextMoveIndex >= mMoveRoute.size())
 			{
 				// 移動が終われば、待機状態へ移行
-				ChangeState(EState::eIdle);
+				ChangeState((int)EState::eIdle);
 			}
 		}
 		break;
@@ -719,7 +708,7 @@ void CEnemyA::UpdateAttack()
 			// 攻撃開始位置と攻撃終了位置の設定
 			mAttackStartPos = Position();
 			mAttackEndPos = mAttackStartPos + VectorZ() * ATTACK_MOVE_DIST;
-			ChangeAnimation(EAnimType::eRightAttack,true);
+			ChangeAnimation((int)EAnimType::eRightAttack,true);
 			mStateStep++;
 			break;
 		// ステップ1 : 攻撃時の移動処理
@@ -769,7 +758,7 @@ void CEnemyA::UpdateAttack()
 			else
 			{
 				// 時間が経過したら、待機状態へ移行
-				ChangeState(EState::eIdle);
+				ChangeState((int)EState::eIdle);
 			}
 			break;
 	}
@@ -779,28 +768,28 @@ void CEnemyA::UpdateAttack()
 
 
 // 状態の文字列を取得
-std::string CEnemyA::GetStateStr(EState state) const
+std::string CEnemyA::GetStateStr(int state) const
 {
-	switch (state)
+	switch ((int)state)
 	{
-	case EState::eIdle:    return "待機";
-	case EState::ePatrol:  return "巡回";
-	case EState::eChase:   return "追跡";
-	case EState::eLost:    return "見失う";
-	case EState::eAttack:  return "攻撃";
+	case (int)EState::eIdle:    return "待機";
+	case (int)EState::ePatrol:  return "巡回";
+	case (int)EState::eChase:   return "追跡";
+	case (int)EState::eLost:    return "見失う";
+	case (int)EState::eAttack:  return "攻撃";
 	}
 	return "";
 }
 
-CColor CEnemyA::GetStateColor(EState state) const
+CColor CEnemyA::GetStateColor(int state) const
 {
-	switch (state)
+	switch ((int)state)
 	{
-	case EState::eIdle:    return CColor::white;
-	case EState::ePatrol:  return CColor::green;
-	case EState::eChase:   return CColor::red;
-	case EState::eLost:    return CColor::yellow;
-	case EState::eAttack:  return CColor::magenta;
+	case (int)EState::eIdle:    return CColor::white;
+	case (int)EState::ePatrol:  return CColor::green;
+	case (int)EState::eChase:   return CColor::red;
+	case (int)EState::eLost:    return CColor::yellow;
+	case (int)EState::eAttack:  return CColor::magenta;
 	}
 	return CColor::white;
 }

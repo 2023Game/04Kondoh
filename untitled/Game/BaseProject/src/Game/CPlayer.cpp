@@ -211,7 +211,7 @@ CPlayer::CPlayer()
 	// 盾のボーンを取得
 	CModelXFrame* Shield = mpModel->FinedFrame("Armature_mixamorig_Shield_joint");
 	const CMatrix& shieldMTX = Shield->CombinedMatrix();
-	// 攻撃用のコライダーを剣の行列に設定
+	// 攻撃用のコライダーを行列に設定
 	mpAttackCollider1->SetAttachMtx(&swordMTX);
 	mpAttackCollider2->SetAttachMtx(&swordMTX);
 	mpAttackCollider3->SetAttachMtx(&shieldMTX);
@@ -542,34 +542,6 @@ void CPlayer::UpdateEvasion()
 
 }
 
-//void CPlayer::UpEvasion()
-//{
-//	
-//}
-//
-//void CPlayer::DwonEvasion()
-//{
-//	for (int i = 0; i < 10; i++)
-//	{
-//		mMoveSpeed += VectorZ() * EVA_MOVE_MINUS;
-//	}
-//}
-//
-//void CPlayer::LeftEvasion()
-//{
-//	for (int i = 0; i <= 20; i++)
-//	{
-//		mMoveSpeed += VectorX() * EVA_MOVE_MINUS;
-//	}
-//}
-//
-//void CPlayer::RightEvasion()
-//{
-//	for (int i = 0; i <= 10; i++)
-//	{
-//		mMoveSpeed += VectorX() * EVA_MOVE_PLUS;
-//	}
-//}
 
 // 防御
 void CPlayer::UpdateDefense()
@@ -709,6 +681,8 @@ void CPlayer::UpdateMove()
 	}
 }
 
+// ↓ポーションブラーの更新処理、使ってない
+/*
 // モーションブラーの更新処理
 void CPlayer::UpdateMotionBlur()
 {
@@ -741,7 +715,7 @@ void CPlayer::UpdateMotionBlur()
 		mMotionBlurRemainTime = 0.0f;
 	}
 }
-
+*/
 
 // 更新
 void CPlayer::Update()
@@ -893,22 +867,24 @@ void CPlayer::Update()
 		System::ExitGame();
 	}
 
-	//// 右クリックで弾丸発射
-	//if (CInput::PushKey(VK_RBUTTON))
-	//{
-	//	 //弾丸を生成
-	//	new CBullet
-	//	(
-	//		// 発射位置
-	//		Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
-	//		VectorZ(),	// 発射方向
-	//		1000.0f,	// 移動距離
-	//		1000.0f		// 飛距離
-	//	);
-	//}
+	// ↓炎や弾丸、モーションブラーなどの処理、使ってない
+	/* 
+	// 右クリックで弾丸発射
+	if (CInput::PushKey(VK_RBUTTON))
+	{
+		 //弾丸を生成
+		new CBullet
+		(
+			// 発射位置
+			Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
+			VectorZ(),	// 発射方向
+			1000.0f,	// 移動距離
+			1000.0f		// 飛距離
+		);
+	}
 
-	// 「E」キーで炎の発射をオンオフする
-	/*if (CInput::PushKey('E'))
+	 「E」キーで炎の発射をオンオフする
+	if (CInput::PushKey('E'))
 	{
 		if (!mpFlamethrower->IsThrowing())
 		{
@@ -918,22 +894,24 @@ void CPlayer::Update()
 		{
 			mpFlamethrower->Stop();
 		}
-	}*/
+	}
 
-	// 「B」キーを押したら、モーションブラー開始
-	//if (CInput::PushKey('B'))
-	//{
-	//	// モーションブラーを掛けている最中であれば、
-	//	// 新しくモーションブラーを掛け直さない
-	//	if (mMotionBlurRemainTime <= 0.0f)
-	//	{
-	//		System::SetEnableMotionBlur(true);
-	//		mMotionBlurRemainTime = MOTION_BLUR_TIME;
-	//	}
-	//}
+	 「B」キーを押したら、モーションブラー開始
+	if (CInput::PushKey('B'))
+	{
+		// モーションブラーを掛けている最中であれば、
+		// 新しくモーションブラーを掛け直さない
+		if (mMotionBlurRemainTime <= 0.0f)
+		{
+			System::SetEnableMotionBlur(true);
+			mMotionBlurRemainTime = MOTION_BLUR_TIME;
+		}
+	}
 
-	// モーションブラーの更新処理
+	 モーションブラーの更新処理
 	UpdateMotionBlur();
+
+	*/
 
 	// キャラクターの更新
 	CXCharacter::Update();
@@ -962,9 +940,10 @@ void CPlayer::Update()
 // 衝突処理
 void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
-	// 縦方向の衝突処理
-	/*
-	if (self == mpColliderLine)
+
+
+	// 当たり判定
+	if (self == mpColliderCapsule)
 	{
 		if (other->Layer() == ELayer::eField)
 		{
@@ -978,72 +957,6 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			// 衝突した地面が床か天井かを内積で判定
 			CVector normal = hit.adjust.Normalized();
 			float dot = CVector::Dot(normal, CVector::up);
-			// 内積の結果がプラスであれば、床と衝突した
-			if (dot >= 0.0f)
-			{
-				// 落下などで床に上から衝突した時（下移動）のみ
-				// 上下の移動速度を0にする
-				if (mMoveSpeedY < 0.0f)
-				{
-					mMoveSpeedY = 0.0f;
-				}
-
-				// 接地した
-				mIsGrounded = true;
-				// 接地した地面の法線を記憶しておく
-				mGroundNormal = hit.adjust.Normalized();
-
-				if (other->Tag() == ETag::eRideableObject)
-				{
-					mpRideObject = other->Owner();
-				}
-			}
-			// 内積の結果がマイナスであれば、天井と衝突した
-			else
-			{
-				// ジャンプなどで天井に下から衝突した時（上移動）のみ
-				// 上下の移動速度を0にする
-				if (mMoveSpeedY > 0.0f)
-				{
-					mMoveSpeedY = 0.0f;
-				}
-			}
-		}
-	}
-
-	// 横方向（X軸とZ軸）の衝突処理
-	else if (self == mpColliderLineX || self == mpColliderLineZ)
-	{
-		if (other->Layer() == ELayer::eField)
-		{
-			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-			CVector adjust = hit.adjust;
-			adjust.Y(0.0f);
-
-			// 押し戻しベクトルの分座標を移動
-			Position(Position() + adjust * hit.weight);
-
-		}
-	}
-	*/
-
-	// 当たり判定
-	if (self == mpColliderCapsule)
-	{
-		if (other->Layer() == ELayer::eField)
-		{
-			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-			CVector adjust = hit.adjust;
-			//adjust.X(0.0f);
-			//adjust.Z(0.0f);
-
-			Position(Position() + adjust * hit.weight);
-
-			// 衝突した地面が床か天井かを内積で判定
-			CVector normal = hit.adjust.Normalized();
-			float dot = CVector::Dot(normal, CVector::up);
-			float sideX = CVector::Dot(normal, CVector::right);
-			float sideZ = CVector::Dot(normal, CVector::forward);
 			// 内積の結果がプラスであれば、床と衝突した
 			if (dot >= 0.0f)
 			{

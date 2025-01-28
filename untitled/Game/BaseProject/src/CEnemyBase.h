@@ -74,6 +74,7 @@ protected:
 	CGaugeUI3D* mpHpGauge;    // HPゲージ
 	CVector mGaugeOffsetPos;  // ゲージのオフセット座標
 
+
 };
 
 #endif // !CENEMYBASE_H

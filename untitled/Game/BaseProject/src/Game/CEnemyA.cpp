@@ -72,6 +72,25 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpBodyCol->SetCollisionTags({ ETag::eField, ETag::ePlayer });
 	mpBodyCol->SetCollisionLayers({ ELayer::eField, ELayer::ePlayer, ELayer::eAttackCol });
 
+	// 左手のカプセルコライダ
+	mpLAttackCol = new CColliderSphere
+	(
+		this, ELayer::eEnemy,
+		5.0
+	);
+	// 衝突するタグとレイヤーを設定
+	mpLAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
+	mpLAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+
+	// 右手のカプセルコライダ
+	mpRAttackCol = new CColliderSphere
+	(
+		this,ELayer::eEnemy,
+		10.0
+	);
+	// 衝突するタグとレイヤーを設定
+	mpRAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
+	mpRAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
 
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
@@ -88,6 +107,18 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 		CNavNode* node = new CNavNode(point, true);
 		mPatrolPoints.push_back(node);
 	}
+
+	// 左手のボーンを取得
+	CModelXFrame* LHand = mpModel->FinedFrame("Armature_mixamorig_LeftHand");
+	const CMatrix& LhandMTX = LHand->CombinedMatrix();
+	// 右手のボーンを取得
+	CModelXFrame* RHand = mpModel->FinedFrame("Armature_mixamorig_RightHand");
+	const CMatrix& RhandMTX = RHand->CombinedMatrix();
+	// 攻撃用のコライダーを行列に設定
+	mpLAttackCol->SetAttachMtx(&LhandMTX);
+	mpRAttackCol->SetAttachMtx(&RhandMTX);
+
+
 }
 
 CEnemyA::~CEnemyA()
@@ -156,8 +187,12 @@ void CEnemyA::Update()
 	case (int)EState::eAttack:  UpdateAttack(); break;
 	}
 
-
+	// キャラクターの更新
 	CXCharacter::Update(); 
+
+	// コライダを更新
+	mpLAttackCol->Update();
+	mpRAttackCol->Update();
 
 	// 経路探索用のノードが存在すれば、座標を更新
 	if (mpNavNode != nullptr)
@@ -266,45 +301,44 @@ void CEnemyA::AttackEnd()
 // 衝突処理
 void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
-	//// 縦方向の衝突処理
-	//if (self == mpColliderLine)
-	//{
-	//	if (other->Layer() == ELayer::eField)
-	//	{
-	//		// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-	//		CVector adjust = hit.adjust;
-	//		adjust.X(0.0f);
-	//		adjust.Z(0.0f);
+	if (self == mpBodyCol)
+	{
+		if (other->Layer() == ELayer::eField)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			adjust.X(0.0f);
+			adjust.Z(0.0f);
 
-	//		Position(Position() + adjust * hit.weight);
-	//	}
-	//}
+			Position(Position() + adjust * hit.weight);
 
-	//// 横方向（X軸とZ軸）の衝突処理
-	//else if (self == mpColliderLineX || self == mpColliderLineZ)
-	//{
-	//	if (other->Layer() == ELayer::eField)
-	//	{
-	//		// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-	//		CVector adjust = hit.adjust;
-	//		adjust.Y(0.0f);
+			// 衝突した地面が床か天井かを内積で判定
+			CVector normal = hit.adjust.Normalized();
+			float dot = CVector::Dot(normal, CVector::up);
+			// 内積の結果がプラスであれば、床と衝突した
+			if (dot >= 0.0f)
+			{
+				// 落下などで床に上から衝突した時（下移動）のみ
+				// 上下の移動速度を0にする
+				if (mMoveSpeedY < 0.0f)
+				{
+					mMoveSpeedY = 0.0f;
+				}
 
-	//		// 押し戻しベクトルの分座標を移動
-	//		Position(Position() + adjust * hit.weight);
+				// 接地した
+				mIsGrounded = true;
+				// 接地した地面の法線を記憶しておく
+				mGroundNormal = hit.adjust.Normalized();
 
-	//	}
-	//}
+			}
+		}
+		else if (other->Layer() == ELayer::eAttackCol && other->Tag() == ETag::ePlayer)
+		{
 
-
+		}
+	}
 }
 
-//void CEnemyA::ChangeAnimation(EAnimType type, bool restart)
-//{
-//	int index = (int)type;
-//	if (!(0 <= index && index < (int)EAnimType::Num)) return; 
-//	const AnimData& data = ANIM_DATA[index];
-//	CXCharacter::ChangeAnimation(index, data.loop, data.frameLength, restart);
-//}
 
 //状態切り替え
 void CEnemyA::ChangeState(int state)
@@ -549,6 +583,8 @@ void CEnemyA::UpdateIdle()
 		// 待機時間が経過したら、巡回状態へ移行
 		ChangeState((int)EState::ePatrol);
 	}
+
+	CPlayer* player = CPlayer::Instance();
 }
 
 // 巡回中の更新処理

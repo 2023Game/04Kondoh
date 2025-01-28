@@ -1,11 +1,14 @@
 #include "CEnemyManager.h"
 #include "CEnemyBase.h"
+#include "CField.h"
 #include "Maths.h"
 
 CEnemyManager* CEnemyManager::spInstance = nullptr;
 
 // コンストラクタ
 CEnemyManager::CEnemyManager()
+	: mpCurrentEnemy(nullptr)
+	, mpNextEnemy(nullptr)
 {
 }
 
@@ -56,6 +59,7 @@ CEnemyBase* CEnemyManager::FindLockOnTarget(float angle, float length) const
 	float angleR = Math::DegreeToRadian(angle);
 
 	float nearDot = 0.0f;
+	// 近い敵
 	CEnemyBase* nearEnemy = nullptr;
 
 	for (CEnemyBase* enemy : mEnemies)
@@ -75,9 +79,26 @@ CEnemyBase* CEnemyManager::FindLockOnTarget(float angle, float length) const
 			nearEnemy = enemy;
 			nearDot = dot;
 		}
+
 	}
 
 	return nearEnemy;
+}
+
+CEnemyBase* CEnemyManager::NextLockOnTarget()
+{
+	mpCurrentEnemy = FindLockOnTarget(45, 300);
+	if (mpCurrentEnemy == nullptr) return;
+	return nullptr;
+}
+
+bool CEnemyManager::IsFindTarget() const
+{
+	// 
+	CEnemyManager* enemy = CEnemyManager::Instance();
+	if (enemy == nullptr) return false;
+	CFiled 
+	return false;
 }
 
 

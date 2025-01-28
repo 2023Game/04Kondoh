@@ -178,6 +178,7 @@ void CEnemyBase::Update()
 	mIsGrounded = false;
 
 	// TODO:HPゲージを更新
+
 }
 
 // 描画

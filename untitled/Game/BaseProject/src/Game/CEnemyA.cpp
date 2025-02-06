@@ -30,6 +30,11 @@
 #define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
 #define IDLE_TIME 5.0f          // 待機状態の時間
+#define DEATH_WAIT_TIME 3.0f	// 死亡時の待機時間
+#define LOOKAT_SPEED 2.0f		// 対象の方向に向く速度
+
+#define EATTACKWAY CPlayer::EAttackWay		// プレイヤーの攻撃方向
+#define EATTACKPWOER CPlayer::EAttackPower	// プレイヤーの攻撃威力
 
 // プレイヤーのアニメーションデータのテーブル
 const std::vector<CEnemyBase::AnimData> ANIM_DATA =
@@ -39,6 +44,7 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ANIM_PATH"walk.x",		        true,	42.0f,	1.0f},	// 歩行
 	{ ANIM_PATH"Run.x",					true,	23.0f,	1.0f},	// 走る
 	{ ANIM_PATH"RightAttackS.x",		false,	58.0f,	1.0f},  // 右攻撃
+	{ ANIM_PATH"Deth.x",				false,	129.0f,	1.0f},	// 死亡
 };
 
 
@@ -75,7 +81,7 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	// 左手のカプセルコライダ
 	mpLAttackCol = new CColliderSphere
 	(
-		this, ELayer::eEnemy,
+		this, ELayer::eAttackCol,
 		5.0
 	);
 	// 衝突するタグとレイヤーを設定
@@ -85,12 +91,13 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	// 右手のカプセルコライダ
 	mpRAttackCol = new CColliderSphere
 	(
-		this,ELayer::eEnemy,
+		this,ELayer::eAttackCol,
 		10.0
 	);
 	// 衝突するタグとレイヤーを設定
 	mpRAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
 	mpRAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+
 
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
@@ -185,6 +192,8 @@ void CEnemyA::Update()
 	case (int)EState::eChase:   UpdateChase();  break;
 	case (int)EState::eLost:    UpdateLost();   break;
 	case (int)EState::eAttack:  UpdateAttack(); break;
+	case (int)EState::eStan:	UpdateStan();	break;
+	case (int)EState::eChance:	UpdateChance();	break;
 	}
 
 	// キャラクターの更新
@@ -203,6 +212,7 @@ void CEnemyA::Update()
 	// 現在の状態に合わせて視野範囲の色を変更
 	mpDebugFov->SetColor(GetStateColor(mState));
 
+	CDebugPrint::Print("Enemy : %d\n", mHp);
 	CDebugPrint::Print("状態 : %s\n", GetStateStr(mState).c_str());
 	CDebugPrint::Print("ステップ : %d\n", mStateStep);
 }
@@ -271,6 +281,12 @@ void CEnemyA::Render()
 	}
 }
 
+bool CEnemyA::IsState(int state)
+{
+	if ((int)mState == state) return true;
+	return false;
+}
+
 bool CEnemyA::IsAttacking() const
 {
 	if (mState == (int)EState::eAttack) return true;
@@ -298,9 +314,36 @@ void CEnemyA::AttackEnd()
 	//mpAttack1Col->SetEnable(false);
 }
 
+void CEnemyA::TakeDamage(int damage, CObjectBase* causer)
+{
+	// ベースクラスのダメージ処理を呼び出す
+	CEnemyBase::TakeDamage(damage, causer);
+
+	if (IsDeath())
+	{
+		// 攻撃を加えた相手を戦闘相手に設定
+		mpBattleTarget = causer;
+		// 攻撃を加えた相手の方向へ向く
+		LookAtBattleTarget(true);
+		// 戦闘状態を切り替える
+		mIsBattle = true;
+		// 移動を停止
+		mMoveSpeed = CVector::zero;
+	}
+
+}
+
+void CEnemyA::Death()
+{
+	ChangeState((int)EState::eDeath);
+}
+
 // 衝突処理
 void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
+	CPlayer* player = CPlayer::Instance();
+	CPlayer::EAttackPower attackPow = player->GetAttackPower();
+
 	if (self == mpBodyCol)
 	{
 		if (other->Layer() == ELayer::eField)
@@ -332,9 +375,46 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 
 			}
 		}
-		else if (other->Layer() == ELayer::eAttackCol && other->Tag() == ETag::ePlayer)
+		else if (other->Tag() == ETag::ePlayer &&
+				 other->Layer() == ELayer::eAttackCol )
 		{
 
+		}
+	}
+	else if (self == mpLAttackCol)
+	{
+		if (other->Layer() == ELayer::ePlayer)
+		{
+			// ヒットしたのがキャラクターかつ、
+			// まだ攻撃がヒットしていないキャラクターであれば
+			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+			if (chara != nullptr && !IsAttackHitObj(chara))
+			{
+				// ダメージを与える
+				chara->TakeDamage(3, this);
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(chara);
+			}
+		}
+		else if (other->Tag() == ETag::ePlayer &&other->Layer() == ELayer::eAttackCol)
+		{
+			if (IsStan())
+			{
+				ChangeState((int)EState::eStan);
+			}
+		}
+	}
+	else if (self == mpRAttackCol)
+	{
+		// ヒットしたのがキャラクターかつ、
+		// まだ攻撃がヒットしていないキャラクターであれば
+		CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+		if (chara != nullptr && !IsAttackHitObj(chara))
+		{
+			// ダメージを与える
+			chara->TakeDamage(3, this);
+			// 攻撃ヒット済みリストに登録
+			AddAttackHitObj(chara);
 		}
 	}
 }
@@ -352,6 +432,19 @@ void CEnemyA::ChangeState(int state)
 
 	// 状態切り替え
 	CEnemyBase::ChangeState(state);
+}
+
+// 攻撃タイプ切り替え
+void CEnemyA::ChangeAttackType(int attacktype)
+{
+	// 攻撃中に他の攻撃タイプへ移行する場合は
+	// 攻撃終了処理を呼び出す
+	if (mAttackType != attacktype && IsState((int)EState::eAttack))
+	{
+		AttackEnd();
+	}
+	// 攻撃タイプ切り替え
+	CEnemyBase::ChangeAttackType(attacktype);
 }
 
 // プレイヤーが視野範囲内に入ったかどうか
@@ -423,6 +516,7 @@ bool CEnemyA::IsLookPlayer() const
 	return true;
 }
 
+// プレイヤーを攻撃出来るかどうか
 bool CEnemyA::CanAttackPlayer() const
 {
 	// プレイヤーがいない場合は、攻撃できない
@@ -455,6 +549,37 @@ bool CEnemyA::AttackRangeMin()
 	// 全ての条件をみたした
 	return true;
 	return false;
+}
+
+bool CEnemyA::IsStan()
+{
+	CPlayer* player = CPlayer::Instance();
+	CPlayer::EAttackWay attackway = player->GetAttackWay();
+	CPlayer::EAttackPower attackPow = player->GetAttackPower();
+	
+	switch (mAttackType)
+	{
+	case (int)EAttackType::eLeftAttackS:
+		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eRightAttack)) 
+			return true;
+		return false;
+		break;
+	case (int)EAttackType::eLeftAttackM:
+		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eRightAttack))
+			return true;
+		return false;
+		break;
+	case (int)EAttackType::eRightAttackS:
+		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eLeftAttack))
+			return true;
+		return false;
+		break;
+	case (int)EAttackType::eRightAttackM:
+		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eLeftAttack))
+			return true;
+		return false;
+		break;
+	}
 }
 
 // 指定した位置まで移動する
@@ -497,6 +622,34 @@ bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
 
 	// 目的地には到着しなかった
 	return false;
+}
+
+// 戦闘相手の方へ向く
+void CEnemyA::LookAtBattleTarget(bool immediate)
+{
+	// 戦闘相手がいなければ、処理しない
+	if (mpBattleTarget == nullptr) return;
+
+	// 戦闘相手までの方向ベクトルを求める
+	CVector targetPos = mpBattleTarget->Position();
+	CVector vec = targetPos - Position();
+	vec.Y(0.0f);
+	vec.Normalize();
+	// すぐに戦闘相手の方向へ向く
+	if (immediate)
+	{
+		Rotation(CQuaternion::LookRotation(vec));
+	}
+	// 徐々に戦闘相手の方向へ向く
+	else
+	{
+		CVector forward = CVector::Slerp
+		(
+			VectorZ(), vec,
+			LOOKAT_SPEED * Times::DeltaTime()
+		);
+		Rotation(CQuaternion::LookRotation(forward));
+	}
 }
 
 // 次に巡回するポイントを変更
@@ -585,6 +738,15 @@ void CEnemyA::UpdateIdle()
 	}
 
 	CPlayer* player = CPlayer::Instance();
+	if (player != nullptr)
+	{
+		CPlayer::EState state = player->GetState();
+		if (IsAttacking())
+		{
+			CPlayer::EAttackWay attackway = player->GetAttackWay();
+			CPlayer::EAttackPower attackPow = player->GetAttackPower();
+		}
+	}
 }
 
 // 巡回中の更新処理
@@ -801,6 +963,53 @@ void CEnemyA::UpdateAttack()
 	
 }
 
+void CEnemyA::UpdateDeth()
+{
+	// ステップごとに処理を分ける
+	switch (mStateStep)
+	{
+		// ステップ0：死亡アニメーション再生
+	case 0:
+		ChangeAnimation((int)EAnimType::eDeath, true);
+		mStateStep++;
+		break;
+		// ステップ1：アニメーション終了待ち
+	case 1:
+		// 死亡アニメーションが終了したら、削除
+		if (IsAnimationFinished())
+		{
+			mStateStep++;
+		}
+		break;
+		// ステップ2：死亡後の待ち
+	case 2:
+		if (mElapsedTime < DEATH_WAIT_TIME)
+		{
+			mElapsedTime += Times::DeltaTime();
+		}
+		// 待ち時間が終了したら、削除
+		else
+		{
+			Kill();
+		}
+		break;
+	}
+}
+
+void CEnemyA::UpdateStan()
+{
+	// TODO:アニメーションを再生、１秒後に復活、
+	// 視界に入っていたら：攻撃状態に、入っていなかったら：待機状態に
+	// １秒の間で攻撃をすると：攻撃チャンス！！状態へ
+}
+
+void CEnemyA::UpdateChance()
+{
+	// TODO：ノックバックするようになる
+	// 攻撃に倍率が乗る
+}
+
+
 
 
 // 状態の文字列を取得
@@ -813,6 +1022,8 @@ std::string CEnemyA::GetStateStr(int state) const
 	case (int)EState::eChase:   return "追跡";
 	case (int)EState::eLost:    return "見失う";
 	case (int)EState::eAttack:  return "攻撃";
+	case (int)EState::eDeath:	return "死亡";
+	case (int)EState::eChance:	return "気絶";
 	}
 	return "";
 }
@@ -826,6 +1037,8 @@ CColor CEnemyA::GetStateColor(int state) const
 	case (int)EState::eChase:   return CColor::red;
 	case (int)EState::eLost:    return CColor::yellow;
 	case (int)EState::eAttack:  return CColor::magenta;
+	case (int)EState::eDeath:	return CColor::black;
+	case (int)EState::eChance:	return CColor::cyan;
 	}
 	return CColor::white;
 }

@@ -53,6 +53,12 @@ void CEnemyBase::DeleteObject(CObjectBase* obj)
 	}
 }
 
+bool CEnemyBase::IsState(int state)
+{
+	if ((int)mState == state) return true;
+	return false;
+}
+
 // “G‚Ì‰Šú‰»
 void CEnemyBase::InitEnemy(std::string path, const std::vector<AnimData>* pAnimData)
 {
@@ -159,6 +165,13 @@ void CEnemyBase::ChangeState(int state)
 	mState = state;
 	mStateStep = 0;
 	mElapsedTime = 0.0f;
+}
+
+void CEnemyBase::ChangeAttackType(int attacktype)
+{
+	if (attacktype == mAttackType) return;
+
+	mAttackType = attacktype;
 }
 
 

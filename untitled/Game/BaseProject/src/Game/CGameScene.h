@@ -17,5 +17,6 @@ public:
 	void Update();
 
 private:
+	CSound* mpGameBGM;
 	CGameMenu* mpGameMenu;
 };

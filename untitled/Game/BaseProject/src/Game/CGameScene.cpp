@@ -50,7 +50,7 @@ void CGameScene::Load()
 	CResourceManager::Load<CSound>  ("SlashSound",    "Sound\\SE\\slash.wav");
 
 	// ゲームBGMを読み込み
-	//CBGMManager::Instance()->Play(EBGMType::eGame);
+	CBGMManager::Instance()->Play(EBGMType::eGame);
 
 	// 経路探索管理クラスを作成
 	new CNavManager();
@@ -106,11 +106,11 @@ void CGameScene::Load()
 //シーンの更新処理
 void CGameScene::Update()
 {
-	// BGM再生中でなければ、BGMを再生
-	//if (!mpGameBGM->IsPlaying())
-	//{
-	//	mpGameBGM->PlayLoop(-1, 1.0f, false, 1.0f);
-	//}
+	//BGM再生中でなければ、BGMを再生
+	/*if (!mpGameBGM->IsPlaying())
+	{
+		mpGameBGM->PlayLoop(-1, 1.0f, false, 1.0f);
+	}*/
 
 	if (CInput::PushKey('H'))
 	{

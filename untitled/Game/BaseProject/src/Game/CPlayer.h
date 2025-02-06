@@ -62,6 +62,10 @@ public:
 	// デストラクタ
 	~CPlayer();
 
+	// 指定の攻撃タイプか
+	bool IsAttackType(EAttackPower power, EAttackWay way);
+	//
+	bool IsAttacking() const override;
 	// 現在の状態を取得
 	EState GetState();
 	// 攻撃の方向を取得
@@ -89,32 +93,27 @@ private:
 
 	// 非戦闘時の待機状態
 	void UpdateIdle();
-
 	// 戦闘時の待機状態
 	void UpdateAttackIdle();
 	// 攻撃
 	void UpdateAttack();
 	// 攻撃終了待ち
 	void UpdateAttackWait();
-
 	// 回避
 	void UpdateEvasion();
-
 	// 防御
 	void UpdateDefense();
-
 	// ジャンプ開始
 	void UpdateJumpStart();
 	// ジャンプ中
 	void UpdateJump();
 	// ジャンプ終了
 	void UpdateJumpEnd();
-
 	// 移動の更新処理
 	void UpdateMove();
 
 	// モーションブラーの更新処理
-	void UpdateMotionBlur();
+	/*void UpdateMotionBlur();*/
 
 
 	// アニメーションの種類
@@ -162,8 +161,6 @@ private:
 	// 切り替えるアニメーションの種類を取得
 	EAnimType GetAttackAnimType() const;
 
-	
-
 	// プレイヤーのインスタンス
 	static CPlayer* spInstance;
 
@@ -173,6 +170,7 @@ private:
 		std::string path;	// アニメーションデータのパス
 		bool loop;			// ループするかどうか
 		float frameLength;	// アニメーションのフレーム数
+		float speed;		// アニメーション速度（1.0で等倍）
 	};
 	// アニメーションデータのテーブル
 	static const AnimData ANIM_DATA[];
@@ -187,10 +185,9 @@ private:
 	void ChangeAttack();
 
 	
-	EAttackWay mAttackWay; // 攻撃方向
-
-	EAttackPower mAttackPower;     // 攻撃の強さ
-	EAttackPower mCurrAttackPower; // 現在の攻撃の強さ
+	EAttackWay mAttackWay;			// 攻撃方向
+	EAttackPower mAttackPower;		// 攻撃の強さ
+	EAttackPower mCurrAttackPower;	// 現在の攻撃の強さ
 
 	// モード選択
 	enum class EMode
@@ -204,9 +201,12 @@ private:
 	void ChangeLockOnTarget();
 	// ターゲットをロックオンする
 	void LockOnTarget();
+	
 	bool mIsBattleMode;				// バトルモードか
 	bool mIsLockOn;					// ロックオンしているか
 	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
+
+
 
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
@@ -215,8 +215,8 @@ private:
 	bool mIsGrounded;	// 接地しているかどうか
 	CVector mGroundNormal;	// 接地している地面の法線
 
-	CColliderLine* mpColliderLine;  // 縦方向の線分コライダー
-	CColliderCapsule* mpColliderCapsule;  // カプセルコライダー
+	// 本体のコライダ
+	CCollider* mpBodyCol;
 	// 攻撃用のコライダ１（剣の刃の部分）
 	CColliderCapsule* mpAttackCollider1;
 	// 攻撃用のコライダ２（剣の持ち手の部分）
@@ -236,9 +236,9 @@ private:
 	bool mIsPlayedSlashSE;
 	bool mIsSpawnedSlashEffect;
 
-	// 火炎放射エフェクト
-	CFlamethrower* mpFlamethrower;
+	//// 火炎放射エフェクト
+	//CFlamethrower* mpFlamethrower;
 
-	// モーションブラーを掛ける残り時間
-	float mMotionBlurRemainTime;
+	//// モーションブラーを掛ける残り時間
+	//float mMotionBlurRemainTime;
 };

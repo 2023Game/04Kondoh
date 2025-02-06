@@ -1,14 +1,14 @@
 #include "CEnemyManager.h"
 #include "CEnemyBase.h"
 #include "CField.h"
+#include "CPlayer.h"
 #include "Maths.h"
 
 CEnemyManager* CEnemyManager::spInstance = nullptr;
 
 // コンストラクタ
 CEnemyManager::CEnemyManager()
-	: mpCurrentEnemy(nullptr)
-	, mpNextEnemy(nullptr)
+	:mpTargetPos(CVector::zero)
 {
 }
 
@@ -73,7 +73,10 @@ CEnemyBase* CEnemyManager::FindLockOnTarget(float angle, float length) const
 		CVector dir = vec.Normalized();
 		float dot = CVector::Dot(camDir, dir);
 		if (dot < cosf(angleR)) continue;
-		// 
+
+		// TODO：遮蔽物がある時、ロックオン出来ない
+
+
 		if (nearEnemy == nullptr || nearDot < dot)
 		{
 			nearEnemy = enemy;
@@ -85,21 +88,35 @@ CEnemyBase* CEnemyManager::FindLockOnTarget(float angle, float length) const
 	return nearEnemy;
 }
 
-CEnemyBase* CEnemyManager::NextLockOnTarget()
-{
-	mpCurrentEnemy = FindLockOnTarget(45, 300);
-	if (mpCurrentEnemy == nullptr) return;
-	return nullptr;
-}
 
-bool CEnemyManager::IsFindTarget() const
-{
-	// 
-	CEnemyManager* enemy = CEnemyManager::Instance();
-	if (enemy == nullptr) return false;
-	CFiled 
-	return false;
-}
+//bool CEnemyManager::IsFindTarget() const
+//{
+//	CPlayer* player = CPlayer::Instance();
+//	// 敵が存在しない場合
+//	CEnemyManager* enemy = CEnemyManager::Instance();
+//	if (enemy == nullptr) return false;
+//	// フィールドが存在しない場合
+//	CField* field = CField::Instance();
+//	if (field == nullptr) return false;
+//
+//	CVector enemyPos = Instance()->Position();
+//	//
+//	CVector playerPos = player->Position();
+//
+//	CHitInfo hit;
+//	//
+//	if (field->CollisionRay(playerPos, enemyPos, &hit)) return false;
+//
+//	return true;
+//}
+
+//CEnemyBase* CEnemyManager::NextLockOnTarget()
+//{
+//	mpCurrentEnemy = FindLockOnTarget(45, 300);
+//	if (mpCurrentEnemy == nullptr) return;
+//	return nullptr;
+//}
+
 
 
 

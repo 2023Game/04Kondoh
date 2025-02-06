@@ -10,6 +10,7 @@
 #include "Maths.h"
 #include "CNavNode.h"
 #include "CNavManager.h"
+#include "CField.h"
 
 #include "CEnemyManager.h"
 #include "CEnemyA.h"
@@ -46,36 +47,36 @@ CPlayer* CPlayer::spInstance = nullptr;
 // プレイヤーのアニメーションデータのテーブル
 const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 {
-	{ "",							        true,	0.0f	},	// 戦闘時のTポーズ
-	{ PLAYER_ANIM_PATH"AttackIdle.x",	    true,	170.0f	},	// 戦闘時の待機
+	{ "",								true,	0.0f,	1.0f	},	// 戦闘時のTポーズ
+	{ PLAYER_ANIM_PATH"AttackIdle.x",	true,	170.0f,	1.0f	},	// 戦闘時の待機
 
-	{ PLAYER_ANIM_PATH"AttackWalk.x",	    true,	34.0f	},	// 歩行
-	{ PLAYER_ANIM_PATH"BackWalk.x",	        true,	39.0f	},	// 後ろ方向歩行
-	{ PLAYER_ANIM_PATH"LeftWalk.x",	        true,	40.0f	},	// 左方向歩行
-	{ PLAYER_ANIM_PATH"RightWalk.x",	    true,	35.0f	},	// 右方向歩行
+	{ PLAYER_ANIM_PATH"AttackWalk.x",	true,	34.0f,	10.0f	},	// 歩行
+	{ PLAYER_ANIM_PATH"BackWalk.x",		true,	39.0f,	1.0f	},	// 後ろ方向歩行
+	{ PLAYER_ANIM_PATH"LeftWalk.x",		true,	40.0f,	1.0f	},	// 左方向歩行
+	{ PLAYER_ANIM_PATH"RightWalk.x",	true,	35.0f,	1.0f	},	// 右方向歩行
 
-	{ PLAYER_ANIM_PATH"UpAttackS.x",	    false,	54.0f	},	// 弱上攻撃
-	{ PLAYER_ANIM_PATH"UpAttackM.x",	    false,	69.0f	},	// 中上攻撃
-	{ PLAYER_ANIM_PATH"UpAttackL.x",	    false,	92.0f	},	// 強上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackS.x",	false,	54.0f,	1.0f	},	// 弱上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackM.x",	false,	69.0f,	0.1f	},	// 中上攻撃
+	{ PLAYER_ANIM_PATH"UpAttackL.x",	false,	92.0f,	1.0f	},	// 強上攻撃
 
-	{ PLAYER_ANIM_PATH"DwonAttackS.x",	   false,	50.0f	},	// 弱下攻撃
-	{ PLAYER_ANIM_PATH"DwonAttackM.x",	   false,	55.0f	},	// 中下攻撃
-	{ PLAYER_ANIM_PATH"DwonAttackL.x",	   false,	90.0f	},	// 強下攻撃
+	{ PLAYER_ANIM_PATH"DwonAttackS.x",	false,	50.0f,	1.0f	},	// 弱下攻撃
+	{ PLAYER_ANIM_PATH"DwonAttackM.x",	false,	55.0f,	1.0f	},	// 中下攻撃
+	{ PLAYER_ANIM_PATH"DwonAttackL.x",	false,	90.0f,	1.0f	},	// 強下攻撃
 
-	{ PLAYER_ANIM_PATH"RightAttackS.x",	   false,	60.0f	},	// 弱右攻撃
-	{ PLAYER_ANIM_PATH"RightAttackM.x",	   false,	65.0f	},	// 中右攻撃
-	{ PLAYER_ANIM_PATH"RightAttackL.x",	   false,	86.0f	},	// 強右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackS.x",	false,	60.0f,	1.0f	},	// 弱右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackM.x",	false,	65.0f,	1.0f	},	// 中右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackL.x",	false,	86.0f,	1.0f	},	// 強右攻撃
 
-	{ PLAYER_ANIM_PATH"LeftAttackS.x",	   false,	50.0f	},	// 弱左攻撃
-	{ PLAYER_ANIM_PATH"LeftAttackM.x",	   false,	60.0f	},	// 中左攻撃
-	{ PLAYER_ANIM_PATH"LeftAttackL.x",	   false,	99.0f	},	// 強左攻撃
+	{ PLAYER_ANIM_PATH"LeftAttackS.x",	false,	50.0f,	1.0f	},	// 弱左攻撃
+	{ PLAYER_ANIM_PATH"LeftAttackM.x",	false,	60.0f,	1.0f	},	// 中左攻撃
+	{ PLAYER_ANIM_PATH"LeftAttackL.x",	false,	99.0f,	1.0f	},	// 強左攻撃
 
-	{ PLAYER_ANIM_PATH"Defense.x",	        true,	43.0f	},  // 防御
-	{ PLAYER_ANIM_PATH"Evasion.x",	       false,	50.0f	},  // 回避
+	{ PLAYER_ANIM_PATH"Defense.x",		true,	43.0f,	1.0f	},  // 防御
+	{ PLAYER_ANIM_PATH"Evasion.x",		false,	50.0f,	1.0f	},  // 回避
 
-	{ PLAYER_ANIM_PATH"jump_start.x",	   false,	25.0f	},	// ジャンプ開始
-	{ PLAYER_ANIM_PATH"jump.x",		        true,	1.0f	},	// ジャンプ中
-	{ PLAYER_ANIM_PATH"jump_end.x",	       false,	26.0f	},	// ジャンプ終了
+	{ PLAYER_ANIM_PATH"jump_start.x",	false,	25.0f,	1.0f	},	// ジャンプ開始
+	{ PLAYER_ANIM_PATH"jump.x",			true,	1.0f,	1.0f	},	// ジャンプ中
+	{ PLAYER_ANIM_PATH"jump_end.x",		false,	26.0f,	1.0f	},	// ジャンプ終了
 };
 
 
@@ -90,7 +91,6 @@ CPlayer::CPlayer()
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
 	, mMoveSpeedY(0.0f)
-	, mMotionBlurRemainTime(0.0f)
 	, mpRideObject(nullptr)
 	, mpLockOnTarget(nullptr)
 	, mIsGrounded(false)
@@ -115,8 +115,8 @@ CPlayer::CPlayer()
 	// CXCharacterの初期化
 	Init(model);
 
-		// 最初は待機アニメーションを再生
-		ChangeAnimation(EAnimType::eAttackTPose);
+	// 最初は待機アニメーションを再生
+	ChangeAnimation(EAnimType::eAttackTPose);
 
 	//// 縦方向のコライダー作成
 	//mpColliderLine = new CColliderLine
@@ -148,14 +148,17 @@ CPlayer::CPlayer()
 	//mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
 
 	// カプセルコライダー作成
-	mpColliderCapsule = new CColliderCapsule
+	mpBodyCol = new CColliderCapsule
 	(
 		this, ELayer::ePlayer,
 		CVector(0.0f, PLAYER_CAP_DWON, 0.0f),
 		CVector(0.0f, PLAYER_CAP_UP, 0.0f),
-		PLAYER_WIDTH,true
+		PLAYER_WIDTH, true
 	);
-	mpColliderCapsule->SetCollisionLayers({ ELayer::eField, ELayer::eWall});
+	mpBodyCol->SetCollisionTags({ ETag::eEnemy,ETag::eField });
+	mpBodyCol->SetCollisionLayers
+	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,ELayer::eEnemy });
+
 
 	// 攻撃用のコライダ１（剣の刃の部分）
 	mpAttackCollider1 = new CColliderCapsule
@@ -194,12 +197,12 @@ CPlayer::CPlayer()
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
 
-	mpFlamethrower = new CFlamethrower
-	(
-		this, nullptr,
-		CVector(0.0f, 14.0f, -1.0f),
-		CQuaternion(0.0f, 90.0f, 0.0f).Matrix()
-	);
+	//mpFlamethrower = new CFlamethrower
+	//(
+	//	this, nullptr,
+	//	CVector(0.0f, 14.0f, -1.0f),
+	//	CQuaternion(0.0f, 90.0f, 0.0f).Matrix()
+	//);
 
 	// 経路探索用のノードを作成
 	mpNavNode = new CNavNode(Position(), true);
@@ -211,6 +214,7 @@ CPlayer::CPlayer()
 	// 盾のボーンを取得
 	CModelXFrame* Shield = mpModel->FinedFrame("Armature_mixamorig_Shield_joint");
 	const CMatrix& shieldMTX = Shield->CombinedMatrix();
+
 	// 攻撃用のコライダーを行列に設定
 	mpAttackCollider1->SetAttachMtx(&swordMTX);
 	mpAttackCollider2->SetAttachMtx(&swordMTX);
@@ -222,10 +226,7 @@ CPlayer::CPlayer()
 CPlayer::~CPlayer()
 {
 	// コライダーを破棄
-	//SAFE_DELETE(mpColliderLine);
-	//SAFE_DELETE(mpColliderLineX);
-	//SAFE_DELETE(mpColliderLineZ);
-	SAFE_DELETE(mpColliderCapsule);
+	SAFE_DELETE(mpBodyCol);
 
 	// 経路探索用のノードを破棄
 	CNavManager* navMgr = CNavManager::Instance();
@@ -235,6 +236,19 @@ CPlayer::~CPlayer()
 	}
 
 	spInstance = nullptr;
+}
+
+// 指定の攻撃タイプか
+bool CPlayer::IsAttackType(EAttackPower power, EAttackWay way)
+{
+	if (mAttackPower == power && mAttackWay == way) return true;
+	return false;
+}
+
+bool CPlayer::IsAttacking() const
+{
+	return mState == EState::eAttack
+		|| mState == EState::eAttackWait;
 }
 
 // 現在の状態を取得
@@ -363,14 +377,14 @@ void CPlayer::LockOnTarget()
 		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 300);
 		mpLockOnTarget = target;
 		// ロックオンする敵が存在する
-		if (mpLockOnTarget != nullptr)
+		if (mpLockOnTarget != nullptr )
 		{
-			if (CInput::PushKey('B'))
-			{
-				// TODO:ロックオンする敵を変更
-			}
-			// ロックオン処理
-			target->Position();
+				if (CInput::PushKey('B'))
+				{
+					// TODO:ロックオンする敵を変更
+				}
+				// ロックオン処理
+				target->Position();
 		}
 		// ロックオンする敵が存在しなかったら、
 		// バトルモードフラグをオフにする
@@ -384,6 +398,9 @@ void CPlayer::LockOnTarget()
 		mpLockOnTarget = nullptr;
 	}
 }
+
+
+
 
 // 非戦闘時の待機状態
 void CPlayer::UpdateIdle()
@@ -943,7 +960,7 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 
 
 	// 当たり判定
-	if (self == mpColliderCapsule)
+	if (self == mpBodyCol)
 	{
 		if (other->Layer() == ELayer::eField)
 		{
@@ -996,6 +1013,34 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 
 			// 押し戻しベクトルの分座標を移動
 			Position(Position() + adjust * hit.weight);
+		}
+	}
+	else if (self == mpAttackCollider1)
+	{
+		// ヒットしたのがキャラクターかつ、
+			// まだ攻撃がヒットしていないキャラクターであれば
+		CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+		if (chara != nullptr && !IsAttackHitObj(chara))
+		{
+			if (mCurrAttackPower == EAttackPower::eAttackS)
+			{
+				chara->TakeDamage(3, this);
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(chara);
+			}
+			else if (mCurrAttackPower == EAttackPower::eAttackM)
+			{
+				chara->TakeDamage(5, this);
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(chara);
+			}
+			else if (mCurrAttackPower == EAttackPower::eAttackL)
+			{
+				// ダメージを与える
+				chara->TakeDamage(8, this);
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(chara);
+			}
 		}
 	}
 }

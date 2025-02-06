@@ -20,22 +20,20 @@ public:
 	// 次に近い敵を
 	CEnemyBase* NextLockOnTarget();
 
-	bool IsFindTarget() const;
 
 private:
 	// コンストラクタ
 	CEnemyManager();
 	// デストラクタ
 	~CEnemyManager();
+	// 
+	bool IsFindTarget() const;
+	// 敵の位置
+	CVector mpTargetPos;
 
 	// インスタンスのポインタ
 	static CEnemyManager* spInstance;
 	// 敵のリスト
 	std::list<CEnemyBase*> mEnemies;
-
-	// 現在の敵
-	CEnemyBase* mpCurrentEnemy;
-	//
-	CEnemyBase* mpNextEnemy;
 
 };

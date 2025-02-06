@@ -47,16 +47,23 @@ public:
 
 protected:
 
+	// 指定のステートか
+	virtual bool IsState(int state);
+
 	// 敵の初期化
 	void InitEnemy(std::string path, const std::vector<AnimData>* pAnimData);
 
 	// 状態切り替え
 	virtual void ChangeState(int state);
 
+	// 攻撃タイプ切り替え
+	virtual void ChangeAttackType(int attacktype);
+
 	// アニメーション切り替え
 	void ChangeAnimation(int type, bool restart = false);
 
 	int mState;           // 状態
+	int mAttackType;	  // 攻撃タイプ
 	int mStateStep;       // 状態内のステップ管理用
 	float mElapsedTime;   // 経過時間計測用
 

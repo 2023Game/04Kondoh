@@ -23,10 +23,14 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define PLAYER_CAP_UP    13.5f     // プレイヤーの高さ
 #define PLAYER_CAP_DWON   2.5f     // プレイヤーの底
 #define PLAYER_WIDTH      2.0f     // プレイヤーの幅
+
 #define ATTACK1_CAP_UP     80.0f     // 攻撃コライダー1の上
 #define ATTACK1_CAP_DWON    0.0f     // 攻撃コライダー1の下
 #define ATTACK2_CAP_UP      0.0f     // 攻撃コライダー2の上
 #define ATTACK2_CAP_DWON  -30.0f     // 攻撃コライダー2の下
+#define ATTACK_START_FRAME 24.0f	// 攻撃開始フレーム
+#define ATTACK_END_FRAME 50.0f		// 攻撃終了フレーム
+
 #define MOVE_SPEED 0.375f * 2.0f
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
@@ -171,6 +175,7 @@ CPlayer::CPlayer()
 	mpAttackCollider1->SetCollisionTags({ ETag::eEnemy });
 	mpAttackCollider1->SetCollisionLayers({ ELayer::eEnemy });
 	mpAttackCollider1->Rotate(CVector(-4.5f, 14.1f, 0.0f));
+	mpAttackCollider1->SetEnable(false);
 
 	// 攻撃用のコライダ２（剣の持ち手の部分）
 	mpAttackCollider2 = new CColliderCapsule
@@ -183,6 +188,7 @@ CPlayer::CPlayer()
 	mpAttackCollider2->SetCollisionTags({ ETag::eEnemy });
 	mpAttackCollider2->SetCollisionLayers({ ELayer::eEnemy });
 	mpAttackCollider2->Rotate(CVector(-4.5f, 14.1f, 0.0f));
+	mpAttackCollider2->SetEnable(false);
 
 	// 攻撃用のコライダ３（盾の部分）
 	mpAttackCollider3 = new CColliderSphere
@@ -193,6 +199,7 @@ CPlayer::CPlayer()
 	mpAttackCollider3->SetCollisionTags({ ETag::eEnemy });
 	mpAttackCollider3->SetCollisionLayers({ ELayer::eEnemy });
 	mpAttackCollider3->Translate(0.0f, 0.0f, -12.0f);
+	mpAttackCollider3->SetEnable(false);
 
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
@@ -251,6 +258,36 @@ bool CPlayer::IsAttacking() const
 		|| mState == EState::eAttackWait;
 }
 
+void CPlayer::AttackStart()
+{
+	// ベースクラスの攻撃開始処理を呼び出し
+	CXCharacter::AttackStart();
+
+	if (IsAttackType(EAttackPower::eAttackS, EAttackWay::eUpAttack))
+	{
+		mpAttackCollider2->SetEnable(true);
+	}
+	else if (IsAttackType(EAttackPower::eAttackS, EAttackWay::eLeftAttack))
+	{
+		mpAttackCollider3->SetEnable(true);
+	}
+	else
+	{
+		mpAttackCollider1->SetEnable(true);
+	}
+}
+
+void CPlayer::AttackEnd()
+{
+	// ベースクラスの攻撃終了処理を呼び出し
+	CXCharacter::AttackEnd();
+
+	// 攻撃コライダーをオフ
+	mpAttackCollider1->SetEnable(false);
+	mpAttackCollider2->SetEnable(false);
+	mpAttackCollider3->SetEnable(false);
+}
+
 // 現在の状態を取得
 CPlayer::EState CPlayer::GetState()
 {
@@ -275,11 +312,11 @@ CPlayer* CPlayer::Instance()
 }
 
 // アニメーション切り替え
-void CPlayer::ChangeAnimation(EAnimType type)
+void CPlayer::ChangeAnimation(EAnimType type, bool restart)
 {
 	if (!(EAnimType::None < type && type < EAnimType::Num)) return;
 	AnimData data = ANIM_DATA[(int)type];
-	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength);
+	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength, restart);
 }
 
 // 攻撃方向や、攻撃の威力によって
@@ -363,10 +400,12 @@ void CPlayer::ChangeAttack()
 	}
 }
 
+/*
 void CPlayer::ChangeLockOnTarget()
 {
 
 }
+*/
 
 void CPlayer::LockOnTarget()
 {
@@ -455,55 +494,89 @@ void CPlayer::UpdateAttack()
 {
 	// プレイヤーの攻撃状態に合わせてアニメーションを切り替える
 	EAnimType anim = GetAttackAnimType();
-	ChangeAnimation(anim);
 
-	// 攻撃終了待ち状態へ移行
-	mState = EState::eAttackWait;
+	switch (mStateStep)
+	{
+	case 0:
+		ChangeAnimation(anim, true);
 
-	// 斬撃SEの再生済みフラグを初期化
-	mIsPlayedSlashSE = false;
-	// 斬撃エフェクトの生成済みフラグを初期化
-	mIsSpawnedSlashEffect = false;
+		// 斬撃SEの再生済みフラグを初期化
+		mIsPlayedSlashSE = false;
+		// 斬撃エフェクトの生成済みフラグを初期化
+		mIsSpawnedSlashEffect = false;
+
+		mStateStep++;
+		break;
+	case 1:
+		if (GetAnimationFrameRatio() >=  0.25f)
+		{
+			// 斬撃SEを再生
+//			mpSlashSE->Play();
+			// 攻撃開始
+			AttackStart();
+
+			mStateStep++;
+		}
+		break;
+	case 2:
+		if (GetAnimationFrameRatio() >= 0.75f)
+		{
+			// 攻撃終了
+			AttackEnd();
+
+			mStateStep++;
+		}
+		break;
+	case 3:
+		// 攻撃アニメーションが終了したら、
+		if (IsAnimationFinished())
+		{
+			// 待機状態へ移行
+			ChangeState(EState::eIdle);
+			ChangeAnimation(EAnimType::eAttackIdle);
+		}
+		break;
+	}
 }
 
 // 攻撃終了待ち
-void CPlayer::UpdateAttackWait()
-{
-	// 斬撃SEを再生していないかつ、アニメーションが25%以上進行したら、
-	if (!mIsPlayedSlashSE && GetAnimationFrameRatio() >= 0.25f)
-	{
-		// 斬撃SEを再生
-		mpSlashSE->Play();
-		mIsPlayedSlashSE = true;
-	}
-
-	// 斬撃エフェクトを生成していないかつ、アニメーションが35%以上進行したら、
-	if (!mIsSpawnedSlashEffect && GetAnimationFrameRatio() >= 0.35f)
-	{
-		// 斬撃エフェクトを生成して、正面方向へ飛ばす
-		CSlash* slash = new CSlash
-		(
-			this,
-			Position() + CVector(0.0f, 10.0f, 0.0f),
-			VectorZ(),
-			300.0f,
-			100.0f
-		);
-		// 斬撃エフェクトの色設定
-		slash->SetColor(CColor(0.15f, 0.5f, 0.5f));
-
-		mIsSpawnedSlashEffect = true;
-	}
-
-	// 攻撃アニメーションが終了したら、
-	if (IsAnimationFinished())
-	{
-		// 待機状態へ移行
-		mState = EState::eIdle;
-		mAttackWay = EAttackWay::eIdle;
-		ChangeAnimation(EAnimType::eAttackIdle);
-	}
-}
+//void CPlayer::UpdateAttackWait()
+//{
+//	// 斬撃SEを再生していないかつ、アニメーションが25%以上進行したら、
+//	if (!mIsPlayedSlashSE && GetAnimationFrameRatio() >= 0.25f)
+//	{
+//		// 斬撃SEを再生
+//		mpSlashSE->Play();
+//		mIsPlayedSlashSE = true;
+//	}
+//
+//	// 斬撃エフェクトを生成していないかつ、アニメーションが35%以上進行したら、
+//	if (!mIsSpawnedSlashEffect && GetAnimationFrameRatio() >= 0.35f)
+//	{
+//		// 斬撃エフェクトを生成して、正面方向へ飛ばす
+//		CSlash* slash = new CSlash
+//		(
+//			this,
+//			Position() + CVector(0.0f, 10.0f, 0.0f),
+//			VectorZ(),
+//			300.0f,
+//			100.0f
+//		);
+//		// 斬撃エフェクトの色設定
+//		slash->SetColor(CColor(0.15f, 0.5f, 0.5f));
+//
+//		mIsSpawnedSlashEffect = true;
+//	}
+//
+//	// 攻撃アニメーションが終了したら、
+//	if (IsAnimationFinished())
+//	{
+//		// 待機状態へ移行
+//		mState = EState::eIdle;
+//		mAttackWay = EAttackWay::eIdle;
+//		ChangeAnimation(EAnimType::eAttackIdle);
+//	}
+//}
 
 // 回避
 void CPlayer::UpdateEvasion()
@@ -790,8 +863,8 @@ void CPlayer::Update()
 		UpdateAttack();
 		break;
 		// 攻撃終了待ち
-	case EState::eAttackWait:
-		UpdateAttackWait();
+	//case EState::eAttackWait:
+	//	UpdateAttackWait();
 		break;
 		// 防御
 	case EState::eDefense:
@@ -1015,32 +1088,30 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			Position(Position() + adjust * hit.weight);
 		}
 	}
-	else if (self == mpAttackCollider1)
+	else if (self == mpAttackCollider1,mpAttackCollider2,mpAttackCollider3)
 	{
 		// ヒットしたのがキャラクターかつ、
 			// まだ攻撃がヒットしていないキャラクターであれば
 		CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
 		if (chara != nullptr && !IsAttackHitObj(chara))
 		{
+			// 攻撃ヒット済みリストに登録
+			AddAttackHitObj(chara);
+
 			if (mCurrAttackPower == EAttackPower::eAttackS)
 			{
 				chara->TakeDamage(3, this);
-				// 攻撃ヒット済みリストに登録
-				AddAttackHitObj(chara);
 			}
 			else if (mCurrAttackPower == EAttackPower::eAttackM)
 			{
-				chara->TakeDamage(5, this);
-				// 攻撃ヒット済みリストに登録
-				AddAttackHitObj(chara);
+				chara->TakeDamage(100, this);
 			}
 			else if (mCurrAttackPower == EAttackPower::eAttackL)
 			{
 				// ダメージを与える
 				chara->TakeDamage(8, this);
-				// 攻撃ヒット済みリストに登録
-				AddAttackHitObj(chara);
 			}
+
 		}
 	}
 }

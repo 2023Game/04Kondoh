@@ -10,7 +10,10 @@
 #include "CNavNode.h"
 #include "CNavManager.h"
 
-#define ANIM_PATH "Character\\EnemyA\\"
+#define ANIM_PATH "Character\\EnemyA\\anim\\"
+#define ATTACK_ANIM_PATH "Character\\EnemyA\\anim\\Attack\\"
+#define DAMAGEHIT_PATH "Character\\EnemyA\\anim\\DamageHit\\"
+#define CHANCEHIT_PATH "Character\\EnemyA\\anim\\ChanceHit\\"
 
 #define ENEMY_HEIGHT 16.0f      // 敵の高さ
 #define ENEMY_SOLE   5.0f       // 敵の底
@@ -21,12 +24,14 @@
 #define WALK_SPEED 10.0f        // 歩きの速度
 #define RUN_SPEED 20.0f         // 走っている時の速度
 #define ROTATE_SPEED 6.0f       // 回転速度
+
 #define ATTACK_RANGE 20.0f      // 攻撃範囲
 #define ATTACK_RANGE_MIN 12.0f  // 最小攻撃範囲
 #define ATTACK_MOVE_DIST 8.0f   // 攻撃時の移動距離
 #define ATTACK_MOVE_START 12.0f // 攻撃時の移動開始フレーム
 #define ATTACK_MOVE_END 24.0f   // 攻撃時の移動終了フレーム
 #define ATTACK_WAIT_TIME 1.0f   // 攻撃終了時の待ち時間
+
 #define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
 #define IDLE_TIME 5.0f          // 待機状態の時間
@@ -39,12 +44,30 @@
 // プレイヤーのアニメーションデータのテーブル
 const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 {
-	{ "",								true,	0.0f,	1.0f},	// Tポーズ
-	{ ANIM_PATH"Idle.x",		        true,	126.0f,	1.0f},	// 待機
-	{ ANIM_PATH"walk.x",		        true,	42.0f,	1.0f},	// 歩行
-	{ ANIM_PATH"Run.x",					true,	23.0f,	1.0f},	// 走る
-	{ ANIM_PATH"RightAttackS.x",		false,	58.0f,	1.0f},  // 右攻撃
-	{ ANIM_PATH"Deth.x",				false,	129.0f,	1.0f},	// 死亡
+	{ "",									true,	0.0f,	1.0f},	// Tポーズ
+	{ ANIM_PATH"Idle.x",					true,	126.0f,	1.0f},	// 待機
+	{ ANIM_PATH"walk.x",					true,	42.0f,	1.0f},	// 歩行
+	{ ANIM_PATH"Run.x",						true,	23.0f,	1.0f},	// 走る
+	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
+	{ ANIM_PATH"Stan.x",					false,	129.0f,	1.0f},	// 気絶アニメーション
+
+	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	0.5f},  // 右弱攻撃
+	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	93.0f,	2.0f},  // 右中攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	34.0f,	1.0f},  // 左弱攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	53.0f,	1.0f},  // 左中攻撃
+	{ ATTACK_ANIM_PATH"UpAttackS.x",		false,	69.0f,	1.0f},  // 上弱攻撃
+	{ ATTACK_ANIM_PATH"UpAttackM.x",		false,	81.0f,	2.0f},  // 上中攻撃
+	{ ATTACK_ANIM_PATH"DownAttackS.x",		false,	69.0f,	1.0f},  // 下弱攻撃
+	{ ATTACK_ANIM_PATH"DownAttackM.x",		false,	73.0f,	1.0f},  // 下中攻撃
+
+	{ DAMAGEHIT_PATH"Damage1.x",				true,	42.0f,	1.0f},	// 仰け反り1
+	{ DAMAGEHIT_PATH"Damage2.x",				true,	42.0f,	1.0f},	// 仰け反り2
+	{ DAMAGEHIT_PATH"Damage3.x",				true,	42.0f,	1.0f},	// 仰け反り3
+	{ CHANCEHIT_PATH"chancehit1.x",				true,	23.0f,	1.0f},	// チャンス時1
+	{ CHANCEHIT_PATH"chancehit2.x",				true,	23.0f,	1.0f},	// チャンス時2
+	{ CHANCEHIT_PATH"chancehit3.x",				true,	23.0f,	1.0f},	// チャンス時3
+	{ CHANCEHIT_PATH"chancehit4.x",				true,	23.0f,	1.0f},	// チャンス時4
+
 };
 
 
@@ -58,6 +81,8 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mNextPatrolIndex(-1)
 	, mNextMoveIndex(0)
 {
+	mMaxHp = 100;
+	mHp = mMaxHp;
 
 	// 敵を初期化
 	InitEnemy("EnemyA", &ANIM_DATA);
@@ -82,22 +107,23 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpLAttackCol = new CColliderSphere
 	(
 		this, ELayer::eAttackCol,
-		5.0
+		30.0
 	);
 	// 衝突するタグとレイヤーを設定
 	mpLAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
 	mpLAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+	mpLAttackCol->SetEnable(false);
 
 	// 右手のカプセルコライダ
 	mpRAttackCol = new CColliderSphere
 	(
 		this,ELayer::eAttackCol,
-		10.0
+		30.0
 	);
 	// 衝突するタグとレイヤーを設定
 	mpRAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
 	mpRAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
-
+	mpRAttackCol->SetEnable(false);
 
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
@@ -187,13 +213,14 @@ void CEnemyA::Update()
 	// 現在の状態に合わせて更新処理を切り替える
 	switch (mState)
 	{
-	case (int)EState::eIdle:    UpdateIdle();   break;
-	case (int)EState::ePatrol:  UpdatePatrol(); break;
-	case (int)EState::eChase:   UpdateChase();  break;
-	case (int)EState::eLost:    UpdateLost();   break;
-	case (int)EState::eAttack:  UpdateAttack(); break;
-	case (int)EState::eStan:	UpdateStan();	break;
-	case (int)EState::eChance:	UpdateChance();	break;
+	case (int)EState::eIdle:		UpdateIdle();	break;
+	case (int)EState::ePatrol:		UpdatePatrol();	break;
+	case (int)EState::eChase:		UpdateChase();	break;
+	case (int)EState::eLost:		UpdateLost();	break;
+	case (int)EState::eAttack:		UpdateAttack();	break;
+	case (int)EState::eAttackParry:	UpdateStan();	break;
+	case (int)EState::eChance:		UpdateChance();	break;
+	case (int)EState::eDeath:		UpdateDeath();	break;
 	}
 
 	// キャラクターの更新
@@ -215,6 +242,7 @@ void CEnemyA::Update()
 	CDebugPrint::Print("Enemy : %d\n", mHp);
 	CDebugPrint::Print("状態 : %s\n", GetStateStr(mState).c_str());
 	CDebugPrint::Print("ステップ : %d\n", mStateStep);
+	CDebugPrint::Print("スタン : %s\n", IsStan() ? "true" : "false");
 }
 
 void CEnemyA::Render()
@@ -299,9 +327,13 @@ void CEnemyA::AttackStart()
 	CEnemyBase::AttackStart();
 
 	// パンチ攻撃中であれば、パンチ攻撃のコライダーをオンにする
-	if (mState == (int)EState::eAttack)
+	if (mAttackType == (int)EAttackType::eLeftAttackS,(int)EAttackType::eLeftAttackM)
 	{
-		//mpAttack1Col->SetEnable(true);
+		mpRAttackCol->SetEnable(true);
+	}
+	else if (mAttackType == (int)EAttackType::eRightAttackS, (int)EAttackType::eRightAttackM)
+	{
+		mpLAttackCol->SetEnable(true);
 	}
 }
 
@@ -311,7 +343,8 @@ void CEnemyA::AttackEnd()
 	CEnemyBase::AttackEnd();
 
 	// 攻撃コライダーをオフ
-	//mpAttack1Col->SetEnable(false);
+	mpLAttackCol->SetEnable(false);
+	mpRAttackCol->SetEnable(false);
 }
 
 void CEnemyA::TakeDamage(int damage, CObjectBase* causer)
@@ -344,63 +377,39 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 	CPlayer* player = CPlayer::Instance();
 	CPlayer::EAttackPower attackPow = player->GetAttackPower();
 
-	if (self == mpBodyCol)
+	// ベースの衝突処理を呼び出す
+	CEnemyBase::Collision(self, other, hit);
+
+	if (self == mpLAttackCol)
 	{
-		if (other->Layer() == ELayer::eField)
-		{
-			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
-			CVector adjust = hit.adjust;
-			adjust.X(0.0f);
-			adjust.Z(0.0f);
-
-			Position(Position() + adjust * hit.weight);
-
-			// 衝突した地面が床か天井かを内積で判定
-			CVector normal = hit.adjust.Normalized();
-			float dot = CVector::Dot(normal, CVector::up);
-			// 内積の結果がプラスであれば、床と衝突した
-			if (dot >= 0.0f)
-			{
-				// 落下などで床に上から衝突した時（下移動）のみ
-				// 上下の移動速度を0にする
-				if (mMoveSpeedY < 0.0f)
-				{
-					mMoveSpeedY = 0.0f;
-				}
-
-				// 接地した
-				mIsGrounded = true;
-				// 接地した地面の法線を記憶しておく
-				mGroundNormal = hit.adjust.Normalized();
-
-			}
-		}
-		else if (other->Tag() == ETag::ePlayer &&
-				 other->Layer() == ELayer::eAttackCol )
-		{
-
-		}
-	}
-	else if (self == mpLAttackCol)
-	{
-		if (other->Layer() == ELayer::ePlayer)
+		if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::ePlayer)
 		{
 			// ヒットしたのがキャラクターかつ、
 			// まだ攻撃がヒットしていないキャラクターであれば
 			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
 			if (chara != nullptr && !IsAttackHitObj(chara))
 			{
-				// ダメージを与える
-				chara->TakeDamage(3, this);
 				// 攻撃ヒット済みリストに登録
 				AddAttackHitObj(chara);
+				// ダメージを与える
+				chara->TakeDamage(3, this);
+
 			}
 		}
-		else if (other->Tag() == ETag::ePlayer &&other->Layer() == ELayer::eAttackCol)
+		// アッタックパリー処理
+		else if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::eAttackCol)
 		{
-			if (IsStan())
+			// ヒットしたのがキャラクターかつ、
+			// まだ攻撃がヒットしていないキャラクターであれば
+			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+			if (chara != nullptr && !IsAttackHitObj(chara))
 			{
-				ChangeState((int)EState::eStan);
+				if (IsStan())
+				{
+					// 攻撃ヒット済みリストに登録
+					AddAttackHitObj(chara);
+					ChangeState((int)EState::eAttackParry);
+				}
 			}
 		}
 	}
@@ -551,6 +560,7 @@ bool CEnemyA::AttackRangeMin()
 	return false;
 }
 
+// スタンするか
 bool CEnemyA::IsStan()
 {
 	CPlayer* player = CPlayer::Instance();
@@ -562,21 +572,40 @@ bool CEnemyA::IsStan()
 	case (int)EAttackType::eLeftAttackS:
 		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eRightAttack)) 
 			return true;
-		return false;
+		else
+			return false;
 		break;
 	case (int)EAttackType::eLeftAttackM:
 		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eRightAttack))
 			return true;
-		return false;
+		else
+			return false;
 		break;
 	case (int)EAttackType::eRightAttackS:
 		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eLeftAttack))
 			return true;
-		return false;
+		else
+			return false;
 		break;
 	case (int)EAttackType::eRightAttackM:
 		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eLeftAttack))
 			return true;
+		else 
+			return false;
+		break;
+	case (int)EAttackType::eDownAttackS:
+		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eUpAttack))
+			return true;
+		else
+			return false;
+		break;
+	case (int)EAttackType::eDownAttackM:
+		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eUpAttack))
+			return true;
+		else
+			return false;
+		break;
+	default:
 		return false;
 		break;
 	}
@@ -906,7 +935,7 @@ void CEnemyA::UpdateAttack()
 			// 攻撃開始位置と攻撃終了位置の設定
 			mAttackStartPos = Position();
 			mAttackEndPos = mAttackStartPos + VectorZ() * ATTACK_MOVE_DIST;
-			ChangeAnimation((int)EAnimType::eRightAttack,true);
+			ChangeAnimation((int)EAnimType::eRightAttackS,true);
 			mStateStep++;
 			break;
 		// ステップ1 : 攻撃時の移動処理
@@ -914,9 +943,11 @@ void CEnemyA::UpdateAttack()
 		{
 			// 攻撃アニメーションが移動開始フレームを超えた場合
 			float frame = GetAnimationFrame();
+			AttackStart();
 			if (!AttackRangeMin()) {
 				if (frame >= ATTACK_MOVE_START)
 				{
+
 					// 移動終了フレームまで到達してない場合
 					if (frame < ATTACK_MOVE_END)
 					{
@@ -944,6 +975,7 @@ void CEnemyA::UpdateAttack()
 		case 2:
 			if (IsAnimationFinished())
 			{
+				AttackEnd();
 				mStateStep++;
 			}
 			break;
@@ -963,7 +995,7 @@ void CEnemyA::UpdateAttack()
 	
 }
 
-void CEnemyA::UpdateDeth()
+void CEnemyA::UpdateDeath()
 {
 	// ステップごとに処理を分ける
 	switch (mStateStep)

@@ -64,8 +64,12 @@ public:
 
 	// 指定の攻撃タイプか
 	bool IsAttackType(EAttackPower power, EAttackWay way);
-	//
+	// 攻撃中か
 	bool IsAttacking() const override;
+	// 
+	void AttackStart() override;
+	//
+	void AttackEnd() override;
 	// 現在の状態を取得
 	EState GetState();
 	// 攻撃の方向を取得
@@ -98,7 +102,7 @@ private:
 	// 攻撃
 	void UpdateAttack();
 	// 攻撃終了待ち
-	void UpdateAttackWait();
+//	void UpdateAttackWait();
 	// 回避
 	void UpdateEvasion();
 	// 防御
@@ -155,7 +159,7 @@ private:
 		Num
 	};
 	// アニメーション切り替え
-	void ChangeAnimation(EAnimType type);
+	void ChangeAnimation(EAnimType type, bool restart = false);
 
 	// 攻撃方向や、攻撃の威力によって
 	// 切り替えるアニメーションの種類を取得

@@ -61,10 +61,25 @@ private:
 		eIdle,			// 待機
 		eWalk,			// 歩行
 		eRun,			// 走り
-		eRightAttack,	// 攻撃
 		eDeath,			// 死亡
-		eStan,			// 気絶
-		eChance,		// 攻撃チャンス！！
+		eStan,			// 気絶アニメーション
+
+		eRightAttackS,	// 右弱攻撃
+		eRightAttackM,	// 右中攻撃
+		eLeftAttackS,	// 左弱攻撃
+		eLeftAttackM,	// 左中攻撃
+		eUpAttackS,		// 上弱攻撃
+		eUpAttackM,		// 上中攻撃
+		eDownAttackS,	// 下弱攻撃
+		eDownAttackM,	// 下中攻撃
+		eHit1,			// 仰け反り1
+		eHit2,			// 仰け反り2
+		eHit3,			// 仰け反り3
+		eChanceHit1,	// チャンス時の仰け反り1
+		eChanceHit2,	// チャンス時の仰け反り2
+		eChanceHit3,	// チャンス時の仰け反り3
+		eChanceHit4,	// チャンス時の仰け反り4
+
 
 		Num
 	};
@@ -72,25 +87,30 @@ private:
 	// 敵の状態
 	enum class EState
 	{
-		eIdle,		// 待機
-		ePatrol,	// 巡回中
-		eChase,		// 追跡中
-		eLost,		// 見失う
-		eAttack,	// 攻撃
-		eDeath,		// 死亡
-		eStan,		// 気絶
-		eChance,	// 攻撃チャンス！！
+		eIdle,			// 待機
+		ePatrol,		// 巡回中
+		eChase,			// 追跡中
+		eLost,			// 見失う
+		eAttack,		// 攻撃
+		eDeath,			// 死亡
+		eParry,			// パリー時
+		eAttackParry,	// アタックパリー時
+		eChance,		// チャンス！！
 	};
 	//状態切り替え
 	void ChangeState(int state) override;
 
 	enum class EAttackType
 	{
-
+		eIdel,			// 待機
 		eLeftAttackS,	// 左弱攻撃
 		eLeftAttackM,	// 左中攻撃
 		eRightAttackS,	// 右弱攻撃
 		eRightAttackM,	// 右中攻撃
+		eUpAttackS,		// 上弱攻撃
+		eUpAttackM,		// 上中攻撃
+		eDownAttackS,	// 下弱攻撃
+		eDownAttackM,	// 下中攻撃
 	};
 	// 攻撃タイプ切り替え
 	void ChangeAttackType(int attacktype) override;
@@ -127,7 +147,7 @@ private:
 	// 攻撃時の更新処理
 	void UpdateAttack();
 	// 死亡時の更新処理
-	void UpdateDeth();
+	void UpdateDeath();
 	// 気絶時の更新処理
 	void UpdateStan();
 	// アタックチャーンス！！の更新処理

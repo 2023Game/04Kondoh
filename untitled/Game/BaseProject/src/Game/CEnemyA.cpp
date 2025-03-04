@@ -38,6 +38,9 @@
 #define DEATH_WAIT_TIME 3.0f	// 死亡時の待機時間
 #define LOOKAT_SPEED 2.0f		// 対象の方向に向く速度
 
+#define DETECT_COL_POS CVector(0.0f, 5.0f, 3.0f)	// 判定用コライダの座標
+#define DETECT_COL_SCL CVector(0.7f, 1.5f, 0.7f)	// 判定用コライダの大きさ
+
 #define EATTACKWAY CPlayer::EAttackWay		// プレイヤーの攻撃方向
 #define EATTACKPWOER CPlayer::EAttackPower	// プレイヤーの攻撃威力
 
@@ -80,6 +83,7 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mAttackEndPos(CVector::zero)
 	, mNextPatrolIndex(-1)
 	, mNextMoveIndex(0)
+	, mpDetectType((int)EAttackType::eIdel)
 {
 	mMaxHp = 100;
 	mHp = mMaxHp;
@@ -125,6 +129,20 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpRAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
 	mpRAttackCol->SetEnable(false);
 
+	mpDetectCol = new CColliderSphere
+	(
+		this, ELayer::eDetectCol,
+		8.0
+	);
+	// 衝突するタグとレイヤーを設定
+	mpDetectCol->SetCollisionTags({ ETag::ePlayer });
+	mpDetectCol->SetCollisionLayers({ ELayer::eDetectCol });
+	// コライダの座標と大きさ
+	mpDetectCol->Position(DETECT_COL_POS);
+	mpDetectCol->Scale(DETECT_COL_SCL);
+	// コライダをオフにする
+	mpDetectCol->SetEnable(false);
+
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
 
@@ -157,7 +175,9 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 CEnemyA::~CEnemyA()
 {
 	// コライダーを破棄
-
+	SAFE_DELETE(mpLAttackCol);
+	SAFE_DELETE(mpRAttackCol);
+	SAFE_DELETE(mpDetectCol);
 
 	// 視野範囲のデバッグ表示が存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
@@ -242,7 +262,7 @@ void CEnemyA::Update()
 	CDebugPrint::Print("Enemy : %d\n", mHp);
 	CDebugPrint::Print("状態 : %s\n", GetStateStr(mState).c_str());
 	CDebugPrint::Print("ステップ : %d\n", mStateStep);
-	CDebugPrint::Print("スタン : %s\n", IsStan() ? "true" : "false");
+	CDebugPrint::Print("スタン : %s\n", IsParry() ? "パリィだぜ！" : "残念だぜ！");
 }
 
 void CEnemyA::Render()
@@ -325,6 +345,7 @@ void CEnemyA::AttackStart()
 {
 	// ベースクラスの攻撃開始処理を呼び出し
 	CEnemyBase::AttackStart();
+	mpDetectCol->SetEnable(true);
 
 	// パンチ攻撃中であれば、パンチ攻撃のコライダーをオンにする
 	if (mAttackType == (int)EAttackType::eLeftAttackS,(int)EAttackType::eLeftAttackM)
@@ -345,6 +366,7 @@ void CEnemyA::AttackEnd()
 	// 攻撃コライダーをオフ
 	mpLAttackCol->SetEnable(false);
 	mpRAttackCol->SetEnable(false);
+	mpDetectCol->SetEnable(false);
 }
 
 void CEnemyA::TakeDamage(int damage, CObjectBase* causer)
@@ -369,6 +391,31 @@ void CEnemyA::TakeDamage(int damage, CObjectBase* causer)
 void CEnemyA::Death()
 {
 	ChangeState((int)EState::eDeath);
+}
+
+// スタンするか
+bool CEnemyA::IsParry()
+{
+	CPlayer* player = CPlayer::Instance();
+	CPlayer::EAttackWay attackway = player->GetAttackWay();
+	CPlayer::EAttackPower attackPow = player->GetAttackPower();
+
+	if (mAttackType == (int)EAttackType::eIdel) return false;
+
+	if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eRightAttack))
+		mpDetectType = (int)EAttackType::eLeftAttackS;
+	else if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eRightAttack))
+		mpDetectType = (int)EAttackType::eLeftAttackM;
+	else if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eLeftAttack))
+		mpDetectType = (int)EAttackType::eRightAttackS;
+	else if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eLeftAttack))
+		mpDetectType = (int)EAttackType::eRightAttackM;
+	else if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eUpAttack))
+		mpDetectType = (int)EAttackType::eDownAttackS;
+	else if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eUpAttack))
+		mpDetectType = (int)EAttackType::eDownAttackM;
+
+	if (mpDetectType == mAttackType) return true;
 }
 
 // 衝突処理
@@ -396,22 +443,7 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 
 			}
 		}
-		// アッタックパリー処理
-		else if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::eAttackCol)
-		{
-			// ヒットしたのがキャラクターかつ、
-			// まだ攻撃がヒットしていないキャラクターであれば
-			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
-			if (chara != nullptr && !IsAttackHitObj(chara))
-			{
-				if (IsStan())
-				{
-					// 攻撃ヒット済みリストに登録
-					AddAttackHitObj(chara);
-					ChangeState((int)EState::eAttackParry);
-				}
-			}
-		}
+
 	}
 	else if (self == mpRAttackCol)
 	{
@@ -424,6 +456,22 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			chara->TakeDamage(3, this);
 			// 攻撃ヒット済みリストに登録
 			AddAttackHitObj(chara);
+		}
+	}
+	
+	if (self == mpDetectCol)
+	{
+		// ヒットしたのがキャラクターかつ、
+		// まだ攻撃がヒットしていないキャラクターであれば
+		CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+		if (chara != nullptr && !IsAttackHitObj(chara))
+		{
+			if (IsParry())
+			{
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(chara);
+				ChangeState((int)EState::eAttackParry);
+			}
 		}
 	}
 }
@@ -560,56 +608,6 @@ bool CEnemyA::AttackRangeMin()
 	return false;
 }
 
-// スタンするか
-bool CEnemyA::IsStan()
-{
-	CPlayer* player = CPlayer::Instance();
-	CPlayer::EAttackWay attackway = player->GetAttackWay();
-	CPlayer::EAttackPower attackPow = player->GetAttackPower();
-	
-	switch (mAttackType)
-	{
-	case (int)EAttackType::eLeftAttackS:
-		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eRightAttack)) 
-			return true;
-		else
-			return false;
-		break;
-	case (int)EAttackType::eLeftAttackM:
-		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eRightAttack))
-			return true;
-		else
-			return false;
-		break;
-	case (int)EAttackType::eRightAttackS:
-		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eLeftAttack))
-			return true;
-		else
-			return false;
-		break;
-	case (int)EAttackType::eRightAttackM:
-		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eLeftAttack))
-			return true;
-		else 
-			return false;
-		break;
-	case (int)EAttackType::eDownAttackS:
-		if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eUpAttack))
-			return true;
-		else
-			return false;
-		break;
-	case (int)EAttackType::eDownAttackM:
-		if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eUpAttack))
-			return true;
-		else
-			return false;
-		break;
-	default:
-		return false;
-		break;
-	}
-}
 
 // 指定した位置まで移動する
 bool CEnemyA::MoveTo(const CVector& targetPos, float speed)

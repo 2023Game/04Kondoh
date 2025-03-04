@@ -71,8 +71,9 @@ void CGameScene::Load()
 			CVector(100.0f,0.94f,100.0f),
 		}
 	);
-	enemyA->Scale(1.0f, 1.0f, 1.0f);
+	enemyA->Scale(1.5f, 0.8f, 1.5f);
 	enemyA->Position(100.0f, 0.0f, 0.0f);
+
 
 	// CGameCamera‚ÌƒeƒXƒg
 	//CGameCamera* mainCamera = new CGameCamera

@@ -188,7 +188,6 @@ private:
 	// 攻撃状態へ切り替え
 	void ChangeAttack();
 
-	
 	EAttackWay mAttackWay;			// 攻撃方向
 	EAttackPower mAttackPower;		// 攻撃の強さ
 	EAttackPower mCurrAttackPower;	// 現在の攻撃の強さ
@@ -222,12 +221,13 @@ private:
 	// 本体のコライダ
 	CCollider* mpBodyCol;
 	// 攻撃用のコライダ１（剣の刃の部分）
-	CColliderCapsule* mpAttackCollider1;
+	CColliderCapsule* mpAttackCol1;
 	// 攻撃用のコライダ２（剣の持ち手の部分）
-	CColliderCapsule* mpAttackCollider2;
+	CColliderCapsule* mpAttackCol2;
 	// 攻撃用のコライダ３（盾の部分）
-	CColliderSphere* mpAttackCollider3;
-
+	CColliderSphere* mpAttackCol3;
+	// 判定用コライダ
+	CColliderSphere* mpDetectCol;
 
 	CTransform* mpRideObject;
 

@@ -124,7 +124,7 @@ private:
 	// 攻撃時に移動する距離か
 	bool AttackRangeMin();
 	// スタンするか
-	bool IsStan();
+	bool IsParry();
 
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
@@ -177,11 +177,16 @@ private:
 	CColliderSphere* mpLAttackCol; 
 	// 右手の球コライダ
 	CColliderSphere* mpRAttackCol;
+	// 判定用コライダ
+	CColliderSphere* mpDetectCol;
 
 	std::vector<CNavNode*> mMoveRoute;	// 求めた最短経路記憶用
 	int mNextMoveIndex;					// 次に移動するノードのインデックス値
 
 	CObjectBase* mpBattleTarget;	// 戦闘相手
 	bool mIsBattle;					// 戦闘状態か
+
+	int mpDetectType;	// 攻撃タイプ
+	bool mIsParry;	// スタンしているか
 };
 #endif

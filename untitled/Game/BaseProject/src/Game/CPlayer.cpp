@@ -165,41 +165,41 @@ CPlayer::CPlayer()
 
 
 	// 攻撃用のコライダ１（剣の刃の部分）
-	mpAttackCollider1 = new CColliderCapsule
+	mpAttackCol1 = new CColliderCapsule
 	(
 		this, ELayer::eAttackCol,
 		CVector(0.0f, 0.0f, ATTACK1_CAP_DWON),
 		CVector(0.0f, 0.0f, ATTACK1_CAP_UP),
 		0.3f, true
 	);
-	mpAttackCollider1->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCollider1->SetCollisionLayers({ ELayer::eEnemy });
-	mpAttackCollider1->Rotate(CVector(-4.5f, 14.1f, 0.0f));
-	mpAttackCollider1->SetEnable(false);
+	mpAttackCol1->SetCollisionTags({ ETag::eEnemy });
+	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy });
+	mpAttackCol1->Rotate(CVector(-4.5f, 14.1f, 0.0f));
+	mpAttackCol1->SetEnable(false);
 
 	// 攻撃用のコライダ２（剣の持ち手の部分）
-	mpAttackCollider2 = new CColliderCapsule
+	mpAttackCol2 = new CColliderCapsule
 	(
 		this, ELayer::eAttackCol,
 		CVector(0.0f, 0.0f, ATTACK2_CAP_UP),
 		CVector(0.0f, 0.0f, ATTACK2_CAP_DWON),
 		0.8, true
 	);
-	mpAttackCollider2->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCollider2->SetCollisionLayers({ ELayer::eEnemy });
-	mpAttackCollider2->Rotate(CVector(-4.5f, 14.1f, 0.0f));
-	mpAttackCollider2->SetEnable(false);
+	mpAttackCol2->SetCollisionTags({ ETag::eEnemy });
+	mpAttackCol2->SetCollisionLayers({ ELayer::eEnemy });
+	mpAttackCol2->Rotate(CVector(-4.5f, 14.1f, 0.0f));
+	mpAttackCol2->SetEnable(false);
 
 	// 攻撃用のコライダ３（盾の部分）
-	mpAttackCollider3 = new CColliderSphere
+	mpAttackCol3 = new CColliderSphere
 	(
 		this, ELayer::eAttackCol,
 		15.0, true
 	);
-	mpAttackCollider3->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCollider3->SetCollisionLayers({ ELayer::eEnemy });
-	mpAttackCollider3->Translate(0.0f, 0.0f, -12.0f);
-	mpAttackCollider3->SetEnable(false);
+	mpAttackCol3->SetCollisionTags({ ETag::eEnemy });
+	mpAttackCol3->SetCollisionLayers({ ELayer::eEnemy });
+	mpAttackCol3->Translate(0.0f, 0.0f, -12.0f);
+	mpAttackCol3->SetEnable(false);
 
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
@@ -223,9 +223,9 @@ CPlayer::CPlayer()
 	const CMatrix& shieldMTX = Shield->CombinedMatrix();
 
 	// 攻撃用のコライダーを行列に設定
-	mpAttackCollider1->SetAttachMtx(&swordMTX);
-	mpAttackCollider2->SetAttachMtx(&swordMTX);
-	mpAttackCollider3->SetAttachMtx(&shieldMTX);
+	mpAttackCol1->SetAttachMtx(&swordMTX);
+	mpAttackCol2->SetAttachMtx(&swordMTX);
+	mpAttackCol3->SetAttachMtx(&shieldMTX);
 
 
 }
@@ -249,7 +249,8 @@ CPlayer::~CPlayer()
 bool CPlayer::IsAttackType(EAttackPower power, EAttackWay way)
 {
 	if (mAttackPower == power && mAttackWay == way) return true;
-	return false;
+	else 
+		return false;
 }
 
 bool CPlayer::IsAttacking() const
@@ -265,15 +266,15 @@ void CPlayer::AttackStart()
 
 	if (IsAttackType(EAttackPower::eAttackS, EAttackWay::eUpAttack))
 	{
-		mpAttackCollider2->SetEnable(true);
+		mpAttackCol2->SetEnable(true);
 	}
 	else if (IsAttackType(EAttackPower::eAttackS, EAttackWay::eLeftAttack))
 	{
-		mpAttackCollider3->SetEnable(true);
+		mpAttackCol3->SetEnable(true);
 	}
 	else
 	{
-		mpAttackCollider1->SetEnable(true);
+		mpAttackCol1->SetEnable(true);
 	}
 }
 
@@ -283,9 +284,9 @@ void CPlayer::AttackEnd()
 	CXCharacter::AttackEnd();
 
 	// 攻撃コライダーをオフ
-	mpAttackCollider1->SetEnable(false);
-	mpAttackCollider2->SetEnable(false);
-	mpAttackCollider3->SetEnable(false);
+	mpAttackCol1->SetEnable(false);
+	mpAttackCol2->SetEnable(false);
+	mpAttackCol3->SetEnable(false);
 }
 
 // 現在の状態を取得
@@ -944,6 +945,8 @@ void CPlayer::Update()
 
 	}
 
+	CDebugPrint::Print("スタン : %s\n", IsAttackType(EAttackPower::eAttackS, EAttackWay::eRightAttack) 
+														? "だぜ！" : "残念だぜ！");
 	CDebugPrint::Print("LockOn:%s\n",mIsLockOn?"ON":"OFF");
 	if (mpLockOnTarget != nullptr)
 	{
@@ -1007,9 +1010,9 @@ void CPlayer::Update()
 	CXCharacter::Update();
 
 	// コライダーの行列を変更
-	mpAttackCollider1->Update();
-	mpAttackCollider2->Update();
-	mpAttackCollider3->Update();
+	mpAttackCol1->Update();
+	mpAttackCol2->Update();
+	mpAttackCol3->Update();
 
 	// 経路探索用のノードが存在すれば、座標を更新
 	if (mpNavNode != nullptr)
@@ -1088,7 +1091,7 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			Position(Position() + adjust * hit.weight);
 		}
 	}
-	else if (self == mpAttackCollider1,mpAttackCollider2,mpAttackCollider3)
+	else if (self == mpAttackCol1,mpAttackCol2,mpAttackCol3)
 	{
 		// ヒットしたのがキャラクターかつ、
 			// まだ攻撃がヒットしていないキャラクターであれば

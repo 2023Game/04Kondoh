@@ -11,6 +11,7 @@ enum class ELayer
 	ePlayer,
 	eEnemy,
 
+	eDetectCol,		// パリィレイヤー
 	eAttackCol,		// 攻撃レイヤー
 };
 // 衝突判定レイヤーの初期化リスト

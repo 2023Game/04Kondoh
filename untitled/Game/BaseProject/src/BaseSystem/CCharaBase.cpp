@@ -1,10 +1,16 @@
 #include "CCharaBase.h"
 
+#define STAN_RECOVERY 1.0f	// 怯み度の１秒間の回復量
+
 // コンストラクタ
 CCharaBase::CCharaBase(ETag tag, ETaskPriority prio, int sortOrder, ETaskPauseType pause)
 	: CObjectBase(tag, prio, sortOrder, pause)
 	, mMaxHp(10)
 	, mHp(mMaxHp)
+	, mStanPoints(0.0f)
+	, mStanThreshold(100.0f)
+	, mAttackDir(EAttackDir::eNone)
+	, mAttackPower(EAttackPower::eAttackS)
 {
 }
 
@@ -25,8 +31,71 @@ int CCharaBase::GetHp() const
 	return mHp;
 }
 
+// 指定の攻撃タイプか
+bool CCharaBase::IsAttackType(EAttackPower power, EAttackDir dir)
+{
+	if (mAttackPower == power && mAttackDir == dir) return true;
+	else
+		return false;
+}
+
+// 攻撃方向を取得
+EAttackDir CCharaBase::GetAttackDir() const
+{
+	return mAttackDir;
+}
+
+// 攻撃の方向の文字列を取得
+std::string CCharaBase::GetAttackDirStr() const
+{
+	switch (mAttackDir)
+	{
+	case EAttackDir::eUp:		return "上";
+	case EAttackDir::eDown:		return "下";
+	case EAttackDir::eLeft:		return "左";
+	case EAttackDir::eRight:	return "右";
+	}
+
+	return "";
+}
+
+// 攻撃の強さを取得
+EAttackPower CCharaBase::GetAttackPower() const
+{
+	return mAttackPower;
+}
+
+// 攻撃の強さの文字列を取得
+std::string CCharaBase::GetAttackPowerStr() const
+{
+	switch (mAttackPower)
+	{
+	case EAttackPower::eAttackS:	return "弱";
+	case EAttackPower::eAttackM:	return "中";
+	case EAttackPower::eAttackL:	return "強";
+	}
+
+	return "";
+}
+
+// 指定した攻撃の方向と強さで怯むかどうか
+bool CCharaBase::CheckParry(EAttackDir dir, EAttackPower power) const
+{
+	// そもそも攻撃してない場合、パリィ出来ない
+	if (!IsAttacking()) return false;
+
+	// 攻撃の強さが一致していない場合、パリィ出来ない
+	if (mAttackPower != power) return false;
+
+	// 攻撃の方向が一致していない場合、パリィ出来ない
+	if (mAttackDir != dir) return false;
+
+	// 全ての条件式を満たした場合、パリィ出来る
+	return true;
+}
+
 // ダメージを受ける
-void CCharaBase::TakeDamage(int damage, CObjectBase* causer)
+void CCharaBase::TakeDamage(int damage, float stan, CObjectBase* causer)
 {
 	// 既に死亡していたら、ダメージを受けない
 	if (IsDeath()) return;
@@ -42,6 +111,16 @@ void CCharaBase::TakeDamage(int damage, CObjectBase* causer)
 	else
 	{
 		mHp -= damage;
+
+		// まだ、生きている場合、怯み度を加算
+		mStanPoints += stan;
+		// 怯み度がしきい値を超えると
+		if (mStanPoints > mStanThreshold)
+		{
+			// 怯み処理を実行して、怯み度をリセット
+			Stan();
+			mStanPoints = 0.0f;
+		}
 	}
 }
 
@@ -55,4 +134,20 @@ bool CCharaBase::IsDeath() const
 {
 	// 現在HPが0ならば、死亡
 	return mHp <= 0;
+}
+
+// 怯み処理
+void CCharaBase::Stan()
+{
+}
+
+void CCharaBase::Update()
+{
+	// 怯み度が少しでも溜まっていたら、
+	if (mStanPoints > 0.0f)
+	{
+		// 徐々に回復する
+		mStanPoints -= STAN_RECOVERY * Times::DeltaTime();
+		if (mStanPoints < 0.0f) mStanPoints = 0.0f;
+	}
 }

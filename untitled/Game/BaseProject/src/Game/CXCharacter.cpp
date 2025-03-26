@@ -75,6 +75,9 @@ matrix:移動、回転、拡大縮小の行列
 */
 void CXCharacter::Update(const CMatrix& matrix)
 {
+	// ベースクラスの更新処理
+	CCharaBase::Update();
+
 	if (mpModel == nullptr) return;
 
 	auto& animSet = mpModel->AnimationSet();

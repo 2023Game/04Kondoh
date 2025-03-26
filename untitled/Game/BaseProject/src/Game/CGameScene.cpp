@@ -65,10 +65,11 @@ void CGameScene::Load()
 	CEnemyA* enemyA = new CEnemyA
 	(
 		{
-			CVector(100.0f,0.94f,  0.0f),
-			CVector(  0.0f,0.94f,  0.0f),
-			CVector(  0.0f,0.94f,100.0f),
-			CVector(100.0f,0.94f,100.0f),
+			CVector(100.0f, 0.94f,   0.0f),
+			CVector(  0.0f, 0.94f,   0.0f),
+			CVector(  0.0f, 0.94f, 100.0f),
+			CVector(100.0f, 0.94f, 100.0f),
+			CVector( 50.0f, 2.0f,   50.0f),
 		}
 	);
 	enemyA->Scale(1.5f, 0.8f, 1.5f);
@@ -92,6 +93,7 @@ void CGameScene::Load()
 		atPos
 	);
 	mainCamera->AddCollider(field->GetFieldCol());
+
 	std::list<CWall*> walls = field->GetWalls();
 	for (CWall* wall : walls)
 	{

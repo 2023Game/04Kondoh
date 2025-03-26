@@ -67,8 +67,8 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ PLAYER_ANIM_PATH"DwonAttackM.x",	false,	55.0f,	1.0f	},	// 中下攻撃
 	{ PLAYER_ANIM_PATH"DwonAttackL.x",	false,	90.0f,	1.0f	},	// 強下攻撃
 
-	{ PLAYER_ANIM_PATH"RightAttackS.x",	false,	60.0f,	1.0f	},	// 弱右攻撃
-	{ PLAYER_ANIM_PATH"RightAttackM.x",	false,	65.0f,	1.0f	},	// 中右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackS.x",	false,	60.0f,	1.7f	},	// 弱右攻撃
+	{ PLAYER_ANIM_PATH"RightAttackM.x",	false,	65.0f,	1.5f	},	// 中右攻撃
 	{ PLAYER_ANIM_PATH"RightAttackL.x",	false,	86.0f,	1.0f	},	// 強右攻撃
 
 	{ PLAYER_ANIM_PATH"LeftAttackS.x",	false,	50.0f,	1.0f	},	// 弱左攻撃
@@ -81,6 +81,7 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ PLAYER_ANIM_PATH"jump_start.x",	false,	25.0f,	1.0f	},	// ジャンプ開始
 	{ PLAYER_ANIM_PATH"jump.x",			true,	1.0f,	1.0f	},	// ジャンプ中
 	{ PLAYER_ANIM_PATH"jump_end.x",		false,	26.0f,	1.0f	},	// ジャンプ終了
+	{ PLAYER_ANIM_PATH"jump_Attack.x",	false,	47.0f,	1.0f	},	// ジャンプ攻撃
 };
 
 
@@ -88,9 +89,7 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 CPlayer::CPlayer()
 	: CXCharacter(ETag::ePlayer, ETaskPriority::ePlayer)
 	, mState(EState::eIdle)
-	, mAttackWay(EAttackWay::eIdle)
-	, mAttackPower(EAttackPower::eAttackM)
-	, mCurrAttackPower(EAttackPower::eAttackM)
+	, mSelectAttackPower(EAttackPower::eAttackM)
 	, mMode(EMode::eBattle)
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
@@ -122,35 +121,6 @@ CPlayer::CPlayer()
 	// 最初は待機アニメーションを再生
 	ChangeAnimation(EAnimType::eAttackTPose);
 
-	//// 縦方向のコライダー作成
-	//mpColliderLine = new CColliderLine
-	//(
-	//	this, ELayer::ePlayer,
-	//	CVector(0.0f, 0.0f, 0.0f),
-	//	CVector(0.0f, PLAYER_HEIGHT, 0.0f)
-	//);
-	//mpColliderLine->SetCollisionLayers({ ELayer::eField });
-
-	//float width = PLAYER_WIDTH * 0.5f;
-	//float posY = PLAYER_HEIGHT * 0.5f;
-	//// 横方向（X軸）のコライダー作成
-	//mpColliderLineX = new CColliderLine
-	//(
-	//	this, ELayer::ePlayer,
-	//	CVector(-width, posY, 0.0f),
-	//	CVector( width, posY, 0.0f)
-	//);
-	//mpColliderLineX->SetCollisionLayers({ ELayer::eField });
-
-	//// 横方向（Z軸）のコライダー作成
-	//mpColliderLineZ = new CColliderLine
-	//(
-	//	this, ELayer::ePlayer,
-	//	CVector(0.0f, posY, -width),
-	//	CVector(0.0f, posY,  width)
-	//);
-	//mpColliderLineZ->SetCollisionLayers({ ELayer::eField });
-
 	// カプセルコライダー作成
 	mpBodyCol = new CColliderCapsule
 	(
@@ -170,10 +140,10 @@ CPlayer::CPlayer()
 		this, ELayer::eAttackCol,
 		CVector(0.0f, 0.0f, ATTACK1_CAP_DWON),
 		CVector(0.0f, 0.0f, ATTACK1_CAP_UP),
-		0.3f, true
+		0.7f, true
 	);
 	mpAttackCol1->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy });
+	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall});
 	mpAttackCol1->Rotate(CVector(-4.5f, 14.1f, 0.0f));
 	mpAttackCol1->SetEnable(false);
 
@@ -186,7 +156,7 @@ CPlayer::CPlayer()
 		0.8, true
 	);
 	mpAttackCol2->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCol2->SetCollisionLayers({ ELayer::eEnemy });
+	mpAttackCol2->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall});
 	mpAttackCol2->Rotate(CVector(-4.5f, 14.1f, 0.0f));
 	mpAttackCol2->SetEnable(false);
 
@@ -197,19 +167,12 @@ CPlayer::CPlayer()
 		15.0, true
 	);
 	mpAttackCol3->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCol3->SetCollisionLayers({ ELayer::eEnemy });
+	mpAttackCol3->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall});
 	mpAttackCol3->Translate(0.0f, 0.0f, -12.0f);
 	mpAttackCol3->SetEnable(false);
 
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
-
-	//mpFlamethrower = new CFlamethrower
-	//(
-	//	this, nullptr,
-	//	CVector(0.0f, 14.0f, -1.0f),
-	//	CQuaternion(0.0f, 90.0f, 0.0f).Matrix()
-	//);
 
 	// 経路探索用のノードを作成
 	mpNavNode = new CNavNode(Position(), true);
@@ -245,13 +208,6 @@ CPlayer::~CPlayer()
 	spInstance = nullptr;
 }
 
-// 指定の攻撃タイプか
-bool CPlayer::IsAttackType(EAttackPower power, EAttackWay way)
-{
-	if (mAttackPower == power && mAttackWay == way) return true;
-	else 
-		return false;
-}
 
 bool CPlayer::IsAttacking() const
 {
@@ -264,11 +220,11 @@ void CPlayer::AttackStart()
 	// ベースクラスの攻撃開始処理を呼び出し
 	CXCharacter::AttackStart();
 
-	if (IsAttackType(EAttackPower::eAttackS, EAttackWay::eUpAttack))
+	if (IsAttackType(EAttackPower::eAttackS, EAttackDir::eUp))
 	{
 		mpAttackCol2->SetEnable(true);
 	}
-	else if (IsAttackType(EAttackPower::eAttackS, EAttackWay::eLeftAttack))
+	else if (IsAttackType(EAttackPower::eAttackS, EAttackDir::eLeft))
 	{
 		mpAttackCol3->SetEnable(true);
 	}
@@ -295,17 +251,6 @@ CPlayer::EState CPlayer::GetState()
 	return mState;
 }
 
-// 攻撃の方向を取得
-CPlayer:: EAttackWay CPlayer::GetAttackWay()
-{
-	return mAttackWay;
-}
-
-// 攻撃の威力を取得
-CPlayer::EAttackPower CPlayer::GetAttackPower()
-{
-	return mAttackPower;
-}
 
 CPlayer* CPlayer::Instance()
 {
@@ -324,24 +269,24 @@ void CPlayer::ChangeAnimation(EAnimType type, bool restart)
 // 切り替えるアニメーションの種類を取得
 CPlayer::EAnimType CPlayer::GetAttackAnimType() const
 {
-	switch (mAttackWay)
+	switch (mAttackDir)
 	{
-	case EAttackWay::eUpAttack:
+	case EAttackDir::eUp:
 		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eUpAttackS;
 		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eUpAttackM;
 		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eUpAttackL;
 		break;
-	case EAttackWay::eDwonAttack:
+	case EAttackDir::eDown:
 		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eDwonAttackS;
 		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eDwonAttackM;
 		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eDwonAttackL;
 		break;
-	case EAttackWay::eLeftAttack:
+	case EAttackDir::eLeft:
 		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eLeftAttackS;
 		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eLeftAttackM;
 		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eLeftAttackL;
 		break;
-	case EAttackWay::eRightAttack:
+	case EAttackDir::eRight:
 		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eRightAttackS;
 		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eRightAttackM;
 		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eRightAttackL;
@@ -370,77 +315,124 @@ void CPlayer::ChangeEvasion()
 
 void CPlayer::ChangeAttack()
 {
-	mMoveSpeed = CVector::zero;
-	ChangeState(EState::eAttack);
-	mAttackPower = mCurrAttackPower;
-
+	
+	if (mState == EState::eIdle)
+	{
+		if (CInput::PushKey(VK_LBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eLeft;
+		}
+		else if (CInput::PushKey(VK_RBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eRight;
+		}
+	}
 	// 上入力で、上攻撃
-	if (CInput::Key('W'))
+	else if (mState == EState::eJump
+		|| mState == EState::eJumpStart
+		|| mState == EState::eJumpEnd)
 	{
-		mAttackWay = EAttackWay::eUpAttack;
+		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eUp;
+		}
 	}
+	
 	// 下入力で、下攻撃
-	else if (CInput::Key('S'))
+	else if (mState == EState::eDefense)
 	{
-		mAttackWay = EAttackWay::eDwonAttack;
-	}
-	// 左入力で、左攻撃
-	else if (CInput::Key('A'))
-	{
-		mAttackWay = EAttackWay::eLeftAttack;
-	}
-	// 右入力で、右攻撃
-	else if (CInput::Key('D'))
-	{
-		mAttackWay = EAttackWay::eRightAttack;
-	}
-	// 何も入力をしていなければ、上攻撃
-	else
-	{
-		mAttackWay = EAttackWay::eUpAttack;
-	}
-}
-
-/*
-void CPlayer::ChangeLockOnTarget()
-{
-
-}
-*/
-
-void CPlayer::LockOnTarget()
-{
-	// ロックオン開始
-	if (mIsLockOn)
-	{
-		// ロックオンする敵を取得
-		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 300);
-		mpLockOnTarget = target;
-		// ロックオンする敵が存在する
-		if (mpLockOnTarget != nullptr )
+		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
 		{
-				if (CInput::PushKey('B'))
-				{
-					// TODO:ロックオンする敵を変更
-				}
-				// ロックオン処理
-				target->Position();
-		}
-		// ロックオンする敵が存在しなかったら、
-		// バトルモードフラグをオフにする
-		else
-		{
-			mIsLockOn = false;
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eDown;
 		}
 	}
-	else
-	{
-		mpLockOnTarget = nullptr;
-	}
 }
 
 
+//void CPlayer::LockOnTarget()
+//{
+//	// ロックオン開始
+//	if (mIsLockOn)
+//	{
+//		// ロックオンする敵を取得
+//		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 300);
+//		mpLockOnTarget = target;
+//		// ロックオンする敵が存在する
+//		if (mpLockOnTarget != nullptr )
+//		{
+//				if (CInput::PushKey('B'))
+//				{
+//					// TODO:ロックオンする敵を変更
+//				}
+//				// ロックオン処理
+//				target->Position();
+//		}
+//		// ロックオンする敵が存在しなかったら、
+//		// バトルモードフラグをオフにする
+//		else
+//		{
+//			mIsLockOn = false;
+//		}
+//	}
+//	else
+//	{
+//		mpLockOnTarget = nullptr;
+//	}
+//}
 
+
+// ダメージ量を計算して返す
+void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const
+{
+	
+	if (mSelectAttackPower == EAttackPower::eAttackS)
+	{
+		// ダメージを与える
+		*outDamage = 1;
+	}
+	else if (mSelectAttackPower == EAttackPower::eAttackM)
+	{
+		*outDamage = 2;
+	}
+	else if (mSelectAttackPower == EAttackPower::eAttackL)
+	{
+		*outDamage = 3;
+	}
+
+	// パリィ出来るかどうか、判断する
+	if (taker->CheckParry(mAttackDir, mAttackPower))
+	{
+		if (mSelectAttackPower == EAttackPower::eAttackS)
+		{
+			*outDamage *= 2;
+			// 怯み度を加算する
+			*outStan = 10.0f;
+		}
+		else if (mSelectAttackPower == EAttackPower::eAttackM)
+		{
+			*outDamage *= 2;
+			*outStan = 50.0f;
+		}
+		else if (mSelectAttackPower == EAttackPower::eAttackL)
+		{
+			*outDamage *= 2;
+			*outStan = 100.0f;
+		}
+	}
+	
+}
 
 // 非戦闘時の待機状態
 void CPlayer::UpdateIdle()
@@ -462,31 +454,42 @@ void CPlayer::UpdateAttackIdle()
 	// 接地していれば、
 	if (mIsGrounded)
 	{
-		// 左クリックで攻撃
-		if (CInput::PushKey(VK_LBUTTON))
+		////左クリックで攻撃
+		//if (CInput::PushKey(VK_LBUTTON))
+		//{
+		//	mMoveSpeed = CVector::zero;
+		//	ChangeState(EState::eAttack);
+		//	mAttackPower = mSelectAttackPower;
+		//	mAttackDir = EAttackDir::eLeft;
+		//	ChangeAttack();
+		//}
+		//else if (CInput::PushKey(VK_RBUTTON))
+		//{
+		//	mMoveSpeed = CVector::zero;
+		//	ChangeState(EState::eAttack);
+		//	mAttackPower = mSelectAttackPower;
+		//	mAttackDir = EAttackDir::eRight;
+		//}
+		if (CInput::Key(VK_SHIFT))
 		{
-			ChangeAttack();
-		}
-		// 右クリックで防御
-		else if (CInput::PushKey(VK_RBUTTON))
-		{
-			mState = EState::eDefense;
+			ChangeState(EState::eDefense);
 		}
 		// SPACEキーでジャンプ開始へ移行
 		else if (CInput::PushKey(VK_SPACE))
 		{
-			mState = EState::eJumpStart;
+			ChangeState(EState::eJumpStart);
 		}
 		// シフトで回避
-		else if (CInput::Key(VK_SHIFT))
+		else if (CInput::Key('F'))
 		{
 			ChangeEvasion();
 		}
-		else if (CInput::PushKey('R'))
-		{
-			mIsLockOn = !mIsLockOn;
-			LockOnTarget();
-		}
+		// まだ使えない
+		//else if (CInput::PushKey('R'))
+		//{
+		//	mIsLockOn = !mIsLockOn;
+		//	LockOnTarget();
+		//}
 	}
 }
 
@@ -500,22 +503,13 @@ void CPlayer::UpdateAttack()
 	{
 	case 0:
 		ChangeAnimation(anim, true);
-
-		// 斬撃SEの再生済みフラグを初期化
-		mIsPlayedSlashSE = false;
-		// 斬撃エフェクトの生成済みフラグを初期化
-		mIsSpawnedSlashEffect = false;
-
 		mStateStep++;
 		break;
 	case 1:
 		if (GetAnimationFrameRatio() >=  0.25f)
 		{
-			// 斬撃SEを再生
-//			mpSlashSE->Play();
 			// 攻撃開始
 			AttackStart();
-
 			mStateStep++;
 		}
 		break;
@@ -524,7 +518,6 @@ void CPlayer::UpdateAttack()
 		{
 			// 攻撃終了
 			AttackEnd();
-
 			mStateStep++;
 		}
 		break;
@@ -625,14 +618,8 @@ void CPlayer::UpdateEvasion()
 			ChangeState(EState::eIdle);
 		}
 		break;
-
 	}
-	//mMoveSpeed = CVector::zero;
-	//float moveFrame = _MOVE_END - ATTACK_MOVE_START;
-	//float percent = (frame - ATTACK_MOVE_START) / moveFrame;
-
 }
-
 
 // 防御
 void CPlayer::UpdateDefense()
@@ -649,7 +636,7 @@ void CPlayer::UpdateDefense()
 void CPlayer::UpdateJumpStart()
 {
 	ChangeAnimation(EAnimType::eJumpStart);
-	mState = EState::eJump;
+	ChangeState(EState::eJump);
 
 	mMoveSpeedY += JUMP_SPEED;
 	mIsGrounded = false;
@@ -661,7 +648,7 @@ void CPlayer::UpdateJump()
 	if (mMoveSpeedY <= 0.0f)
 	{
 		ChangeAnimation(EAnimType::eJumpEnd);
-		mState = EState::eJumpEnd;
+		ChangeState(EState::eJumpEnd);
 	}
 }
 
@@ -672,7 +659,7 @@ void CPlayer::UpdateJumpEnd()
 	// 地面に接地したら、待機状態へ戻す
 	if (IsAnimationFinished() && mIsGrounded)
 	{
-		mState = EState::eIdle;
+		ChangeState(EState::eIdle);
 	}
 }
 
@@ -835,14 +822,14 @@ void CPlayer::Update()
 	// マウスホイールが上にスクロールされていたら、現在の攻撃威力をアップ
 	if (WheelDelta > 0)
 	{
-		int power = ((int)mCurrAttackPower + 1) % powerNum;
-		mCurrAttackPower = (EAttackPower)power;
+		int power = ((int)mSelectAttackPower + 1) % powerNum;
+		mSelectAttackPower = (EAttackPower)power;
 	}
 	// マウスホイールが下にスクロールされていたら、現在の攻撃威力ダウン
 	else if (WheelDelta < 0)
 	{
-		int power = ((int)mCurrAttackPower + powerNum - 1) % powerNum;
-		mCurrAttackPower = (EAttackPower)power;
+		int power = ((int)mSelectAttackPower + powerNum - 1) % powerNum;
+		mSelectAttackPower = (EAttackPower)power;
 	}
 
 	// 状態に合わせて、更新処理を切り替える
@@ -898,6 +885,15 @@ void CPlayer::Update()
 		UpdateMove();
 	}
 
+	if (mState == EState::eIdle
+		|| mState == EState::eJumpStart
+		|| mState == EState::eJump
+		|| mState == EState::eJumpEnd
+		|| mState == EState::eDefense)
+	{
+		ChangeAttack();
+	}
+
 	mMoveSpeedY -= GRAVITY;
 	CVector moveSpeed = mMoveSpeed + CVector(0.0f, mMoveSpeedY, 0.0f);
 
@@ -932,26 +928,6 @@ void CPlayer::Update()
 		// TODO：敵に視点をボタンを押してロックするか、自動で敵に向くようにする
 
 
-	//if (mIsLockOn)
-	//{
-	//	// メインカメラ取得
-	//	CCamera* camera = CCamera::MainCamera();
-	//	CVector targetPos = mpLockOnTarget->Position();
-	//	targetPos.Y(0.0f);
-	//	targetPos.Normalize();
-	//	camera->Rotation(CQuaternion::LookRotation(targetPos));
-	//}
-
-
-	}
-
-	CDebugPrint::Print("スタン : %s\n", IsAttackType(EAttackPower::eAttackS, EAttackWay::eRightAttack) 
-														? "だぜ！" : "残念だぜ！");
-	CDebugPrint::Print("LockOn:%s\n",mIsLockOn?"ON":"OFF");
-	if (mpLockOnTarget != nullptr)
-	{
-		CVector p = mpLockOnTarget->Position();
-		CDebugPrint::Print("NearEnemy: %f, %f, %f\n", p.X(), p.Y(), p.Z());
 	}
 
 	// 「P」キーを押したら、ゲームを終了
@@ -1020,21 +996,23 @@ void CPlayer::Update()
 		mpNavNode->SetPos(Position());
 	}
 
-	CDebugPrint::Print("Grounded:%s\n", mIsGrounded ? "true" : "false");
-	//	CDebugPrint::Print("Mode:%d\n",(int)mMode);
-	CDebugPrint::Print("Power:%d\n", (int)mCurrAttackPower);
+	CDebugPrint::Print("FPS:%f\n \n", Times::FPS());
+
+	CDebugPrint::Print("■プレイヤーの情報\n");
+	CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
+	CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
+
+	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
+	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
+	CDebugPrint::Print("　\n");
 
 	mIsGrounded = false;
-
-	CDebugPrint::Print("FPS:%f\n", Times::FPS());
 }
 
 
 // 衝突処理
 void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
-
-
 	// 当たり判定
 	if (self == mpBodyCol)
 	{
@@ -1091,7 +1069,7 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			Position(Position() + adjust * hit.weight);
 		}
 	}
-	else if (self == mpAttackCol1,mpAttackCol2,mpAttackCol3)
+	else if (self == mpAttackCol1 || self == mpAttackCol2 || self == mpAttackCol3)
 	{
 		// ヒットしたのがキャラクターかつ、
 			// まだ攻撃がヒットしていないキャラクターであれば
@@ -1101,19 +1079,13 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			// 攻撃ヒット済みリストに登録
 			AddAttackHitObj(chara);
 
-			if (mCurrAttackPower == EAttackPower::eAttackS)
-			{
-				chara->TakeDamage(3, this);
-			}
-			else if (mCurrAttackPower == EAttackPower::eAttackM)
-			{
-				chara->TakeDamage(100, this);
-			}
-			else if (mCurrAttackPower == EAttackPower::eAttackL)
-			{
-				// ダメージを与える
-				chara->TakeDamage(8, this);
-			}
+			// 与えるダメージの計算
+			int damage = 0;
+			float stan = 0.0f;
+			CalcDamage(chara, &damage, &stan);
+
+			// ダメージを与える
+			chara->TakeDamage(damage, stan, this);
 
 		}
 	}

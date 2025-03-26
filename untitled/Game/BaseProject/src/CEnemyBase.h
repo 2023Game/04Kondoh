@@ -23,6 +23,16 @@ public:
 		float speed;        // アニメーションの再生速度（1.0で等倍）
 	};
 
+	// 攻撃データ
+	struct AttackData
+	{
+		EAttackDir dir;			// 攻撃の方向
+		EAttackPower power;		// 攻撃の強さ
+		bool parry;				// パリー出来るかどうか
+		float parryStartFrame;	// パリー出来るアニメーション開始フレーム数
+		float parryEndFrame;	// パリー出来るアニメーション終了フレーム数
+	};
+
 	// コンストラクタ
 	CEnemyBase();
 	//デストラクタ
@@ -30,6 +40,9 @@ public:
 
 	//オブジェクトを削除を伝える関数
 	void DeleteObject(CObjectBase* obj) override;
+
+	// パリィ出来るかどうか
+	bool CheckParry(EAttackDir dir, EAttackPower power) const override;
 
 	/// <summary>
 	/// 衝突処理
@@ -69,6 +82,8 @@ protected:
 
 	// アニメーションデータのテーブル
 	const std::vector<AnimData>* mpAnimData;
+	// 攻撃データのテーブル
+	const std::vector<AttackData>* mpAttackData;
 
 	CVector mMoveSpeed;    // 前後左右の移動速度
 	float mMoveSpeedY;     // 重力やジャンプによる上下の移動速度

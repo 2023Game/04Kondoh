@@ -33,26 +33,7 @@ public:
 		eJumpEnd,	// ジャンプ終了
 	};
 
-	// 攻撃方向
-	enum class EAttackWay
-	{
-		eIdle,         // 待機
-
-		eUpAttack,    // 上攻撃
-		eDwonAttack,  // 下攻撃
-		eRightAttack, // 右攻撃
-		eLeftAttack,  // 左攻撃
-	};
-
-	// 攻撃の強さ
-	enum class EAttackPower
-	{
-		eAttackS,   // 弱攻撃
-		eAttackM,   // 中攻撃
-		eAttackL,   // 強攻撃
-
-		Num,        // 攻撃の強さの数
-	};
+	
 
 	//インスタンスのポインタの取得
 	static CPlayer* Instance();
@@ -62,8 +43,6 @@ public:
 	// デストラクタ
 	~CPlayer();
 
-	// 指定の攻撃タイプか
-	bool IsAttackType(EAttackPower power, EAttackWay way);
 	// 攻撃中か
 	bool IsAttacking() const override;
 	// 
@@ -72,10 +51,6 @@ public:
 	void AttackEnd() override;
 	// 現在の状態を取得
 	EState GetState();
-	// 攻撃の方向を取得
-	EAttackWay GetAttackWay();
-	// 攻撃の威力を取得
-	EAttackPower GetAttackPower();
 
 	// 更新
 	void Update();
@@ -94,6 +69,13 @@ public:
 private:
 	// キーの入力情報から移動ベクトルを求める
 	CVector CalcMoveVec(bool force = false) const;
+	/// <summary>
+	/// ダメージ量を計算して返す
+	/// </summary>
+	/// <param name="taker">ダメージを受けるキャラ</param>
+	/// <param name="outDamage">ダメージ量を返す用</param>
+	/// <param name="outStan">怯み度を返す用</param>
+	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const;
 
 	// 非戦闘時の待機状態
 	void UpdateIdle();
@@ -125,36 +107,37 @@ private:
 	{
 		None = -1,
 
-		eAttackTPose,    // 戦闘時のTポーズ
-		eAttackIdle,     // 戦闘時の待機アニメーション
+		eAttackTPose,	// 戦闘時のTポーズ
+		eAttackIdle,	// 戦闘時の待機アニメーション
 
-		eAttackWalk,     // 歩行
-		eAttackBackWalk, // 後ろ方向への歩行
-		eAttackLeftWalk,     // 左方向への歩行
-		eAttackRightWalk,    // 右方向への歩行
+		eAttackWalk,		// 歩行
+		eAttackBackWalk,	// 後ろ方向への歩行
+		eAttackLeftWalk,	// 左方向への歩行
+		eAttackRightWalk,	// 右方向への歩行
 
-		eUpAttackS,	   // 弱上攻撃アニメーション
-		eUpAttackM,	   // 中上攻撃アニメーション
-		eUpAttackL,	   // 強上攻撃アニメーション
+		eUpAttackS,		// 弱上攻撃アニメーション
+		eUpAttackM,		// 中上攻撃アニメーション
+		eUpAttackL,		// 強上攻撃アニメーション
 
-		eDwonAttackS,  // 弱下攻撃アニメーション
-		eDwonAttackM,  // 中下攻撃アニメーション
-		eDwonAttackL,  // 強下攻撃アニメーション
+		eDwonAttackS,	// 弱下攻撃アニメーション
+		eDwonAttackM,	// 中下攻撃アニメーション
+		eDwonAttackL,	// 強下攻撃アニメーション
 
-		eRightAttackS, // 弱右攻撃アニメーション
-		eRightAttackM, // 中右攻撃アニメーション
-		eRightAttackL, // 強右攻撃アニメーション
+		eRightAttackS,	// 弱右攻撃アニメーション
+		eRightAttackM,	// 中右攻撃アニメーション
+		eRightAttackL,	// 強右攻撃アニメーション
 
-		eLeftAttackS,  // 弱左攻撃アニメーション
-		eLeftAttackM,  // 中左攻撃アニメーション
-		eLeftAttackL,  // 強左攻撃アニメーション
+		eLeftAttackS,	// 弱左攻撃アニメーション
+		eLeftAttackM,	// 中左攻撃アニメーション
+		eLeftAttackL,	// 強左攻撃アニメーション
 
-		eDefense,      // 防御
-		eEvasion,      // 回避
+		eDefense,		// 防御
+		eEvasion,		// 回避
 
-		eJumpStart,	   // ジャンプ開始
-		eJump,		   // ジャンプ中
-		eJumpEnd,	   // ジャンプ終了
+		eJumpStart,		// ジャンプ開始
+		eJump,			// ジャンプ中
+		eJumpEnd,		// ジャンプ終了
+		eJumpAttack,	// ジャンプ攻撃
 
 		Num
 	};
@@ -188,9 +171,8 @@ private:
 	// 攻撃状態へ切り替え
 	void ChangeAttack();
 
-	EAttackWay mAttackWay;			// 攻撃方向
-	EAttackPower mAttackPower;		// 攻撃の強さ
-	EAttackPower mCurrAttackPower;	// 現在の攻撃の強さ
+	// 選択中の攻撃の強さ
+	EAttackPower mSelectAttackPower;
 
 	// モード選択
 	enum class EMode

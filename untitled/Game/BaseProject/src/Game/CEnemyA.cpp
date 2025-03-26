@@ -41,7 +41,7 @@
 #define DETECT_COL_POS CVector(0.0f, 5.0f, 3.0f)	// 判定用コライダの座標
 #define DETECT_COL_SCL CVector(0.7f, 1.5f, 0.7f)	// 判定用コライダの大きさ
 
-#define EATTACKWAY CPlayer::EAttackWay		// プレイヤーの攻撃方向
+#define EATTACKWAY CPlayer::EAttackDir		// プレイヤーの攻撃方向
 #define EATTACKPWOER CPlayer::EAttackPower	// プレイヤーの攻撃威力
 
 // プレイヤーのアニメーションデータのテーブル
@@ -54,8 +54,8 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
 	{ ANIM_PATH"Stan.x",					false,	129.0f,	1.0f},	// 気絶アニメーション
 
-	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	0.5f},  // 右弱攻撃
-	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	93.0f,	2.0f},  // 右中攻撃
+	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	0.125f},  // 右弱攻撃
+	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	93.0f,	0.5f},  // 右中攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	34.0f,	1.0f},  // 左弱攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	53.0f,	1.0f},  // 左中攻撃
 	{ ATTACK_ANIM_PATH"UpAttackS.x",		false,	69.0f,	1.0f},  // 上弱攻撃
@@ -73,6 +73,13 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 
 };
 
+const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
+{
+	{ EAttackDir::eRight,	EAttackPower::eAttackS,		true, 0.0f, 50.0f},
+	{ EAttackDir::eLeft,	EAttackPower::eAttackS,		true, 0.0f, 20.0f},
+	{ EAttackDir::eUp,		EAttackPower::eAttackM,		true, 0.0f, 49.0f},
+	{ EAttackDir::eDown,	EAttackPower::eAttackS,		true, 0.0f, 37.0f},
+};
 
 // コンストラクタ
 CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
@@ -83,8 +90,9 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mAttackEndPos(CVector::zero)
 	, mNextPatrolIndex(-1)
 	, mNextMoveIndex(0)
-	, mpDetectType((int)EAttackType::eIdel)
 {
+	//この敵キャラの攻撃データを設定
+	mpAttackData = &ATTACK_DATA;
 	mMaxHp = 100;
 	mHp = mMaxHp;
 
@@ -129,19 +137,6 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpRAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
 	mpRAttackCol->SetEnable(false);
 
-	mpDetectCol = new CColliderSphere
-	(
-		this, ELayer::eDetectCol,
-		8.0
-	);
-	// 衝突するタグとレイヤーを設定
-	mpDetectCol->SetCollisionTags({ ETag::ePlayer });
-	mpDetectCol->SetCollisionLayers({ ELayer::eDetectCol });
-	// コライダの座標と大きさ
-	mpDetectCol->Position(DETECT_COL_POS);
-	mpDetectCol->Scale(DETECT_COL_SCL);
-	// コライダをオフにする
-	mpDetectCol->SetEnable(false);
 
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
@@ -165,6 +160,7 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	// 右手のボーンを取得
 	CModelXFrame* RHand = mpModel->FinedFrame("Armature_mixamorig_RightHand");
 	const CMatrix& RhandMTX = RHand->CombinedMatrix();
+
 	// 攻撃用のコライダーを行列に設定
 	mpLAttackCol->SetAttachMtx(&LhandMTX);
 	mpRAttackCol->SetAttachMtx(&RhandMTX);
@@ -177,7 +173,6 @@ CEnemyA::~CEnemyA()
 	// コライダーを破棄
 	SAFE_DELETE(mpLAttackCol);
 	SAFE_DELETE(mpRAttackCol);
-	SAFE_DELETE(mpDetectCol);
 
 	// 視野範囲のデバッグ表示が存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
@@ -238,9 +233,10 @@ void CEnemyA::Update()
 	case (int)EState::eChase:		UpdateChase();	break;
 	case (int)EState::eLost:		UpdateLost();	break;
 	case (int)EState::eAttack:		UpdateAttack();	break;
-	case (int)EState::eAttackParry:	UpdateStan();	break;
-	case (int)EState::eChance:		UpdateChance();	break;
+	case (int)EState::eStan:		UpdateStan();	break;
 	case (int)EState::eDeath:		UpdateDeath();	break;
+//	case (int)EState::eGuardParry:	UpdateGuardParry();
+//	case (int)EState::eAttackParry:	UpdateStan();	break;
 	}
 
 	// キャラクターの更新
@@ -259,10 +255,15 @@ void CEnemyA::Update()
 	// 現在の状態に合わせて視野範囲の色を変更
 	mpDebugFov->SetColor(GetStateColor(mState));
 
-	CDebugPrint::Print("Enemy : %d\n", mHp);
-	CDebugPrint::Print("状態 : %s\n", GetStateStr(mState).c_str());
-	CDebugPrint::Print("ステップ : %d\n", mStateStep);
-	CDebugPrint::Print("スタン : %s\n", IsParry() ? "パリィだぜ！" : "残念だぜ！");
+	CDebugPrint::Print("■敵の情報\n");
+	CDebugPrint::Print("　HP：%d\n", mHp);
+	CDebugPrint::Print("　怯み度：%.2f\n", mStanPoints);
+	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
+	//CDebugPrint::Print("ステップ : %d\n", mStateStep);
+	//CDebugPrint::Print("スタン : %s\n", IsParry() ? "パリィだぜ！" : "残念だぜ！");
+	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
+	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
+	CDebugPrint::Print("　フレーム：%.2f\n", GetAnimationFrame());
 }
 
 void CEnemyA::Render()
@@ -345,14 +346,13 @@ void CEnemyA::AttackStart()
 {
 	// ベースクラスの攻撃開始処理を呼び出し
 	CEnemyBase::AttackStart();
-	mpDetectCol->SetEnable(true);
 
 	// パンチ攻撃中であれば、パンチ攻撃のコライダーをオンにする
-	if (mAttackType == (int)EAttackType::eLeftAttackS,(int)EAttackType::eLeftAttackM)
+	if (mAttackType == (int)EAttackType::eRightAttack)
 	{
 		mpRAttackCol->SetEnable(true);
 	}
-	else if (mAttackType == (int)EAttackType::eRightAttackS, (int)EAttackType::eRightAttackM)
+	else if (mAttackType == (int)EAttackType::eLeftAttack)
 	{
 		mpLAttackCol->SetEnable(true);
 	}
@@ -366,13 +366,12 @@ void CEnemyA::AttackEnd()
 	// 攻撃コライダーをオフ
 	mpLAttackCol->SetEnable(false);
 	mpRAttackCol->SetEnable(false);
-	mpDetectCol->SetEnable(false);
 }
 
-void CEnemyA::TakeDamage(int damage, CObjectBase* causer)
+void CEnemyA::TakeDamage(int damage, float stan, CObjectBase* causer)
 {
 	// ベースクラスのダメージ処理を呼び出す
-	CEnemyBase::TakeDamage(damage, causer);
+	CEnemyBase::TakeDamage(damage, stan, causer);
 
 	if (IsDeath())
 	{
@@ -393,36 +392,15 @@ void CEnemyA::Death()
 	ChangeState((int)EState::eDeath);
 }
 
-// スタンするか
-bool CEnemyA::IsParry()
+void CEnemyA::Stan()
 {
-	CPlayer* player = CPlayer::Instance();
-	CPlayer::EAttackWay attackway = player->GetAttackWay();
-	CPlayer::EAttackPower attackPow = player->GetAttackPower();
-
-	if (mAttackType == (int)EAttackType::eIdel) return false;
-
-	if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eRightAttack))
-		mpDetectType = (int)EAttackType::eLeftAttackS;
-	else if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eRightAttack))
-		mpDetectType = (int)EAttackType::eLeftAttackM;
-	else if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eLeftAttack))
-		mpDetectType = (int)EAttackType::eRightAttackS;
-	else if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eLeftAttack))
-		mpDetectType = (int)EAttackType::eRightAttackM;
-	else if (player->IsAttackType(EATTACKPWOER::eAttackS, EATTACKWAY::eUpAttack))
-		mpDetectType = (int)EAttackType::eDownAttackS;
-	else if (player->IsAttackType(EATTACKPWOER::eAttackM, EATTACKWAY::eUpAttack))
-		mpDetectType = (int)EAttackType::eDownAttackM;
-
-	if (mpDetectType == mAttackType) return true;
+	ChangeState((int)EState::eStan);
 }
 
 // 衝突処理
 void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
 	CPlayer* player = CPlayer::Instance();
-	CPlayer::EAttackPower attackPow = player->GetAttackPower();
 
 	// ベースの衝突処理を呼び出す
 	CEnemyBase::Collision(self, other, hit);
@@ -439,7 +417,7 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 				// 攻撃ヒット済みリストに登録
 				AddAttackHitObj(chara);
 				// ダメージを与える
-				chara->TakeDamage(3, this);
+				chara->TakeDamage(3, 0.0f, this);
 
 			}
 		}
@@ -453,25 +431,9 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 		if (chara != nullptr && !IsAttackHitObj(chara))
 		{
 			// ダメージを与える
-			chara->TakeDamage(3, this);
+			chara->TakeDamage(3, 0.0f,this);
 			// 攻撃ヒット済みリストに登録
 			AddAttackHitObj(chara);
-		}
-	}
-	
-	if (self == mpDetectCol)
-	{
-		// ヒットしたのがキャラクターかつ、
-		// まだ攻撃がヒットしていないキャラクターであれば
-		CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
-		if (chara != nullptr && !IsAttackHitObj(chara))
-		{
-			if (IsParry())
-			{
-				// 攻撃ヒット済みリストに登録
-				AddAttackHitObj(chara);
-				ChangeState((int)EState::eAttackParry);
-			}
 		}
 	}
 }
@@ -763,17 +725,6 @@ void CEnemyA::UpdateIdle()
 		// 待機時間が経過したら、巡回状態へ移行
 		ChangeState((int)EState::ePatrol);
 	}
-
-	CPlayer* player = CPlayer::Instance();
-	if (player != nullptr)
-	{
-		CPlayer::EState state = player->GetState();
-		if (IsAttacking())
-		{
-			CPlayer::EAttackWay attackway = player->GetAttackWay();
-			CPlayer::EAttackPower attackPow = player->GetAttackPower();
-		}
-	}
 }
 
 // 巡回中の更新処理
@@ -846,6 +797,8 @@ void CEnemyA::UpdateChase()
 	// プレイヤーに攻撃できるならば、攻撃状態へ移行
 	if (CanAttackPlayer())
 	{
+		// 右攻撃に変更（TODO：攻撃の種類を切り替える）
+		ChangeAttackType((int)EAttackType::eRightAttack);
 		ChangeState((int)EState::eAttack);
 		return;
 	}
@@ -1031,13 +984,29 @@ void CEnemyA::UpdateStan()
 	// TODO:アニメーションを再生、１秒後に復活、
 	// 視界に入っていたら：攻撃状態に、入っていなかったら：待機状態に
 	// １秒の間で攻撃をすると：攻撃チャンス！！状態へ
+	switch (mStateStep)
+	{
+		// 怯みアニメーション再生
+	case 0:
+		ChangeAnimation((int)EAnimType::eStan, true);
+		mStateStep++;
+		break;
+		// アニメーション終了待ち
+	case 1:
+		// アニメーションが終われば待機状態へ戻す
+		if (IsAnimationFinished())
+		{
+			ChangeState((int)EState::eIdle);
+		}
+		break;
+	}
 }
 
-void CEnemyA::UpdateChance()
-{
-	// TODO：ノックバックするようになる
-	// 攻撃に倍率が乗る
-}
+//void CEnemyA::UpdateChance()
+//{
+//	// TODO：ノックバックするようになる
+//	// 攻撃に倍率が乗る
+//}
 
 
 
@@ -1053,7 +1022,7 @@ std::string CEnemyA::GetStateStr(int state) const
 	case (int)EState::eLost:    return "見失う";
 	case (int)EState::eAttack:  return "攻撃";
 	case (int)EState::eDeath:	return "死亡";
-	case (int)EState::eChance:	return "気絶";
+	case (int)EState::eStan:	return "気絶";
 	}
 	return "";
 }
@@ -1068,7 +1037,7 @@ CColor CEnemyA::GetStateColor(int state) const
 	case (int)EState::eLost:    return CColor::yellow;
 	case (int)EState::eAttack:  return CColor::magenta;
 	case (int)EState::eDeath:	return CColor::black;
-	case (int)EState::eChance:	return CColor::cyan;
+	case (int)EState::eStan:	return CColor::cyan;
 	}
 	return CColor::white;
 }

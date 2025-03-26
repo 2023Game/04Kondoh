@@ -38,9 +38,11 @@ public:
 	void AttackEnd() override;
 
 	// ダメージを受ける
-	void TakeDamage(int damage, CObjectBase* causer) override;
+	void TakeDamage(int damage,float stan, CObjectBase* causer) override;
 	// 死亡
 	void Death() override;
+	// 怯み処理
+	void Stan() override;
 
 	/// <summary>
 	/// 衝突処理
@@ -72,6 +74,7 @@ private:
 		eUpAttackM,		// 上中攻撃
 		eDownAttackS,	// 下弱攻撃
 		eDownAttackM,	// 下中攻撃
+
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
 		eHit3,			// 仰け反り3
@@ -79,7 +82,6 @@ private:
 		eChanceHit2,	// チャンス時の仰け反り2
 		eChanceHit3,	// チャンス時の仰け反り3
 		eChanceHit4,	// チャンス時の仰け反り4
-
 
 		Num
 	};
@@ -92,25 +94,29 @@ private:
 		eChase,			// 追跡中
 		eLost,			// 見失う
 		eAttack,		// 攻撃
+		eGuardParry,	// 防御でパリー
+		eAttackParry,	// 攻撃でパリー
+		eStan,			// 怯む
 		eDeath,			// 死亡
-		eParry,			// パリー時
-		eAttackParry,	// アタックパリー時
-		eChance,		// チャンス！！
 	};
 	//状態切り替え
 	void ChangeState(int state) override;
 
 	enum class EAttackType
 	{
-		eIdel,			// 待機
-		eLeftAttackS,	// 左弱攻撃
-		eLeftAttackM,	// 左中攻撃
-		eRightAttackS,	// 右弱攻撃
-		eRightAttackM,	// 右中攻撃
-		eUpAttackS,		// 上弱攻撃
-		eUpAttackM,		// 上中攻撃
-		eDownAttackS,	// 下弱攻撃
-		eDownAttackM,	// 下中攻撃
+		eRightAttack,	// 右攻撃
+		eLeftAttack,	// 左攻撃
+		eUpAttack,		// 上攻撃
+		eDownAttack,	// 下攻撃
+
+		//eLeftAttackS,		// 左弱攻撃
+		//eLeftAttackM,		// 左中攻撃
+		//eRightAttackS,	// 右弱攻撃
+		//eRightAttackM,	// 右中攻撃
+		//eUpAttackS,		// 上弱攻撃
+		//eUpAttackM,		// 上中攻撃
+		//eDownAttackS,		// 下弱攻撃
+		//eDownAttackM,		// 下中攻撃
 	};
 	// 攻撃タイプ切り替え
 	void ChangeAttackType(int attacktype) override;
@@ -123,8 +129,6 @@ private:
 	bool CanAttackPlayer() const;
 	// 攻撃時に移動する距離か
 	bool AttackRangeMin();
-	// スタンするか
-	bool IsParry();
 
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
@@ -148,10 +152,12 @@ private:
 	void UpdateAttack();
 	// 死亡時の更新処理
 	void UpdateDeath();
-	// 気絶時の更新処理
+	// 攻撃パリー
+	void UpdateGuardParry();
+	// 
+	void UpdateAttackParry();
+	// 怯み時の更新処理
 	void UpdateStan();
-	// アタックチャーンス！！の更新処理
-	void UpdateChance();
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
@@ -177,8 +183,6 @@ private:
 	CColliderSphere* mpLAttackCol; 
 	// 右手の球コライダ
 	CColliderSphere* mpRAttackCol;
-	// 判定用コライダ
-	CColliderSphere* mpDetectCol;
 
 	std::vector<CNavNode*> mMoveRoute;	// 求めた最短経路記憶用
 	int mNextMoveIndex;					// 次に移動するノードのインデックス値

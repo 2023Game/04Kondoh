@@ -13,6 +13,8 @@ CEnemyBase::CEnemyBase()
 	,mState(0)
 	,mStateStep(0)
 	,mElapsedTime(0.0f)
+	,mpAnimData(nullptr)
+	,mpAttackData(nullptr)
 	,mMoveSpeed(CVector::zero)
 	,mMoveSpeedY(0.0f)
 	,mIsGrounded(false)
@@ -51,6 +53,24 @@ void CEnemyBase::DeleteObject(CObjectBase* obj)
 	{
 		mpHpGauge = nullptr;
 	}
+}
+
+// パリィ出来るかどうか
+bool CEnemyBase::CheckParry(EAttackDir dir, EAttackPower power) const
+{
+	// ベースクラスのパリー条件を満たしていない場合、パリィ出来ない
+	if (!CXCharacter::CheckParry(dir, power)) return false;
+
+	// パリィ出来ない攻撃だった場合、パリィ出来ない
+	const AttackData& data = (*mpAttackData)[mAttackType];
+	if (!data.parry) return false;
+
+	// 現在のアニメーションフレームが、パリィ出来る範囲外だった場合、パリィ出来ない
+	float frame = GetAnimationFrame();
+	if (!(data.parryStartFrame <= frame && frame <= data.parryEndFrame)) return false;
+
+	// すべての条件を満たした場合、パリィ出来る
+	return true;
 }
 
 bool CEnemyBase::IsState(int state)
@@ -172,6 +192,11 @@ void CEnemyBase::ChangeAttackType(int attacktype)
 	if (attacktype == mAttackType) return;
 
 	mAttackType = attacktype;
+
+	// 攻撃の種類から攻撃のデータを取得
+	const AttackData& data = (*mpAttackData)[mAttackType];
+	mAttackDir = data.dir;
+	mAttackPower = data.power;
 }
 
 

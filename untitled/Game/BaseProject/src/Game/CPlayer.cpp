@@ -129,7 +129,7 @@ CPlayer::CPlayer()
 		CVector(0.0f, PLAYER_CAP_UP, 0.0f),
 		PLAYER_WIDTH, true
 	);
-	mpBodyCol->SetCollisionTags({ ETag::eEnemy,ETag::eField });
+	mpBodyCol->SetCollisionTags({ ETag::eEnemy, ETag::eField, ETag::eWall});
 	mpBodyCol->SetCollisionLayers
 	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,ELayer::eEnemy });
 

@@ -2,6 +2,7 @@
 
 // コンストラクタ
 CWall::CWall(const CVector& pos, const CVector& angle, const CVector& size)
+	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
 {
 	// 壁のモデルデータ取得
 	mpModel = CResourceManager::Get<CModel>("Wall");

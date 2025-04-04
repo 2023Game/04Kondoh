@@ -35,7 +35,7 @@ void CGameScene::Load()
 	//ここでゲーム中に必要な
 	//リソースの読み込みやクラスの生成を行う
 
-	CResourceManager::Load<CModel>  ("Field",         "Field\\Stage1.obj");
+	CResourceManager::Load<CModel>  ("Field",         "Field\\BattleMan_Stage1.obj");
 	CResourceManager::Load<CModel>  ("FieldCol",      "Field\\StageCol.obj");
 	CResourceManager::Load<CModel>  ("FieldCube",     "Field\\Object\\cube.obj");
 	CResourceManager::Load<CModel>  ("FieldCylinder", "Field\\Object\\cylinder.obj");

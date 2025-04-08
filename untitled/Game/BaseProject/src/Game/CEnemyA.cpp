@@ -54,7 +54,7 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
 	{ ANIM_PATH"Stan.x",					false,	129.0f,	1.0f},	// 気絶アニメーション
 
-	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	0.125f},  // 右弱攻撃
+	{ ATTACK_ANIM_PATH"LRLAttack.x",		false,	98.0f,	1.0f},  // 右弱攻撃
 	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	93.0f,	0.5f},  // 右中攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	34.0f,	1.0f},  // 左弱攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	53.0f,	1.0f},  // 左中攻撃

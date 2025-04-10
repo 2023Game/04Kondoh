@@ -67,7 +67,7 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ PLAYER_ANIM_PATH"DwonAttackM.x",	false,	55.0f,	1.0f	},	// ’†‰ºUŒ‚
 	{ PLAYER_ANIM_PATH"DwonAttackL.x",	false,	90.0f,	1.0f	},	// ‹­‰ºUŒ‚
 
-	{ PLAYER_ANIM_PATH"RightAttackS.x",	false,	60.0f,	1.7f	},	// ã‰EUŒ‚
+	{ PLAYER_ANIM_PATH"RightAttackS.x",	false,	60.0f,	1.0f	},	// ã‰EUŒ‚
 	{ PLAYER_ANIM_PATH"RightAttackM.x",	false,	65.0f,	1.5f	},	// ’†‰EUŒ‚
 	{ PLAYER_ANIM_PATH"RightAttackL.x",	false,	86.0f,	1.0f	},	// ‹­‰EUŒ‚
 

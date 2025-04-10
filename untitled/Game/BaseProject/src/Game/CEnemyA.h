@@ -75,6 +75,8 @@ private:
 		eDownAttackS,	// 下弱攻撃
 		eDownAttackM,	// 下中攻撃
 
+		eRLRAttack,		// 三連攻撃（右左右）
+
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
 		eHit3,			// 仰け反り3

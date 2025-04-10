@@ -63,6 +63,8 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ATTACK_ANIM_PATH"DownAttackS.x",		false,	69.0f,	1.0f},  // 下弱攻撃
 	{ ATTACK_ANIM_PATH"DownAttackM.x",		false,	73.0f,	1.0f},  // 下中攻撃
 
+	{ ATTACK_ANIM_PATH"EnemyA_RLRAttack.x",	false,	91.0f,	1.0f},	// 三連攻撃（右左右）
+
 	{ DAMAGEHIT_PATH"Damage1.x",				true,	42.0f,	1.0f},	// 仰け反り1
 	{ DAMAGEHIT_PATH"Damage2.x",				true,	42.0f,	1.0f},	// 仰け反り2
 	{ DAMAGEHIT_PATH"Damage3.x",				true,	42.0f,	1.0f},	// 仰け反り3
@@ -886,7 +888,7 @@ void CEnemyA::UpdateAttack()
 			// 攻撃開始位置と攻撃終了位置の設定
 			mAttackStartPos = Position();
 			mAttackEndPos = mAttackStartPos + VectorZ() * ATTACK_MOVE_DIST;
-			ChangeAnimation((int)EAnimType::eRightAttackS,true);
+			ChangeAnimation((int)EAnimType::eRLRAttack,true);
 			mStateStep++;
 			break;
 		// ステップ1 : 攻撃時の移動処理

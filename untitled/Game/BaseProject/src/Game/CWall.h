@@ -41,7 +41,7 @@ public:
 	CCollider* GetFieldCol()const;
 
 private:
-	CModel* mpModel;                    // 壁のモデルデータ
+	CModel* mpModel;		// 壁のモデルデータ
 	CColliderMesh* mpColliderMesh;      // 壁のコリジョンデータ
 	CColliderMesh* mpNavColliderMesh;   // 壁の経路探索用のコリジョンデータ
 

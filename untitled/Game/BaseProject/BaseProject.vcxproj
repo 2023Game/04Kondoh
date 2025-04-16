@@ -73,6 +73,7 @@
     <ClCompile Include="src\BaseSystem\System.cpp" />
     <ClCompile Include="src\CEnemyManager.cpp" />
     <ClCompile Include="src\CEnemyBase.cpp" />
+    <ClCompile Include="src\CFieldWall.cpp" />
     <ClCompile Include="src\Game\CApplication.cpp" />
     <ClCompile Include="src\Game\CBullet.cpp" />
     <ClCompile Include="src\Game\CDebugFieldOfView.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\CEnemyManager.h" />
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\CEnemyBase.h" />
+    <ClInclude Include="src\CFieldWall.h" />
     <ClInclude Include="src\Game\CApplication.h" />
     <ClInclude Include="src\Game\CBullet.h" />
     <ClInclude Include="src\Game\CDebugFieldOfView.h" />

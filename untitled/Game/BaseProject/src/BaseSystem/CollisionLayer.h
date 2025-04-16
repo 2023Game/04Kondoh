@@ -11,8 +11,8 @@ enum class ELayer
 	ePlayer,
 	eEnemy,
 
-	eDetectCol,		// パリィレイヤー
-	eAttackCol,		// 攻撃レイヤー
+	eEye,		// キャラクターの視線
+	eAttackCol,	// 攻撃レイヤー
 };
 // 衝突判定レイヤーの初期化リスト
 using Layers = std::initializer_list<ELayer>;

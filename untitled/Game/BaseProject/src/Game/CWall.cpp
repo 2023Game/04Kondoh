@@ -8,8 +8,8 @@ CWall::CWall(const CVector& pos, const CVector& angle, const CVector& size)
 	mpModel = CResourceManager::Get<CModel>("Wall");
 
 	// 壁のコライダーを作成
-	CModel* colModel = CResourceManager::Get<CModel>("WallCol");
-	mpColliderMesh = new CColliderMesh(this, ELayer::eWall, colModel, true);
+	CModel* wallcolModel = CResourceManager::Get<CModel>("WallCol");
+	mpColliderMesh = new CColliderMesh(this, ELayer::eWall, wallcolModel, true);
 
 	// 壁の経路探索用のコライダーを作成
 	CModel* navColModel = CResourceManager::Get<CModel>("WallNavCol");

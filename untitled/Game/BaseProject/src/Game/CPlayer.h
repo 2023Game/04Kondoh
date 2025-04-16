@@ -101,6 +101,9 @@ private:
 	// モーションブラーの更新処理
 	/*void UpdateMotionBlur();*/
 
+	// 攻撃範囲内か？
+	bool IsAttackRange() const;
+
 
 	// アニメーションの種類
 	enum class EAnimType
@@ -191,7 +194,9 @@ private:
 	bool mIsLockOn;					// ロックオンしているか
 	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
 
-
+	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
+	float mAttackAngle;		// 攻撃範囲の角度
+	float mAttackLength;	// 攻撃範囲の距離
 
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
@@ -208,8 +213,6 @@ private:
 	CColliderCapsule* mpAttackCol2;
 	// 攻撃用のコライダ３（盾の部分）
 	CColliderSphere* mpAttackCol3;
-	// 判定用コライダ
-	CColliderSphere* mpDetectCol;
 
 	CTransform* mpRideObject;
 

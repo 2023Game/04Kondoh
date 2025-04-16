@@ -54,16 +54,12 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
 	{ ANIM_PATH"Stan.x",					false,	129.0f,	1.0f},	// 気絶アニメーション
 
-	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	1.0f},  // 右弱攻撃
-	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	93.0f,	0.5f},  // 右中攻撃
-	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	34.0f,	1.0f},  // 左弱攻撃
-	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	53.0f,	1.0f},  // 左中攻撃
-	{ ATTACK_ANIM_PATH"UpAttackS.x",		false,	69.0f,	1.0f},  // 上弱攻撃
-	{ ATTACK_ANIM_PATH"UpAttackM.x",		false,	81.0f,	2.0f},  // 上中攻撃
-	{ ATTACK_ANIM_PATH"DownAttackS.x",		false,	69.0f,	1.0f},  // 下弱攻撃
-	{ ATTACK_ANIM_PATH"DownAttackM.x",		false,	73.0f,	1.0f},  // 下中攻撃
-
-	{ ATTACK_ANIM_PATH"EnemyA_RLRAttack.x",	false,	91.0f,	1.0f},	// 三連攻撃（右左右）
+	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	34.0f,	1.0f},	// 左薙ぎ払い
+	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	1.0f},	// 右薙ぎ払い
+	// TODO:回し蹴りのどちらかアニメーションが違うかも
+	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	53.0f,	1.0f},	// 左回し蹴り
+	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	53.0f,	1.0f},	// 右回し蹴り
+	// TODO:タックルと押し出しのアニメデータを追加する
 
 	{ DAMAGEHIT_PATH"Damage1.x",				true,	42.0f,	1.0f},	// 仰け反り1
 	{ DAMAGEHIT_PATH"Damage2.x",				true,	42.0f,	1.0f},	// 仰け反り2
@@ -167,7 +163,8 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpLAttackCol->SetAttachMtx(&LhandMTX);
 	mpRAttackCol->SetAttachMtx(&RhandMTX);
 
-
+	// 待機最大時間をランダムで決める（１回だけだよ）
+	mIdleTime = Math::Rand(0.0f, 5.0f);
 }
 
 CEnemyA::~CEnemyA()
@@ -261,11 +258,10 @@ void CEnemyA::Update()
 	CDebugPrint::Print("　HP：%d\n", mHp);
 	CDebugPrint::Print("　怯み度：%.2f\n", mStanPoints);
 	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
-	//CDebugPrint::Print("ステップ : %d\n", mStateStep);
-	//CDebugPrint::Print("スタン : %s\n", IsParry() ? "パリィだぜ！" : "残念だぜ！");
 	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	CDebugPrint::Print("　フレーム：%.2f\n", GetAnimationFrame());
+	CDebugPrint::Print("　最大待機時間：%.2f\n", mIdleTime);
 }
 
 void CEnemyA::Render()
@@ -468,6 +464,9 @@ void CEnemyA::ChangeAttackType(int attacktype)
 	CEnemyBase::ChangeAttackType(attacktype);
 }
 
+
+
+// TODO:エネミーベースクラスに移植する
 // プレイヤーが視野範囲内に入ったかどうか
 bool CEnemyA::IsFoundPlayer() const
 {
@@ -718,7 +717,7 @@ void CEnemyA::UpdateIdle()
 	// 待機アニメーションを再生
 	ChangeAnimation((int)EAnimType::eIdle);
 
-	if (mElapsedTime < IDLE_TIME)
+	if (mElapsedTime < mIdleTime)
 	{
 		mElapsedTime += Times::DeltaTime();
 	}
@@ -774,12 +773,21 @@ void CEnemyA::UpdatePatrol()
 		}
 		else
 		{
+			// 待機最大時間をランダムで決める
+			mIdleTime = Math::Rand(0.0f, 8.0f);
 			ChangePatrolPoint();
 			mStateStep = 1;
 			mElapsedTime = 0.0f;
 		}
 		break;
 	}
+}
+
+// 戦闘待機状態の更新処理
+void CEnemyA::UpdateBattleIdle()
+{
+	CPlayer* player = CPlayer::Instance();
+//	if (player->IsAttacking() || )
 }
 
 // 追跡中の更新処理
@@ -888,7 +896,7 @@ void CEnemyA::UpdateAttack()
 			// 攻撃開始位置と攻撃終了位置の設定
 			mAttackStartPos = Position();
 			mAttackEndPos = mAttackStartPos + VectorZ() * ATTACK_MOVE_DIST;
-			ChangeAnimation((int)EAnimType::eRLRAttack,true);
+			ChangeAnimation((int)EAnimType::eSweepL,true);
 			mStateStep++;
 			break;
 		// ステップ1 : 攻撃時の移動処理

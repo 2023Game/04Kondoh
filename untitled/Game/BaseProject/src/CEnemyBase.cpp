@@ -4,6 +4,7 @@
 #include "CColliderCapsule.h"
 #include "CGaugeUI3D.h"
 #include "CEnemyManager.h"
+#include "Maths.h"
 
 #define GRAVITY 0.0625f;
 
@@ -13,6 +14,7 @@ CEnemyBase::CEnemyBase()
 	,mState(0)
 	,mStateStep(0)
 	,mElapsedTime(0.0f)
+	,mIdleTime(0.0f)
 	,mpAnimData(nullptr)
 	,mpAttackData(nullptr)
 	,mMoveSpeed(CVector::zero)
@@ -100,6 +102,7 @@ void CEnemyBase::InitEnemy(std::string path, const std::vector<AnimData>* pAnimD
 	// CXCharacter‚Ì‰Šú‰»
 	Init(model);
 }
+
 
 // Õ“Ëˆ—
 void CEnemyBase::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)

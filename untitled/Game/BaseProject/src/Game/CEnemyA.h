@@ -66,16 +66,12 @@ private:
 		eDeath,			// 死亡
 		eStan,			// 気絶アニメーション
 
-		eRightAttackS,	// 右弱攻撃
-		eRightAttackM,	// 右中攻撃
-		eLeftAttackS,	// 左弱攻撃
-		eLeftAttackM,	// 左中攻撃
-		eUpAttackS,		// 上弱攻撃
-		eUpAttackM,		// 上中攻撃
-		eDownAttackS,	// 下弱攻撃
-		eDownAttackM,	// 下中攻撃
-
-		eRLRAttack,		// 三連攻撃（右左右）
+		eSweepL,			// 左薙ぎ払い
+		eSweepR,			// 右薙ぎ払い
+		eRoundKickL,		// 左回し蹴り
+		eRoundKickR,		// 右回し蹴り
+//		eTornadoKickTackl,	// 竜巻旋風脚タックル
+//		ePushAttack,		// 押し出し攻撃
 
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
@@ -144,6 +140,8 @@ private:
 
 	// 待機状態の更新処理
 	void UpdateIdle();
+	// 戦闘待機状態の更新処理
+	void UpdateBattleIdle();
 	// 巡回中の更新処理
 	void UpdatePatrol();
 	// 追跡中の更新処理
@@ -154,12 +152,14 @@ private:
 	void UpdateAttack();
 	// 死亡時の更新処理
 	void UpdateDeath();
-	// 攻撃パリー
+	// 攻撃パリィ
 	void UpdateGuardParry();
-	// 
+	// 防御パリィ
 	void UpdateAttackParry();
 	// 怯み時の更新処理
 	void UpdateStan();
+
+
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;

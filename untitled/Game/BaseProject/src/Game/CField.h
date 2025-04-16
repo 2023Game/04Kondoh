@@ -50,7 +50,9 @@ private:
 	// フィールドのインスタンス
 	static CField* spInstance;
 
+	// ステージ1の床のモデル
 	CModel* mpModel;
+	// ステージ1の床のコリジョン
 	CColliderMesh* mpColliderMesh;
 
 	CModel* mpCubeModel;

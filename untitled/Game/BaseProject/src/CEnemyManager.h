@@ -15,10 +15,15 @@ public:
 	void Add(CEnemyBase* enemy);
 	// 敵をリストから削除
 	void Remove(CEnemyBase* enemy);
-	// プレイヤーに近い敵をロックオンする
-	CEnemyBase* FindLockOnTarget(float angle, float length) const;
-	// 次に近い敵を
-	CEnemyBase* NextLockOnTarget();
+
+	void GetPosition();
+
+	//// プレイヤーに近い敵をロックオンする
+	//CEnemyBase* FindLockOnTarget(float angle, float length) const;
+	//// 次に近い敵を
+	//CEnemyBase* NextLockOnTarget();
+
+
 
 
 private:

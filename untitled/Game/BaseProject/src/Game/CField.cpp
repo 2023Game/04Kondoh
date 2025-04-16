@@ -24,9 +24,10 @@ CField::CField()
 	spInstance = this;
 
 	mpModel = CResourceManager::Get<CModel>("Field");
-	CModel* colModel = CResourceManager::Get<CModel>("FieldCol");
+//	CModel* colModel = CResourceManager::Get<CModel>("FieldCol");
 
-	mpColliderMesh = new CColliderMesh(this, ELayer::eField, colModel, true);
+	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);
+
 
 	CreateWalls();
 	//CreateFieldObjects();
@@ -69,6 +70,7 @@ void CField::CreateWalls()
 
 }
 
+/*
 void CField::CreateFieldObjects()
 {
 	mpCubeModel = CResourceManager::Get<CModel>("FieldCube");
@@ -157,6 +159,7 @@ void CField::CreateFieldObjects()
 		le->AddPoint(pos, width, width);
 	}
 }
+*/
 
 // Œo˜H’Tõ—p‚Ìƒm[ƒh‚ðì¬
 void CField::CreateNavNodes()
@@ -257,10 +260,12 @@ void CField::Render()
 	mpModel->Render(Matrix());
 }
 
+
 CCollider* CField::GetFieldCol() const
 {
 	return mpColliderMesh;
 }
+
 
 std::list<CWall*> CField::GetWalls() const
 {

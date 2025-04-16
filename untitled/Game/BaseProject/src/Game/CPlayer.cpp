@@ -1,6 +1,7 @@
 //プレイヤークラスのインクルード
 #include "CPlayer.h"
 #include "CEnemyA.h"
+#include "CEnemyManager.h"
 #include "CInput.h"
 #include "CCamera.h"
 #include "CGameCamera2.h"
@@ -11,6 +12,7 @@
 #include "CNavNode.h"
 #include "CNavManager.h"
 #include "CField.h"
+#include "CDebugFieldOfView.h"
 
 #include "CEnemyManager.h"
 #include "CEnemyA.h"
@@ -24,12 +26,14 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define PLAYER_CAP_DWON   2.5f     // プレイヤーの底
 #define PLAYER_WIDTH      2.0f     // プレイヤーの幅
 
-#define ATTACK1_CAP_UP     80.0f     // 攻撃コライダー1の上
-#define ATTACK1_CAP_DWON    0.0f     // 攻撃コライダー1の下
-#define ATTACK2_CAP_UP      0.0f     // 攻撃コライダー2の上
-#define ATTACK2_CAP_DWON  -30.0f     // 攻撃コライダー2の下
-#define ATTACK_START_FRAME 24.0f	// 攻撃開始フレーム
-#define ATTACK_END_FRAME 50.0f		// 攻撃終了フレーム
+#define ATTACK1_CAP_UP		80.0f	// 攻撃コライダー1の上
+#define ATTACK1_CAP_DWON	0.0f	// 攻撃コライダー1の下
+#define ATTACK2_CAP_UP		0.0f	// 攻撃コライダー2の上
+#define ATTACK2_CAP_DWON	-30.0f	// 攻撃コライダー2の下
+#define ATTACK_START_FRAME	24.0f	// 攻撃開始フレーム
+#define ATTACK_END_FRAME	50.0f	// 攻撃終了フレーム
+#define ATTACK_LENGTH		10.0f	// 攻撃範囲の距離
+#define ATTACK_ANGLE		30.0f	// 攻撃範囲の角度
 
 #define MOVE_SPEED 0.375f * 2.0f
 #define JUMP_SPEED 1.5f
@@ -171,6 +175,8 @@ CPlayer::CPlayer()
 	mpAttackCol3->Translate(0.0f, 0.0f, -12.0f);
 	mpAttackCol3->SetEnable(false);
 
+	// 視野範囲のデバッグ表示を作成
+	mpDebugAttack = new CDebugFieldOfView(this, mAttackAngle, mAttackLength);
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
 
@@ -757,6 +763,42 @@ void CPlayer::UpdateMove()
 			ChangeAnimation(EAnimType::eAttackIdle);
 		}
 	}
+}
+
+bool CPlayer::IsAttackRange() const
+{
+	// 敵が存在しない場合は、範囲外とする
+	CEnemyManager* enemy = CEnemyManager::Instance();
+	if (enemy == nullptr) return false;
+
+	// プレイヤー座標の取得
+	CVector enemyPos = enemy->Position();
+	// 自分自身の座標を取得
+	CVector pos = Position();
+	// 自身からプレイヤーまでのベクトルを求める
+	CVector vec = pos - playerPos;
+	vec.Y(0.0f);
+
+	// 1: 攻撃範囲の角度内か求める
+	// ベクトルを正規化して方向要素のみにするため
+	// 長さを１にする
+	CVector dir = pos.Normalized();
+	// 自身の正面方向のベクトルを取得
+	CVector forward = VectorZ();
+	// プレイヤーまでのベクトルと
+	// 自身の正面方向のベクトルの内積を求めて角度を出す
+	float dot = CVector::Dot(dir, forward);
+	// 視野角度のラジアンを求める
+	float angleR = Math::DegreeToRadian(mAttackAngle);
+	// 求めた内積と視野角度で、視野範囲か判断する
+	if (dot < cosf(angleR)) return false;
+
+	// 2: 視野距離内か求める
+	// 終わりまでの距離と攻撃範囲の距離で、攻撃範囲内か判断する
+	float dist = Length();
+	if (dist > mAttackLength) return false;
+
+	return true;
 }
 
 // ↓ポーションブラーの更新処理、使ってない

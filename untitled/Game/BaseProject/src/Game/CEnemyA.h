@@ -66,12 +66,12 @@ private:
 		eDeath,			// 死亡
 		eStan,			// 気絶アニメーション
 
-		eSweepL,			// 左薙ぎ払い
-		eSweepR,			// 右薙ぎ払い
-		eRoundKickL,		// 左回し蹴り
-		eRoundKickR,		// 右回し蹴り
-//		eTornadoKickTackl,	// 竜巻旋風脚タックル
-//		ePushAttack,		// 押し出し攻撃
+		eBlowL,			// 左薙ぎ払い
+		eBlowR,			// 右薙ぎ払い
+		eRoundKickL,	// 左回し蹴り
+		eRoundKickR,	// 右回し蹴り
+		eTackle,		// 竜巻旋風脚タックル
+		eHeadButt,		// 押し出し攻撃
 
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
@@ -89,32 +89,34 @@ private:
 	{
 		eIdle,			// 待機
 		ePatrol,		// 巡回中
+
+		eBattleIdle,	// 待機（戦闘）
 		eChase,			// 追跡中
 		eLost,			// 見失う
+
 		eAttack,		// 攻撃
-		eGuardParry,	// 防御でパリー
-		eAttackParry,	// 攻撃でパリー
+
+		eGuard,			// 防御
+		eAvoid,			// 回避
+
 		eStan,			// 怯む
 		eDeath,			// 死亡
 	};
 	//状態切り替え
 	void ChangeState(int state) override;
 
+	// 攻撃タイプ
 	enum class EAttackType
 	{
-		eRightAttack,	// 右攻撃
-		eLeftAttack,	// 左攻撃
-		eUpAttack,		// 上攻撃
-		eDownAttack,	// 下攻撃
+		eBlowL,			// 左薙ぎ払い
+		eBlowR,			// 右薙ぎ払い
+		eRoundKickL,	// 左回し蹴り
+		eRoundKickR,	// 右回し蹴り
+		eTackle,		// 竜巻旋風脚タックル
+		eHeadButt,		// 頭突き攻撃
+		eTripleAttack,	// 三連攻撃
 
-		//eLeftAttackS,		// 左弱攻撃
-		//eLeftAttackM,		// 左中攻撃
-		//eRightAttackS,	// 右弱攻撃
-		//eRightAttackM,	// 右中攻撃
-		//eUpAttackS,		// 上弱攻撃
-		//eUpAttackM,		// 上中攻撃
-		//eDownAttackS,		// 下弱攻撃
-		//eDownAttackM,		// 下中攻撃
+		eNum,			// アタックタイプの数
 	};
 	// 攻撃タイプ切り替え
 	void ChangeAttackType(int attacktype) override;
@@ -128,6 +130,15 @@ private:
 	// 攻撃時に移動する距離か
 	bool AttackRangeMin();
 
+	// プレイヤーの攻撃を検知したか？
+	bool IsPlayerAttackDetected() const;
+
+	/// <summary>
+	/// プレイヤーの攻撃を検知時の処理
+	/// </summary>
+	/// <returns>trueの場合は、状態が変わった</returns>
+	bool DetectedPlayerAttack();
+
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
 	// 戦闘相手の方へ向く
@@ -140,25 +151,38 @@ private:
 
 	// 待機状態の更新処理
 	void UpdateIdle();
-	// 戦闘待機状態の更新処理
-	void UpdateBattleIdle();
 	// 巡回中の更新処理
 	void UpdatePatrol();
+
+	// 戦闘待機状態の更新処理
+	void UpdateBattleIdle();
 	// 追跡中の更新処理
 	void UpdateChase();
 	// 見失った時の更新処理
 	void UpdateLost();
+
 	// 攻撃時の更新処理
 	void UpdateAttack();
+	
 	// 死亡時の更新処理
 	void UpdateDeath();
-	// 攻撃パリィ
-	void UpdateGuardParry();
-	// 防御パリィ
-	void UpdateAttackParry();
 	// 怯み時の更新処理
 	void UpdateStan();
 
+	// ↓攻撃ごとの更新処理↓
+
+	// 薙ぎ払い攻撃
+	void UpdateBlowL();
+	void UpdateBlowR();
+	// 回し蹴り攻撃
+	void UpdateRoundKickL();
+	void UpdateRoundKickR();
+	// 竜巻旋風脚タックル
+	void UpdateTackle();
+	// 押し出し攻撃
+	void UpdateHeadButt();
+	// 三連攻撃
+	void UpdataTripleAttack();
 
 
 	// 状態の文字列を取得
@@ -166,6 +190,9 @@ private:
 	// 状態の色を取得
 	CColor GetStateColor(int state) const;
 
+	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
+	float mAttackAngle;		// 攻撃範囲の角度
+	float mAttackLength;	// 攻撃範囲の距離
 
 	CDebugFieldOfView* mpDebugFov;  // 視野範囲のデバッグ表示
 	float mFovAngle;                // 視野範囲の角度
@@ -194,5 +221,8 @@ private:
 
 	int mpDetectType;	// 攻撃タイプ
 	bool mIsParry;	// スタンしているか
+
+	// プレイヤーの攻撃を既に検知済みである
+	bool mIsDetectedPlayerAttack;
 };
 #endif

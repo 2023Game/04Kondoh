@@ -101,9 +101,6 @@ private:
 	// モーションブラーの更新処理
 	/*void UpdateMotionBlur();*/
 
-	// 攻撃範囲内か？
-	bool IsAttackRange() const;
-
 
 	// アニメーションの種類
 	enum class EAnimType
@@ -193,10 +190,6 @@ private:
 	bool mIsBattleMode;				// バトルモードか
 	bool mIsLockOn;					// ロックオンしているか
 	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
-
-	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
-	float mAttackAngle;		// 攻撃範囲の角度
-	float mAttackLength;	// 攻撃範囲の距離
 
 
 	CVector mMoveSpeed;	// 前後左右の移動速度

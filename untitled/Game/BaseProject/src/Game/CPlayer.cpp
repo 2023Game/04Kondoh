@@ -28,6 +28,16 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define ATTACK2_CAP_UP		0.0f	// 攻撃コライダー2の上
 #define ATTACK2_CAP_DWON	-30.0f	// 攻撃コライダー2の下
 
+#define DAMAGE_S		1.0f	// 弱攻撃のダメージ
+#define DAMAGE_M		2.0f	// 中攻撃のダメージ
+#define DAMAGE_L		3.0f	// 強攻撃のダメージ
+#define DAMAGE_DIA		2.0f	// ダメージの倍率
+
+#define STAN_VAL_S		1.0f	// 弱攻撃のスタン値
+#define STAN_VAL_M		5.0f	// 中攻撃のスタン値
+#define STAN_VAL_L		10.0f	// 強攻撃のスタン値
+#define STAN_VAL_DIA	10.0f	// スタン値の倍率
+
 #define MOVE_SPEED 0.375f * 2.5f
 #define JUMP_SPEED 1.5f
 #define GRAVITY 0.0625f
@@ -396,15 +406,18 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) cons
 	if (mSelectAttackPower == EAttackPower::eAttackS)
 	{
 		// ダメージを与える
-		*outDamage = 1;
+		*outDamage = DAMAGE_S;
+		*outStan = STAN_VAL_S;
 	}
 	else if (mSelectAttackPower == EAttackPower::eAttackM)
 	{
-		*outDamage = 2;
+		*outDamage = DAMAGE_M;
+		*outStan = STAN_VAL_M;
 	}
 	else if (mSelectAttackPower == EAttackPower::eAttackL)
 	{
-		*outDamage = 3;
+		*outDamage = DAMAGE_L;
+		*outStan = STAN_VAL_L;
 	}
 
 	// パリィ出来るかどうか、判断する
@@ -412,19 +425,19 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) cons
 	{
 		if (mSelectAttackPower == EAttackPower::eAttackS)
 		{
-			*outDamage *= 2;
+			*outDamage = DAMAGE_S;
 			// 怯み度を加算する
-			*outStan = 10.0f;
+			*outStan * STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackM)
 		{
-			*outDamage *= 2;
-			*outStan = 50.0f;
+			*outDamage = DAMAGE_M;
+			*outStan * STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackL)
 		{
-			*outDamage *= 2;
-			*outStan = 100.0f;
+			*outDamage = DAMAGE_L;
+			*outStan * STAN_VAL_DIA;
 		}
 	}
 	

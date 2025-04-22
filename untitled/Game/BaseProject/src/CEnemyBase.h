@@ -75,11 +75,13 @@ protected:
 	// アニメーション切り替え
 	void ChangeAnimation(int type, bool restart = false);
 
-	int mState;           // 状態
-	int mAttackType;	  // 攻撃タイプ
-	int mStateStep;       // 状態内のステップ管理用
-	float mElapsedTime;   // 経過時間計測用
-	float mIdleTime;	  // 待機時間
+	int mState;				// 状態
+	int mAttackType;		// 攻撃タイプ
+
+	int mStateStep;			// 状態内のステップ管理用
+	float mElapsedTime;		// 経過時間計測用
+	float mIdleTime;		// 待機時間
+	float mBattleIdletime;	// 戦闘時の待機時間
 
 	// アニメーションデータのテーブル
 	const std::vector<AnimData>* mpAnimData;

@@ -54,6 +54,9 @@ public:
 
 private:
 
+	// ダメージ計算
+	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const;
+
 	// アニメーションの種類
 	enum class EAnimType
 	{
@@ -61,6 +64,7 @@ private:
 
 		eTPose,			// Tポーズ
 		eIdle,			// 待機
+		eBattleIdle,	// 戦闘待機
 		eWalk,			// 歩行
 		eRun,			// 走り
 		eDeath,			// 死亡
@@ -108,6 +112,8 @@ private:
 	// 攻撃タイプ
 	enum class EAttackType
 	{
+		eNone,			// 指定なし
+
 		eBlowL,			// 左薙ぎ払い
 		eBlowR,			// 右薙ぎ払い
 		eRoundKickL,	// 左回し蹴り
@@ -115,8 +121,6 @@ private:
 		eTackle,		// 竜巻旋風脚タックル
 		eHeadButt,		// 頭突き攻撃
 		eTripleAttack,	// 三連攻撃
-
-		eNum,			// アタックタイプの数
 	};
 	// 攻撃タイプ切り替え
 	void ChangeAttackType(int attacktype) override;
@@ -125,8 +129,14 @@ private:
 	bool IsFoundPlayer() const;
 	// 現在位置からプレイヤーが見えているかどうか
 	bool IsLookPlayer() const;
-	// プレイヤーを攻撃出来るかどうか
-	bool CanAttackPlayer() const;
+
+	/// <summary>
+	/// 攻撃出来るかどうか
+	/// </summary>
+	/// <param name="range">攻撃範囲を設定</param>
+	/// <returns>攻撃範囲より内側：true</returns>
+	bool CanAttackPlayer(float range) const;
+
 	// 攻撃時に移動する距離か
 	bool AttackRangeMin();
 
@@ -139,8 +149,14 @@ private:
 	/// <returns>trueの場合は、状態が変わった</returns>
 	bool DetectedPlayerAttack();
 
+	// どの攻撃をするか判定する
+	void AttackPickDetect();
+
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
+	// ランダムで移動
+	bool RandMove(float speed);
+
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);
 
@@ -163,7 +179,12 @@ private:
 
 	// 攻撃時の更新処理
 	void UpdateAttack();
-	
+
+	// 防御時の更新処理
+	void UpdateGuard();
+	// 回避時の更新処理
+	void UpdateAvoid();
+
 	// 死亡時の更新処理
 	void UpdateDeath();
 	// 怯み時の更新処理
@@ -187,12 +208,16 @@ private:
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
+	// 攻撃タイプの文字列取得
+	std::string GetAttackTypeStr(int state) const;
 	// 状態の色を取得
 	CColor GetStateColor(int state) const;
 
 	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
-	float mAttackAngle;		// 攻撃範囲の角度
-	float mAttackLength;	// 攻撃範囲の距離
+	// プレイヤーの攻撃範囲の角度
+	float mPlayerAttackAngle;
+	// プレイヤーの攻撃範囲の距離
+	float mPlayerAttackLength;
 
 	CDebugFieldOfView* mpDebugFov;  // 視野範囲のデバッグ表示
 	float mFovAngle;                // 視野範囲の角度
@@ -219,8 +244,13 @@ private:
 	CObjectBase* mpBattleTarget;	// 戦闘相手
 	bool mIsBattle;					// 戦闘状態か
 
+	int mAttackCount;		// 攻撃の回数
+	bool mIsTripleAttack;	// 三連攻撃状態か
+
+	/*
 	int mpDetectType;	// 攻撃タイプ
 	bool mIsParry;	// スタンしているか
+	*/
 
 	// プレイヤーの攻撃を既に検知済みである
 	bool mIsDetectedPlayerAttack;

@@ -43,7 +43,7 @@
 #define KICK_MOVE_DIST		10.0f	// 回し蹴り時の移動距離
 #define KICK_MOVE_START		1.0f	// 回し蹴り時の移動開始フレーム
 #define KICK_MOVE_END		50.0f	// 回し蹴り時の移動終了フレーム
-#define ATTACK_WAIT_TIME	1.0f	// 攻撃終了時の待ち時間
+#define ATTACK_WAIT_TIME	0.5f	// 攻撃終了時の待ち時間
 
 #define IDLE_TIME_MIN 0.0f			// 待機時の最短待機時間
 #define IDLE_TIME_MAX 10.0f			// 待機時の最長待機時間
@@ -72,7 +72,7 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 {
 	{ "",									true,	0.0f,	1.0f},	// Tポーズ
 	{ ANIM_PATH"Idle.x",					true,	126.0f,	1.0f},	// 待機
-	{ ANIM_PATH"BattleIdle.x",				true,	110.0f,	1.0f},	// 戦闘待機		
+	{ ANIM_PATH"BattleIdle.x",				true,	110.0f,	0.5f},	// 戦闘待機		
 	{ ANIM_PATH"Walk.x",					true,	42.0f,	1.0f},	// 歩行
 	{ ANIM_PATH"Run.x",						true,	23.0f,	1.0f},	// 走る
 	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
@@ -310,6 +310,8 @@ void CEnemyA::Update()
 	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	CDebugPrint::Print("　フレーム：%.2f\n", GetAnimationFrame());
 	CDebugPrint::Print("　最大待機時間：%.2f\n", mIdleTime);
+	CDebugPrint::Print("　三連攻撃の回数：%d\n", mAttackCount);
+	CDebugPrint::Print("　三連攻撃：%s\n", mIsTripleAttack ? "オン" : "オフ");
 
 }
 
@@ -820,10 +822,10 @@ bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
 }
 
 
-bool CEnemyA::RandMove(float speed)
-{
-
-}
+//bool CEnemyA::RandMove(float speed)
+//{
+//
+//}
 
 // 戦闘相手の方へ向く
 void CEnemyA::LookAtBattleTarget(bool immediate)
@@ -1270,17 +1272,17 @@ void CEnemyA::UpdateBlowL()
 			AttackEnd();
 			if (mIsTripleAttack)
 			{
+				mAttackCount++;
 				mStateStep++;
 			}
 			else
 			{
-				// 時間が経過したら、待機状態へ移行
+				// 待機状態へ移行
 				ChangeState((int)EState::eBattleIdle);
 			}
 		}
 		break;
-	case 3:	// ステップ3 : 攻撃終了時の待ち時間
-		mAttackCount++;
+	case 3:	// ステップ3 : 
 		ChangeAttackType((int)EAttackType::eTripleAttack);
 		ChangeState((int)EState::eAttack);
 		break;
@@ -1319,6 +1321,7 @@ void CEnemyA::UpdateBlowR()
 			AttackEnd();
 			if (mIsTripleAttack)
 			{
+				mAttackCount++;
 				mStateStep++;
 			}
 			else
@@ -1329,7 +1332,6 @@ void CEnemyA::UpdateBlowR()
 		}
 		break;
 	case 3:	// ステップ3 : 攻撃終了時の待ち時間
-		mAttackCount++;
 		ChangeAttackType((int)EAttackType::eTripleAttack);
 		ChangeState((int)EState::eAttack);
 		break;

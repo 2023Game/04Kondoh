@@ -83,7 +83,7 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ PLAYER_ANIM_PATH"LeftAttackL.x",	false,	99.0f,	1.0f	},	// 強左攻撃
 
 	{ PLAYER_ANIM_PATH"Defense.x",		true,	43.0f,	1.0f	},  // 防御
-	{ PLAYER_ANIM_PATH"Evasion.x",		false,	50.0f,	1.0f	},  // 回避
+	{ PLAYER_ANIM_PATH"Avoid.x",		false,	50.0f,	1.0f	},  // 回避
 
 	{ PLAYER_ANIM_PATH"jump_start.x",	false,	25.0f,	1.0f	},	// ジャンプ開始
 	{ PLAYER_ANIM_PATH"jump.x",			true,	1.0f,	1.0f	},	// ジャンプ中

@@ -77,6 +77,9 @@ private:
 		eTackle,		// 竜巻旋風脚タックル
 		eHeadButt,		// 押し出し攻撃
 
+//		eBlockIdle,		// 防御待機状態
+//		eBlockHit,		// 
+
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
 		eHit3,			// 仰け反り3
@@ -125,6 +128,8 @@ private:
 	// 攻撃タイプ切り替え
 	void ChangeAttackType(int attacktype) override;
 
+	// TODO:待機行動のクラスを作る
+
 	// プレイヤーが視野範囲内に入ったかどうか
 	bool IsFoundPlayer() const;
 	// 現在位置からプレイヤーが見えているかどうか
@@ -154,8 +159,6 @@ private:
 
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
-	// ランダムで移動
-	bool RandMove(float speed);
 
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);
@@ -203,8 +206,13 @@ private:
 	// 押し出し攻撃
 	void UpdateHeadButt();
 	// 三連攻撃
-	void UpdataTripleAttack();
+	void UpdateTripleAttack();
 
+	// 待機行動の更新処理
+	// ↓行動を自然にする為の更新処理↓
+
+	// 横移動(horizontal)
+	void UpdatteHorizonMove();
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
@@ -222,6 +230,8 @@ private:
 	CDebugFieldOfView* mpDebugFov;  // 視野範囲のデバッグ表示
 	float mFovAngle;                // 視野範囲の角度
 	float mFovLength;                // 視野範囲の距離
+
+	float mMoveAngle;		// 軌道運動する為の角度
 
 	CNavNode* mpLostPlayerNode;  // プレイヤーを見失った位置のノード
 
@@ -244,7 +254,7 @@ private:
 	CObjectBase* mpBattleTarget;	// 戦闘相手
 	bool mIsBattle;					// 戦闘状態か
 
-	int mAttackCount;		// 攻撃の回数
+	int mAttackCount;		// 今の攻撃の回数
 	bool mIsTripleAttack;	// 三連攻撃状態か
 
 	/*

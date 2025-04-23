@@ -22,6 +22,7 @@
 #define FOV_LENGTH 100.0f       // 視野範囲の距離
 #define EYE_HEIGHT 10.0f        // 視点の高さ
 #define WALK_SPEED 10.0f        // 歩きの速度
+#define BATTLE_WALK_SPEED 0.01f	// 戦闘時の移動
 #define RUN_SPEED 40.0f         // 走っている時の速度
 #define ROTATE_SPEED 6.0f       // 回転速度
 
@@ -43,7 +44,7 @@
 #define KICK_MOVE_DIST		10.0f	// 回し蹴り時の移動距離
 #define KICK_MOVE_START		1.0f	// 回し蹴り時の移動開始フレーム
 #define KICK_MOVE_END		50.0f	// 回し蹴り時の移動終了フレーム
-#define ATTACK_WAIT_TIME	0.5f	// 攻撃終了時の待ち時間
+#define ATTACK_WAIT_TIME	0.01f	// 攻撃終了時の待ち時間
 
 #define IDLE_TIME_MIN 0.0f			// 待機時の最短待機時間
 #define IDLE_TIME_MAX 10.0f			// 待機時の最長待機時間
@@ -121,6 +122,7 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mFovLength(FOV_LENGTH)
 	, mPlayerAttackAngle(ATTACK_ANGLE)
 	, mPlayerAttackLength(ATTACK_LENGTH)
+	, mMoveAngle()
 	, mpDebugFov(nullptr)
 	, mAttackStartPos(CVector::zero)
 	, mAttackEndPos(CVector::zero)
@@ -673,6 +675,7 @@ bool CEnemyA::IsPlayerAttackDetected() const
 
 }
 
+// プレイヤーの攻撃を検知時の処理
 bool CEnemyA::DetectedPlayerAttack()
 {
 	CPlayer* player = CPlayer::Instance();
@@ -822,10 +825,6 @@ bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
 }
 
 
-//bool CEnemyA::RandMove(float speed)
-//{
-//
-//}
 
 // 戦闘相手の方へ向く
 void CEnemyA::LookAtBattleTarget(bool immediate)
@@ -1024,6 +1023,7 @@ void CEnemyA::UpdateBattleIdle()
 		// 戦闘時の待機時間待ち
 		if (mElapsedTime < mBattleIdletime)
 		{
+			UpdatteHorizonMove();
 			// TODO:プレイヤーの攻撃範囲外に移動する
 			mElapsedTime += Times::DeltaTime();
 		}
@@ -1161,7 +1161,7 @@ void CEnemyA::UpdateAttack()
 	case (int)EAttackType::eRoundKickR:		UpdateRoundKickR();		break;
 	case (int)EAttackType::eTackle:			UpdateTackle();			break;
 	case (int)EAttackType::eHeadButt:		UpdateHeadButt();		break;
-	case (int)EAttackType::eTripleAttack:	UpdataTripleAttack();	break;
+	case (int)EAttackType::eTripleAttack:	UpdateTripleAttack();	break;
 	}
 
 	if (mAttackType == (int)EAttackType::eNone)
@@ -1282,9 +1282,9 @@ void CEnemyA::UpdateBlowL()
 			}
 		}
 		break;
-	case 3:	// ステップ3 : 
+	case 3:	// ステップ3 : 三連攻撃に切り替える
+		mStateStep = 0;
 		ChangeAttackType((int)EAttackType::eTripleAttack);
-		ChangeState((int)EState::eAttack);
 		break;
 	}
 }
@@ -1331,9 +1331,9 @@ void CEnemyA::UpdateBlowR()
 			}
 		}
 		break;
-	case 3:	// ステップ3 : 攻撃終了時の待ち時間
+	case 3:	// ステップ3 : 
+		mStateStep = 0;
 		ChangeAttackType((int)EAttackType::eTripleAttack);
-		ChangeState((int)EState::eAttack);
 		break;
 	}
 }
@@ -1533,7 +1533,7 @@ void CEnemyA::UpdateHeadButt()
 }
 
 // 三連攻撃
-void CEnemyA::UpdataTripleAttack()
+void CEnemyA::UpdateTripleAttack()
 {
 	switch (mAttackCount)
 	{
@@ -1541,9 +1541,8 @@ void CEnemyA::UpdataTripleAttack()
 	{
 		int attackrand = Math::Rand(0, 99);
 		// 三項演算子
-		attackrand < FIFTY_FIFTY_PROB ?
-			ChangeAttackType((int)EAttackType::eBlowL) : ChangeAttackType((int)EAttackType::eBlowR);
-		ChangeState((int)EState::eAttack);
+		ChangeAttackType(attackrand < FIFTY_FIFTY_PROB ? 
+			(int)EAttackType::eBlowL :(int)EAttackType::eBlowR);
 		break;
 	}
 	case 1:
@@ -1555,11 +1554,11 @@ void CEnemyA::UpdataTripleAttack()
 		else
 		{
 			int attackrand = Math::Rand(0, 99);
-			attackrand < FIFTY_FIFTY_PROB ?
-				ChangeAttackType((int)EAttackType::eBlowL) : ChangeAttackType((int)EAttackType::eBlowR);
-			ChangeState((int)EState::eAttack);
-			break;
+			ChangeAttackType(attackrand < FIFTY_FIFTY_PROB ?
+				(int)EAttackType::eBlowL : (int)EAttackType::eBlowR);
+			mElapsedTime = 0;
 		}
+		break;
 	}
 	case 2:
 	{
@@ -1570,11 +1569,11 @@ void CEnemyA::UpdataTripleAttack()
 		else
 		{
 			int attackrand = Math::Rand(0, 99);
-			attackrand < FIFTY_FIFTY_PROB ?
-				ChangeAttackType((int)EAttackType::eBlowL) : ChangeAttackType((int)EAttackType::eBlowR);
-			ChangeState((int)EState::eAttack);
-			break;
+			ChangeAttackType(attackrand < FIFTY_FIFTY_PROB ?
+				(int)EAttackType::eBlowL : (int)EAttackType::eBlowR);
+			mElapsedTime = 0;
 		}
+		break;
 	}
 	case 3:
 		mAttackCount = 0;
@@ -1632,4 +1631,38 @@ CColor CEnemyA::GetStateColor(int state) const
 	return CColor::white;
 }
 
+void CEnemyA::UpdatteHorizonMove()
+{
+	// 自身の座標
+	CVector pos = Position();
+	CPlayer* player = CPlayer::Instance();
+	CVector targetPos = player->Position();
+	CVector vec = targetPos - pos;
 
+	// 度数法の角度を弧度法に変換
+	float radius = Math::DegreeToRadian(mMoveAngle);
+
+	float addposX = cosf(radius) * vec.X();
+	float addposZ = sinf(radius) * vec.Z();
+
+	float posX = targetPos.X() + addposX;
+	float posZ = targetPos.Z() + addposZ;
+
+	mMoveAngle += 10.0f;
+
+	CVector forward = CVector::Slerp
+	(
+		vec, vec,
+		LOOKAT_SPEED * Times::DeltaTime()
+	);
+	Rotation(CQuaternion::LookRotation(forward));
+
+	// プレイヤーの方を向く
+	LookAtBattleTarget();
+
+	// 移動方向ベクトルを求める Normalized moveDir
+	CVector moveDir = CVector(posX, pos, posZ);
+	// 目的地まで移動する
+	pos += moveDir * BATTLE_WALK_SPEED;
+	Position(pos);
+}

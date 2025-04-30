@@ -2,6 +2,18 @@
 中攻撃　60～70
 小攻撃　40～50
 
+
+DwonAttackM 55.0f
 DwonAttackS 50.0f
+
 UpAttackL 92.0f
-UpAttackS 61.0f
+UpAttackM 69.0f
+UpAttackS 54.0f
+
+LeftAttackL 99.0f
+LeftAttackM 60.0f
+LeftAttackS 50.0f
+
+RightAttackL 86.0f
+RightAttackM 65.0f
+RightAttackS 60.0f

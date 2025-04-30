@@ -11,19 +11,20 @@
 // コンストラクタ
 CEnemyBase::CEnemyBase()
 	:CXCharacter(ETag::eEnemy, ETaskPriority::eEnemy)
-	,mState(0)
-	,mStateStep(0)
-	,mElapsedTime(0.0f)
-	,mIdleTime(0.0f)
-	,mBattleIdletime(0.0f)
-	,mpAnimData(nullptr)
-	,mpAttackData(nullptr)
-	,mMoveSpeed(CVector::zero)
-	,mMoveSpeedY(0.0f)
-	,mIsGrounded(false)
-	,mGroundNormal(CVector::up)
-	,mpBodyCol(nullptr)
-	,mpHpGauge(nullptr)
+	, mState(0)
+	, mStateStep(0)
+	, mElapsedTime(0.0f)
+	, mIdleTime(0.0f)
+	, mBattleIdletime(0.0f)
+	, mpAnimData(nullptr)
+	, mpAttackData(nullptr)
+	, mMoveSpeed(CVector::zero)
+	, mMoveSpeedY(0.0f)
+	, mIsGrounded(false)
+	, mIsHitWall(false)
+	, mGroundNormal(CVector::up)
+	, mpBodyCol(nullptr)
+	, mpHpGauge(nullptr)
 {
 	// エネミー管理クラスに自身を追加
 	CEnemyManager::Instance()->Add(this);
@@ -159,6 +160,16 @@ void CEnemyBase::Collision(CCollider* self, CCollider* other, const CHitInfo& hi
 			adjust.Y(0.0f);
 			Position(Position() + adjust * hit.weight);
 		}
+		else if (other->Layer() == ELayer::eWall)
+		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+
+			mIsHitWall = true;
+
+			// 押し戻しベクトルの分座標を移動
+			Position(Position() + adjust * hit.weight);
+		}
 	}
 	
 }
@@ -218,6 +229,7 @@ void CEnemyBase::Update()
 	CXCharacter::Update();
 
 	mIsGrounded = false;
+	mIsHitWall = false;
 
 	// TODO:HPゲージを更新
 

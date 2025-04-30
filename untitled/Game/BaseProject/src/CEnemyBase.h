@@ -77,7 +77,6 @@ protected:
 
 	int mState;				// 状態
 	int mAttackType;		// 攻撃タイプ
-
 	int mStateStep;			// 状態内のステップ管理用
 	float mElapsedTime;		// 経過時間計測用
 	float mIdleTime;		// 待機時間
@@ -88,16 +87,17 @@ protected:
 	// 攻撃データのテーブル
 	const std::vector<AttackData>* mpAttackData;
 
-	CVector mMoveSpeed;    // 前後左右の移動速度
-	float mMoveSpeedY;     // 重力やジャンプによる上下の移動速度
+	CVector mMoveSpeed;	// 前後左右の移動速度
+	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
 
-	bool mIsGrounded;      // 接地しているかどうか
-	CVector mGroundNormal; // 接地している地面の法線
+	bool mIsHitWall;		// 壁に当たったかどうか
+	bool mIsGrounded;		// 接地しているかどうか
+	CVector mGroundNormal;	// 接地している地面の法線
 
-	CCollider* mpBodyCol;  // 本体のコライダー
+	CCollider* mpBodyCol;	// 本体のコライダー
 
-	CGaugeUI3D* mpHpGauge;    // HPゲージ
-	CVector mGaugeOffsetPos;  // ゲージのオフセット座標
+	CGaugeUI3D* mpHpGauge;		// HPゲージ
+	CVector mGaugeOffsetPos;	// ゲージのオフセット座標
 
 
 };

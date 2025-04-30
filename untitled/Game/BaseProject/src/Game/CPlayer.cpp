@@ -102,14 +102,17 @@ CPlayer::CPlayer()
 	, mElapsedTime(0.0f)
 	, mMoveSpeedY(0.0f)
 	, mpRideObject(nullptr)
-	, mpLockOnTarget(nullptr)
 	, mIsGrounded(false)
 	, mIsPlayedSlashSE(false)
 	, mIsSpawnedSlashEffect(false)
-	, mIsLockOn(false)
+	, mIsBattleMode(true)
+	, mIsGuard(false)
 {
 	//インスタンスの設定
 	spInstance = this;
+
+	mMaxHp = 100;
+	mHp = mMaxHp;
 
 	// モデルデータ取得
 	CModelX* model = CResourceManager::Get<CModelX>("Player");
@@ -311,17 +314,17 @@ void CPlayer::ChangeState(EState state)
 	mElapsedTime = 0.0f;
 }
 
-void CPlayer::ChangeEvasion()
+void CPlayer::ChangeAvoid()
 {
 	// キーの入力情報から回避方向を求める
-	mEvaDir = CalcMoveVec(true);
+	mAvoidDir = CalcMoveVec(true);
 	// 回避状態へ切り替え
-	ChangeState(EState::eEvasion);
+	ChangeState(EState::eAvoid);
 }
 
 void CPlayer::ChangeAttack()
 {
-	
+
 	if (mState == EState::eIdle)
 	{
 		if (CInput::PushKey(VK_LBUTTON))
@@ -352,9 +355,8 @@ void CPlayer::ChangeAttack()
 			mAttackDir = EAttackDir::eUp;
 		}
 	}
-	
 	// 下入力で、下攻撃
-	else if (mState == EState::eDefense)
+	else if (mState == EState::eGuard)
 	{
 		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
 		{
@@ -362,6 +364,23 @@ void CPlayer::ChangeAttack()
 			ChangeState(EState::eAttack);
 			mAttackPower = mSelectAttackPower;
 			mAttackDir = EAttackDir::eDown;
+		}
+	}
+	else if (mState == EState::eAttack)
+	{
+		if (CInput::PushKey(VK_LBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eLeft;
+		}
+		else if (CInput::PushKey(VK_RBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eRight;
 		}
 	}
 }
@@ -465,7 +484,7 @@ void CPlayer::UpdateAttackIdle()
 	{
 		if (CInput::Key(VK_SHIFT))
 		{
-			ChangeState(EState::eDefense);
+			ChangeState(EState::eGuard);
 		}
 		// SPACEキーでジャンプ開始へ移行
 		else if (CInput::PushKey(VK_SPACE))
@@ -475,7 +494,7 @@ void CPlayer::UpdateAttackIdle()
 		// シフトで回避
 		else if (CInput::Key('F'))
 		{
-			ChangeEvasion();
+			ChangeAvoid();
 		}
 		// まだ使えない
 		//else if (CInput::PushKey('R'))
@@ -509,6 +528,7 @@ void CPlayer::UpdateAttack()
 	case 2:
 		if (GetAnimationFrameRatio() >= 0.75f)
 		{
+			ChangeAttack();
 			// 攻撃終了
 			AttackEnd();
 			mStateStep++;
@@ -566,7 +586,7 @@ void CPlayer::UpdateAttack()
 //}
 
 // 回避
-void CPlayer::UpdateEvasion()
+void CPlayer::UpdateAvoid()
 {
 	mMoveSpeed = CVector::zero;
 
@@ -574,7 +594,7 @@ void CPlayer::UpdateEvasion()
 	{
 	case 0:
 		
-		ChangeAnimation(EAnimType::eEvasion);
+		ChangeAnimation(EAnimType::eAvoid);
 		mStateStep++;
 		break;
 	case 1:
@@ -585,7 +605,7 @@ void CPlayer::UpdateEvasion()
 			if (frame < EVA_MOVE_END)
 			{
 				// 回避時の移動速度を求める
-				mMoveSpeed = mEvaDir * EVA_MOVE_SPEED * Times::DeltaTime();
+				mMoveSpeed = mAvoidDir * EVA_MOVE_SPEED * Times::DeltaTime();
 			}
 			else
 			{
@@ -615,11 +635,11 @@ void CPlayer::UpdateEvasion()
 }
 
 // 防御
-void CPlayer::UpdateDefense()
+void CPlayer::UpdateGuard()
 {
 	mMoveSpeed = CVector::zero;
-	ChangeAnimation(EAnimType::eDefense);
-	if (CInput::PullKey(VK_RBUTTON))
+	ChangeAnimation(EAnimType::eGuard);
+	if (CInput::PullKey(VK_SHIFT))
 	{
 		mState = EState::eIdle;
 	}
@@ -848,12 +868,12 @@ void CPlayer::Update()
 	//	UpdateAttackWait();
 		break;
 		// 防御
-	case EState::eDefense:
-		UpdateDefense();
+	case EState::eGuard:
+		UpdateGuard();
 		break;
 		// 回避
-	case EState::eEvasion:
-		UpdateEvasion();
+	case EState::eAvoid:
+		UpdateAvoid();
 		break;
 		// ジャンプ開始
 	case EState::eJumpStart:
@@ -882,7 +902,7 @@ void CPlayer::Update()
 		|| mState == EState::eJumpStart
 		|| mState == EState::eJump
 		|| mState == EState::eJumpEnd
-		|| mState == EState::eDefense)
+		|| mState == EState::eGuard)
 	{
 		ChangeAttack();
 	}
@@ -991,12 +1011,15 @@ void CPlayer::Update()
 
 	CDebugPrint::Print("FPS:%f\n \n", Times::FPS());
 
+	CDebugPrint::Print("　HP：%d\n", (int)mHp);
+	CDebugPrint::Print("　怯み度：%.2f\n", mStanPoints);
 	CDebugPrint::Print("■プレイヤーの情報\n");
 	CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
 	CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
 
 	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
+//	CDebugPrint::Print("　防御しているか：%s\n", mIsGuard ? "はい" : "いいえ");
 	CDebugPrint::Print("　\n");
 
 	mIsGrounded = false;

@@ -74,11 +74,15 @@ private:
 		eBlowR,			// 右薙ぎ払い
 		eRoundKickL,	// 左回し蹴り
 		eRoundKickR,	// 右回し蹴り
-		eTackle,		// 竜巻旋風脚タックル
-		eHeadButt,		// 押し出し攻撃
+		eTackle,		// タックル
+		eTackleWait,	// タックルの待ち時間
+		eHeadButt,		// 頭突き攻撃
 
-//		eBlockIdle,		// 防御待機状態
-//		eBlockHit,		// 
+		eBattleWalkL,	// 戦闘時の左歩行
+		eBattleWalkR,	// 戦闘時の右歩行
+
+		eGuardIdle,		// 防御待機状態
+		eGuardHit,		// 防御時のヒットアクション
 
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
@@ -121,7 +125,8 @@ private:
 		eBlowR,			// 右薙ぎ払い
 		eRoundKickL,	// 左回し蹴り
 		eRoundKickR,	// 右回し蹴り
-		eTackle,		// 竜巻旋風脚タックル
+		eTackle,		// タックル
+		eTackleWait,	// タックル終了時の予備動作
 		eHeadButt,		// 頭突き攻撃
 		eTripleAttack,	// 三連攻撃
 	};
@@ -147,6 +152,8 @@ private:
 
 	// プレイヤーの攻撃を検知したか？
 	bool IsPlayerAttackDetected() const;
+	// プレイヤーの攻撃範囲内か？
+	bool IsPlayerAttackRange() const;
 
 	/// <summary>
 	/// プレイヤーの攻撃を検知時の処理
@@ -201,8 +208,10 @@ private:
 	// 回し蹴り攻撃
 	void UpdateRoundKickL();
 	void UpdateRoundKickR();
-	// 竜巻旋風脚タックル
+	// タックル
 	void UpdateTackle();
+	// タックル終了時の予備動作
+	void UpdateTackleWait();
 	// 押し出し攻撃
 	void UpdateHeadButt();
 	// 三連攻撃
@@ -212,7 +221,11 @@ private:
 	// ↓行動を自然にする為の更新処理↓
 
 	// 横移動(horizontal)
-	void UpdatteHorizonMove();
+	void UpdateHorizonMove();
+	// 前進行動(forward)
+	void UpdateForwardMove();
+	// 後退行動(back)
+	void UpdateBackMove();
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
@@ -231,7 +244,7 @@ private:
 	float mFovAngle;                // 視野範囲の角度
 	float mFovLength;                // 視野範囲の距離
 
-	float mMoveAngle;		// 軌道運動する為の角度
+	float mRandAngle;		// ランダムの移動角度
 
 	CNavNode* mpLostPlayerNode;  // プレイヤーを見失った位置のノード
 
@@ -248,14 +261,19 @@ private:
 	// 右手の球コライダ
 	CColliderSphere* mpRAttackCol;
 
+
+
 	std::vector<CNavNode*> mMoveRoute;	// 求めた最短経路記憶用
 	int mNextMoveIndex;					// 次に移動するノードのインデックス値
 
 	CObjectBase* mpBattleTarget;	// 戦闘相手
 	bool mIsBattle;					// 戦闘状態か
 
+	bool mIsGuard;		// ガード状態か
+
 	int mAttackCount;		// 今の攻撃の回数
 	bool mIsTripleAttack;	// 三連攻撃状態か
+	int mTackleCount;		// タックルが出来るまでのカウント
 
 	/*
 	int mpDetectType;	// 攻撃タイプ

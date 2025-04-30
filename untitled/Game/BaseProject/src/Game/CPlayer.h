@@ -25,8 +25,8 @@ public:
 		eAttack,	// 攻撃
 		eAttackWait,// 攻撃終了待ち
 
-		eDefense,   // 防御
-		eEvasion,   // 回避
+		eGuard,   // 防御
+		eAvoid,   // 回避
 
 		eJumpStart,	// ジャンプ開始
 		eJump,		// ジャンプ中
@@ -83,12 +83,11 @@ private:
 	void UpdateAttackIdle();
 	// 攻撃
 	void UpdateAttack();
-	// 攻撃終了待ち
-//	void UpdateAttackWait();
-	// 回避
-	void UpdateEvasion();
 	// 防御
-	void UpdateDefense();
+	void UpdateGuard();
+	// 回避
+	void UpdateAvoid();
+
 	// ジャンプ開始
 	void UpdateJumpStart();
 	// ジャンプ中
@@ -131,8 +130,8 @@ private:
 		eLeftAttackM,	// 中左攻撃アニメーション
 		eLeftAttackL,	// 強左攻撃アニメーション
 
-		eDefense,		// 防御
-		eEvasion,		// 回避
+		eGuard,		// 防御
+		eAvoid,		// 回避
 
 		eJumpStart,		// ジャンプ開始
 		eJump,			// ジャンプ中
@@ -167,7 +166,7 @@ private:
 	//状態切り替え
 	void ChangeState(EState state);
 	// 回避状態へ切り替え
-	void ChangeEvasion();
+	void ChangeAvoid();
 	// 攻撃状態へ切り替え
 	void ChangeAttack();
 
@@ -183,14 +182,14 @@ private:
 	EMode mMode;  //モード選択
 
 	// ロックオンするターゲットを変更
-	void ChangeLockOnTarget();
+//	void ChangeLockOnTarget();
 	// ターゲットをロックオンする
-	void LockOnTarget();
+//	void LockOnTarget();
+//	bool mIsLockOn;					// ロックオンしているか
+//	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
 	
-	bool mIsBattleMode;				// バトルモードか
-	bool mIsLockOn;					// ロックオンしているか
-	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
-
+	bool mIsBattleMode;		// バトルモードか
+	bool mIsGuard;			// 防御しているか
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
@@ -209,7 +208,7 @@ private:
 
 	CTransform* mpRideObject;
 
-	CVector mEvaDir;    // 回避方向
+	CVector mAvoidDir;    // 回避方向
 
 	int mStateStep;     // 状態内のステップ管理用
 	float mElapsedTime; // 経過時間計測用

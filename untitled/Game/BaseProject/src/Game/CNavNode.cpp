@@ -5,7 +5,7 @@
 // ノードのY座標のオフセット値
 #define NODE_OFFSET_Y 5.0f
 // 探すノードの距離の限界値
-#define FIND_NODE_DISTANCE 70.0f
+#define FIND_NODE_DISTANCE 50.0f
 
 // コンストラクタ
 CNavNode::CNavNode(const CVector& pos, bool isDestNode)

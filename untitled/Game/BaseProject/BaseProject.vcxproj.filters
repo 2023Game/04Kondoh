@@ -394,6 +394,9 @@
     <ClCompile Include="src\CFieldWall.cpp">
       <Filter>ソース ファイル\Game\Field</Filter>
     </ClCompile>
+    <ClCompile Include="src\BaseSystem\CFontData.cpp">
+      <Filter>ソース ファイル\BaseSystem\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -710,6 +713,9 @@
     </ClInclude>
     <ClInclude Include="src\CFieldWall.h">
       <Filter>ソース ファイル\Game\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BaseSystem\CFontData.h">
+      <Filter>ソース ファイル\BaseSystem\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

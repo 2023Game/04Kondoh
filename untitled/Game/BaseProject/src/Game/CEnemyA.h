@@ -39,10 +39,12 @@ public:
 
 	// ダメージを受ける
 	void TakeDamage(int damage,float stan, CObjectBase* causer) override;
-	// 死亡
+	// 死亡処理
 	void Death() override;
 	// 怯み処理
-	void Stan() override;
+	void Stun() override;
+	// 仰け反り処理
+	void Hit() override;
 
 	/// <summary>
 	/// 衝突処理
@@ -67,8 +69,9 @@ private:
 		eBattleIdle,	// 戦闘待機
 		eWalk,			// 歩行
 		eRun,			// 走り
+		eStun,			// 混乱
+		eStunWait,		// 混乱待ち時間
 		eDeath,			// 死亡
-		eStan,			// 気絶アニメーション
 
 		eBlowL,			// 左薙ぎ払い
 		eBlowR,			// 右薙ぎ払い
@@ -110,7 +113,11 @@ private:
 		eGuard,			// 防御
 		eAvoid,			// 回避
 
-		eStan,			// 怯む
+		eKnockBack,		// ノックバック
+		eHit,			// 仰け反り
+		eStun,			// 混乱
+		eStunWait,		// 混乱待ち時間
+		eParry,			// パリィ
 		eDeath,			// 死亡
 	};
 	//状態切り替え
@@ -147,8 +154,8 @@ private:
 	/// <returns>攻撃範囲より内側：true</returns>
 	bool CanAttackPlayer(float range) const;
 
-	// 攻撃時に移動する距離か
-	bool AttackRangeMin();
+	// 移動する攻撃範囲か？
+	bool IsMoveAttackRange();
 
 	// プレイヤーの攻撃を検知したか？
 	bool IsPlayerAttackDetected() const;
@@ -173,6 +180,7 @@ private:
 	// 次に巡回するポイントを変更
 	void ChangePatrolPoint();
 
+
 	// ↓ステートベースAI↓
 
 	// 待機状態の更新処理
@@ -195,10 +203,19 @@ private:
 	// 回避時の更新処理
 	void UpdateAvoid();
 
+	// ノックバック時の更新処理
+	void UpdateKnockBack();
+	// 仰け反り時の更新処理
+	void UpdateHit();
+	// 混乱時の更新処理
+	void UpdateStun();
+	// 混乱待ちの更新処理
+	void UpdateStunWait();
+	// パリィ時の更新処理
+	void UpdateParry();
 	// 死亡時の更新処理
 	void UpdateDeath();
-	// 怯み時の更新処理
-	void UpdateStan();
+
 
 	// ↓攻撃ごとの更新処理↓
 
@@ -217,6 +234,7 @@ private:
 	// 三連攻撃
 	void UpdateTripleAttack();
 
+
 	// 待機行動の更新処理
 	// ↓行動を自然にする為の更新処理↓
 
@@ -226,6 +244,7 @@ private:
 	void UpdateForwardMove();
 	// 後退行動(back)
 	void UpdateBackMove();
+
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
@@ -244,43 +263,45 @@ private:
 	float mFovAngle;                // 視野範囲の角度
 	float mFovLength;                // 視野範囲の距離
 
-	float mRandAngle;		// ランダムの移動角度
-
-	CNavNode* mpLostPlayerNode;  // プレイヤーを見失った位置のノード
+	float mRandMoveAngle;	// ランダムの移動角度
+	int mRandHitAnim;		// ランダムな仰け反りアニメーション
 
 	CVector mAttackStartPos; // 攻撃開始時の位置
 	CVector mAttackEndPos;   // 攻撃終了時の位置
 
-	// 巡回ポイントのリスト
-	std::vector<CNavNode*> mPatrolPoints;
-	int mNextPatrolIndex; // 次に巡回するポイントの番号
-
 
 	// 左手の球コライダ
-	CColliderSphere* mpLAttackCol; 
+	CColliderSphere* mpLHandCol; 
 	// 右手の球コライダ
-	CColliderSphere* mpRAttackCol;
+	CColliderSphere* mpRHandCol;
+	// 左足の球コライダ
+	CColliderSphere* mpLFootCol;
+	// 右足の球コライダ
+	CColliderSphere* mpRFootCol;
 
+	// 戦闘相手
+	CObjectBase* mpBattleTarget;
 
+	bool mIsBattle;			// 戦闘状態か
+	bool mIsGuard;			// ガード状態か
+	bool mIsTripleAttack;	// 三連攻撃状態か
 
-	std::vector<CNavNode*> mMoveRoute;	// 求めた最短経路記憶用
-	int mNextMoveIndex;					// 次に移動するノードのインデックス値
-
-	CObjectBase* mpBattleTarget;	// 戦闘相手
-	bool mIsBattle;					// 戦闘状態か
-
-	bool mIsGuard;		// ガード状態か
+//	float mStunThreshold;	// 怯み度のしきい値
 
 	int mAttackCount;		// 今の攻撃の回数
-	bool mIsTripleAttack;	// 三連攻撃状態か
 	int mTackleCount;		// タックルが出来るまでのカウント
-
-	/*
-	int mpDetectType;	// 攻撃タイプ
-	bool mIsParry;	// スタンしているか
-	*/
 
 	// プレイヤーの攻撃を既に検知済みである
 	bool mIsDetectedPlayerAttack;
+
+	std::vector<CNavNode*> mMoveRoute;	// 求めた最短経路記憶用
+	int mNextMoveIndex;		// 次に移動するノードのインデックス値
+	
+	// プレイヤーを見失った位置のノード
+	CNavNode* mpLostPlayerNode; 
+	// 巡回ポイントのリスト
+	std::vector<CNavNode*> mPatrolPoints;
+	// 次に巡回するポイントの番号
+	int mNextPatrolIndex;
 };
 #endif

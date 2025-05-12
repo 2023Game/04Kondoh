@@ -63,18 +63,31 @@ public:
 	/// <param name="damage">受けるダメージ量</param>
 	/// <param name="stan">加算される怯み度</param>
 	/// <param name="causer">ダメージを与えたもの</param>
-	virtual void TakeDamage(int damage,float stan, CObjectBase* causer);
+	virtual void TakeDamage(int damage,float stun, CObjectBase* causer);
+
+	// 防御処理
+	virtual void Guard();
+
+	// 回避処理
+	virtual void Avoid();
+
+	// ノックバック
+	virtual void KnockBack();
+
+	// 仰け反り処理
+	virtual void Hit();
+
+	// 怯み処理
+	virtual void Stun();
+
+	// 混乱待ち時間
+//	virtual void StunWait();
 
 	// 死亡
 	virtual void Death();
+
 	// 死んでいるかどうか
 	bool IsDeath() const;
-
-	// 怯み処理
-	virtual void Stan();
-
-	// 防御処理
-	//virtual void Defense();
 
 	// 更新
 	void Update()override;
@@ -83,8 +96,11 @@ protected:
 	int mMaxHp;	// 最大HP
 	int mHp;	// 現在HP
 
-	float mStanPoints;		// 現在の怯み度
-	float mStanThreshold;	// 怯み度のしきい値
+	float mStunPoints;		// 現在の怯み度
+	float mStunThreshold;	// 怯み度のしきい値
+
+	bool mIsAttackParry;	// 攻撃時のパリィ
+	bool mIsGuardParry;		// 防御時のパリィ
 
 	EAttackDir mAttackDir;
 	EAttackPower mAttackPower;

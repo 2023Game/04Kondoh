@@ -19,9 +19,10 @@
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
 
-#define PLAYER_CAP_UP    13.5f     // プレイヤーの高さ
-#define PLAYER_CAP_DWON   2.5f     // プレイヤーの底
-#define PLAYER_WIDTH      2.0f     // プレイヤーの幅
+#define PLAYER_HP			10000	// プレイヤーのHP
+#define PLAYER_CAP_UP		13.5f	// プレイヤーの高さ
+#define PLAYER_CAP_DWON		 2.5f	// プレイヤーの底
+#define PLAYER_WIDTH		 2.0f	// プレイヤーの幅
 
 #define ATTACK1_CAP_UP		80.0f	// 攻撃コライダー1の上
 #define ATTACK1_CAP_DWON	0.0f	// 攻撃コライダー1の下
@@ -34,7 +35,7 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define DAMAGE_DIA		2.0f	// ダメージの倍率
 
 #define STAN_VAL_S		1.0f	// 弱攻撃のスタン値
-#define STAN_VAL_M		5.0f	// 中攻撃のスタン値
+#define STAN_VAL_M		100.0f	// 中攻撃のスタン値
 #define STAN_VAL_L		10.0f	// 強攻撃のスタン値
 #define STAN_VAL_DIA	10.0f	// スタン値の倍率
 
@@ -54,50 +55,52 @@ CPlayer* CPlayer::spInstance = nullptr;
 // モーションブラーの反復回数
 #define MOTION_BLUR_COUNT 5
 
-#define PLAYER_ANIM_PATH "Character\\New Player\\anim\\"
+// アニメーションファイルのパス
+#define PLAYER_ANIM_PATH "Character\\Player\\anim\\"
+// 攻撃アニメーションファイルのパス
+#define ATTACK_ANIM_PATH "Character\\Player\\anim\\Attack\\"
+
 // プレイヤーのアニメーションデータのテーブル
 const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 {
-	{ "",								true,	0.0f,	1.0f	},	// 戦闘時のTポーズ
-	{ PLAYER_ANIM_PATH"AttackIdle.x",	true,	170.0f,	1.0f	},	// 戦闘時の待機
+	{ "",								 true,	  0.0f,	 1.0f},	// 戦闘時のTポーズ
+	{ PLAYER_ANIM_PATH"BattleIdle.x",	 true,	170.0f,	 1.0f},	// 戦闘時の待機
 
-	{ PLAYER_ANIM_PATH"AttackWalk.x",	true,	34.0f,	10.0f	},	// 歩行
-	{ PLAYER_ANIM_PATH"BackWalk.x",		true,	39.0f,	1.0f	},	// 後ろ方向歩行
-	{ PLAYER_ANIM_PATH"LeftWalk.x",		true,	40.0f,	1.0f	},	// 左方向歩行
-	{ PLAYER_ANIM_PATH"RightWalk.x",	true,	35.0f,	1.0f	},	// 右方向歩行
+	{ PLAYER_ANIM_PATH"BattleWalk.x",	 true,	 34.0f,	10.0f},	// 歩行
+	{ PLAYER_ANIM_PATH"BackWalk.x",		 true,	 39.0f,	 1.0f},	// 後ろ方向歩行
+	{ PLAYER_ANIM_PATH"LeftWalk.x",		 true,	 40.0f,	 1.0f},	// 左方向歩行
+	{ PLAYER_ANIM_PATH"RightWalk.x",	 true,	 35.0f,	 1.0f},	// 右方向歩行
 
-	{ PLAYER_ANIM_PATH"UpAttackS.x",	false,	54.0f,	1.0f	},	// 弱上攻撃
-	{ PLAYER_ANIM_PATH"UpAttackM.x",	false,	69.0f,	0.1f	},	// 中上攻撃
-	{ PLAYER_ANIM_PATH"UpAttackL.x",	false,	92.0f,	1.0f	},	// 強上攻撃
+	{ ATTACK_ANIM_PATH"UpAttackS.x",	false,	 54.0f,	 1.0f},	// 弱上攻撃
+	{ ATTACK_ANIM_PATH"UpAttackM.x",	false,	 69.0f,	 0.1f},	// 中上攻撃
+	{ ATTACK_ANIM_PATH"UpAttackL.x",	false,	 92.0f,	 1.0f},	// 強上攻撃
 
-	{ PLAYER_ANIM_PATH"DwonAttackS.x",	false,	50.0f,	1.0f	},	// 弱下攻撃
-	{ PLAYER_ANIM_PATH"DwonAttackM.x",	false,	55.0f,	1.0f	},	// 中下攻撃
-	{ PLAYER_ANIM_PATH"DwonAttackL.x",	false,	90.0f,	1.0f	},	// 強下攻撃
+	{ ATTACK_ANIM_PATH"RightAttackS.x",	false,	 60.0f,	 1.0f},	// 弱右攻撃
+	{ ATTACK_ANIM_PATH"RightAttackM.x",	false,	 65.0f,	 1.5f},	// 中右攻撃
+	{ ATTACK_ANIM_PATH"RightAttackL.x",	false,	 86.0f,	 1.0f},	// 強右攻撃
 
-	{ PLAYER_ANIM_PATH"RightAttackS.x",	false,	60.0f,	1.0f	},	// 弱右攻撃
-	{ PLAYER_ANIM_PATH"RightAttackM.x",	false,	65.0f,	1.5f	},	// 中右攻撃
-	{ PLAYER_ANIM_PATH"RightAttackL.x",	false,	86.0f,	1.0f	},	// 強右攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackS.x",	false,	 50.0f,	 1.0f},	// 弱左攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackM.x",	false,	 60.0f,	 1.0f},	// 中左攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackL.x",	false,	 99.0f,	 1.0f},	// 強左攻撃
 
-	{ PLAYER_ANIM_PATH"LeftAttackS.x",	false,	50.0f,	1.0f	},	// 弱左攻撃
-	{ PLAYER_ANIM_PATH"LeftAttackM.x",	false,	60.0f,	1.0f	},	// 中左攻撃
-	{ PLAYER_ANIM_PATH"LeftAttackL.x",	false,	99.0f,	1.0f	},	// 強左攻撃
+	{ PLAYER_ANIM_PATH"Defense.x",		 true,	 43.0f,	 1.0f},  // 防御
+	{ PLAYER_ANIM_PATH"Avoid.x",		false,	 50.0f,	 3.0f},  // 回避
 
-	{ PLAYER_ANIM_PATH"Defense.x",		true,	43.0f,	1.0f	},  // 防御
-	{ PLAYER_ANIM_PATH"Avoid.x",		false,	50.0f,	1.0f	},  // 回避
+	{ PLAYER_ANIM_PATH"jump_start.x",	false,	 25.0f,	 1.0f},	// ジャンプ開始
+	{ PLAYER_ANIM_PATH"jump.x",			 true,	  1.0f,	 1.0f},	// ジャンプ中
+	{ PLAYER_ANIM_PATH"jump_end.x",		false,	 26.0f,	 1.0f},	// ジャンプ終了
+	{ PLAYER_ANIM_PATH"jump_Attack.x",	false,	 47.0f,	 1.0f},	// ジャンプ攻撃
 
-	{ PLAYER_ANIM_PATH"jump_start.x",	false,	25.0f,	1.0f	},	// ジャンプ開始
-	{ PLAYER_ANIM_PATH"jump.x",			true,	1.0f,	1.0f	},	// ジャンプ中
-	{ PLAYER_ANIM_PATH"jump_end.x",		false,	26.0f,	1.0f	},	// ジャンプ終了
-	{ PLAYER_ANIM_PATH"jump_Attack.x",	false,	47.0f,	1.0f	},	// ジャンプ攻撃
+	{ PLAYER_ANIM_PATH"Damage1.x",		false,	 30.0f,	 1.0f},	// 仰け反り1
+	{ PLAYER_ANIM_PATH"Damage2.x",		false,	 27.0f,	 1.0f},	// 仰け反り2
 };
 
 
 // コンストラクタ
 CPlayer::CPlayer()
 	: CXCharacter(ETag::ePlayer, ETaskPriority::ePlayer)
-	, mState(EState::eIdle)
+	, mState(EState::eBattleIdle)
 	, mSelectAttackPower(EAttackPower::eAttackM)
-	, mMode(EMode::eBattle)
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
 	, mMoveSpeedY(0.0f)
@@ -111,7 +114,7 @@ CPlayer::CPlayer()
 	//インスタンスの設定
 	spInstance = this;
 
-	mMaxHp = 100;
+	mMaxHp = PLAYER_HP;
 	mHp = mMaxHp;
 
 	// モデルデータ取得
@@ -129,7 +132,7 @@ CPlayer::CPlayer()
 	Init(model);
 
 	// 最初は待機アニメーションを再生
-	ChangeAnimation(EAnimType::eAttackTPose);
+	ChangeAnimation(EAnimType::eBattleTPose);
 
 	// カプセルコライダー作成
 	mpBodyCol = new CColliderCapsule
@@ -218,10 +221,10 @@ CPlayer::~CPlayer()
 }
 
 
+
 bool CPlayer::IsAttacking() const
 {
-	return mState == EState::eAttack
-		|| mState == EState::eAttackWait;
+	return mState == EState::eAttack;
 }
 
 void CPlayer::AttackStart()
@@ -254,559 +257,35 @@ void CPlayer::AttackEnd()
 	mpAttackCol3->SetEnable(false);
 }
 
-// 現在の状態を取得
-CPlayer::EState CPlayer::GetState()
+void CPlayer::TakeDamage(int damage, float stan, CObjectBase* causer)
 {
-	return mState;
-}
-
-
-CPlayer* CPlayer::Instance()
-{
-	return spInstance;
-}
-
-// アニメーション切り替え
-void CPlayer::ChangeAnimation(EAnimType type, bool restart)
-{
-	if (!(EAnimType::None < type && type < EAnimType::Num)) return;
-	AnimData data = ANIM_DATA[(int)type];
-	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength, restart);
-}
-
-// 攻撃方向や、攻撃の威力によって
-// 切り替えるアニメーションの種類を取得
-CPlayer::EAnimType CPlayer::GetAttackAnimType() const
-{
-	switch (mAttackDir)
+	// ベースクラスのダメージ処理を呼び出す
+	CCharaBase::TakeDamage(damage, stan, causer);
+	// 死亡しなければ
+	if (!IsDeath())
 	{
-	case EAttackDir::eUp:
-		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eUpAttackS;
-		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eUpAttackM;
-		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eUpAttackL;
-		break;
-	case EAttackDir::eDown:
-		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eDwonAttackS;
-		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eDwonAttackM;
-		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eDwonAttackL;
-		break;
-	case EAttackDir::eLeft:
-		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eLeftAttackS;
-		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eLeftAttackM;
-		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eLeftAttackL;
-		break;
-	case EAttackDir::eRight:
-		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eRightAttackS;
-		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eRightAttackM;
-		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eRightAttackL;
-		break;
-	}
-	return EAnimType::None;
-}
+		// 攻撃を加えた相手の方向へ向く
+		CVector targetPos = causer->Position();
+		CVector vec = targetPos - Position();
+		vec.Y(0.0f);
+		Rotation(CQuaternion::LookRotation(vec.Normalized()));
 
-void CPlayer::ChangeState(EState state)
-{
-	// すでに同じ状態であれば、処理しない
-	if (state == mState) return;
-
-	mState = state;
-	mStateStep = 0;
-	mElapsedTime = 0.0f;
-}
-
-void CPlayer::ChangeAvoid()
-{
-	// キーの入力情報から回避方向を求める
-	mAvoidDir = CalcMoveVec(true);
-	// 回避状態へ切り替え
-	ChangeState(EState::eAvoid);
-}
-
-void CPlayer::ChangeAttack()
-{
-
-	if (mState == EState::eIdle)
-	{
-		if (CInput::PushKey(VK_LBUTTON))
-		{
-			mMoveSpeed = CVector::zero;
-			ChangeState(EState::eAttack);
-			mAttackPower = mSelectAttackPower;
-			mAttackDir = EAttackDir::eLeft;
-		}
-		else if (CInput::PushKey(VK_RBUTTON))
-		{
-			mMoveSpeed = CVector::zero;
-			ChangeState(EState::eAttack);
-			mAttackPower = mSelectAttackPower;
-			mAttackDir = EAttackDir::eRight;
-		}
-	}
-	// 上入力で、上攻撃
-	else if (mState == EState::eJump
-		|| mState == EState::eJumpStart
-		|| mState == EState::eJumpEnd)
-	{
-		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
-		{
-			mMoveSpeed = CVector::zero;
-			ChangeState(EState::eAttack);
-			mAttackPower = mSelectAttackPower;
-			mAttackDir = EAttackDir::eUp;
-		}
-	}
-	// 下入力で、下攻撃
-	else if (mState == EState::eGuard)
-	{
-		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
-		{
-			mMoveSpeed = CVector::zero;
-			ChangeState(EState::eAttack);
-			mAttackPower = mSelectAttackPower;
-			mAttackDir = EAttackDir::eDown;
-		}
-	}
-	else if (mState == EState::eAttack)
-	{
-		if (CInput::PushKey(VK_LBUTTON))
-		{
-			mMoveSpeed = CVector::zero;
-			ChangeState(EState::eAttack);
-			mAttackPower = mSelectAttackPower;
-			mAttackDir = EAttackDir::eLeft;
-		}
-		else if (CInput::PushKey(VK_RBUTTON))
-		{
-			mMoveSpeed = CVector::zero;
-			ChangeState(EState::eAttack);
-			mAttackPower = mSelectAttackPower;
-			mAttackDir = EAttackDir::eRight;
-		}
+		// 移動を停止
+		mMoveSpeed = CVector::zero;
 	}
 }
 
-
-//void CPlayer::LockOnTarget()
-//{
-//	// ロックオン開始
-//	if (mIsLockOn)
-//	{
-//		// ロックオンする敵を取得
-//		CEnemyBase* target = CEnemyManager::Instance()->FindLockOnTarget(45, 300);
-//		mpLockOnTarget = target;
-//		// ロックオンする敵が存在する
-//		if (mpLockOnTarget != nullptr )
-//		{
-//				if (CInput::PushKey('B'))
-//				{
-//					// TODO:ロックオンする敵を変更
-//				}
-//				// ロックオン処理
-//				target->Position();
-//		}
-//		// ロックオンする敵が存在しなかったら、
-//		// バトルモードフラグをオフにする
-//		else
-//		{
-//			mIsLockOn = false;
-//		}
-//	}
-//	else
-//	{
-//		mpLockOnTarget = nullptr;
-//	}
-//}
-
-
-// ダメージ量を計算して返す
-void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const
+// 仰け反り処理
+void CPlayer::Hit()
 {
-	
-	if (mSelectAttackPower == EAttackPower::eAttackS)
-	{
-		// ダメージを与える
-		*outDamage = DAMAGE_S;
-		*outStan = STAN_VAL_S;
-	}
-	else if (mSelectAttackPower == EAttackPower::eAttackM)
-	{
-		*outDamage = DAMAGE_M;
-		*outStan = STAN_VAL_M;
-	}
-	else if (mSelectAttackPower == EAttackPower::eAttackL)
-	{
-		*outDamage = DAMAGE_L;
-		*outStan = STAN_VAL_L;
-	}
-
-	// パリィ出来るかどうか、判断する
-	if (taker->CheckParry(mAttackDir, mAttackPower))
-	{
-		if (mSelectAttackPower == EAttackPower::eAttackS)
-		{
-			*outDamage = DAMAGE_S;
-			// 怯み度を加算する
-			*outStan * STAN_VAL_DIA;
-		}
-		else if (mSelectAttackPower == EAttackPower::eAttackM)
-		{
-			*outDamage = DAMAGE_M;
-			*outStan * STAN_VAL_DIA;
-		}
-		else if (mSelectAttackPower == EAttackPower::eAttackL)
-		{
-			*outDamage = DAMAGE_L;
-			*outStan * STAN_VAL_DIA;
-		}
-	}
-	
+	mRandHitAnim = Math::Rand(0, 1);
+	ChangeState(EState::eHit);
 }
 
-// 非戦闘時の待機状態
-void CPlayer::UpdateIdle()
+// 死亡処理
+void CPlayer::Death()
 {
-	// 接地していれば、
-	if (mIsGrounded)
-	{
-		// SPACEキーでジャンプ開始へ移行
-		if (CInput::PushKey(VK_SPACE))
-		{
-			mState = EState::eJumpStart;
-		}
-	}
 }
-
-// 戦闘時の待機状態
-void CPlayer::UpdateAttackIdle()
-{
-	// 接地していれば、
-	if (mIsGrounded)
-	{
-		if (CInput::Key(VK_SHIFT))
-		{
-			ChangeState(EState::eGuard);
-		}
-		// SPACEキーでジャンプ開始へ移行
-		else if (CInput::PushKey(VK_SPACE))
-		{
-			ChangeState(EState::eJumpStart);
-		}
-		// シフトで回避
-		else if (CInput::Key('F'))
-		{
-			ChangeAvoid();
-		}
-		// まだ使えない
-		//else if (CInput::PushKey('R'))
-		//{
-		//	mIsLockOn = !mIsLockOn;
-		//	LockOnTarget();
-		//}
-	}
-}
-
-// 攻撃
-void CPlayer::UpdateAttack()
-{
-	// プレイヤーの攻撃状態に合わせてアニメーションを切り替える
-	EAnimType anim = GetAttackAnimType();
-
-	switch (mStateStep)
-	{
-	case 0:
-		ChangeAnimation(anim, true);
-		mStateStep++;
-		break;
-	case 1:
-		if (GetAnimationFrameRatio() >=  0.25f)
-		{
-			// 攻撃開始
-			AttackStart();
-			mStateStep++;
-		}
-		break;
-	case 2:
-		if (GetAnimationFrameRatio() >= 0.75f)
-		{
-			ChangeAttack();
-			// 攻撃終了
-			AttackEnd();
-			mStateStep++;
-		}
-		break;
-	case 3:
-		// 攻撃アニメーションが終了したら、
-		if (IsAnimationFinished())
-		{
-			// 待機状態へ移行
-			ChangeState(EState::eIdle);
-			ChangeAnimation(EAnimType::eAttackIdle);
-		}
-		break;
-	}
-}
-
-// 攻撃終了待ち
-//void CPlayer::UpdateAttackWait()
-//{
-//	// 斬撃SEを再生していないかつ、アニメーションが25%以上進行したら、
-//	if (!mIsPlayedSlashSE && GetAnimationFrameRatio() >= 0.25f)
-//	{
-//		// 斬撃SEを再生
-//		mpSlashSE->Play();
-//		mIsPlayedSlashSE = true;
-//	}
-//
-//	// 斬撃エフェクトを生成していないかつ、アニメーションが35%以上進行したら、
-//	if (!mIsSpawnedSlashEffect && GetAnimationFrameRatio() >= 0.35f)
-//	{
-//		// 斬撃エフェクトを生成して、正面方向へ飛ばす
-//		CSlash* slash = new CSlash
-//		(
-//			this,
-//			Position() + CVector(0.0f, 10.0f, 0.0f),
-//			VectorZ(),
-//			300.0f,
-//			100.0f
-//		);
-//		// 斬撃エフェクトの色設定
-//		slash->SetColor(CColor(0.15f, 0.5f, 0.5f));
-//
-//		mIsSpawnedSlashEffect = true;
-//	}
-//
-//	// 攻撃アニメーションが終了したら、
-//	if (IsAnimationFinished())
-//	{
-//		// 待機状態へ移行
-//		mState = EState::eIdle;
-//		mAttackWay = EAttackWay::eIdle;
-//		ChangeAnimation(EAnimType::eAttackIdle);
-//	}
-//}
-
-// 回避
-void CPlayer::UpdateAvoid()
-{
-	mMoveSpeed = CVector::zero;
-
-	switch (mStateStep)
-	{
-	case 0:
-		
-		ChangeAnimation(EAnimType::eAvoid);
-		mStateStep++;
-		break;
-	case 1:
-	{
-		float frame = GetAnimationFrame();
-		if (frame >= EVA_MOVE_START)
-		{
-			if (frame < EVA_MOVE_END)
-			{
-				// 回避時の移動速度を求める
-				mMoveSpeed = mAvoidDir * EVA_MOVE_SPEED * Times::DeltaTime();
-			}
-			else
-			{
-				mStateStep++;
-			}
-		}
-		break;
-	}
-	case 2:
-		if (IsAnimationFinished())
-		{
-			mStateStep++;
-		}
-		break;
-	case 3:
-		if (mElapsedTime < EVA_WAIT_TIME)
-		{
-			mElapsedTime += Times::DeltaTime();
-		}
-		else
-		{
-			// 時間が経過したら、待機状態へ移行
-			ChangeState(EState::eIdle);
-		}
-		break;
-	}
-}
-
-// 防御
-void CPlayer::UpdateGuard()
-{
-	mMoveSpeed = CVector::zero;
-	ChangeAnimation(EAnimType::eGuard);
-	if (CInput::PullKey(VK_SHIFT))
-	{
-		mState = EState::eIdle;
-	}
-}
-
-// ジャンプ開始
-void CPlayer::UpdateJumpStart()
-{
-	ChangeAnimation(EAnimType::eJumpStart);
-	ChangeState(EState::eJump);
-
-	mMoveSpeedY += JUMP_SPEED;
-	mIsGrounded = false;
-}
-
-// ジャンプ中
-void CPlayer::UpdateJump()
-{
-	if (mMoveSpeedY <= 0.0f)
-	{
-		ChangeAnimation(EAnimType::eJumpEnd);
-		ChangeState(EState::eJumpEnd);
-	}
-}
-
-// ジャンプ終了
-void CPlayer::UpdateJumpEnd()
-{
-	// ジャンプアニメーションが終了かつ、
-	// 地面に接地したら、待機状態へ戻す
-	if (IsAnimationFinished() && mIsGrounded)
-	{
-		ChangeState(EState::eIdle);
-	}
-}
-
-// キーの入力情報から移動ベクトルを求める
-CVector CPlayer::CalcMoveVec(bool force) const
-{
-	CVector move = CVector::zero;
-
-	// キーの入力ベクトルを取得
-	CVector input = CVector::zero;
-	if (CInput::Key('W'))		input.Y(-1.0f);
-	else if (CInput::Key('S'))	input.Y(1.0f);
-	if (CInput::Key('A'))		input.X(-1.0f);
-	else if (CInput::Key('D'))	input.X(1.0f);
-
-	float inputLen = input.LengthSqr();
-	// 強制で移動するモードで、どのキーも入力されていなければ
-	// 正面方向へ強制移動する
-	if (force && inputLen == 0.0f)
-	{
-		input.Y(-1.0f);
-		inputLen = 1.0f;
-	}
-
-	// 入力ベクトルの長さで入力されているか判定
-	if (inputLen > 0.0f)
-	{
-		// 上方向ベクトル(設置している場合は、地面の法線)
-		CVector up = mIsGrounded ? mGroundNormal : CVector::up;
-		// カメラの向きに合わせた移動ベクトルに変換
-		CCamera* mainCamera = CCamera::MainCamera();
-		CVector camForward = mainCamera->VectorZ();
-		camForward.Y(0.0f);
-		camForward.Normalize();
-		// カメラの正面方向ベクトルと上方向ベクトルの外積から
-		// 横方向の移動ベクトルを求める
-		CVector moveSide = CVector::Cross(up, camForward);
-		// 横方向の移動ベクトルと上方向ベクトルの外積から
-		// 正面方向の移動ベクトルを求める
-		CVector moveForward = CVector::Cross(moveSide, up);
-
-		// 求めた各方向の移動ベクトルから、
-		// 最終的なプレイヤーの移動ベクトルを求める
-		move = moveForward * input.Y() + moveSide * input.X();
-		move.Normalize();
-	}
-
-	return move;
-}
-
-
-// 移動の更新処理
-void CPlayer::UpdateMove()
-{
-	mMoveSpeed = CVector::zero;
-
-	// プレイヤーの移動ベクトルを求める
-	CVector move = CalcMoveVec();
-	// 求めた移動ベクトルの長さで入力されているか判定
-	if (move.LengthSqr() > 0.0f)
-	{
-			mMoveSpeed += move * MOVE_SPEED;
-
-		// 待機状態であれば、歩行アニメーションに切り替え
-		if (mState == EState::eIdle && mMode == EMode::eBattle)
-		{
-			if (CInput::Key('W'))
-			{
-				ChangeAnimation(EAnimType::eAttackWalk);
-			}
-			else if (CInput::Key('S'))
-			{
-				ChangeAnimation(EAnimType::eAttackBackWalk);
-			}
-			else if (CInput::Key('A'))
-			{
-				ChangeAnimation(EAnimType::eAttackLeftWalk);
-			}
-			else if (CInput::Key('D'))
-			{
-				ChangeAnimation(EAnimType::eAttackRightWalk);
-			}
-		}
-		else if (mState == EState::eIdle && mMode == EMode::eNotBattle)
-		{
-			ChangeAnimation(EAnimType::eAttackWalk);
-		}
-	}
-	// 移動キーを入力していない
-	else
-	{
-		// 待機状態であれば、待機アニメーションに切り替え
-		if (mState == EState::eIdle)
-		{
-			ChangeAnimation(EAnimType::eAttackIdle);
-		}
-	}
-}
-
-// ↓ポーションブラーの更新処理、使ってない
-/*
-// モーションブラーの更新処理
-void CPlayer::UpdateMotionBlur()
-{
-	// モーションブラーの残り時間が残っていなければ、処理しない
-	if (mMotionBlurRemainTime <= 0.0f) return;
-	// 現在のカメラを取得し、存在しなければ処理しない
-	CCamera* currentCamera = CCamera::CurrentCamera();
-	if (currentCamera == nullptr) return;
-
-	// カメラの向きと反対方向へブラーを掛けるため、
-	// 反転したカメラの向きを取得
-	CVector camDir = -currentCamera->VectorZ();
-
-	// 残り時間から経過時間の割合を取得（経過時間の割合 = 1 - 残り時間の割合）
-	float percent = 1.0f - mMotionBlurRemainTime / MOTION_BLUR_TIME;
-	// ブラーの幅をサインカーブで経過時間に合わせて増減させる
-	float ratio = sinf(M_PI * percent);
-	float width = MOTION_BLUR_WIDTH * ratio;
-
-	// モーションブラーのパラメータを設定
-	System::SetMotionBlur(camDir, width, MOTION_BLUR_COUNT);
-
-	// 残り時間を経過時間分減少させる
-	mMotionBlurRemainTime -= Times::DeltaTime();
-	// 残り時間がなくなれば、
-	if (mMotionBlurRemainTime <= 0.0f)
-	{
-		// モーションブラーをオフにする
-		System::SetEnableMotionBlur(false);
-		mMotionBlurRemainTime = 0.0f;
-	}
-}
-*/
 
 // 更新
 void CPlayer::Update()
@@ -818,15 +297,9 @@ void CPlayer::Update()
 	{
 		mIsBattleMode = !mIsBattleMode;
 	}
-	// バトルモードかどうか
-	if (mIsBattleMode)
-	{
-		mMode = EMode::eBattle;
-	}
-	else
-	{
-		mMode = EMode::eNotBattle;
-	}
+
+	//// 待機と戦闘時待機の切り替え
+	//ChangeState(EState::eBattleIdle);
 
 	// マウスホイールの回転量の差分
 	int WheelDelta = CInput::GetDeltaMouseWheel();
@@ -848,49 +321,19 @@ void CPlayer::Update()
 	// 状態に合わせて、更新処理を切り替える
 	switch (mState)
 	{
-		// 待機状態
-	case EState::eIdle:
-		if (mMode == EMode::eBattle)
-		{
-			UpdateAttackIdle();
-		}
-		else
-		{
-			UpdateIdle();
-		}
-		break;
-		// 攻撃
-	case EState::eAttack:
-		UpdateAttack();
-		break;
-		// 攻撃終了待ち
-	//case EState::eAttackWait:
-	//	UpdateAttackWait();
-		break;
-		// 防御
-	case EState::eGuard:
-		UpdateGuard();
-		break;
-		// 回避
-	case EState::eAvoid:
-		UpdateAvoid();
-		break;
-		// ジャンプ開始
-	case EState::eJumpStart:
-		UpdateJumpStart();
-		break;
-		// ジャンプ中
-	case EState::eJump:
-		UpdateJump();
-		break;
-		// ジャンプ終了
-	case EState::eJumpEnd:
-		UpdateJumpEnd();
-		break;
+		//case EState::eIdle:			UpdateIdle();		break;
+	case EState::eBattleIdle:	UpdateBattleIdle();	break;
+	case EState::eAttack:		UpdateAttack();		break;
+	case EState::eGuard:		UpdateGuard();		break;
+	case EState::eAvoid:		UpdateAvoid();		break;
+	case EState::eJumpStart:	UpdateJumpStart();	break;
+	case EState::eJump:			UpdateJump();		break;
+	case EState::eJumpEnd:		UpdateJumpEnd();	break;
+	case EState::eHit:			UpdateHit();		break;
 	}
 
 	// 待機中とジャンプ中は、移動処理を行う
-	if (mState == EState::eIdle
+	if (mState == EState::eBattleIdle
 		|| mState == EState::eJumpStart
 		|| mState == EState::eJump
 		|| mState == EState::eJumpEnd)
@@ -898,7 +341,7 @@ void CPlayer::Update()
 		UpdateMove();
 	}
 
-	if (mState == EState::eIdle
+	if (mState == EState::eBattleIdle
 		|| mState == EState::eJumpStart
 		|| mState == EState::eJump
 		|| mState == EState::eJumpEnd
@@ -914,7 +357,7 @@ void CPlayer::Update()
 	Position(Position() + moveSpeed);
 
 	// ロックオンと移動の仕方とバトルモード
-	if (!(mMode == EMode::eBattle))
+	if (!mIsBattleMode)
 	{
 		// プレイヤーを移動方向へ向ける
 		CVector current = VectorZ();
@@ -949,52 +392,6 @@ void CPlayer::Update()
 		System::ExitGame();
 	}
 
-	// ↓炎や弾丸、モーションブラーなどの処理、使ってない
-	/* 
-	// 右クリックで弾丸発射
-	if (CInput::PushKey(VK_RBUTTON))
-	{
-		 //弾丸を生成
-		new CBullet
-		(
-			// 発射位置
-			Position() + CVector(0.0f, 10.0f, 0.0f) + VectorZ() * 20.0f,
-			VectorZ(),	// 発射方向
-			1000.0f,	// 移動距離
-			1000.0f		// 飛距離
-		);
-	}
-
-	 「E」キーで炎の発射をオンオフする
-	if (CInput::PushKey('E'))
-	{
-		if (!mpFlamethrower->IsThrowing())
-		{
-			mpFlamethrower->Start();
-		}
-		else
-		{
-			mpFlamethrower->Stop();
-		}
-	}
-
-	 「B」キーを押したら、モーションブラー開始
-	if (CInput::PushKey('B'))
-	{
-		// モーションブラーを掛けている最中であれば、
-		// 新しくモーションブラーを掛け直さない
-		if (mMotionBlurRemainTime <= 0.0f)
-		{
-			System::SetEnableMotionBlur(true);
-			mMotionBlurRemainTime = MOTION_BLUR_TIME;
-		}
-	}
-
-	 モーションブラーの更新処理
-	UpdateMotionBlur();
-
-	*/
-
 	// キャラクターの更新
 	CXCharacter::Update();
 
@@ -1012,14 +409,15 @@ void CPlayer::Update()
 	CDebugPrint::Print("FPS:%f\n \n", Times::FPS());
 
 	CDebugPrint::Print("　HP：%d\n", (int)mHp);
-	CDebugPrint::Print("　怯み度：%.2f\n", mStanPoints);
+	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
+	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
 	CDebugPrint::Print("■プレイヤーの情報\n");
 	CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
 	CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
 
 	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
-//	CDebugPrint::Print("　防御しているか：%s\n", mIsGuard ? "はい" : "いいえ");
+	//	CDebugPrint::Print("　防御しているか：%s\n", mIsGuard ? "はい" : "いいえ");
 	CDebugPrint::Print("　\n");
 
 	mIsGrounded = false;
@@ -1087,22 +485,25 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 	}
 	else if (self == mpAttackCol1 || self == mpAttackCol2 || self == mpAttackCol3)
 	{
-		// ヒットしたのがキャラクターかつ、
-			// まだ攻撃がヒットしていないキャラクターであれば
-		CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
-		if (chara != nullptr && !IsAttackHitObj(chara))
+		if (other->Layer() == ELayer::eEnemy, other->Tag() == ETag::eEnemy)
 		{
-			// 攻撃ヒット済みリストに登録
-			AddAttackHitObj(chara);
+			// ヒットしたのがキャラクターかつ、
+				// まだ攻撃がヒットしていないキャラクターであれば
+			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+			if (chara != nullptr && !IsAttackHitObj(chara))
+			{
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(chara);
 
-			// 与えるダメージの計算
-			int damage = 0;
-			float stan = 0.0f;
-			CalcDamage(chara, &damage, &stan);
+				// 与えるダメージの計算
+				int damage = 0;
+				float stan = 0.0f;
+				CalcDamage(chara, &damage, &stan);
 
-			// ダメージを与える
-			chara->TakeDamage(damage, stan, this);
+				// ダメージを与える
+				chara->TakeDamage(damage, stan, this);
 
+			}
 		}
 	}
 }
@@ -1111,4 +512,478 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 void CPlayer::Render()
 {
 	CXCharacter::Render();
+}
+
+
+// 現在の状態を取得
+CPlayer::EState CPlayer::GetState()
+{
+	return mState;
+}
+
+
+CPlayer* CPlayer::Instance()
+{
+	return spInstance;
+}
+
+// アニメーション切り替え
+void CPlayer::ChangeAnimation(EAnimType type, bool restart)
+{
+	if (!(EAnimType::None < type && type < EAnimType::Num)) return;
+	AnimData data = ANIM_DATA[(int)type];
+	CXCharacter::ChangeAnimation((int)type, data.loop, data.frameLength, restart);
+}
+
+// 攻撃方向や、攻撃の威力によって
+// 切り替えるアニメーションの種類を取得
+CPlayer::EAnimType CPlayer::GetAttackAnimType() const
+{
+	switch (mAttackDir)
+	{
+	case EAttackDir::eUp:
+		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eUpAttackS;
+		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eUpAttackM;
+		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eUpAttackL;
+		break;
+	case EAttackDir::eLeft:
+		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eLeftAttackS;
+		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eLeftAttackM;
+		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eLeftAttackL;
+		break;
+	case EAttackDir::eRight:
+		if (mAttackPower == EAttackPower::eAttackS) return EAnimType::eRightAttackS;
+		if (mAttackPower == EAttackPower::eAttackM) return EAnimType::eRightAttackM;
+		if (mAttackPower == EAttackPower::eAttackL) return EAnimType::eRightAttackL;
+		break;
+	}
+	return EAnimType::None;
+}
+
+void CPlayer::ChangeState(EState state)
+{
+	// すでに同じ状態であれば、処理しない
+	if (state == mState) return;
+
+	mState = state;
+	mStateStep = 0;
+	mElapsedTime = 0.0f;
+}
+
+void CPlayer::ChangeAvoid()
+{
+	// キーの入力情報から回避方向を求める
+	mAvoidDir = CalcMoveVec(true);
+	// 回避状態へ切り替え
+	ChangeState(EState::eAvoid);
+}
+
+void CPlayer::ChangeAttack()
+{
+
+	if (mState == EState::eBattleIdle)
+	{
+		if (CInput::PushKey(VK_LBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eLeft;
+		}
+		else if (CInput::PushKey(VK_RBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eRight;
+		}
+	}
+	// 上入力で、上攻撃
+	else if (mState == EState::eJump
+			|| mState == EState::eJumpStart
+			|| mState == EState::eJumpEnd)
+	{
+		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eUp;
+		}
+	}
+	// 下入力で、下攻撃
+	//else if (mState == EState::eGuard)
+	//{
+	//	if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
+	//	{
+	//		mMoveSpeed = CVector::zero;
+	//		ChangeState(EState::eAttack);
+	//		mAttackPower = mSelectAttackPower;
+	//		mAttackDir = EAttackDir::eDown;
+	//	}
+	//}
+	else if (mState == EState::eAttack)
+	{
+		if (CInput::PushKey(VK_LBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eLeft;
+		}
+		else if (CInput::PushKey(VK_RBUTTON))
+		{
+			mMoveSpeed = CVector::zero;
+			ChangeState(EState::eAttack);
+			mAttackPower = mSelectAttackPower;
+			mAttackDir = EAttackDir::eRight;
+		}
+	}
+}
+
+// ダメージ量を計算して返す
+void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const
+{
+	if (mSelectAttackPower == EAttackPower::eAttackS)
+	{
+		// ダメージを与える
+		*outDamage = DAMAGE_S;
+		*outStan = STAN_VAL_S;
+	}
+	else if (mSelectAttackPower == EAttackPower::eAttackM)
+	{
+		*outDamage = DAMAGE_M;
+		*outStan = STAN_VAL_M;
+	}
+	else if (mSelectAttackPower == EAttackPower::eAttackL)
+	{
+		*outDamage = DAMAGE_L;
+		*outStan = STAN_VAL_L;
+	}
+
+	// パリィ出来るかどうか、判断する
+	if (taker->CheckParry(mAttackDir, mAttackPower))
+	{
+		if (mSelectAttackPower == EAttackPower::eAttackS)
+		{
+			*outDamage = DAMAGE_S;
+			// 怯み度を加算する
+			*outStan * STAN_VAL_DIA;
+		}
+		else if (mSelectAttackPower == EAttackPower::eAttackM)
+		{
+			*outDamage = DAMAGE_M;
+			*outStan * STAN_VAL_DIA;
+		}
+		else if (mSelectAttackPower == EAttackPower::eAttackL)
+		{
+			*outDamage = DAMAGE_L;
+			*outStan * STAN_VAL_DIA;
+		}
+	}
+	
+}
+
+// 非戦闘時の待機状態
+//void CPlayer::UpdateIdle()
+//{
+//	// 接地していれば、
+//	if (mIsGrounded)
+//	{
+//		// SPACEキーでジャンプ開始へ移行
+//		if (CInput::PushKey(VK_SPACE))
+//		{
+//			mState = EState::eJumpStart;
+//		}
+//	}
+//}
+
+// 戦闘時の待機状態
+void CPlayer::UpdateBattleIdle()
+{
+	// 接地していれば、
+	if (mIsGrounded)
+	{
+		if (CInput::Key(VK_SHIFT))
+		{
+			ChangeState(EState::eGuard);
+		}
+		// SPACEキーでジャンプ開始へ移行
+		else if (CInput::PushKey(VK_SPACE))
+		{
+			ChangeState(EState::eJumpStart);
+		}
+		// シフトで回避
+		else if (CInput::Key('F'))
+		{
+			ChangeAvoid();
+		}
+	}
+}
+
+// 攻撃
+void CPlayer::UpdateAttack()
+{
+	// プレイヤーの攻撃状態に合わせてアニメーションを切り替える
+	EAnimType anim = GetAttackAnimType();
+
+	switch (mStateStep)
+	{
+	case 0:
+		ChangeAnimation(anim, true);
+		mStateStep++;
+		break;
+	case 1:
+		if (GetAnimationFrameRatio() >=  0.25f)
+		{
+			// 攻撃開始
+			AttackStart();
+			mStateStep++;
+		}
+		break;
+	case 2:
+		if (GetAnimationFrameRatio() >= 0.75f)
+		{
+			ChangeAttack();
+			// 攻撃終了
+			AttackEnd();
+			mStateStep++;
+		}
+		break;
+	case 3:
+		// 攻撃アニメーションが終了したら、
+		if (IsAnimationFinished())
+		{
+			// 戦闘時の待機状態へ移行
+			ChangeState(EState::eBattleIdle);
+		}
+		break;
+	}
+}
+
+
+// 回避
+void CPlayer::UpdateAvoid()
+{
+	mMoveSpeed = CVector::zero;
+
+	switch (mStateStep)
+	{
+	case 0:
+		
+		ChangeAnimation(EAnimType::eAvoid);
+		mStateStep++;
+		break;
+	case 1:
+	{
+		float frame = GetAnimationFrame();
+		if (frame >= EVA_MOVE_START)
+		{
+			if (frame < EVA_MOVE_END)
+			{
+				// 回避時の移動速度を求める
+				mMoveSpeed = mAvoidDir * EVA_MOVE_SPEED * Times::DeltaTime();
+			}
+			else
+			{
+				mStateStep++;
+			}
+		}
+		break;
+	}
+	case 2:
+		if (IsAnimationFinished())
+		{
+			mStateStep++;
+		}
+		break;
+	case 3:
+		if (mElapsedTime < EVA_WAIT_TIME)
+		{
+			mElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			// 時間が経過したら、待機状態へ移行
+			ChangeState(EState::eBattleIdle);
+//			else if(mState == EState::eIdle) return ChangeState(EState::eIdle);
+		}
+		break;
+	}
+}
+
+// 防御
+void CPlayer::UpdateGuard()
+{
+	mMoveSpeed = CVector::zero;
+	ChangeAnimation(EAnimType::eGuard);
+	if (CInput::PullKey(VK_SHIFT))
+	{
+		ChangeState(EState::eBattleIdle);
+	}
+}
+
+// ジャンプ開始
+void CPlayer::UpdateJumpStart()
+{
+	ChangeAnimation(EAnimType::eJumpStart);
+	ChangeState(EState::eJump);
+
+	mMoveSpeedY += JUMP_SPEED;
+	mIsGrounded = false;
+}
+
+// ジャンプ中
+void CPlayer::UpdateJump()
+{
+	if (mMoveSpeedY <= 0.0f)
+	{
+		ChangeAnimation(EAnimType::eJumpEnd);
+		ChangeState(EState::eJumpEnd);
+	}
+}
+
+// ジャンプ終了
+void CPlayer::UpdateJumpEnd()
+{
+	// ジャンプアニメーションが終了かつ、
+	// 地面に接地したら、待機状態へ戻す
+	if (IsAnimationFinished() && mIsGrounded)
+	{
+		ChangeState(EState::eBattleIdle);
+	}
+}
+
+// キーの入力情報から移動ベクトルを求める
+CVector CPlayer::CalcMoveVec(bool force) const
+{
+	CVector move = CVector::zero;
+
+	// キーの入力ベクトルを取得
+	CVector input = CVector::zero;
+	if (CInput::Key('W'))		input.Y(-1.0f);
+	else if (CInput::Key('S'))	input.Y(1.0f);
+	if (CInput::Key('A'))		input.X(-1.0f);
+	else if (CInput::Key('D'))	input.X(1.0f);
+
+	float inputLen = input.LengthSqr();
+	// 強制で移動するモードで、どのキーも入力されていなければ
+	// 正面方向へ強制移動する
+	if (force && inputLen == 0.0f)
+	{
+		input.Y(-1.0f);
+		inputLen = 1.0f;
+	}
+
+	// 入力ベクトルの長さで入力されているか判定
+	if (inputLen > 0.0f)
+	{
+		// 上方向ベクトル(設置している場合は、地面の法線)
+		CVector up = mIsGrounded ? mGroundNormal : CVector::up;
+		// カメラの向きに合わせた移動ベクトルに変換
+		CCamera* mainCamera = CCamera::MainCamera();
+		CVector camForward = mainCamera->VectorZ();
+		camForward.Y(0.0f);
+		camForward.Normalize();
+		// カメラの正面方向ベクトルと上方向ベクトルの外積から
+		// 横方向の移動ベクトルを求める
+		CVector moveSide = CVector::Cross(up, camForward);
+		// 横方向の移動ベクトルと上方向ベクトルの外積から
+		// 正面方向の移動ベクトルを求める
+		CVector moveForward = CVector::Cross(moveSide, up);
+
+		// 求めた各方向の移動ベクトルから、
+		// 最終的なプレイヤーの移動ベクトルを求める
+		move = moveForward * input.Y() + moveSide * input.X();
+		move.Normalize();
+	}
+
+	return move;
+}
+
+
+// 移動の更新処理
+void CPlayer::UpdateMove()
+{
+	mMoveSpeed = CVector::zero;
+
+	// プレイヤーの移動ベクトルを求める
+	CVector move = CalcMoveVec();
+	// 求めた移動ベクトルの長さで入力されているか判定
+	if (move.LengthSqr() > 0.0f)
+	{
+		mMoveSpeed += move * MOVE_SPEED;
+
+		// 戦闘待機状態時の歩行アニメーション
+		if (mState == EState::eBattleIdle)
+		{
+			if (CInput::Key('W'))
+			{
+				ChangeAnimation(EAnimType::eBattleWalk);
+			}
+			else if (CInput::Key('S'))
+			{
+				ChangeAnimation(EAnimType::eBattleBackWalk);
+			}
+			else if (CInput::Key('A'))
+			{
+				ChangeAnimation(EAnimType::eBattleLeftWalk);
+			}
+			else if (CInput::Key('D'))
+			{
+				ChangeAnimation(EAnimType::eBattleRightWalk);
+			}
+		}
+	}
+	// 移動キーを入力していない
+	else
+	{
+		if (mState == EState::eBattleIdle)
+		{
+			ChangeAnimation(EAnimType::eBattleIdle);
+		}
+	}
+}
+
+void CPlayer::UpdateHit()
+{
+	switch (mStateStep)
+	{
+	case 0:
+	{
+		if (mRandHitAnim == 0)
+		{
+			ChangeAnimation(EAnimType::eHit1, true);
+			mStateStep++;
+		}
+		else if (mRandHitAnim == 1)
+		{
+			ChangeAnimation(EAnimType::eHit2, true);
+			mStateStep++;
+		}
+		break;
+	}
+	case 1:
+		if (IsAnimationFinished())
+		{
+			ChangeState(EState::eBattleIdle);
+		}
+		break;
+	}
+}
+
+
+std::string CPlayer::GetStateStr(EState state) const
+{
+	switch (state)
+	{
+	case EState::eBattleIdle:	return "待機(戦闘)";
+	case EState::eAttack:		return "攻撃";
+	case EState::eGuard:		return "防御";
+	case EState::eAvoid:		return "回避";
+	case EState::eHit:			return "仰け反り";
+	case EState::eStun:			return "気絶";
+	case EState::eDeath:		return "死亡";
+	}
+	return "";
 }

@@ -25,17 +25,33 @@
 #define BATTLE_WALK_SPEED 0.01f	// 戦闘時の移動
 #define RUN_SPEED 40.0f         // 走っている時の速度
 #define ROTATE_SPEED 6.0f       // 回転速度
+#define LOOKAT_SPEED 4.0f		// 対象の方向に向く速度
+
+#define IDLE_TIME 5.0f          // 待機状態の時間
+#define DEATH_WAIT_TIME 3.0f	// 死亡時の待機時間
+#define STUN_WAIT_TIME 3.0f		// 気絶時の待機時間
 
 #define DISTANT_ATTACK_RANGE 150.0f	// タックル攻撃範囲
 #define NEAR_ATTACK_RANGE 30.0f		// 薙ぎ払いと回し蹴り、三連攻撃の範囲
 #define HEADBUTT_ATTACK_RANGE 15.0f	// 頭突き攻撃範囲
 
-#define BLOWL_PROB 20		// 左薙ぎ払いの確率
-#define BLOWR_PROB 40		// 右薙ぎ払いの確率
-#define KICKL_PROB 50		// 左回し蹴りの確率
-#define KICKR_PROB 60		// 右回し蹴りの確率
-#define TRIPLE_PROB 95		// 三連攻撃の確率
-#define TACKLE_PROB 90		// タックルの確率
+#define STUN_THRESHOLD	100.0f	// 怯みのしきい値
+#define BLOW_DMG		10.0f	// 薙ぎ払いのダメージ
+#define BLOW_STUN		10.0f	// 薙ぎ払いのスタン値
+#define KICK_DMG		20.0f	// 回し蹴りのダメージ
+#define KICK_STUN		30.0f	// 回し蹴りのスタン値
+#define TACKLE_DMG		50.0f	// タックルのダメージ
+#define TACKLE_STUN		20.0f	// タックルのスタン値
+#define HEADBUTT_DMG	 5.0f	// 頭突きのダメージ
+#define HEADBUTT_STUN	50.0f	// 頭突きのスタン値
+
+#define BLOWL_PROB	20		// 左薙ぎ払いの確率
+#define BLOWR_PROB	40		// 右薙ぎ払いの確率
+#define KICKL_PROB	50		// 左回し蹴りの確率
+#define KICKR_PROB	60		// 右回し蹴りの確率
+#define TRIPLE_PROB	65		// 三連攻撃の確率
+#define TACKLE_PROB	90		// タックルの確率
+#define GUARD_PROB	10		// 防御の確率
 #define FIFTY_FIFTY_PROB 50	// 半分の確率
 
 #define TACKLE_MOVE_DIST	150.0f	// タックル時の移動距離
@@ -44,31 +60,26 @@
 #define TACKLE_WAIT_DIST	10.0f	// タックル終了時の予備動作の移動距離
 #define TACKLE_WAIT_START	0.0f	// タックル終了時の予備動作の開始
 #define TACKLE_WAIT_END		60.0f	// タックル終了時の予備動作の終了
-
-#define KICK_MOVE_DIST		10.0f	// 回し蹴り時の移動距離
-#define KICK_MOVE_START		1.0f	// 回し蹴り時の移動開始フレーム
-#define KICK_MOVE_END		50.0f	// 回し蹴り時の移動終了フレーム
-#define ATTACK_WAIT_TIME	0.01f	// 攻撃終了時の待ち時間
 #define TACKLE_COOL_TIME	4.0f	// タックル攻撃のクールタイム
+
+#define BLOW_MOVE_DIST		10.0f	// 薙ぎ払い時の移動距離
+#define BLOW_MOVE_START		 1.0f	// 薙ぎ払い時の移動開始フレーム
+#define BLOW_MOVE_END		30.0f	// 薙ぎ払い時の移動終了フレーム
+#define KICK_MOVE_DIST		10.0f	// 回し蹴り時の移動距離
+#define KICK_MOVE_START		 1.0f	// 回し蹴り時の移動開始フレーム
+#define KICK_MOVE_END		50.0f	// 回し蹴り時の移動終了フレーム
+#define TRIPLE_WAIT_TIME	0.005f	// 三連攻撃の間の攻撃終了時の待ち時間
+
+#define PLAYER_ATTACK_ANGLE		35.0f	// 攻撃範囲の角度
+#define PLAYER_ATTACK_LENGTH	50.0f	// 攻撃範囲の距離
 
 #define IDLE_TIME_MIN 0.0f			// 待機時の最短待機時間
 #define IDLE_TIME_MAX 10.0f			// 待機時の最長待機時間
-#define BATTLE_IDLE_TIME_MIN 1.0f	// 戦闘待機時の最短待機時間
-#define BATTLE_IDLE_TIME_MAX 5.0f	// 戦闘待機時の最長待機時間
-
-#define ATTACK_ANGLE		35.0f	// 攻撃範囲の角度
-#define ATTACK_LENGTH		50.0f	// 攻撃範囲の距離
+#define BATTLE_IDLE_TIME_MIN 0.0f	// 戦闘待機時の最短待機時間
+#define BATTLE_IDLE_TIME_MAX 2.0f	// 戦闘待機時の最長待機時間
 
 #define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
-#define IDLE_TIME 5.0f          // 待機状態の時間
-#define DEATH_WAIT_TIME 3.0f	// 死亡時の待機時間
-#define LOOKAT_SPEED 5.0f		// 対象の方向に向く速度
-
-#define GUARD_PROB 90		// 防御の確率（パーセント）
-
-#define DETECT_COL_POS CVector(0.0f, 5.0f, 3.0f)	// 判定用コライダの座標
-#define DETECT_COL_SCL CVector(0.7f, 1.5f, 0.7f)	// 判定用コライダの大きさ
 
 #define EATTACKWAY CPlayer::EAttackDir		// プレイヤーの攻撃方向
 #define EATTACKPWOER CPlayer::EAttackPower	// プレイヤーの攻撃威力
@@ -76,35 +87,36 @@
 // プレイヤーのアニメーションデータのテーブル
 const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 {
-	{ "",									true,	0.0f,	1.0f},	// Tポーズ
-	{ ANIM_PATH"Idle.x",					true,	126.0f,	1.0f},	// 待機
-	{ ANIM_PATH"BattleIdle.x",				true,	110.0f,	0.5f},	// 戦闘待機		
-	{ ANIM_PATH"Walk.x",					true,	42.0f,	1.0f},	// 歩行
-	{ ANIM_PATH"Run.x",						true,	23.0f,	1.0f},	// 走る
+	{ "",									 true,	  0.0f,	1.0f},	// Tポーズ
+	{ ANIM_PATH"Idle.x",					 true,	126.0f,	1.0f},	// 待機
+	{ ANIM_PATH"BattleIdle.x",				 true,	110.0f,	0.5f},	// 戦闘待機		
+	{ ANIM_PATH"Walk.x",					 true,	 42.0f,	1.0f},	// 歩行
+	{ ANIM_PATH"Run.x",						 true,	 23.0f,	1.0f},	// 走る
+	{ ANIM_PATH"Stun.x",					false,	 74.0f,	1.0f},	// 混乱
+	{ ANIM_PATH"StunWait.x",				 true,	129.0f, 1.0f},	// 混乱待ち時間
 	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
-	{ ANIM_PATH"Stan.x",					false,	129.0f,	1.0f},	// 気絶アニメーション
 
-	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	34.0f,	0.5f},	// 左薙ぎ払い
-	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	34.0f,	0.5f},	// 右薙ぎ払い
-	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	53.0f,	1.0f},	// 左回し蹴り
-	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	53.0f,	1.0f},	// 右回し蹴り
-	{ ATTACK_ANIM_PATH"Tackle.x",			false,	56.0f,	1.0f},	// タックル
-	{ ATTACK_ANIM_PATH"TackleWait.x",		false,	71.0f,	1.5f},	// タックル終了の予備動作	
-	{ ATTACK_ANIM_PATH"HeadButt.x",			false,	68.0f,	1.0f},	// 頭突き攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	 34.0f,	0.5f},	// 左薙ぎ払い
+	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	 34.0f,	0.5f},	// 右薙ぎ払い
+	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	 53.0f,	0.5f},	// 左回し蹴り
+	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	 53.0f,	0.5f},	// 右回し蹴り
+	{ ATTACK_ANIM_PATH"Tackle.x",			false,	 56.0f,	1.0f},	// タックル
+	{ ATTACK_ANIM_PATH"TackleWait.x",		false,	 71.0f,	1.5f},	// タックル終了の予備動作	
+	{ ATTACK_ANIM_PATH"HeadButt.x",			false,	 68.0f,	1.0f},	// 頭突き攻撃
 
-	{ ANIM_PATH"BattleWalkL.x",				true,	32.0f,	1.0f},	// 戦闘時の左歩行
-	{ ANIM_PATH"BattleWalkR.x",				true,	32.0f,	1.0f},	// 戦闘時の右歩行
+	{ ANIM_PATH"BattleWalkL.x",				 true,	 32.0f,	1.0f},	// 戦闘時の左歩行
+	{ ANIM_PATH"BattleWalkR.x",				 true,	 32.0f,	1.0f},	// 戦闘時の右歩行
 
-	{ ANIM_PATH"GuardIdle.x",				true,	151.0f,	0.8f},	// 防御時の待機
-	{ ANIM_PATH"GuardHit.x",				false,	54.0f,	1.0f},	// 防御時のヒット
+	{ ANIM_PATH"GuardIdle.x",				 true,	151.0f,	0.8f},	// 防御時の待機
+	{ ANIM_PATH"GuardHit.x",				false,	 54.0f,	1.0f},	// 防御時のヒット
 
-	{ DAMAGEHIT_PATH"Damage1.x",			true,	42.0f,	1.0f},	// 仰け反り1
-	{ DAMAGEHIT_PATH"Damage2.x",			true,	42.0f,	1.0f},	// 仰け反り2
-	{ DAMAGEHIT_PATH"Damage3.x",			true,	42.0f,	1.0f},	// 仰け反り3
-	{ CHANCEHIT_PATH"chancehit1.x",			true,	23.0f,	1.0f},	// チャンス時1
-	{ CHANCEHIT_PATH"chancehit2.x",			true,	23.0f,	1.0f},	// チャンス時2
-	{ CHANCEHIT_PATH"chancehit3.x",			true,	23.0f,	1.0f},	// チャンス時3
-	{ CHANCEHIT_PATH"chancehit4.x",			true,	23.0f,	1.0f},	// チャンス時4
+	{ DAMAGEHIT_PATH"Damage1.x",			false,	 42.0f,	1.0f},	// 仰け反り1
+	{ DAMAGEHIT_PATH"Damage2.x",			false,	 42.0f,	1.0f},	// 仰け反り2
+	{ DAMAGEHIT_PATH"Damage3.x",			false,	 42.0f,	1.0f},	// 仰け反り3
+	{ CHANCEHIT_PATH"chancehit1.x",			false,	 23.0f,	1.0f},	// チャンス時1
+	{ CHANCEHIT_PATH"chancehit2.x",			false,	 23.0f,	1.0f},	// チャンス時2
+	{ CHANCEHIT_PATH"chancehit3.x",			false,	 23.0f,	1.0f},	// チャンス時3
+	{ CHANCEHIT_PATH"chancehit4.x",			false,	 23.0f,	1.0f},	// チャンス時4
 
 };
 
@@ -113,9 +125,9 @@ const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 	// 指定なし
 	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, 0.0f, 0.0f},
 	// 左薙ぎ払い
-	{ EAttackDir::eLeft,	EAttackPower::eAttackS,	true, 0.0f, 12.0f},
+	{ EAttackDir::eLeft,	EAttackPower::eAttackS,	true, 0.0f, 40.0f},
 	// 右薙ぎ払い
-	{ EAttackDir::eRight,	EAttackPower::eAttackS,	true, 0.0f, 12.0f},
+	{ EAttackDir::eRight,	EAttackPower::eAttackS,	true, 0.0f, 40.0f},
 	// 左回し蹴り
 	{ EAttackDir::eLeft,	EAttackPower::eAttackM,	true, 0.0f, 10.0f},
 	// 右回し蹴り
@@ -134,19 +146,20 @@ const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	:mFovAngle(FOV_ANGLE)
 	, mFovLength(FOV_LENGTH)
-	, mPlayerAttackAngle(ATTACK_ANGLE)
-	, mPlayerAttackLength(ATTACK_LENGTH)
-	, mRandAngle(0.0f)
+	, mPlayerAttackAngle(PLAYER_ATTACK_ANGLE)
+	, mPlayerAttackLength(PLAYER_ATTACK_LENGTH)
 	, mpDebugFov(nullptr)
+	, mpBattleTarget(nullptr)
 	, mAttackStartPos(CVector::zero)
 	, mAttackEndPos(CVector::zero)
+	, mIsBattle(false)
+	, mIsTripleAttack(false)
+	, mRandMoveAngle(0.0f)
+	, mRandHitAnim(0)
+	, mAttackCount(0)
+	, mTackleCount(0)
 	, mNextPatrolIndex(-1)
 	, mNextMoveIndex(0)
-	, mpBattleTarget(nullptr)
-	, mIsBattle(false)
-	, mAttackCount(0)
-	, mIsTripleAttack(false)
-	, mTackleCount(0)
 {
 	//この敵キャラの攻撃データを設定
 	mpAttackData = &ATTACK_DATA;
@@ -173,26 +186,48 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpBodyCol->SetCollisionLayers({ ELayer::eField, ELayer::eWall, ELayer::ePlayer, ELayer::eAttackCol });
 
 	// 左手のカプセルコライダ
-	mpLAttackCol = new CColliderSphere
+	mpLHandCol = new CColliderSphere
 	(
 		this, ELayer::eAttackCol,
-		30.0
+		40.0
 	);
 	// 衝突するタグとレイヤーを設定
-	mpLAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
-	mpLAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
-	mpLAttackCol->SetEnable(false);
+	mpLHandCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
+	mpLHandCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+	mpLHandCol->SetEnable(false);
 
 	// 右手のカプセルコライダ
-	mpRAttackCol = new CColliderSphere
+	mpRHandCol = new CColliderSphere
 	(
 		this,ELayer::eAttackCol,
-		30.0
+		40.0
 	);
 	// 衝突するタグとレイヤーを設定
-	mpRAttackCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
-	mpRAttackCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
-	mpRAttackCol->SetEnable(false);
+	mpRHandCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
+	mpRHandCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+	mpRHandCol->SetEnable(false);
+
+	// 左足の球コライダ
+	mpLFootCol = new CColliderSphere
+	(
+		this, ELayer::eAttackCol,
+		50.0f
+	);
+	// 衝突するタグとレイヤーを設定
+	mpLFootCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
+	mpLFootCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+	mpLFootCol->SetEnable(false);
+
+	// 右足の球コライダ
+	mpRFootCol = new CColliderSphere
+	(
+		this, ELayer::eAttackCol,
+		50.0f
+	);
+	// 衝突するタグとレイヤーを設定
+	mpRFootCol->SetCollisionTags({ ETag::eField,ETag::ePlayer });
+	mpRFootCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+	mpRFootCol->SetEnable(false);
 
 	// プレイヤーが存在しない場合は、範囲外とする
 	CPlayer* player = CPlayer::Instance();
@@ -221,22 +256,32 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	// 右手のボーンを取得
 	CModelXFrame* RHand = mpModel->FinedFrame("Armature_mixamorig_RightHand");
 	const CMatrix& RhandMTX = RHand->CombinedMatrix();
+	// 左足のボーンを取得
+	CModelXFrame* LFoot = mpModel->FinedFrame("Armature_mixamorig_LeftFoot");
+	const CMatrix& LfootMTX = LFoot->CombinedMatrix();
+	// 右足のボーンを取得
+	CModelXFrame* RFoot = mpModel->FinedFrame("Armature_mixamorig_RightFoot");
+	const CMatrix& RfootMTX = RFoot->CombinedMatrix();
 
 	// 攻撃用のコライダーを行列に設定
-	mpLAttackCol->SetAttachMtx(&LhandMTX);
-	mpRAttackCol->SetAttachMtx(&RhandMTX);
+	mpLHandCol->SetAttachMtx(&LhandMTX);
+	mpRHandCol->SetAttachMtx(&RhandMTX);
+	mpLFootCol->SetAttachMtx(&LfootMTX);
+	mpRFootCol->SetAttachMtx(&RfootMTX);
 
 	// 待機最大時間をランダムで決める（１回だけだよ）
 	mIdleTime = Math::Rand(0.0f, 5.0f);
 	// 円運動の移動角度をランダムで決める（１回だけだよ）
-	mRandAngle = Math::Rand(-30.0f, 30.0f);
+	mRandMoveAngle = Math::Rand(-30.0f, 30.0f);
 }
 
 CEnemyA::~CEnemyA()
 {
 	// コライダーを破棄
-	SAFE_DELETE(mpLAttackCol);
-	SAFE_DELETE(mpRAttackCol);
+	SAFE_DELETE(mpLHandCol);
+	SAFE_DELETE(mpRHandCol);
+	SAFE_DELETE(mpLFootCol);
+	SAFE_DELETE(mpRFootCol);
 
 	// 視野範囲のデバッグ表示が存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
@@ -279,37 +324,32 @@ void CEnemyA::DeleteObject(CObjectBase* obj)
 //更新処理
 void CEnemyA::Update()
 {
-
-	if (CInput::Key('U')) {
-		ChangeState(2);
-		//ChangeAnimation(EAnimType::eWalk);
-	}
-	else if (CInput::Key('L')) {
-		ChangeState((int)EState::ePatrol);
-		//ChangeAnimation(EAnimType::eRun);
-	}
-
 	// 現在の状態に合わせて更新処理を切り替える
 	switch (mState)
 	{
-	case (int)EState::eIdle:		UpdateIdle();		break;
-	case (int)EState::ePatrol:		UpdatePatrol();		break;
-	case (int)EState::eBattleIdle:	UpdateBattleIdle();	break;
-	case (int)EState::eChase:		UpdateChase();		break;
-	case (int)EState::eLost:		UpdateLost();		break;
-	case (int)EState::eAttack:		UpdateAttack();		break;
-	case (int)EState::eGuard:		UpdateGuard();		break;
-	case (int)EState::eAvoid:		UpdateAvoid();		break;
-	case (int)EState::eStan:		UpdateStan();		break;
-	case (int)EState::eDeath:		UpdateDeath();		break;
+	case (int)EState::eIdle:		UpdateIdle();		break;	// 待機状態
+	case (int)EState::ePatrol:		UpdatePatrol();		break;	// 巡回状態
+	case (int)EState::eBattleIdle:	UpdateBattleIdle();	break;	// 戦闘待機状態
+	case (int)EState::eChase:		UpdateChase();		break;	// 追跡状態
+	case (int)EState::eLost:		UpdateLost();		break;	// 見失い状態
+	case (int)EState::eAttack:		UpdateAttack();		break;	// 攻撃状態
+	case (int)EState::eGuard:		UpdateGuard();		break;	// 防御状態
+	case (int)EState::eAvoid:		UpdateAvoid();		break;	// 回避状態
+	case (int)EState::eHit:			UpdateHit();		break;	// 仰け反り状態
+	case (int)EState::eStun:		UpdateStun();		break;	// 混乱状態
+	case (int)EState::eStunWait:	UpdateStunWait();	break;	// 混乱待ち状態
+	case (int)EState::eParry:		UpdateParry();		break;	// パリィ状態
+	case (int)EState::eDeath:		UpdateDeath();		break;	// 死亡状態
 	}
 
 	// キャラクターの更新
 	CXCharacter::Update(); 
 
 	// コライダを更新
-	mpLAttackCol->Update();
-	mpRAttackCol->Update();
+	mpLHandCol->Update();
+	mpRHandCol->Update();
+	mpLFootCol->Update();
+	mpRFootCol->Update();
 
 	// 経路探索用のノードが存在すれば、座標を更新
 	if (mpNavNode != nullptr)
@@ -322,15 +362,16 @@ void CEnemyA::Update()
 
 	CDebugPrint::Print("■敵の情報\n");
 	CDebugPrint::Print("　HP：%d\n", mHp);
-	CDebugPrint::Print("　怯み度：%.2f\n", mStanPoints);
+	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
 	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
-	CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
-	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
-	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
-	CDebugPrint::Print("　フレーム：%.2f\n", GetAnimationFrame());
-	CDebugPrint::Print("　円運動の移動角度：%.2f\n", mRandAngle);
-	CDebugPrint::Print("　タックル：%d\n", mTackleCount);
-	CDebugPrint::Print("　壁に当たったか：%s\n", mIsHitWall ? "オン" : "オフ");
+	//CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
+	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
+	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
+	CDebugPrint::Print("　戦闘用経過時間：%.2f\n", mBattleElapsedTime);
+	CDebugPrint::Print("　戦闘時の待機時間：%.2f\n", mBattleIdletime);
+	//CDebugPrint::Print("　円運動の移動角度：%.2f\n", mRandMoveAngle);
+	CDebugPrint::Print("　：%d\n", mRandHitAnim);
+	CDebugPrint::Print("　パリィ出来たか：%s\n", mIsAttackParry ? "パリィOK" : "パリィNO");
 
 	mIsHitWall = false;
 }
@@ -420,11 +461,19 @@ void CEnemyA::AttackStart()
 	// パンチ攻撃中であれば、パンチ攻撃のコライダーをオンにする
 	if (mAttackType == (int)EAttackType::eBlowR)
 	{
-		mpRAttackCol->SetEnable(true);
+		mpRHandCol->SetEnable(true);
 	}
 	else if (mAttackType == (int)EAttackType::eBlowL)
 	{
-		mpLAttackCol->SetEnable(true);
+		mpLHandCol->SetEnable(true);
+	}
+	else if (mAttackType == (int)EAttackType::eRoundKickL)
+	{
+		mpLFootCol->SetEnable(true);
+	}
+	else if (mAttackType == (int)EAttackType::eRoundKickR)
+	{
+		mpRFootCol->SetEnable(true);
 	}
 }
 
@@ -434,14 +483,23 @@ void CEnemyA::AttackEnd()
 	CEnemyBase::AttackEnd();
 
 	// 攻撃コライダーをオフ
-	mpLAttackCol->SetEnable(false);
-	mpRAttackCol->SetEnable(false);
+	mpLHandCol->SetEnable(false);
+	mpRHandCol->SetEnable(false);
+	mpLFootCol->SetEnable(false);
+	mpRFootCol->SetEnable(false);
 }
 
 void CEnemyA::TakeDamage(int damage, float stan, CObjectBase* causer)
 {
+	CPlayer* player = CPlayer::Instance();
 	// ベースクラスのダメージ処理を呼び出す
 	CEnemyBase::TakeDamage(damage, stan, causer);
+
+	if (CheckParry(player->GetAttackDir(),player->GetAttackPower()))
+	{
+		mIsAttackParry = true;
+	}
+
 	// 死亡しなければ
 	if (!IsDeath())
 	{
@@ -455,7 +513,7 @@ void CEnemyA::TakeDamage(int damage, float stan, CObjectBase* causer)
 			// 移動を停止
 			mMoveSpeed = CVector::zero;
 			// 攻撃を加えた相手の方向へ向く
-			LookAtBattleTarget(true);
+			LookAtBattleTarget(false);
 		}
 	}
 
@@ -466,9 +524,16 @@ void CEnemyA::Death()
 	ChangeState((int)EState::eDeath);
 }
 
-void CEnemyA::Stan()
+void CEnemyA::Stun()
 {
-	ChangeState((int)EState::eStan);
+	ChangeState((int)EState::eStun);
+}
+
+void CEnemyA::Hit()
+{
+	// 仰け反り状態のアニメーションをランダムで設定
+	mRandHitAnim = Math::Rand(0, 2);
+	ChangeState((int)EState::eHit);
 }
 
 // 衝突処理
@@ -479,21 +544,8 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 	// ベースの衝突処理を呼び出す
 	CEnemyBase::Collision(self, other, hit);
 
-	if (self == mpBodyCol)
-	{
-		// TODO：攻撃が当たったらHITアニメーションを再生する、
-		//if (other->Tag() == ETag::ePlayer || other->Layer() == ELayer::eAttackCol)
-		//{
-		//	// 攻撃されたら加算する
-		//	int hitAnim = 0;
-		//	if (mElapsedTime < 3.0f)
-		//	{
-		//		mElapsedTime += 
-		//	}
-
-		//}
-	}
-	else if (self == mpLAttackCol || self == mpRAttackCol)
+	if (self == mpLHandCol || self == mpRHandCol 
+		|| self == mpLFootCol || self == mpRFootCol)
 	{
 		if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::ePlayer)
 		{
@@ -510,40 +562,40 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 				float stan = 0.0f;
 				CalcDamage(chara, &damage, &stan);
 				// ダメージを与える
-				chara->TakeDamage(3, 0.0f, this);
+				chara->TakeDamage(damage, stan, this);
 
 			}
 		}
 	}
 }
 
-void CEnemyA::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const
+void CEnemyA::CalcDamage(CCharaBase* taker, int* outEnemyADamage, float* outEnemyAStan) const
 {
 	switch (mAttackType)
 	{
 	case (int)EAttackType::eBlowL:
-		*outDamage = 50.0f;
-		*outStan = 40.0f;
+		*outEnemyADamage = BLOW_DMG;
+		*outEnemyAStan = BLOW_STUN;
 		break;
 	case (int)EAttackType::eBlowR:
-		*outDamage = 50.0f;
-		*outStan = 40.0f;
+		*outEnemyADamage = BLOW_DMG;
+		*outEnemyAStan = BLOW_STUN;
 		break;
 	case (int)EAttackType::eRoundKickL:
-		*outDamage = 60.0f;
-		*outStan = 50.0f;
+		*outEnemyADamage = KICK_DMG;
+		*outEnemyAStan = KICK_STUN;
 		break;
 	case (int)EAttackType::eRoundKickR:
-		*outDamage = 60.0f;
-		*outStan = 50.0f;
+		*outEnemyADamage = KICK_DMG;
+		*outEnemyAStan = KICK_STUN;
 		break;
 	case (int)EAttackType::eTackle:
-		*outDamage = 80.0f;
-		*outStan = 20.0f;
+		*outEnemyADamage = TACKLE_DMG;
+		*outEnemyAStan = TACKLE_STUN;
 		break;
 	case (int)EAttackType::eHeadButt:
-		*outDamage = 30.0f;
-		*outStan = 60.0f;
+		*outEnemyADamage = HEADBUTT_DMG;
+		*outEnemyAStan = HEADBUTT_STUN;
 		break;
 	}
 }
@@ -669,7 +721,7 @@ bool CEnemyA::CanAttackPlayer(float range) const
 }
 
  //攻撃時に移動する距離か
-bool CEnemyA::AttackRangeMin()
+bool CEnemyA::IsMoveAttackRange()
 {
 	// プレイヤーがいない場合は、攻撃できない
 	CPlayer* player = CPlayer::Instance();
@@ -695,45 +747,8 @@ bool CEnemyA::IsPlayerAttackDetected() const
 	if (player == nullptr) return false;
 
 	if (!player->IsAttacking()) return false;
-
+	// プレイヤーの攻撃範囲か？
 	if (IsPlayerAttackRange()) return true;
-
-	/*
-	// プレイヤー座標の取得
-	CVector playerPos = player->Position();
-	// 自分自身の座標を取得
-	CVector pos = Position();
-	// プレイヤーから自身までのベクトルを求める
-	CVector vec = pos - playerPos;
-	vec.Y(0.0f);
-
-
-	// 1: 視野角度内か求める
-	// ベクトルを正規化して方向要素のみにするため
-	// 長さを１にする
-	CVector dir = vec.Normalized();
-	// プレイヤーの正面方向のベクトルを取得
-	CVector forward = player->VectorZ();
-	// 自身までのベクトルと
-	// プレイヤーの正面方向のベクトルの内積を求めて角度を出す
-	float dot = CVector::Dot(dir, forward);
-	// 視野角度のラジアンを求める
-	float angleR = Math::DegreeToRadian(mPlayerAttackAngle);
-	// 求めた内積と視野角度で、視野範囲か判断する
-	if (dot < cosf(angleR)) return false;
-
-
-	// 2: 攻撃距離内か求める
-	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
-	float dist = vec.Length();
-	if (dist > mPlayerAttackLength) return false;
-
-	// プレイヤーとの間に遮蔽物がないか判定する
-	if (!IsLookPlayer()) return false;
-
-	// 全ての条件をクリアしたので、視野範囲内である
-	return true;
-	*/
 }
 
 // プレイヤーの攻撃を検知時の処理
@@ -771,6 +786,7 @@ bool CEnemyA::DetectedPlayerAttack()
 	return false;
 }
 
+// プレイヤーの攻撃範囲内か？
 bool CEnemyA::IsPlayerAttackRange() const
 {
 	CPlayer* player = CPlayer::Instance();
@@ -1118,15 +1134,20 @@ void CEnemyA::UpdateBattleIdle()
 		return;
 	}
 
+	//if (mIsAttackParry || mIsGuardParry)
+	//{
+	//	ChangeState((int)EState::eParry);
+	//}
+
 	// プレイヤーの座標へ向けて移動する
 	CPlayer* player = CPlayer::Instance();
 	CVector targetPos = player->Position();
 
-	if (mRandAngle < -10.0f)
+	if (mRandMoveAngle < -10.0f)
 	{
 		ChangeAnimation((int)EAnimType::eBattleWalkR);
 	}
-	else if (mRandAngle > 10.0f)
+	else if (mRandMoveAngle > 10.0f)
 	{
 		ChangeAnimation((int)EAnimType::eBattleWalkL);
 	}
@@ -1153,7 +1174,7 @@ void CEnemyA::UpdateBattleIdle()
 		break;
 	case 1:
 		// 戦闘時の待機時間待ち
-		if (mElapsedTime < mBattleIdletime)
+		if (mBattleElapsedTime < mBattleIdletime)
 		{
 			
 			UpdateHorizonMove();
@@ -1166,18 +1187,19 @@ void CEnemyA::UpdateBattleIdle()
 				ChangeState((int)EState::eLost);
 				return;
 			}
-
-			// TODO:プレイヤーの攻撃範囲外に移動する
-			mElapsedTime += Times::DeltaTime();
+			mBattleElapsedTime += Times::DeltaTime();
+			
 		}
 		else
 		{
-			mRandAngle = Math::Rand(-30.0f, 30.0f);
+			mRandMoveAngle = Math::Rand(-30.0f, 30.0f);
 			// 攻撃の種類とステートを決める
 			AttackPickDetect();
 			// 戦闘待機時間を初期化
 			mBattleIdletime = 0.0f;
+			mBattleElapsedTime = 0.0f;
 		}
+		break;
 	}
 }
 
@@ -1329,10 +1351,138 @@ void CEnemyA::UpdateGuard()
 	if (!mIsGuard) return ChangeState((int)EState::eBattleIdle);
 }
 
+// 回避時の更新処理
 void CEnemyA::UpdateAvoid()
 {
 }
 
+// ノックバック時の更新処理
+void CEnemyA::UpdateKnockBack()
+{
+	switch (mStateStep)
+	{
+	case 0:
+		// アニメーション再生
+		break;
+	case 1:
+		// 移動処理
+		break;
+	case 2:
+		// アニメーション終了
+		// ステート変更
+		break;
+	}
+}
+
+// 仰け反り時の更新処理
+void CEnemyA::UpdateHit()
+{
+	switch (mStateStep)
+	{
+	case 0:
+	{
+		if (mRandHitAnim == 0)
+		{
+			ChangeAnimation((int)EAnimType::eHit1, true);
+			mStateStep++;
+		}
+		else if (mRandHitAnim == 1)
+		{
+			ChangeAnimation((int)EAnimType::eHit2, true);
+			mStateStep++;
+		}
+		else if (mRandHitAnim == 2)
+		{
+			ChangeAnimation((int)EAnimType::eHit3, true);
+			mStateStep++;
+		}
+		break;
+	}
+	case 1:
+		if (IsAnimationFinished())
+		{
+			ChangeState((int)EState::eBattleIdle);
+		}
+		break;
+	}
+}
+
+// 怯み時の更新処理
+void CEnemyA::UpdateStun()
+{
+	// TODO:アニメーションを再生、１秒後に復活、
+	// 視界に入っていたら：攻撃状態に、入っていなかったら：待機状態に
+	// １秒の間で攻撃をすると：攻撃チャンス！！状態へ
+	switch (mStateStep)
+	{
+		// 怯みアニメーション再生
+	case 0:
+		ChangeAnimation((int)EAnimType::eStun, true);
+		mStateStep++;
+		break;
+		// アニメーション終了待ち
+	case 1:
+		// アニメーションが終われば待機状態へ戻す
+		if (IsAnimationFinished())
+		{
+			ChangeState((int)EState::eStunWait);
+			mStateStep++;
+		}
+		break;
+	}
+}
+
+// 混乱待ちの更新処理
+void CEnemyA::UpdateStunWait()
+{
+	switch (mStateStep)
+	{
+	case 0:
+		ChangeAnimation((int)EAnimType::eStunWait);
+		mStateStep++;
+		break;
+	case 1:
+		if (IsAnimationFinished())
+		{
+			mStateStep++;
+		}
+		break;
+	case 2:
+		if (mElapsedTime < STUN_WAIT_TIME)
+		{
+			mElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			ChangeState((int)EState::eBattleIdle);
+		}
+		break;
+	}
+}
+
+void CEnemyA::UpdateParry()
+{
+	switch (mStateStep)
+	{
+		// 怯みアニメーション再生
+	case 0:
+		ChangeAnimation((int)EAnimType::eStun, true);
+		mStateStep++;
+		break;
+		// アニメーション終了待ち
+	case 1:
+		// アニメーションが終われば待機状態へ戻す
+		if (IsAnimationFinished())
+		{
+			mIsAttackParry = false;
+			mIsGuardParry = false;
+			ChangeState((int)EState::eBattleIdle);
+		}
+		break;
+	}
+}
+
+// 死亡時の更新処理
 void CEnemyA::UpdateDeath()
 {
 	// ステップごとに処理を分ける
@@ -1366,35 +1516,6 @@ void CEnemyA::UpdateDeath()
 	}
 }
 
-
-void CEnemyA::UpdateStan()
-{
-	// TODO:アニメーションを再生、１秒後に復活、
-	// 視界に入っていたら：攻撃状態に、入っていなかったら：待機状態に
-	// １秒の間で攻撃をすると：攻撃チャンス！！状態へ
-	switch (mStateStep)
-	{
-		// 怯みアニメーション再生
-	case 0:
-		ChangeAnimation((int)EAnimType::eStan, true);
-		mStateStep++;
-		break;
-		// アニメーション終了待ち
-	case 1:
-		// アニメーションが終われば待機状態へ戻す
-		if (IsAnimationFinished())
-		{
-			ChangeState((int)EState::eBattleIdle);
-		}
-		break;
-	}
-}
-
-//void CEnemyA::UpdateChance()
-//{
-//	// TODO：ノックバックするようになる
-//	// 攻撃に倍率が乗る
-//}
 
 // 薙ぎ払い攻撃の更新処理
 void CEnemyA::UpdateBlowL()
@@ -1451,23 +1572,39 @@ void CEnemyA::UpdateBlowR()
 	switch (mStateStep)
 	{
 	case 0: // アニメーション再生
+		mAttackStartPos = Position();
+		mAttackEndPos = mAttackStartPos + VectorZ() * BLOW_MOVE_DIST;
 		ChangeAnimation((int)EAnimType::eBlowR, true);
 		mStateStep++;
 		break;
 	case 1: // 攻撃用コライダーオン
 	{
-		// パリィが出来る範囲が終了したら、攻撃コライダーをオンにする
+		// 攻撃アニメーションが移動開始フレームを超えた場合
 		float frame = GetAnimationFrame();
-		const AttackData& data = (*mpAttackData)[mAttackType];
-		if (frame >= data.parryEndFrame)
-		{
-			AttackStart();
-			mStateStep++;
+		AttackStart();
+		if (!IsMoveAttackRange()) {
+			if (frame >= BLOW_MOVE_START)
+			{
+				// 移動終了フレームまで到達してない場合
+				if (frame < BLOW_MOVE_END)
+				{
+					// 線形補間で移動開始位置から移動終了位置まで移動する
+					float moveFrame = BLOW_MOVE_END - BLOW_MOVE_START;
+					float percent = (frame - BLOW_MOVE_START) / moveFrame;
+					CVector pos = CVector::Lerp(mAttackStartPos, mAttackEndPos, percent);
+					Position(pos);
+				}
+				// 移動終了フレームまで到達した場合
+				else
+				{
+					Position(mAttackEndPos);
+					mStateStep++;
+				}
+			}
 		}
-		// 攻撃コライダーがオンになるまで、プレイヤーの方向へ向く
 		else
 		{
-			LookAtBattleTarget();
+			mStateStep++;
 		}
 		break;
 	}
@@ -1510,7 +1647,7 @@ void CEnemyA::UpdateRoundKickL()
 			// 攻撃アニメーションが移動開始フレームを超えた場合
 			float frame = GetAnimationFrame();
 			AttackStart();
-			if (!AttackRangeMin()) {
+			if (!IsMoveAttackRange()) {
 				if (frame >= KICK_MOVE_START)
 				{
 					// 移動終了フレームまで到達してない場合
@@ -1562,7 +1699,7 @@ void CEnemyA::UpdateRoundKickR()
 		// 攻撃アニメーションが移動開始フレームを超えた場合
 		float frame = GetAnimationFrame();
 		AttackStart();
-		if (!AttackRangeMin()) {
+		if (!IsMoveAttackRange()) {
 			if (frame >= KICK_MOVE_START)
 			{
 				// 移動終了フレームまで到達してない場合
@@ -1616,7 +1753,7 @@ void CEnemyA::UpdateTackle()
 		// 攻撃アニメーションが移動開始フレームを超えた場合
 		float frame = GetAnimationFrame();
 		AttackStart();
-		if (!AttackRangeMin()) {
+		if (!IsMoveAttackRange()) {
 			if (frame >= TACKLE_MOVE_START)
 			{
 				// 移動終了フレームまで到達してない場合
@@ -1745,7 +1882,7 @@ void CEnemyA::UpdateTripleAttack()
 	}
 	case 1:
 	{
-		if (mElapsedTime < ATTACK_WAIT_TIME)
+		if (mElapsedTime < TRIPLE_WAIT_TIME)
 		{
 			mElapsedTime += Times::DeltaTime();
 		}
@@ -1760,7 +1897,7 @@ void CEnemyA::UpdateTripleAttack()
 	}
 	case 2:
 	{
-		if (mElapsedTime < ATTACK_WAIT_TIME)
+		if (mElapsedTime < TRIPLE_WAIT_TIME)
 		{
 			mElapsedTime += Times::DeltaTime();
 		}
@@ -1787,13 +1924,19 @@ std::string CEnemyA::GetStateStr(int state) const
 {
 	switch ((int)state)
 	{
-	case (int)EState::eIdle:    return "待機";
-	case (int)EState::ePatrol:  return "巡回";
-	case (int)EState::eChase:   return "追跡";
-	case (int)EState::eLost:    return "見失う";
-	case (int)EState::eAttack:  return "攻撃";
-	case (int)EState::eDeath:	return "死亡";
-	case (int)EState::eStan:	return "気絶";
+	case (int)EState::eIdle:		return "待機";
+	case (int)EState::ePatrol:		return "巡回";
+	case (int)EState::eBattleIdle:	return "待機(戦闘)";
+	case (int)EState::eChase:		return "追跡";
+	case (int)EState::eLost:		return "見失う";
+	case (int)EState::eAttack:		return "攻撃";
+	case (int)EState::eGuard:		return "防御";
+	case (int)EState::eAvoid:		return "回避";
+	case (int)EState::eHit:			return "仰け反り";
+	case (int)EState::eStun:		return "混乱";
+	case (int)EState::eStunWait:	return "混乱待ち時間";
+	case (int)EState::eParry:		return "パリィ";
+	case (int)EState::eDeath:		return "死亡";
 	}
 	return "";
 }
@@ -1826,7 +1969,7 @@ CColor CEnemyA::GetStateColor(int state) const
 	case (int)EState::eLost:    return CColor::yellow;
 	case (int)EState::eAttack:  return CColor::magenta;
 	case (int)EState::eDeath:	return CColor::black;
-	case (int)EState::eStan:	return CColor::cyan;
+	case (int)EState::eStun:	return CColor::cyan;
 	}
 	return CColor::white;
 }
@@ -1845,11 +1988,11 @@ void CEnemyA::UpdateHorizonMove()
 	if (mIsHitWall)
 	{
 		float rand = Math::Rand(-10.0f, 10.0f);
-		mRandAngle = -mRandAngle + rand;
+		mRandMoveAngle = -mRandMoveAngle + rand;
 	}
 
 
-	float rotAngle = mRandAngle * Times::DeltaTime();
+	float rotAngle = mRandMoveAngle * Times::DeltaTime();
 	// 求めたベクトルをY軸に回転
 	CVector rotVec = CQuaternion(0.0f, rotAngle, 0.0f) * vec;
 	// プレイヤーの座標＋回転後のベクトルで、移動後の座標を求める

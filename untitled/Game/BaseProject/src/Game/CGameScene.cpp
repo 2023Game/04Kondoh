@@ -44,7 +44,7 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>  ("Wall",          "Field\\Object\\Wall\\Wall.obj");
 	CResourceManager::Load<CModel>  ("WallCol",       "Field\\Object\\Wall\\WallCol.obj");
 	CResourceManager::Load<CModel>  ("WallNavCol",    "Field\\Object\\Wall\\WallNavCol.obj");
-	CResourceManager::Load<CModelX> ("Player",        "Character\\New Player\\Playre T-Pose.x");
+	CResourceManager::Load<CModelX> ("Player",        "Character\\Player\\T_Pose.x");
 	CResourceManager::Load<CModelX> ("EnemyA",        "Character\\EnemyA\\enemyA.x");
 	CResourceManager::Load<CTexture>("Laser",         "Effect\\laser.png");
 	CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");

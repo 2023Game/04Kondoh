@@ -78,7 +78,8 @@ protected:
 	int mState;				// 状態
 	int mAttackType;		// 攻撃タイプ
 	int mStateStep;			// 状態内のステップ管理用
-	float mElapsedTime;		// 経過時間計測用
+	float mElapsedTime;			// 経過時間計測用
+	float mBattleElapsedTime;	// 攻撃用経過時間
 	float mIdleTime;		// 待機時間
 	float mBattleIdletime;	// 戦闘時の待機時間
 
@@ -90,6 +91,9 @@ protected:
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
 
+	bool mIsAttackParry;	// 攻撃パリィ
+	bool mIsGuardParry;		// 防御パリィ
+
 	bool mIsHitWall;		// 壁に当たったかどうか
 	bool mIsGrounded;		// 接地しているかどうか
 	CVector mGroundNormal;	// 接地している地面の法線
@@ -98,8 +102,6 @@ protected:
 
 	CGaugeUI3D* mpHpGauge;		// HPゲージ
 	CVector mGaugeOffsetPos;	// ゲージのオフセット座標
-
-
 };
 
 #endif // !CENEMYBASE_H

@@ -7,8 +7,8 @@ CCharaBase::CCharaBase(ETag tag, ETaskPriority prio, int sortOrder, ETaskPauseTy
 	: CObjectBase(tag, prio, sortOrder, pause)
 	, mMaxHp(10)
 	, mHp(mMaxHp)
-	, mStanPoints(0.0f)
-	, mStanThreshold(100.0f)
+	, mStunPoints(0.0f)
+	, mStunThreshold(100.0f)
 	, mAttackDir(EAttackDir::eNone)
 	, mAttackPower(EAttackPower::eAttackS)
 {
@@ -95,7 +95,7 @@ bool CCharaBase::CheckParry(EAttackDir dir, EAttackPower power) const
 }
 
 // ダメージを受ける
-void CCharaBase::TakeDamage(int damage, float stan, CObjectBase* causer)
+void CCharaBase::TakeDamage(int damage, float stun, CObjectBase* causer)
 {
 	// 既に死亡していたら、ダメージを受けない
 	if (IsDeath()) return;
@@ -113,15 +113,48 @@ void CCharaBase::TakeDamage(int damage, float stan, CObjectBase* causer)
 		mHp -= damage;
 
 		// まだ、生きている場合、怯み度を加算
-		mStanPoints += stan;
+		mStunPoints += stun;
 		// 怯み度がしきい値を超えると
-		if (mStanPoints > mStanThreshold)
+		if (mStunPoints > mStunThreshold)
 		{
 			// 怯み処理を実行して、怯み度をリセット
-			Stan();
-			mStanPoints = 0.0f;
+			Stun();
+			mStunPoints = 0.0f;
+		}
+		else
+		{
+			if (!IsAttacking())
+			{
+				// 怯み度がしきい値を超えて無い場合、仰け反り処理
+				Hit();
+			}
 		}
 	}
+}
+
+// 防御処理
+void CCharaBase::Guard()
+{
+}
+
+// 回避処理
+void CCharaBase::Avoid()
+{
+}
+
+// ノックバック
+void CCharaBase::KnockBack()
+{
+}
+
+// 仰け反り処理
+void CCharaBase::Hit()
+{
+}
+
+// 怯み処理
+void CCharaBase::Stun()
+{
 }
 
 // 死亡
@@ -136,18 +169,14 @@ bool CCharaBase::IsDeath() const
 	return mHp <= 0;
 }
 
-// 怯み処理
-void CCharaBase::Stan()
-{
-}
 
 void CCharaBase::Update()
 {
 	// 怯み度が少しでも溜まっていたら、
-	if (mStanPoints > 0.0f)
+	if (mStunPoints > 0.0f)
 	{
 		// 徐々に回復する
-		mStanPoints -= STAN_RECOVERY * Times::DeltaTime();
-		if (mStanPoints < 0.0f) mStanPoints = 0.0f;
+		mStunPoints -= STAN_RECOVERY * Times::DeltaTime();
+		if (mStunPoints < 0.0f) mStunPoints = 0.0f;
 	}
 }

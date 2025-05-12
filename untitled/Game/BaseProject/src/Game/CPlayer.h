@@ -20,20 +20,25 @@ public:
 	// プレイヤーの状態
 	enum class EState
 	{
-		eIdle,		// 待機
+		//eIdle,			// 待機
+		eBattleIdle,	// 戦闘時の待機
 
 		eAttack,	// 攻撃
-		eAttackWait,// 攻撃終了待ち
 
 		eGuard,   // 防御
 		eAvoid,   // 回避
+
+		eKnockBack,	// ノックバック
+		eHit,		// 仰け反り
+		eStun,		// 混乱
+		eDeath,		// 死亡
 
 		eJumpStart,	// ジャンプ開始
 		eJump,		// ジャンプ中
 		eJumpEnd,	// ジャンプ終了
 	};
-
-	
+	// 現在の状態を取得
+	EState GetState();
 
 	//インスタンスのポインタの取得
 	static CPlayer* Instance();
@@ -45,12 +50,22 @@ public:
 
 	// 攻撃中か
 	bool IsAttacking() const override;
-	// 
+	// 攻撃開始
 	void AttackStart() override;
-	//
+	// 攻撃終了
 	void AttackEnd() override;
-	// 現在の状態を取得
-	EState GetState();
+
+	// ダメージを受ける
+	void TakeDamage(int damage, float stan, CObjectBase* causer) override;
+
+	// 防御処理
+//	void Guard() override;
+	// 回避処理
+//	void Avoid() override;
+	// 仰け反り処理
+	void Hit() override;
+	// 死亡処理
+	void Death() override;
 
 	// 更新
 	void Update();
@@ -80,12 +95,12 @@ private:
 	// 非戦闘時の待機状態
 	void UpdateIdle();
 	// 戦闘時の待機状態
-	void UpdateAttackIdle();
-	// 攻撃
+	void UpdateBattleIdle();
+	// 攻撃処理
 	void UpdateAttack();
-	// 防御
+	// 防御処理
 	void UpdateGuard();
-	// 回避
+	// 回避処理
 	void UpdateAvoid();
 
 	// ジャンプ開始
@@ -97,8 +112,10 @@ private:
 	// 移動の更新処理
 	void UpdateMove();
 
-	// モーションブラーの更新処理
-	/*void UpdateMotionBlur();*/
+	// 仰け反り処理
+	void UpdateHit();
+	// 死亡処理
+	void UpdateDeath();
 
 
 	// アニメーションの種類
@@ -106,21 +123,17 @@ private:
 	{
 		None = -1,
 
-		eAttackTPose,	// 戦闘時のTポーズ
-		eAttackIdle,	// 戦闘時の待機アニメーション
+		eBattleTPose,	// 戦闘時のTポーズ
+		eBattleIdle,	// 戦闘時の待機アニメーション
 
-		eAttackWalk,		// 歩行
-		eAttackBackWalk,	// 後ろ方向への歩行
-		eAttackLeftWalk,	// 左方向への歩行
-		eAttackRightWalk,	// 右方向への歩行
+		eBattleWalk,		// 歩行
+		eBattleBackWalk,	// 後ろ方向への歩行
+		eBattleLeftWalk,	// 左方向への歩行
+		eBattleRightWalk,	// 右方向への歩行
 
 		eUpAttackS,		// 弱上攻撃アニメーション
 		eUpAttackM,		// 中上攻撃アニメーション
 		eUpAttackL,		// 強上攻撃アニメーション
-
-		eDwonAttackS,	// 弱下攻撃アニメーション
-		eDwonAttackM,	// 中下攻撃アニメーション
-		eDwonAttackL,	// 強下攻撃アニメーション
 
 		eRightAttackS,	// 弱右攻撃アニメーション
 		eRightAttackM,	// 中右攻撃アニメーション
@@ -137,6 +150,10 @@ private:
 		eJump,			// ジャンプ中
 		eJumpEnd,		// ジャンプ終了
 		eJumpAttack,	// ジャンプ攻撃
+
+		eHit1,			// 仰け反り1
+		eHit2,			// 仰け反り2
+		eHit3,			// 仰け反り3
 
 		Num
 	};
@@ -172,21 +189,6 @@ private:
 
 	// 選択中の攻撃の強さ
 	EAttackPower mSelectAttackPower;
-
-	// モード選択
-	enum class EMode
-	{
-		eNotBattle, // 非戦闘モード
-		eBattle,    // 戦闘モード
-	};
-	EMode mMode;  //モード選択
-
-	// ロックオンするターゲットを変更
-//	void ChangeLockOnTarget();
-	// ターゲットをロックオンする
-//	void LockOnTarget();
-//	bool mIsLockOn;					// ロックオンしているか
-//	CObjectBase* mpLockOnTarget;	// ターゲットのポインタ
 	
 	bool mIsBattleMode;		// バトルモードか
 	bool mIsGuard;			// 防御しているか
@@ -213,13 +215,13 @@ private:
 	int mStateStep;     // 状態内のステップ管理用
 	float mElapsedTime; // 経過時間計測用
 
+	int mRandHitAnim;	// ランダムな仰け反りアニメーション
+
 	CSound* mpSlashSE;
 	bool mIsPlayedSlashSE;
 	bool mIsSpawnedSlashEffect;
 
-	//// 火炎放射エフェクト
-	//CFlamethrower* mpFlamethrower;
+	// 状態の文字列を取得
+	std::string GetStateStr(EState state) const;
 
-	//// モーションブラーを掛ける残り時間
-	//float mMotionBlurRemainTime;
 };

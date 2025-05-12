@@ -24,8 +24,6 @@ public:
 	//CEnemyBase* NextLockOnTarget();
 
 
-
-
 private:
 	// コンストラクタ
 	CEnemyManager();

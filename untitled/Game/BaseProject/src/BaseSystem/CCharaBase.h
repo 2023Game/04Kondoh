@@ -57,6 +57,9 @@ public:
 	/// <returns>trueであれば怯む</returns>
 	virtual bool CheckParry(EAttackDir dir, EAttackPower power) const;
 
+	// 防御時のパリィ
+	virtual bool CheckGuardParry() const;
+
 	/// <summary>
 	/// ダメージを受ける
 	/// </summary>
@@ -67,25 +70,22 @@ public:
 
 	// 防御処理
 	virtual void Guard();
-
 	// 回避処理
 	virtual void Avoid();
-
 	// ノックバック
 	virtual void KnockBack();
-
 	// 仰け反り処理
 	virtual void Hit();
-
 	// 怯み処理
 	virtual void Stun();
-
 	// 混乱待ち時間
 //	virtual void StunWait();
-
 	// 死亡
 	virtual void Death();
 
+
+	// 防御中か
+	virtual bool IsGuarding() const;
 	// 死んでいるかどうか
 	bool IsDeath() const;
 
@@ -98,9 +98,6 @@ protected:
 
 	float mStunPoints;		// 現在の怯み度
 	float mStunThreshold;	// 怯み度のしきい値
-
-	bool mIsAttackParry;	// 攻撃時のパリィ
-	bool mIsGuardParry;		// 防御時のパリィ
 
 	EAttackDir mAttackDir;
 	EAttackPower mAttackPower;

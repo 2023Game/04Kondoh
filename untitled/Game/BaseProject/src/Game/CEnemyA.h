@@ -37,14 +37,19 @@ public:
 	// 攻撃終了
 	void AttackEnd() override;
 
+	bool IsGuarding() const override;
+
 	// ダメージを受ける
 	void TakeDamage(int damage,float stan, CObjectBase* causer) override;
-	// 死亡処理
-	void Death() override;
-	// 怯み処理
-	void Stun() override;
+
+	// パリィをされた時の処理
+	void Parry() override;
 	// 仰け反り処理
 	void Hit() override;
+	// 怯み処理
+	void Stun() override;
+	// 死亡処理
+	void Death() override;
 
 	/// <summary>
 	/// 衝突処理
@@ -117,7 +122,7 @@ private:
 		eHit,			// 仰け反り
 		eStun,			// 混乱
 		eStunWait,		// 混乱待ち時間
-		eParry,			// パリィ
+		eTakeParry,		// パリィされた時
 		eDeath,			// 死亡
 	};
 	//状態切り替え

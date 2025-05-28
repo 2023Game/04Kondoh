@@ -16,23 +16,12 @@ public:
 	// 敵をリストから削除
 	void Remove(CEnemyBase* enemy);
 
-	void GetPosition();
-
-	//// プレイヤーに近い敵をロックオンする
-	//CEnemyBase* FindLockOnTarget(float angle, float length) const;
-	//// 次に近い敵を
-	//CEnemyBase* NextLockOnTarget();
-
 
 private:
 	// コンストラクタ
 	CEnemyManager();
 	// デストラクタ
 	~CEnemyManager();
-	// 
-	bool IsFindTarget() const;
-	// 敵の位置
-	CVector mpTargetPos;
 
 	// インスタンスのポインタ
 	static CEnemyManager* spInstance;

@@ -29,9 +29,14 @@ CEnemyBase::CEnemyBase()
 	, mpBodyCol(nullptr)
 	, mpHpGauge(nullptr)
 {
+	CEnemyManager* enemy = CEnemyManager::Instance();
+	//　HPゲージを作成
+	mpHpGauge = new CGaugeUI3D(this);
+	mpHpGauge->SetMaxPoint(mMaxHp);
+	mpHpGauge->SetCurrPoint(mHp);
+
 	// エネミー管理クラスに自身を追加
-	CEnemyManager::Instance()->Add(this);
-	//　TODO:HPゲージを作成
+	enemy->Add(this);
 }
 
 //デストラクタ
@@ -173,8 +178,21 @@ void CEnemyBase::Collision(CCollider* self, CCollider* other, const CHitInfo& hi
 			// 押し戻しベクトルの分座標を移動
 			Position(Position() + adjust * hit.weight);
 		}
+		else if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::eAttackCol)
+		{
+			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
+			if (CheckParry(chara->GetAttackDir(), chara->GetAttackPower()))
+			{
+				mIsAttackParry = true;
+				Parry();
+			}
+		}
 	}
 	
+}
+
+void CEnemyBase::Parry()
+{
 }
 
 // アニメーション切り替え
@@ -234,8 +252,10 @@ void CEnemyBase::Update()
 	mIsGrounded = false;
 	mIsHitWall = false;
 
-	// TODO:HPゲージを更新
-
+	// HPゲージを更新
+	mpHpGauge->Position(Position() + mGaugeOffsetPos);
+	mpHpGauge->SetMaxPoint(mMaxHp);
+	mpHpGauge->SetCurrPoint(mHp);
 }
 
 // 描画

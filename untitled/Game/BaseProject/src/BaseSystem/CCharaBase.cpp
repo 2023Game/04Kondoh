@@ -94,11 +94,19 @@ bool CCharaBase::CheckParry(EAttackDir dir, EAttackPower power) const
 	return true;
 }
 
+bool CCharaBase::CheckGuardParry() const
+{
+	if (!IsGuarding()) return false;
+	return true;
+}
+
 // ダメージを受ける
 void CCharaBase::TakeDamage(int damage, float stun, CObjectBase* causer)
 {
 	// 既に死亡していたら、ダメージを受けない
 	if (IsDeath()) return;
+	// 防御中ならダメージを受けない
+	if (IsGuarding()) return;
 
 	// 受けたダメージが現在HP以上なら
 	if (damage >= mHp)
@@ -110,10 +118,11 @@ void CCharaBase::TakeDamage(int damage, float stun, CObjectBase* causer)
 	// 現在HPの方が多い場合は、ダメージ分減らす
 	else
 	{
-		mHp -= damage;
 
+		mHp -= damage;
 		// まだ、生きている場合、怯み度を加算
 		mStunPoints += stun;
+
 		// 怯み度がしきい値を超えると
 		if (mStunPoints > mStunThreshold)
 		{
@@ -160,6 +169,12 @@ void CCharaBase::Stun()
 // 死亡
 void CCharaBase::Death()
 {
+}
+
+// 防御中か
+bool CCharaBase::IsGuarding() const
+{
+	return false;
 }
 
 // 死んでいるかどうか

@@ -101,6 +101,9 @@
     <Filter Include="ソース ファイル\Game\System">
       <UniqueIdentifier>{58552d5f-f0e8-45c4-accd-bb75766151c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\UI\GameOver">
+      <UniqueIdentifier>{c6713cab-5676-4f4b-8eab-829246ef5e1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -396,6 +399,15 @@
     </ClCompile>
     <ClCompile Include="src\BaseSystem\CFontData.cpp">
       <Filter>ソース ファイル\BaseSystem\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGameOverScene.cpp">
+      <Filter>ソース ファイル\Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGameOverUI.cpp">
+      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CGaugeUI2D.cpp">
+      <Filter>ソース ファイル\Game\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -716,6 +728,15 @@
     </ClInclude>
     <ClInclude Include="src\BaseSystem\CFontData.h">
       <Filter>ソース ファイル\BaseSystem\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CGameOverScene.h">
+      <Filter>ソース ファイル\Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CGameOverUI.h">
+      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CGaugeUI2D.h">
+      <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

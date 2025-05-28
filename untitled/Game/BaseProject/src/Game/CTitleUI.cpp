@@ -84,12 +84,12 @@ CTitleUI::CTitleUI()
 	CExpandButton* btn1 = new CExpandButton
 	(
 		CVector2(WINDOW_WIDTH * 0.5f, 450.0f),
-		CVector2(181.0f, 47.0f),
+		CVector2(220.0f, 140.0f),
 		ETaskPriority::eUI, 0, ETaskPauseType::eGame,
 		false, false
 	);
 	// ボタンの画像を読み込み
-	btn1->LoadButtonImage("UI/title_start0.png", "UI/title_start1.png");
+	btn1->LoadButtonImage("UI/title_start2.png", "UI/title_start2.png");
 	// ボタンクリック時に呼び出されるコールバック関数を設定
 	btn1->SetOnClickFunc(std::bind(&CTitleUI::OnClickStart, this));
 	// ボタンは最初は無効化して、スケール値を0にしておく
@@ -102,11 +102,11 @@ CTitleUI::CTitleUI()
 	CExpandButton* btn2 = new CExpandButton
 	(
 		CVector2(WINDOW_WIDTH * 0.5f, 550.0f),
-		CVector2(181.0f, 47.0f),
+		CVector2(220.0f, 140.0f),
 		ETaskPriority::eUI, 0, ETaskPauseType::eGame,
 		false, false
 	);
-	btn2->LoadButtonImage("UI/title_option0.png", "UI/title_option1.png");
+	btn2->LoadButtonImage("UI/title_option2.png", "UI/title_option2.png");
 	btn2->SetOnClickFunc(std::bind(&CTitleUI::OnClickOption, this));
 	btn2->SetEnable(false);
 	btn2->SetScale(0.0f);
@@ -116,11 +116,11 @@ CTitleUI::CTitleUI()
 	CExpandButton* btn3 = new CExpandButton
 	(
 		CVector2(WINDOW_WIDTH * 0.5f, 650.0f),
-		CVector2(181.0f, 47.0f),
+		CVector2(220.0f, 140.0f),
 		ETaskPriority::eUI, 0, ETaskPauseType::eGame,
 		false, false
 	);
-	btn3->LoadButtonImage("UI/title_quit0.png", "UI/title_quit1.png");
+	btn3->LoadButtonImage("UI/title_quit2.png", "UI/title_quit2.png");
 	btn3->SetOnClickFunc(std::bind(&CTitleUI::OnClickQuit, this));
 	btn3->SetEnable(false);
 	btn3->SetScale(0.0f);
@@ -300,10 +300,6 @@ void CTitleUI::UpdateSelect()
 {
 }
 
-// フェードアウト
-void CTitleUI::UpdateFadeOut()
-{
-}
 
 // 更新
 void CTitleUI::Update()
@@ -321,10 +317,6 @@ void CTitleUI::Update()
 		// メニュー選択
 		case EState::eSelect:
 			UpdateSelect();
-			break;
-		// フェードアウト
-		case EState::eFadeOut:
-			UpdateFadeOut();
 			break;
 	}
 

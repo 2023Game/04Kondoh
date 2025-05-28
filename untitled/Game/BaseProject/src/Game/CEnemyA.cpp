@@ -31,9 +31,9 @@
 #define DEATH_WAIT_TIME 3.0f	// 死亡時の待機時間
 #define STUN_WAIT_TIME 3.0f		// 気絶時の待機時間
 
-#define DISTANT_ATTACK_RANGE 150.0f	// タックル攻撃範囲
-#define NEAR_ATTACK_RANGE 30.0f		// 薙ぎ払いと回し蹴り、三連攻撃の範囲
-#define HEADBUTT_ATTACK_RANGE 15.0f	// 頭突き攻撃範囲
+#define DISTANT_ATTACK_RANGE	150.0f	// タックル攻撃範囲
+#define NEAR_ATTACK_RANGE		 30.0f	// 薙ぎ払いと回し蹴り、三連攻撃の範囲
+#define HEADBUTT_ATTACK_RANGE	  5.0f	// 頭突き攻撃範囲
 
 #define STUN_THRESHOLD	100.0f	// 怯みのしきい値
 #define BLOW_DMG		10.0f	// 薙ぎ払いのダメージ
@@ -84,6 +84,8 @@
 #define EATTACKWAY CPlayer::EAttackDir		// プレイヤーの攻撃方向
 #define EATTACKPWOER CPlayer::EAttackPower	// プレイヤーの攻撃威力
 
+#define GAUGE_OFFSET_Y 23.0f
+
 // プレイヤーのアニメーションデータのテーブル
 const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 {
@@ -125,9 +127,9 @@ const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 	// 指定なし
 	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, 0.0f, 0.0f},
 	// 左薙ぎ払い
-	{ EAttackDir::eLeft,	EAttackPower::eAttackS,	true, 0.0f, 40.0f},
+	{ EAttackDir::eLeft,	EAttackPower::eAttackS,	true, 0.0f, 30.0f},
 	// 右薙ぎ払い
-	{ EAttackDir::eRight,	EAttackPower::eAttackS,	true, 0.0f, 40.0f},
+	{ EAttackDir::eRight,	EAttackPower::eAttackS,	true, 0.0f, 30.0f},
 	// 左回し蹴り
 	{ EAttackDir::eLeft,	EAttackPower::eAttackM,	true, 0.0f, 10.0f},
 	// 右回し蹴り
@@ -165,6 +167,9 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mpAttackData = &ATTACK_DATA;
 	mMaxHp = 100;
 	mHp = mMaxHp;
+
+	// ゲージのオフセット位置を設定
+	mGaugeOffsetPos = CVector(0.0f, GAUGE_OFFSET_Y, 0.0f);
 
 	// 敵を初期化
 	InitEnemy("EnemyA", &ANIM_DATA);
@@ -338,12 +343,12 @@ void CEnemyA::Update()
 	case (int)EState::eHit:			UpdateHit();		break;	// 仰け反り状態
 	case (int)EState::eStun:		UpdateStun();		break;	// 混乱状態
 	case (int)EState::eStunWait:	UpdateStunWait();	break;	// 混乱待ち状態
-	case (int)EState::eParry:		UpdateParry();		break;	// パリィ状態
+	case (int)EState::eTakeParry:		UpdateParry();		break;	// パリィ状態
 	case (int)EState::eDeath:		UpdateDeath();		break;	// 死亡状態
 	}
 
 	// キャラクターの更新
-	CXCharacter::Update(); 
+	CEnemyBase::Update(); 
 
 	// コライダを更新
 	mpLHandCol->Update();
@@ -364,14 +369,13 @@ void CEnemyA::Update()
 	CDebugPrint::Print("　HP：%d\n", mHp);
 	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
 	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
-	//CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
+	CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	CDebugPrint::Print("　戦闘用経過時間：%.2f\n", mBattleElapsedTime);
 	CDebugPrint::Print("　戦闘時の待機時間：%.2f\n", mBattleIdletime);
 	//CDebugPrint::Print("　円運動の移動角度：%.2f\n", mRandMoveAngle);
-	CDebugPrint::Print("　：%d\n", mRandHitAnim);
-	CDebugPrint::Print("　パリィ出来たか：%s\n", mIsAttackParry ? "パリィOK" : "パリィNO");
+	//CDebugPrint::Print("　パリィ出来たか：%s\n", mIsAttackParry ? "パリィOK" : "パリィNO");
 
 	mIsHitWall = false;
 }
@@ -489,16 +493,16 @@ void CEnemyA::AttackEnd()
 	mpRFootCol->SetEnable(false);
 }
 
+bool CEnemyA::IsGuarding() const
+{
+	if (mState == (int)EState::eGuard) return true;
+	return false;
+}
+
 void CEnemyA::TakeDamage(int damage, float stan, CObjectBase* causer)
 {
-	CPlayer* player = CPlayer::Instance();
 	// ベースクラスのダメージ処理を呼び出す
 	CEnemyBase::TakeDamage(damage, stan, causer);
-
-	if (CheckParry(player->GetAttackDir(),player->GetAttackPower()))
-	{
-		mIsAttackParry = true;
-	}
 
 	// 死亡しなければ
 	if (!IsDeath())
@@ -519,21 +523,29 @@ void CEnemyA::TakeDamage(int damage, float stan, CObjectBase* causer)
 
 }
 
-void CEnemyA::Death()
+void CEnemyA::Parry()
 {
-	ChangeState((int)EState::eDeath);
+	ChangeState((int)EState::eTakeParry);
 }
 
-void CEnemyA::Stun()
-{
-	ChangeState((int)EState::eStun);
-}
-
+// 仰け反り処理
 void CEnemyA::Hit()
 {
 	// 仰け反り状態のアニメーションをランダムで設定
 	mRandHitAnim = Math::Rand(0, 2);
 	ChangeState((int)EState::eHit);
+}
+
+// 怯み処理
+void CEnemyA::Stun()
+{
+	ChangeState((int)EState::eStun);
+}
+
+// 死亡処理
+void CEnemyA::Death()
+{
+	ChangeState((int)EState::eDeath);
 }
 
 // 衝突処理
@@ -1134,11 +1146,6 @@ void CEnemyA::UpdateBattleIdle()
 		return;
 	}
 
-	//if (mIsAttackParry || mIsGuardParry)
-	//{
-	//	ChangeState((int)EState::eParry);
-	//}
-
 	// プレイヤーの座標へ向けて移動する
 	CPlayer* player = CPlayer::Instance();
 	CVector targetPos = player->Position();
@@ -1328,6 +1335,8 @@ void CEnemyA::UpdateAttack()
 	case (int)EAttackType::eHeadButt:		UpdateHeadButt();		break;
 	case (int)EAttackType::eTripleAttack:	UpdateTripleAttack();	break;
 	}
+
+
 
 	if (mAttackType == (int)EAttackType::eNone)
 	{
@@ -1935,7 +1944,7 @@ std::string CEnemyA::GetStateStr(int state) const
 	case (int)EState::eHit:			return "仰け反り";
 	case (int)EState::eStun:		return "混乱";
 	case (int)EState::eStunWait:	return "混乱待ち時間";
-	case (int)EState::eParry:		return "パリィ";
+	case (int)EState::eTakeParry:		return "パリィ";
 	case (int)EState::eDeath:		return "死亡";
 	}
 	return "";

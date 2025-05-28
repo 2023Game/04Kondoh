@@ -2,6 +2,7 @@
 #include "CObjectBase.h"
 
 class CImage3D;
+class CImage;
 
 // 3D空間に配置するイメージクラス
 class CGaugeUI3D : public CObjectBase
@@ -33,8 +34,11 @@ private:
 
 	CObjectBase* mpOwner;	// HPゲージの持ち主
 
-	CImage3D* mpGaugeImg;	// ゲージのイメージ
-	CImage3D* mpWhiteImg;	// 白イメージ
+	CImage3D* mpGaugeImg3D;	// 3Dゲージのイメージ
+	CImage3D* mpWhiteImg3D;	// 3Dの白イメージ
+
+	CImage* mpGaugeImg;	// 2Dゲージのイメージ
+	CImage* mpWhiteImg;	// 2Dの白イメージ
 
 	CVector2 mGaugeSize;	// ゲージのイメージのサイズ
 	int mMaxPoint;			// 最大値

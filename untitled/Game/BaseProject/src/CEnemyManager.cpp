@@ -8,7 +8,6 @@ CEnemyManager* CEnemyManager::spInstance = nullptr;
 
 // コンストラクタ
 CEnemyManager::CEnemyManager()
-	:mpTargetPos(CVector::zero)
 {
 }
 

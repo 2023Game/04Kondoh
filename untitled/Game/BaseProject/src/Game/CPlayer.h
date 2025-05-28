@@ -8,6 +8,7 @@
 #include "CSound.h"
 
 class CFlamethrower;
+class CGaugeUI2D;
 
 /*
 プレイヤークラス
@@ -20,13 +21,16 @@ public:
 	// プレイヤーの状態
 	enum class EState
 	{
-		//eIdle,			// 待機
+//		eIdle,			// 待機
 		eBattleIdle,	// 戦闘時の待機
 
 		eAttack,	// 攻撃
 
-		eGuard,   // 防御
-		eAvoid,   // 回避
+		eGuardStart,	// 防御開始
+		eGuard,			// 防御中
+		eGuardEnd,		// 防御終了
+		eGuardParry,	// 防御パリィ
+		eAvoid,			// 回避
 
 		eKnockBack,	// ノックバック
 		eHit,		// 仰け反り
@@ -54,6 +58,10 @@ public:
 	void AttackStart() override;
 	// 攻撃終了
 	void AttackEnd() override;
+	// 防御中か
+	bool IsGuarding() const override;
+	// ジャンプ中か
+	bool IsJumping() const;
 
 	// ダメージを受ける
 	void TakeDamage(int damage, float stan, CObjectBase* causer) override;
@@ -93,13 +101,19 @@ private:
 	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const;
 
 	// 非戦闘時の待機状態
-	void UpdateIdle();
+//	void UpdateIdle();
 	// 戦闘時の待機状態
 	void UpdateBattleIdle();
 	// 攻撃処理
 	void UpdateAttack();
-	// 防御処理
+	// 防御開始処理
+	void UpdateGuardStart();
+	// 防御中処理
 	void UpdateGuard();
+	// 防御終了
+	void UpdateGuardEnd();
+	// 防御パリィ処理
+	void UpdateGuardParry();
 	// 回避処理
 	void UpdateAvoid();
 
@@ -131,6 +145,11 @@ private:
 		eBattleLeftWalk,	// 左方向への歩行
 		eBattleRightWalk,	// 右方向への歩行
 
+		eRun,		// 走る
+		eBackRun,	// 後ろ方向へ走る
+		eLeftRun,	// 左方向へ走る
+		eRightRun,	// 右方向へ走る
+
 		eUpAttackS,		// 弱上攻撃アニメーション
 		eUpAttackM,		// 中上攻撃アニメーション
 		eUpAttackL,		// 強上攻撃アニメーション
@@ -143,8 +162,12 @@ private:
 		eLeftAttackM,	// 中左攻撃アニメーション
 		eLeftAttackL,	// 強左攻撃アニメーション
 
-		eGuard,		// 防御
-		eAvoid,		// 回避
+		eGuardStart,	// 防御開始
+		eGuard,			// 防御中
+		eGuardEnd,		// 防御終了
+		eGuardHit,		// 防御時の仰け反り
+		eGuardParry,	// 防御時のパリィ
+		eAvoid,			// 回避
 
 		eJumpStart,		// ジャンプ開始
 		eJump,			// ジャンプ中
@@ -153,7 +176,8 @@ private:
 
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
-		eHit3,			// 仰け反り3
+		eDeath1,		// 死亡１
+		eDeath2,		// 死亡２
 
 		Num
 	};
@@ -191,7 +215,7 @@ private:
 	EAttackPower mSelectAttackPower;
 	
 	bool mIsBattleMode;		// バトルモードか
-	bool mIsGuard;			// 防御しているか
+	bool mIsAvoiding;		// 回避中か
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
@@ -210,12 +234,19 @@ private:
 
 	CTransform* mpRideObject;
 
-	CVector mAvoidDir;    // 回避方向
+	CGaugeUI2D* mpHpUI;
+
+	CVector mAvoidDir;	// 回避方向
 
 	int mStateStep;     // 状態内のステップ管理用
 	float mElapsedTime; // 経過時間計測用
 
 	int mRandHitAnim;	// ランダムな仰け反りアニメーション
+	int mRandDeathAnim;	// ランダムな死亡アニメーション
+
+	bool mIsRun;			// ランフラグ
+	float mMoveElapsedTime;	// 移動経過時間
+	int mPushRunKey;		// 入力されているランキー
 
 	CSound* mpSlashSE;
 	bool mIsPlayedSlashSE;

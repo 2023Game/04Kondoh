@@ -107,13 +107,14 @@ bool CObjectBase::IsAttacking() const
 // 攻撃開始
 void CObjectBase::AttackStart()
 {
-	// 攻撃がヒットしたオブジェクトのリストを初期化
-	mAttackHitObjects.clear();
+
 }
 
 // 攻撃終了
 void CObjectBase::AttackEnd()
 {
+	// 攻撃がヒットしたオブジェクトのリストを初期化
+	mAttackHitObjects.clear();
 }
 
 // 経路探索用のノードを取得

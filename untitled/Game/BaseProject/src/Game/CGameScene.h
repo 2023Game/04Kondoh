@@ -17,6 +17,8 @@ public:
 	void Update();
 
 private:
+	float mElapsedTime; // Œo‰ßŽžŠÔŒv‘ª—p
+
 	CSound* mpGameBGM;
 	CGameMenu* mpGameMenu;
 };

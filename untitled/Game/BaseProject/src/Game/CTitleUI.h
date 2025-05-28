@@ -32,8 +32,6 @@ private:
 	void UpdateOpen();
 	// メニュー選択
 	void UpdateSelect();
-	// フェードアウト
-	void UpdateFadeOut();
 
 	// タイトルの状態
 	enum class EState
@@ -41,7 +39,6 @@ private:
 		eIdle,		// 待機状態
 		eOpen,		// メニューを開く
 		eSelect,	// メニュー選択
-		eFadeOut,	// フェードアウト
 	};
 	// 状態切り替え
 	void ChangeState(EState state);

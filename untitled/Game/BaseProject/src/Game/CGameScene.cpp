@@ -13,10 +13,13 @@
 #include "CLineEffect.h"
 #include "CNavManager.h"
 
+#define GAMEOVER_WAIT_TIME 0.5f //　ゲームオーバーシーン移行待機時間
+
 //コンストラクタ
 CGameScene::CGameScene()
 	: CSceneBase(EScene::eGame)
 	, mpGameMenu(nullptr)
+	, mElapsedTime(0.0f)
 {
 }
 
@@ -102,7 +105,7 @@ void CGameScene::Load()
 
 	CGameCamera2* mainCamera = new CGameCamera2
 	(
-		atPos + CVector(0.0f, 0.0f, 40.0f),
+		atPos + CVector(0.0f, 0.0f, 25.0f),
 		atPos
 	);
 	mainCamera->AddCollider(field->GetFieldCol());
@@ -122,11 +125,24 @@ void CGameScene::Load()
 //シーンの更新処理
 void CGameScene::Update()
 {
+	CPlayer* player = CPlayer::Instance();
 	//BGM再生中でなければ、BGMを再生
 	/*if (!mpGameBGM->IsPlaying())
 	{
 		mpGameBGM->PlayLoop(-1, 1.0f, false, 1.0f);
 	}*/
+
+	if (player->IsDeath())
+	{
+		if (mElapsedTime < GAMEOVER_WAIT_TIME)
+		{
+			mElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			CSceneManager::Instance()->LoadScene(EScene::eGameOver);
+		}
+	}
 
 	if (CInput::PushKey('H'))
 	{

@@ -2,6 +2,7 @@
 #include "CCamera.h"
 #include <glut.h>
 #include "CImage3D.h"
+#include "CImage.h"
 #include "Maths.h"
 
 #define WORLD_UNIT_PER_PIXEL 32.0f
@@ -10,14 +11,14 @@
 CGaugeUI3D::CGaugeUI3D(CObjectBase* owner)
 	: CObjectBase(ETag::eUI, ETaskPriority::eUI3D, 0, ETaskPauseType::eGame)
 	, mpOwner(owner)
-	, mpGaugeImg(nullptr)
-	, mpWhiteImg(nullptr)
+	, mpGaugeImg3D(nullptr)
+	, mpWhiteImg3D(nullptr)
 	, mMaxPoint(100)
 	, mCurrPoint(mMaxPoint)
 	, mPercent(1.0f)
 {
-	// ゲージのイメージを読み込み
-	mpGaugeImg = new CImage3D
+	// 3Dのゲージのイメージを読み込み
+	mpGaugeImg3D = new CImage3D
 	(
 		"UI\\gauge.png",
 		ETag::eUI,
@@ -25,12 +26,12 @@ CGaugeUI3D::CGaugeUI3D(CObjectBase* owner)
 		ETaskPauseType::eGame,
 		false, false
 	);
-	mpGaugeImg->SetWorldUnitPerPixel(WORLD_UNIT_PER_PIXEL);
-	mpGaugeImg->SetDepthMask(true);
-	mGaugeSize = mpGaugeImg->GetSize();
+	mpGaugeImg3D->SetWorldUnitPerPixel(WORLD_UNIT_PER_PIXEL);
+	mpGaugeImg3D->SetDepthMask(true);
+	mGaugeSize = mpGaugeImg3D->GetSize();
 
-	// 白イメージを読み込み
-	mpWhiteImg = new CImage3D
+	// 3Dの白イメージを読み込み
+	mpWhiteImg3D = new CImage3D
 	(
 		"UI\\white.png",
 		ETag::eUI,
@@ -38,15 +39,26 @@ CGaugeUI3D::CGaugeUI3D(CObjectBase* owner)
 		ETaskPauseType::eGame,
 		false, false
 	);
-	mpWhiteImg->SetWorldUnitPerPixel(WORLD_UNIT_PER_PIXEL);
+	mpWhiteImg3D->SetWorldUnitPerPixel(WORLD_UNIT_PER_PIXEL);
+
+	// 
+	mpGaugeImg = new CImage
+	(
+		"UI\\gauge.png",
+		ETaskPriority::eUI, 0,
+		ETaskPauseType::eGame,
+		false,
+		false
+	);
+
 }
 
 // デストラクタ
 CGaugeUI3D::~CGaugeUI3D()
 {
 	// 読み込んだイメージを削除
-	SAFE_DELETE(mpGaugeImg);
-	SAFE_DELETE(mpWhiteImg);
+	SAFE_DELETE(mpGaugeImg3D);
+	SAFE_DELETE(mpWhiteImg3D);
 
 	// 持ち主に削除されたことを伝える
 	if (mpOwner != nullptr)
@@ -100,8 +112,8 @@ void CGaugeUI3D::SetPercent(float per)
 // 更新
 void CGaugeUI3D::Update()
 {
-	mpGaugeImg->Update();
-	mpWhiteImg->Update();
+	mpGaugeImg3D->Update();
+	mpWhiteImg3D->Update();
 }
 
 // 描画
@@ -117,10 +129,10 @@ void CGaugeUI3D::Render()
 	glMultMatrixf((m * Matrix()).M());
 
 	// ゲージ背景を描画
-	mpWhiteImg->SetOffsetPos(CVector2::zero);
-	mpWhiteImg->SetSize(mGaugeSize);
-	mpWhiteImg->SetColor(CColor::black);
-	mpWhiteImg->Render();
+	mpWhiteImg3D->SetOffsetPos(CVector2::zero);
+	mpWhiteImg3D->SetSize(mGaugeSize);
+	mpWhiteImg3D->SetColor(CColor::black);
+	mpWhiteImg3D->Render();
 
 	// バーのサイズ、座標、色を
 	// ポイント残量の割合に合わせて調整して、バーを描画
@@ -128,21 +140,21 @@ void CGaugeUI3D::Render()
 		// バーのサイズを調整
 		CVector2 barSize = mGaugeSize;
 		barSize.X(barSize.X() * mPercent);
-		mpWhiteImg->SetSize(barSize);
+		mpWhiteImg3D->SetSize(barSize);
 		// バーの座標を調整
 		CVector2 barPos = mGaugeSize - barSize;
-		mpWhiteImg->SetOffsetPos(-barPos);
+		mpWhiteImg3D->SetOffsetPos(-barPos);
 		// バーの色を設定
 		CColor barColor = CColor::green;
 		if (mPercent <= 0.2f) barColor = CColor::red;
 		else if (mPercent <= 0.5f)barColor = CColor::yellow;
-		mpWhiteImg->SetColor(barColor);
+		mpWhiteImg3D->SetColor(barColor);
 		// バーを描画
-		mpWhiteImg->Render();
+		mpWhiteImg3D->Render();
 	}
 
 	// ゲージ本体を描画
-	mpGaugeImg->Render();
+	mpGaugeImg3D->Render();
 
 	// 行列を戻す
 	glPopMatrix();

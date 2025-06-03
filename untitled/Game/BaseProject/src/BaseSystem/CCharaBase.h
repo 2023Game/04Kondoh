@@ -49,13 +49,14 @@ public:
 	// 攻撃の強さの文字列を取得
 	std::string GetAttackPowerStr() const;
 
+
 	/// <summary>
 	/// 指定した攻撃の方向と強さで怯むかどうか
 	/// </summary>
 	/// <param name="dir">方向</param>
 	/// <param name="power">強さ</param>
 	/// <returns>trueであれば怯む</returns>
-	virtual bool CheckParry(EAttackDir dir, EAttackPower power) const;
+	virtual bool CheckAttackParry(EAttackDir dir, EAttackPower power) const;
 
 	// 防御時のパリィ
 	virtual bool CheckGuardParry() const;
@@ -66,7 +67,7 @@ public:
 	/// <param name="damage">受けるダメージ量</param>
 	/// <param name="stan">加算される怯み度</param>
 	/// <param name="causer">ダメージを与えたもの</param>
-	virtual void TakeDamage(int damage,float stun, CObjectBase* causer);
+	virtual void TakeDamage(int damage,float stun, float knockback, CObjectBase* causer);
 
 	// 防御処理
 	virtual void Guard();
@@ -98,6 +99,8 @@ protected:
 
 	float mStunPoints;		// 現在の怯み度
 	float mStunThreshold;	// 怯み度のしきい値
+
+	float mKnockBack;
 
 	EAttackDir mAttackDir;
 	EAttackPower mAttackPower;

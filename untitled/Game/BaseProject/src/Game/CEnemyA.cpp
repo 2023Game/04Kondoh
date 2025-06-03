@@ -33,17 +33,23 @@
 
 #define DISTANT_ATTACK_RANGE	150.0f	// タックル攻撃範囲
 #define NEAR_ATTACK_RANGE		 30.0f	// 薙ぎ払いと回し蹴り、三連攻撃の範囲
-#define HEADBUTT_ATTACK_RANGE	  5.0f	// 頭突き攻撃範囲
+#define HEADBUTT_ATTACK_RANGE	  10.0f	// 頭突き攻撃範囲
+
+#define BLOW_DMG		10.0f	// 薙ぎ払いのダメージ
+#define KICK_DMG		20.0f	// 回し蹴りのダメージ
+#define TACKLE_DMG		50.0f	// タックルのダメージ
+#define HEADBUTT_DMG	 5.0f	// 頭突きのダメージ
 
 #define STUN_THRESHOLD	100.0f	// 怯みのしきい値
-#define BLOW_DMG		10.0f	// 薙ぎ払いのダメージ
 #define BLOW_STUN		10.0f	// 薙ぎ払いのスタン値
-#define KICK_DMG		20.0f	// 回し蹴りのダメージ
 #define KICK_STUN		30.0f	// 回し蹴りのスタン値
-#define TACKLE_DMG		50.0f	// タックルのダメージ
 #define TACKLE_STUN		20.0f	// タックルのスタン値
-#define HEADBUTT_DMG	 5.0f	// 頭突きのダメージ
 #define HEADBUTT_STUN	50.0f	// 頭突きのスタン値
+
+#define BLOW_KNOCKBACK		50.0f	// 薙ぎ払いのノックバック距離
+#define KICK_KNOCKBACK		50.0f	// 
+#define TACKLE_KNOCKBACK	50.0f	// 
+#define HEADBUTT_KNOCKBACK	50.0f	//
 
 #define BLOWL_PROB	20		// 左薙ぎ払いの確率
 #define BLOWR_PROB	40		// 右薙ぎ払いの確率
@@ -104,7 +110,7 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	 53.0f,	0.5f},	// 右回し蹴り
 	{ ATTACK_ANIM_PATH"Tackle.x",			false,	 56.0f,	1.0f},	// タックル
 	{ ATTACK_ANIM_PATH"TackleWait.x",		false,	 71.0f,	1.5f},	// タックル終了の予備動作	
-	{ ATTACK_ANIM_PATH"HeadButt.x",			false,	 68.0f,	1.0f},	// 頭突き攻撃
+	{ ATTACK_ANIM_PATH"HeadButt.x",			false,	 68.0f,	0.125f},	// 頭突き攻撃
 
 	{ ANIM_PATH"BattleWalkL.x",				 true,	 32.0f,	1.0f},	// 戦闘時の左歩行
 	{ ANIM_PATH"BattleWalkR.x",				 true,	 32.0f,	1.0f},	// 戦闘時の右歩行
@@ -125,23 +131,23 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 {
 	// 指定なし
-	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, 0.0f, 0.0f},
+	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, false, 0.0f, 0.0f, 0.0f, 0.0f},
 	// 左薙ぎ払い
-	{ EAttackDir::eLeft,	EAttackPower::eAttackS,	true, 0.0f, 30.0f},
+	{ EAttackDir::eLeft,	EAttackPower::eAttackS,	true, true, 0.0f, 10.0f, 16.0f, 22.0f},
 	// 右薙ぎ払い
-	{ EAttackDir::eRight,	EAttackPower::eAttackS,	true, 0.0f, 30.0f},
+	{ EAttackDir::eRight,	EAttackPower::eAttackS,	true, true, 0.0f, 10.0f, 16.0f, 24.0f},
 	// 左回し蹴り
-	{ EAttackDir::eLeft,	EAttackPower::eAttackM,	true, 0.0f, 10.0f},
+	{ EAttackDir::eLeft,	EAttackPower::eAttackM,	true, true, 0.0f, 10.0f, 23.0f, 43.0f},
 	// 右回し蹴り
-	{ EAttackDir::eRight,	EAttackPower::eAttackM,	true, 0.0f, 10.0f},
+	{ EAttackDir::eRight,	EAttackPower::eAttackM,	true, true, 0.0f, 10.0f, 23.0f, 43.0f},
 	// タックル
-	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, 0.0f, 0.0f},
+	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, false, 0.0f, 0.0f, 0.0f, 0.0f},
 	// タックル終了時の予備動作
-	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, 0.0f, 0.0f},
+	{ EAttackDir::eNone,	EAttackPower::eAttackL,	false, false, 0.0f, 0.0f, 0.0f, 0.0f},
 	// 頭突き攻撃
-	{ EAttackDir::eUp,		EAttackPower::eAttackL,	false, 0.0f, 0.0f},
+	{ EAttackDir::eUp,		EAttackPower::eAttackL,	false, true, 0.0f, 0.0f, 20.0f, 30.0f},
 	// 三連攻撃
-	{ EAttackDir::eNone,	EAttackPower::eAttackS,	false, 0.0f, 0.0f},
+	{ EAttackDir::eNone,	EAttackPower::eAttackS,	false, false, 0.0f, 0.0f, 0.0f, 0.0f},
 };
 
 // コンストラクタ
@@ -372,7 +378,7 @@ void CEnemyA::Update()
 	CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
-	CDebugPrint::Print("　戦闘用経過時間：%.2f\n", mBattleElapsedTime);
+	CDebugPrint::Print("　経過時間：%.2f\n", GetAnimationFrame());
 	CDebugPrint::Print("　戦闘時の待機時間：%.2f\n", mBattleIdletime);
 	//CDebugPrint::Print("　円運動の移動角度：%.2f\n", mRandMoveAngle);
 	//CDebugPrint::Print("　パリィ出来たか：%s\n", mIsAttackParry ? "パリィOK" : "パリィNO");
@@ -499,10 +505,10 @@ bool CEnemyA::IsGuarding() const
 	return false;
 }
 
-void CEnemyA::TakeDamage(int damage, float stan, CObjectBase* causer)
+void CEnemyA::TakeDamage(int damage, float stan, float knockback, CObjectBase* causer)
 {
 	// ベースクラスのダメージ処理を呼び出す
-	CEnemyBase::TakeDamage(damage, stan, causer);
+	CEnemyBase::TakeDamage(damage, stan, knockback, causer);
 
 	// 死亡しなければ
 	if (!IsDeath())
@@ -572,44 +578,53 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 				// 与えるダメージの計算
 				int damage = 0;
 				float stan = 0.0f;
-				CalcDamage(chara, &damage, &stan);
-				// ダメージを与える
-				chara->TakeDamage(damage, stan, this);
+				float knockback = 0.0f;
+				CalcDamage(chara, &damage, &stan, &knockback);
 
+				// ダメージを与える
+				chara->TakeDamage(damage, stan, knockback, this);
 			}
 		}
 	}
 }
 
-void CEnemyA::CalcDamage(CCharaBase* taker, int* outEnemyADamage, float* outEnemyAStan) const
+void CEnemyA::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const
 {
+
 	switch (mAttackType)
 	{
 	case (int)EAttackType::eBlowL:
-		*outEnemyADamage = BLOW_DMG;
-		*outEnemyAStan = BLOW_STUN;
+		*outDamage = BLOW_DMG;
+		*outStan = BLOW_STUN;
+		*outKnockback = BLOW_KNOCKBACK;
 		break;
 	case (int)EAttackType::eBlowR:
-		*outEnemyADamage = BLOW_DMG;
-		*outEnemyAStan = BLOW_STUN;
+		*outDamage = BLOW_DMG;
+		*outStan = BLOW_STUN;
+		*outKnockback = BLOW_KNOCKBACK;
 		break;
 	case (int)EAttackType::eRoundKickL:
-		*outEnemyADamage = KICK_DMG;
-		*outEnemyAStan = KICK_STUN;
+		*outDamage = KICK_DMG;
+		*outStan = KICK_STUN;
+		*outKnockback = KICK_KNOCKBACK;
 		break;
 	case (int)EAttackType::eRoundKickR:
-		*outEnemyADamage = KICK_DMG;
-		*outEnemyAStan = KICK_STUN;
+		*outDamage = KICK_DMG;
+		*outStan = KICK_STUN;
+		*outKnockback = KICK_KNOCKBACK;
 		break;
 	case (int)EAttackType::eTackle:
-		*outEnemyADamage = TACKLE_DMG;
-		*outEnemyAStan = TACKLE_STUN;
+		*outDamage = TACKLE_DMG;
+		*outStan = TACKLE_STUN;
+		*outKnockback = TACKLE_KNOCKBACK;
 		break;
 	case (int)EAttackType::eHeadButt:
-		*outEnemyADamage = HEADBUTT_DMG;
-		*outEnemyAStan = HEADBUTT_STUN;
+		*outDamage = HEADBUTT_DMG;
+		*outStan = HEADBUTT_STUN;
+		*outKnockback = HEADBUTT_KNOCKBACK;
 		break;
 	}
+
 }
 
 
@@ -1014,6 +1029,7 @@ void CEnemyA::ChangePatrolPoint()
 			float dist = vec.Length();
 			// 巡回ポイントが近すぎる場合は、スルー
 			if (dist < PATROL_NEAR_DIST) continue;
+
 			// 一番近い巡回ポイントもしくは、
 			// 現在一番近い巡回ポイントよりさらに近い場合は、
 			// 巡回ポイントの番号を置き換える
@@ -1532,23 +1548,46 @@ void CEnemyA::UpdateBlowL()
 	switch (mStateStep)
 	{
 	case 0: // アニメーション再生
+		mAttackStartPos = Position();
+		mAttackEndPos = mAttackStartPos + VectorZ() * BLOW_MOVE_DIST;
 		ChangeAnimation((int)EAnimType::eBlowL, true);
 		mStateStep++;
 		break;
 	case 1: // 攻撃用コライダーオン
 	{
-		// パリィが出来る範囲が終了したら、攻撃コライダーをオンにする
+		// 攻撃アニメーションが移動開始フレームを超えた場合
 		float frame = GetAnimationFrame();
 		const AttackData& data = (*mpAttackData)[mAttackType];
-		if (frame >= data.parryEndFrame)
-		{
-			AttackStart();
-			mStateStep++;
+		float blowMoveStart = data.attackParryEndFrame;
+		AttackStart();
+		if (!IsMoveAttackRange()) {
+			if (frame >= blowMoveStart)
+			{
+				// 移動終了フレームまで到達してない場合
+				if (frame < BLOW_MOVE_END)
+				{
+					// 線形補間で移動開始位置から移動終了位置まで移動する
+					float moveFrame = BLOW_MOVE_END - blowMoveStart;
+					float percent = (frame - blowMoveStart) / moveFrame;
+					CVector pos = CVector::Lerp(mAttackStartPos, mAttackEndPos, percent);
+					Position(pos);
+				}
+				// 移動終了フレームまで到達した場合
+				else
+				{
+					Position(mAttackEndPos);
+					mStateStep++;
+				}
+			}
+			// 攻撃コライダーがオンになるまで、プレイヤーの方向へ向く
+			else
+			{
+				LookAtBattleTarget();
+			}
 		}
-		// 攻撃コライダーがオンになるまで、プレイヤーの方向へ向く
 		else
 		{
-			LookAtBattleTarget();
+			mStateStep++;
 		}
 		break;
 	}
@@ -1563,12 +1602,12 @@ void CEnemyA::UpdateBlowL()
 			}
 			else
 			{
-				// 待機状態へ移行
+				// 時間が経過したら、待機状態へ移行
 				ChangeState((int)EState::eBattleIdle);
 			}
 		}
 		break;
-	case 3:	// ステップ3 : 三連攻撃に切り替える
+	case 3:	// ステップ3 : 
 		mStateStep = 0;
 		ChangeAttackType((int)EAttackType::eTripleAttack);
 		break;
@@ -1590,16 +1629,18 @@ void CEnemyA::UpdateBlowR()
 	{
 		// 攻撃アニメーションが移動開始フレームを超えた場合
 		float frame = GetAnimationFrame();
+		const AttackData& data = (*mpAttackData)[mAttackType];
+		float blowMoveStart = data.attackParryEndFrame;
 		AttackStart();
 		if (!IsMoveAttackRange()) {
-			if (frame >= BLOW_MOVE_START)
+			if (frame >= blowMoveStart)
 			{
 				// 移動終了フレームまで到達してない場合
 				if (frame < BLOW_MOVE_END)
 				{
 					// 線形補間で移動開始位置から移動終了位置まで移動する
-					float moveFrame = BLOW_MOVE_END - BLOW_MOVE_START;
-					float percent = (frame - BLOW_MOVE_START) / moveFrame;
+					float moveFrame = BLOW_MOVE_END - blowMoveStart;
+					float percent = (frame - blowMoveStart) / moveFrame;
 					CVector pos = CVector::Lerp(mAttackStartPos, mAttackEndPos, percent);
 					Position(pos);
 				}
@@ -1609,6 +1650,11 @@ void CEnemyA::UpdateBlowR()
 					Position(mAttackEndPos);
 					mStateStep++;
 				}
+			}
+			// 攻撃コライダーがオンになるまで、プレイヤーの方向へ向く
+			else
+			{
+				LookAtBattleTarget();
 			}
 		}
 		else
@@ -1655,16 +1701,18 @@ void CEnemyA::UpdateRoundKickL()
 		{
 			// 攻撃アニメーションが移動開始フレームを超えた場合
 			float frame = GetAnimationFrame();
+			const AttackData& data = (*mpAttackData)[mAttackType];
+			float kickMoveStart = data.attackParryEndFrame;
 			AttackStart();
 			if (!IsMoveAttackRange()) {
-				if (frame >= KICK_MOVE_START)
+				if (frame >= kickMoveStart)
 				{
 					// 移動終了フレームまで到達してない場合
 					if (frame < KICK_MOVE_END)
 					{
 						// 線形補間で移動開始位置から移動終了位置まで移動する
-						float moveFrame = KICK_MOVE_END - KICK_MOVE_START;
-						float percent = (frame - KICK_MOVE_START) / moveFrame;
+						float moveFrame = KICK_MOVE_END - kickMoveStart;
+						float percent = (frame - kickMoveStart) / moveFrame;
 						CVector pos = CVector::Lerp(mAttackStartPos, mAttackEndPos, percent);
 						Position(pos);
 					}
@@ -1674,6 +1722,10 @@ void CEnemyA::UpdateRoundKickL()
 						Position(mAttackEndPos);
 						mStateStep++;
 					}
+				}
+				else
+				{
+					LookAtBattleTarget();
 				}
 			}
 			else
@@ -1707,16 +1759,18 @@ void CEnemyA::UpdateRoundKickR()
 	{
 		// 攻撃アニメーションが移動開始フレームを超えた場合
 		float frame = GetAnimationFrame();
+		const AttackData& data = (*mpAttackData)[mAttackType];
+		float kickMoveStart = data.attackParryEndFrame;
 		AttackStart();
 		if (!IsMoveAttackRange()) {
-			if (frame >= KICK_MOVE_START)
+			if (frame >= kickMoveStart)
 			{
 				// 移動終了フレームまで到達してない場合
 				if (frame < KICK_MOVE_END)
 				{
 					// 線形補間で移動開始位置から移動終了位置まで移動する
-					float moveFrame = KICK_MOVE_END - KICK_MOVE_START;
-					float percent = (frame - KICK_MOVE_START) / moveFrame;
+					float moveFrame = KICK_MOVE_END - kickMoveStart;
+					float percent = (frame - kickMoveStart) / moveFrame;
 					CVector pos = CVector::Lerp(mAttackStartPos, mAttackEndPos, percent);
 					Position(pos);
 				}
@@ -1726,6 +1780,10 @@ void CEnemyA::UpdateRoundKickR()
 					Position(mAttackEndPos);
 					mStateStep++;
 				}
+			}
+			else
+			{
+				LookAtBattleTarget();
 			}
 		}
 		else
@@ -1840,7 +1898,7 @@ void CEnemyA::UpdateTackleWait()
 	}
 }
 
-// 押し出し攻撃の更新処理
+// 頭突き攻撃の更新処理
 void CEnemyA::UpdateHeadButt()
 {
 	switch (mStateStep)
@@ -1854,7 +1912,7 @@ void CEnemyA::UpdateHeadButt()
 		// パリィが出来る範囲が終了したら、攻撃コライダーをオンにする
 		float frame = GetAnimationFrame();
 		const AttackData& data = (*mpAttackData)[mAttackType];
-		if (frame >= data.parryEndFrame)
+		if (frame >= data.attackParryEndFrame)
 		{
 			AttackStart();
 			mStateStep++;

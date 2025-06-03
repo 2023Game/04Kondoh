@@ -15,14 +15,14 @@ CGaugeUI2D::CGaugeUI2D()
 
 	mpHpGaugeImg = new CImage
 	(
-		"UI\\gauge2.png",
+		"UI\\gauge3.png",
 		ETaskPriority::eUI, 0,
 		ETaskPauseType::eGame,
 		false, false
 	);
 	mGaugeSize = mpHpGaugeImg->GetSize();
-	CVector2 center = CVector2(-mGaugeSize.X() * 0.5f, 0.0f);
-	mpHpGaugeImg->SetCenter(center);
+	//CVector2 center = CVector2(-mGaugeSize.X() * 0.5f, 0.0f);
+	//mpHpGaugeImg->SetCenter(center);
 
 	mpHpWhiteImg = new CImage
 	(
@@ -90,23 +90,27 @@ void CGaugeUI2D::Update()
 }
 
 // •`‰æ
-void CGaugeUI2D::Rendar()
+void CGaugeUI2D::Render()
 {
 	CVector2 pos = mPosition;
 
-	mpHpGaugeImg->SetPos(pos);
-	mpHpGaugeImg->Render();
-
-
-	CVector2 barPos = mPosition;
-	barPos.X(barPos.X() - mGaugeSize.X() * 0.5f);
+	CVector2 barPos = mPosition + CVector2(8.0f, 8.0f);
 	mpHpWhiteImg->SetPos(barPos);
 
-	CVector2 barSize = mGaugeSize;
+	CVector2 barSize = mGaugeSize - CVector2(16.0f, 16.0f);
 	barSize.X(barSize.X() * mPercent);
 	mpHpWhiteImg->SetSize(barSize);
 
+	CColor barColor = CColor::green;
+	if (mPercent <= 0.2f) barColor = CColor::red;
+	else if (mPercent <= 0.5f) barColor = CColor::yellow;
+	mpHpWhiteImg->SetColor(barColor);
+
 	mpHpWhiteImg->Render();
+
+	// ƒQ[ƒW•`‰æ
+	mpHpGaugeImg->SetPos(pos);
+	mpHpGaugeImg->Render();
 
 }
 

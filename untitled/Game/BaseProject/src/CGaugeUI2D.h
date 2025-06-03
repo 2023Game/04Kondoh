@@ -24,7 +24,7 @@ public:
 	// XV
 	void Update() override;
 	// •`‰æ
-	void Rendar() ;
+	void Render() ;
 
 private:
 

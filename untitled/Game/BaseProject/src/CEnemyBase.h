@@ -26,11 +26,14 @@ public:
 	// 攻撃データ
 	struct AttackData
 	{
-		EAttackDir dir;			// 攻撃の方向
-		EAttackPower power;		// 攻撃の強さ
-		bool parry;				// パリー出来るかどうか
-		float parryStartFrame;	// パリー出来るアニメーション開始フレーム数
-		float parryEndFrame;	// パリー出来るアニメーション終了フレーム数
+		EAttackDir dir;					// 攻撃の方向
+		EAttackPower power;				// 攻撃の強さ
+		bool attackParry;				// アタックパリィ出来るかどうか
+		bool guardParry;				// ガードパリィ出来るかどうか
+		float attackParryStartFrame;	// アタックパリィ出来るアニメーション開始フレーム数
+		float attackParryEndFrame;		// アタックパリィ出来るアニメーション終了フレーム数
+		float guardParryStartFrame;		// ガードパリィ出来るアニメーション開始フレーム
+		float guardParryEndFrame;		// ガードパリィ出来るアニメーション終了フレーム
 	};
 
 	// コンストラクタ
@@ -42,7 +45,9 @@ public:
 	void DeleteObject(CObjectBase* obj) override;
 
 	// パリィ出来るかどうか
-	bool CheckParry(EAttackDir dir, EAttackPower power) const override;
+	bool CheckAttackParry(EAttackDir dir, EAttackPower power) const override;
+
+	bool CheckGaurdParry() const;
 
 	/// <summary>
 	/// 衝突処理

@@ -64,12 +64,8 @@ public:
 	bool IsJumping() const;
 
 	// ダメージを受ける
-	void TakeDamage(int damage, float stan, CObjectBase* causer) override;
+	void TakeDamage(int damage, float stan, float knockback, CObjectBase* causer) override;
 
-	// 防御処理
-//	void Guard() override;
-	// 回避処理
-//	void Avoid() override;
 	// 仰け反り処理
 	void Hit() override;
 	// 死亡処理
@@ -98,7 +94,7 @@ private:
 	/// <param name="taker">ダメージを受けるキャラ</param>
 	/// <param name="outDamage">ダメージ量を返す用</param>
 	/// <param name="outStan">怯み度を返す用</param>
-	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const;
+	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
 
 	// 非戦闘時の待機状態
 //	void UpdateIdle();
@@ -236,10 +232,15 @@ private:
 
 	CGaugeUI2D* mpHpUI;
 
-	CVector mAvoidDir;	// 回避方向
 
 	int mStateStep;     // 状態内のステップ管理用
 	float mElapsedTime; // 経過時間計測用
+
+	float mKnockBack;
+
+	CVector mAvoidDir;	// 回避方向
+	CVector mMoveStartPos;	// 移動開始の位置
+	CVector mMoveEndPos;	// 移動終了の位置
 
 	int mRandHitAnim;	// ランダムな仰け反りアニメーション
 	int mRandDeathAnim;	// ランダムな死亡アニメーション

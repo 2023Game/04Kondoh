@@ -35,10 +35,14 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define DAMAGE_L		3.0f	// 強攻撃のダメージ
 #define DAMAGE_DIA		2.0f	// ダメージの倍率
 
-#define STAN_VAL_S		1.0f	// 弱攻撃のスタン値
-#define STAN_VAL_M		100.0f	// 中攻撃のスタン値
-#define STAN_VAL_L		10.0f	// 強攻撃のスタン値
-#define STAN_VAL_DIA	10.0f	// スタン値の倍率
+#define STAN_VAL_S		10.0f	// 弱攻撃のスタン値
+#define STAN_VAL_M		20.0f	// 中攻撃のスタン値
+#define STAN_VAL_L		30.0f	// 強攻撃のスタン値
+#define STAN_VAL_DIA	2.0f	// スタン値の倍率
+
+#define KNOCKBACK_S		6.0f	// 弱攻撃のノックバック距離
+#define KNOCKBACK_M		8.0f	// 中攻撃のノックバック距離
+#define KNOCKBACK_L		10.0f	// 強攻撃のノックバック距離
 
 #define DEATH_RPOB 40	// 死亡アニメーション確率
 #define DEATH_WAIT_TIME	5.0
@@ -50,7 +54,8 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define JUMP_SPEED	1.5f
 #define GRAVITY		0.098f // 0.0625
 #define JUMP_END_Y	1.0f  
-#define EVA_MOVE_SPEED	90.0f  // 回避時の移動速度
+
+#define EVA_MOVE_DIST	90.0f  // 回避時の移動速度
 #define EVA_MOVE_START   5.0f  // 回避時の移動開始フレーム 
 #define EVA_MOVE_END    40.0f  // 回避時の移動終了フレーム 
 
@@ -122,6 +127,7 @@ CPlayer::CPlayer()
 	, mSelectAttackPower(EAttackPower::eAttackM)
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
+	, mKnockBack(0.0f)
 	, mMoveSpeedY(0.0f)
 	, mpRideObject(nullptr)
 	, mIsGrounded(false)
@@ -224,6 +230,7 @@ CPlayer::CPlayer()
 	mpHpUI = new CGaugeUI2D();
 	mpHpUI->SetMaxPoint(mMaxHp);
 	mpHpUI->SetCurrPoint(mHp);
+	mpHpUI->SetPos(CVector2(370.0f, 660.0f));
 
 	mRandDeathAnim = Math::Rand(0, 99);
 }
@@ -303,10 +310,10 @@ bool CPlayer::IsJumping() const
 	return false;
 }
 
-void CPlayer::TakeDamage(int damage, float stan, CObjectBase* causer)
+void CPlayer::TakeDamage(int damage, float stan, float knockback, CObjectBase* causer)
 {
 	// ベースクラスのダメージ処理を呼び出す
-	CCharaBase::TakeDamage(damage, stan, causer);
+	CCharaBase::TakeDamage(damage, stan, knockback, causer);
 	// 死亡しなければ
 	if (!IsDeath())
 	{
@@ -345,7 +352,7 @@ void CPlayer::Update()
 		mIsBattleMode = !mIsBattleMode;
 	}
 
-	//// 待機と戦闘時待機の切り替え
+	// TODO:通常時待機と戦闘時待機の切り替え
 	//ChangeState(EState::eBattleIdle);
 
 	// マウスホイールの回転量の差分
@@ -468,10 +475,9 @@ void CPlayer::Update()
 	CDebugPrint::Print("■プレイヤーの情報\n");
 	CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
 	CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
-
+	CDebugPrint::Print("　ノックバック距離：%f\n", mKnockBack);
 	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
-	//	CDebugPrint::Print("　防御しているか：%s\n", mIsGuard ? "はい" : "いいえ");
 	CDebugPrint::Print("　\n");
 }
 
@@ -540,21 +546,21 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 		if (other->Layer() == ELayer::eEnemy, other->Tag() == ETag::eEnemy)
 		{
 			// ヒットしたのがキャラクターかつ、
-				// まだ攻撃がヒットしていないキャラクターであれば
+			// まだ攻撃がヒットしていないキャラクターであれば
 			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
 			if (chara != nullptr && !IsAttackHitObj(chara))
 			{
+
 				// 攻撃ヒット済みリストに登録
 				AddAttackHitObj(chara);
 
 				// 与えるダメージの計算
 				int damage = 0;
 				float stan = 0.0f;
-				CalcDamage(chara, &damage, &stan);
-
+				float knockback = 0.0f;
+				CalcDamage(chara, &damage, &stan, &knockback);
 				// ダメージを与える
-				chara->TakeDamage(damage, stan, this);
-
+				chara->TakeDamage(damage, stan, knockback, this);
 			}
 		}
 
@@ -652,9 +658,7 @@ void CPlayer::ChangeAttack()
 		}
 	}
 	// 上入力で、上攻撃
-	else if (mState == EState::eJump
-			|| mState == EState::eJumpStart
-			|| mState == EState::eJumpEnd)
+	else if (IsJumping())
 	{
 		if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
 		{
@@ -664,17 +668,6 @@ void CPlayer::ChangeAttack()
 			mAttackDir = EAttackDir::eUp;
 		}
 	}
-	// 下入力で、下攻撃
-	//else if (mState == EState::eGuard)
-	//{
-	//	if (CInput::PushKey(VK_LBUTTON) || CInput::PushKey(VK_RBUTTON))
-	//	{
-	//		mMoveSpeed = CVector::zero;
-	//		ChangeState(EState::eAttack);
-	//		mAttackPower = mSelectAttackPower;
-	//		mAttackDir = EAttackDir::eDown;
-	//	}
-	//}
 	else if (mState == EState::eAttack)
 	{
 		if (CInput::PushKey(VK_LBUTTON))
@@ -695,27 +688,30 @@ void CPlayer::ChangeAttack()
 }
 
 // ダメージ量を計算して返す
-void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const
+void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const
 {
 	if (mSelectAttackPower == EAttackPower::eAttackS)
 	{
 		// ダメージを与える
 		*outDamage = DAMAGE_S;
 		*outStan = STAN_VAL_S;
+		*outKnockback = 8.0f;
 	}
 	else if (mSelectAttackPower == EAttackPower::eAttackM)
 	{
 		*outDamage = DAMAGE_M;
 		*outStan = STAN_VAL_M;
+		*outKnockback = 8.0f;
 	}
 	else if (mSelectAttackPower == EAttackPower::eAttackL)
 	{
 		*outDamage = DAMAGE_L;
 		*outStan = STAN_VAL_L;
+		*outKnockback = 8.0f;
 	}
 
 	// パリィ出来るかどうか、判断する
-	if (taker->CheckParry(mAttackDir, mAttackPower))
+	if (taker->CheckAttackParry(mAttackDir, mAttackPower))
 	{
 		if (mSelectAttackPower == EAttackPower::eAttackS)
 		{
@@ -918,7 +914,7 @@ void CPlayer::UpdateAvoid()
 				CVector forward = CVector::Slerp(current, mAvoidDir, 0.5);
 				Rotation(CQuaternion::LookRotation(forward));
 				// 回避時の移動速度を求める
-				mMoveSpeed = mAvoidDir * EVA_MOVE_SPEED * Times::DeltaTime();
+				mMoveSpeed = mAvoidDir * EVA_MOVE_DIST * Times::DeltaTime();
 			}
 			else
 			{
@@ -1084,15 +1080,7 @@ void CPlayer::UpdateMove()
 		if (mState == EState::eBattleIdle)
 		{
 			EAnimType moveAnim = EAnimType::eBattleWalk;
-			if (CInput::Key('W'))
-			{
-				mIsRun ? moveAnim = EAnimType::eRun : moveAnim = EAnimType::eBattleWalk;
-			}
-			else if (CInput::Key('S'))
-			{
-				mIsRun ? moveAnim = EAnimType::eBackRun : moveAnim = EAnimType::eBattleBackWalk;
-			}
-			else if (CInput::Key('A'))
+			if (CInput::Key('A'))
 			{
 				mIsRun ? moveAnim = EAnimType::eLeftRun : moveAnim = EAnimType::eBattleLeftWalk;
 			}
@@ -1100,6 +1088,15 @@ void CPlayer::UpdateMove()
 			{
 				mIsRun ? moveAnim = EAnimType::eRightRun : moveAnim = EAnimType::eBattleRightWalk;
 			}
+			else if (CInput::Key('W'))
+			{
+				mIsRun ? moveAnim = EAnimType::eRun : moveAnim = EAnimType::eBattleWalk;
+			}
+			else if (CInput::Key('S'))
+			{
+				mIsRun ? moveAnim = EAnimType::eBackRun : moveAnim = EAnimType::eBattleBackWalk;
+			}
+
 			ChangeAnimation(moveAnim);
 		}
 	}
@@ -1127,19 +1124,47 @@ void CPlayer::UpdateHit()
 	{
 	case 0:
 	{
+		EAnimType animType = EAnimType::eHit1;
+		mMoveStartPos = Position();
+		mMoveEndPos = mMoveStartPos + VectorZ() * mKnockBack;
+
 		if (mRandHitAnim == 0)
 		{
-			ChangeAnimation(EAnimType::eHit1, true);
-			mStateStep++;
+			animType = EAnimType::eHit1;
 		}
 		else if (mRandHitAnim == 1)
 		{
-			ChangeAnimation(EAnimType::eHit2, true);
-			mStateStep++;
+			animType = EAnimType::eHit2;
 		}
+
+		ChangeAnimation(animType, true);
+		mStateStep++;
 		break;
 	}
 	case 1:
+	{
+		float frame = GetAnimationFrame();
+		float moveStartFrame = mAnimationFrameSize * 0.1f;
+		float moveEndFrame = mAnimationFrameSize * 0.9f;
+		if (GetAnimationFrameRatio() >= 0.1)
+		{
+			if (GetAnimationFrameRatio() <= 0.9)
+			{
+				// 線形補間で移動開始位置から移動終了位置まで移動する
+				float moveFrame = moveEndFrame - moveStartFrame;
+				float percent = (frame - moveStartFrame) / moveFrame;
+				CVector pos = CVector::Lerp(mMoveStartPos, mMoveEndPos, percent);
+				Position(pos);
+			}
+			else
+			{
+				Position(mMoveEndPos);
+				mStateStep++;
+			}
+		}
+		break;
+	}
+	case 2:
 		if (IsAnimationFinished())
 		{
 			ChangeState(EState::eBattleIdle);

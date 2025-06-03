@@ -40,7 +40,7 @@ public:
 	bool IsGuarding() const override;
 
 	// ダメージを受ける
-	void TakeDamage(int damage,float stan, CObjectBase* causer) override;
+	void TakeDamage(int damage,float stan, float knockback, CObjectBase* causer) override;
 
 	// パリィをされた時の処理
 	void Parry() override;
@@ -62,7 +62,7 @@ public:
 private:
 
 	// ダメージ計算
-	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan) const;
+	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
 
 	// アニメーションの種類
 	enum class EAnimType
@@ -270,6 +270,7 @@ private:
 
 	float mRandMoveAngle;	// ランダムの移動角度
 	int mRandHitAnim;		// ランダムな仰け反りアニメーション
+	float mKnockBack;
 
 	CVector mAttackStartPos; // 攻撃開始時の位置
 	CVector mAttackEndPos;   // 攻撃終了時の位置
@@ -283,30 +284,30 @@ private:
 	CColliderSphere* mpLFootCol;
 	// 右足の球コライダ
 	CColliderSphere* mpRFootCol;
-
 	// 戦闘相手
 	CObjectBase* mpBattleTarget;
+
 
 	bool mIsBattle;			// 戦闘状態か
 	bool mIsGuard;			// ガード状態か
 	bool mIsTripleAttack;	// 三連攻撃状態か
-
-//	float mStunThreshold;	// 怯み度のしきい値
 
 	int mAttackCount;		// 今の攻撃の回数
 	int mTackleCount;		// タックルが出来るまでのカウント
 
 	// プレイヤーの攻撃を既に検知済みである
 	bool mIsDetectedPlayerAttack;
-
-	std::vector<CNavNode*> mMoveRoute;	// 求めた最短経路記憶用
-	int mNextMoveIndex;		// 次に移動するノードのインデックス値
 	
+
 	// プレイヤーを見失った位置のノード
 	CNavNode* mpLostPlayerNode; 
 	// 巡回ポイントのリスト
 	std::vector<CNavNode*> mPatrolPoints;
+	// 求めた最短経路記憶用
+	std::vector<CNavNode*> mMoveRoute;
 	// 次に巡回するポイントの番号
 	int mNextPatrolIndex;
+	// 次に移動するノードのインデックス値
+	int mNextMoveIndex;		
 };
 #endif

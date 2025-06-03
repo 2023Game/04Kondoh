@@ -68,20 +68,35 @@ void CEnemyBase::DeleteObject(CObjectBase* obj)
 }
 
 // パリィ出来るかどうか
-bool CEnemyBase::CheckParry(EAttackDir dir, EAttackPower power) const
+bool CEnemyBase::CheckAttackParry(EAttackDir dir, EAttackPower power) const
 {
 	// ベースクラスのパリー条件を満たしていない場合、パリィ出来ない
-	if (!CXCharacter::CheckParry(dir, power)) return false;
+	if (!CXCharacter::CheckAttackParry(dir, power)) return false;
 
 	// パリィ出来ない攻撃だった場合、パリィ出来ない
 	const AttackData& data = (*mpAttackData)[mAttackType];
-	if (!data.parry) return false;
+	if (!data.attackParry) return false;
 
 	// 現在のアニメーションフレームが、パリィ出来る範囲外だった場合、パリィ出来ない
 	float frame = GetAnimationFrame();
-	if (!(data.parryStartFrame <= frame && frame <= data.parryEndFrame)) return false;
+	if (!(data.attackParryStartFrame <= frame && frame <= data.attackParryEndFrame)) 
+		return false;
 
 	// すべての条件を満たした場合、パリィ出来る
+	return true;
+}
+
+bool CEnemyBase::CheckGaurdParry() const
+{
+	if (!CXCharacter::CheckGuardParry()) return false;
+
+	const AttackData& data = (*mpAttackData)[mAttackType];
+	if (!data.guardParry)	return false;
+
+	float frame = GetAnimationFrame();
+	if (!(data.guardParryStartFrame <= frame && frame <= data.guardParryEndFrame))
+		return false;
+
 	return true;
 }
 
@@ -181,7 +196,7 @@ void CEnemyBase::Collision(CCollider* self, CCollider* other, const CHitInfo& hi
 		else if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::eAttackCol)
 		{
 			CCharaBase* chara = dynamic_cast<CCharaBase*>(other->Owner());
-			if (CheckParry(chara->GetAttackDir(), chara->GetAttackPower()))
+			if (CheckAttackParry(chara->GetAttackDir(), chara->GetAttackPower()))
 			{
 				mIsAttackParry = true;
 				Parry();

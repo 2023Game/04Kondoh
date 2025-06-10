@@ -208,8 +208,7 @@ private:
 	// 回避時の更新処理
 	void UpdateAvoid();
 
-	// ノックバック時の更新処理
-	void UpdateKnockBack();
+
 	// 仰け反り時の更新処理
 	void UpdateHit();
 	// 混乱時の更新処理
@@ -270,10 +269,9 @@ private:
 
 	float mRandMoveAngle;	// ランダムの移動角度
 	int mRandHitAnim;		// ランダムな仰け反りアニメーション
-	float mKnockBack;
 
-	CVector mAttackStartPos; // 攻撃開始時の位置
-	CVector mAttackEndPos;   // 攻撃終了時の位置
+	CVector mMoveStartPos; // 攻撃開始時の位置
+	CVector mMoveEndPos;   // 攻撃終了時の位置
 
 
 	// 左手の球コライダ

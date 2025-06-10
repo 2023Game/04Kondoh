@@ -127,7 +127,6 @@ CPlayer::CPlayer()
 	, mSelectAttackPower(EAttackPower::eAttackM)
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
-	, mKnockBack(0.0f)
 	, mMoveSpeedY(0.0f)
 	, mpRideObject(nullptr)
 	, mIsGrounded(false)
@@ -296,6 +295,12 @@ void CPlayer::AttackEnd()
 bool CPlayer::IsGuarding() const
 {
 	if (mState == EState::eGuard) return true;
+	return false;
+}
+
+bool CPlayer::IsGuardParry() const
+{
+	if (mState == EState::eGuardParry) return true;
 	return false;
 }
 
@@ -543,7 +548,7 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 	}
 	else if (self == mpAttackCol1 || self == mpAttackCol2 || self == mpAttackCol3)
 	{
-		if (other->Layer() == ELayer::eEnemy, other->Tag() == ETag::eEnemy)
+		if (other->Layer() == ELayer::eEnemy && other->Tag() == ETag::eEnemy)
 		{
 			// ヒットしたのがキャラクターかつ、
 			// まだ攻撃がヒットしていないキャラクターであれば
@@ -717,17 +722,17 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 		{
 			*outDamage = DAMAGE_S;
 			// 怯み度を加算する
-			*outStan * STAN_VAL_DIA;
+			*outStan *= STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackM)
 		{
 			*outDamage = DAMAGE_M;
-			*outStan * STAN_VAL_DIA;
+			*outStan *= STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackL)
 		{
 			*outDamage = DAMAGE_L;
-			*outStan * STAN_VAL_DIA;
+			*outStan *= STAN_VAL_DIA;
 		}
 	}
 	
@@ -1126,7 +1131,7 @@ void CPlayer::UpdateHit()
 	{
 		EAnimType animType = EAnimType::eHit1;
 		mMoveStartPos = Position();
-		mMoveEndPos = mMoveStartPos + VectorZ() * mKnockBack;
+		mMoveEndPos = mMoveStartPos - VectorZ() * mKnockBack;
 
 		if (mRandHitAnim == 0)
 		{
@@ -1136,9 +1141,9 @@ void CPlayer::UpdateHit()
 		{
 			animType = EAnimType::eHit2;
 		}
-
 		ChangeAnimation(animType, true);
 		mStateStep++;
+
 		break;
 	}
 	case 1:
@@ -1162,6 +1167,7 @@ void CPlayer::UpdateHit()
 				mStateStep++;
 			}
 		}
+
 		break;
 	}
 	case 2:

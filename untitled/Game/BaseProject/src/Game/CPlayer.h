@@ -60,6 +60,8 @@ public:
 	void AttackEnd() override;
 	// 防御中か
 	bool IsGuarding() const override;
+	// 
+	bool IsGuardParry() const override;
 	// ジャンプ中か
 	bool IsJumping() const;
 
@@ -235,8 +237,6 @@ private:
 
 	int mStateStep;     // 状態内のステップ管理用
 	float mElapsedTime; // 経過時間計測用
-
-	float mKnockBack;
 
 	CVector mAvoidDir;	// 回避方向
 	CVector mMoveStartPos;	// 移動開始の位置

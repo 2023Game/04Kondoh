@@ -9,6 +9,7 @@ CCharaBase::CCharaBase(ETag tag, ETaskPriority prio, int sortOrder, ETaskPauseTy
 	, mHp(mMaxHp)
 	, mStunPoints(0.0f)
 	, mStunThreshold(100.0f)
+	, mKnockBack(0.0f)
 	, mAttackDir(EAttackDir::eNone)
 	, mAttackPower(EAttackPower::eAttackS)
 {
@@ -96,8 +97,7 @@ bool CCharaBase::CheckAttackParry(EAttackDir dir, EAttackPower power) const
 
 bool CCharaBase::CheckGuardParry() const
 {
-	if (!IsGuarding()) return false;
-	return true;
+	return false;
 }
 
 // ダメージを受ける
@@ -179,6 +179,12 @@ void CCharaBase::Death()
 
 // 防御中か
 bool CCharaBase::IsGuarding() const
+{
+	return false;
+}
+
+// 防御パリィ中か
+bool CCharaBase::IsGuardParry() const
 {
 	return false;
 }

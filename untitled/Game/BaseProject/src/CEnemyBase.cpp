@@ -86,10 +86,8 @@ bool CEnemyBase::CheckAttackParry(EAttackDir dir, EAttackPower power) const
 	return true;
 }
 
-bool CEnemyBase::CheckGaurdParry() const
+bool CEnemyBase::CheckGuardParry() const
 {
-	if (!CXCharacter::CheckGuardParry()) return false;
-
 	const AttackData& data = (*mpAttackData)[mAttackType];
 	if (!data.guardParry)	return false;
 

@@ -47,6 +47,8 @@
     <ClCompile Include="src\BaseSystem\CModel.cpp" />
     <ClCompile Include="src\BaseSystem\CModelX.cpp" />
     <ClCompile Include="src\BaseSystem\CMyShader.cpp" />
+    <ClCompile Include="src\BaseSystem\CNavManager.cpp" />
+    <ClCompile Include="src\BaseSystem\CNavNode.cpp" />
     <ClCompile Include="src\BaseSystem\CRect.cpp" />
     <ClCompile Include="src\BaseSystem\CResource.cpp" />
     <ClCompile Include="src\BaseSystem\CResourceManager.cpp" />
@@ -92,8 +94,6 @@
     <ClCompile Include="src\Game\CGaugeUI3D.cpp" />
     <ClCompile Include="src\Game\CImage.cpp" />
     <ClCompile Include="src\Game\CMoveFloor.cpp" />
-    <ClCompile Include="src\Game\CNavManager.cpp" />
-    <ClCompile Include="src\Game\CNavNode.cpp" />
     <ClCompile Include="src\Game\CPlayer.cpp" />
     <ClCompile Include="src\Game\CRideabeObject.cpp" />
     <ClCompile Include="src\Game\CRotateFloor.cpp" />
@@ -150,6 +150,8 @@
     <ClInclude Include="src\BaseSystem\CModel.h" />
     <ClInclude Include="src\BaseSystem\CModelX.h" />
     <ClInclude Include="src\BaseSystem\CMyShader.h" />
+    <ClInclude Include="src\BaseSystem\CNavManager.h" />
+    <ClInclude Include="src\BaseSystem\CNavNode.h" />
     <ClInclude Include="src\BaseSystem\ColliderType.h" />
     <ClInclude Include="src\BaseSystem\CollisionLayer.h" />
     <ClInclude Include="src\BaseSystem\CRect.h" />
@@ -204,8 +206,6 @@
     <ClInclude Include="src\Game\CGaugeUI3D.h" />
     <ClInclude Include="src\Game\CImage.h" />
     <ClInclude Include="src\Game\CMoveFloor.h" />
-    <ClInclude Include="src\Game\CNavManager.h" />
-    <ClInclude Include="src\Game\CNavNode.h" />
     <ClInclude Include="src\Game\CPlayer.h" />
     <ClInclude Include="src\Game\CRideableObject.h" />
     <ClInclude Include="src\Game\CRotateFloor.h" />

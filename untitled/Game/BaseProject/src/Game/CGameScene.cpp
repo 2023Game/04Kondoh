@@ -4,6 +4,7 @@
 #include "CFieldWall.h"
 #include "CWall.h"
 #include "CPlayer.h"
+#include "CEnemyManager.h"
 #include "CEnemyA.h"
 #include "CGameCamera.h"
 #include "CGameCamera2.h"

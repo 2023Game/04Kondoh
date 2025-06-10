@@ -47,7 +47,7 @@ public:
 	// ƒpƒŠƒBo—ˆ‚é‚©‚Ç‚¤‚©
 	bool CheckAttackParry(EAttackDir dir, EAttackPower power) const override;
 
-	bool CheckGaurdParry() const;
+	bool CheckGuardParry() const override;
 
 	/// <summary>
 	/// Õ“Ëˆ—

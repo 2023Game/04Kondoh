@@ -89,9 +89,6 @@
     <Filter Include="ソース ファイル\Game\Debug">
       <UniqueIdentifier>{39cb4993-a79c-410a-961b-56b7be3c3ee6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Game\Navigation">
-      <UniqueIdentifier>{302d246b-b520-48de-8b1c-ae704a963a5d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Game\Character\Enemy">
       <UniqueIdentifier>{29473c90-16f4-469a-bdd7-fdf09fe3ebe2}</UniqueIdentifier>
     </Filter>
@@ -103,6 +100,9 @@
     </Filter>
     <Filter Include="ソース ファイル\Game\UI\GameOver">
       <UniqueIdentifier>{c6713cab-5676-4f4b-8eab-829246ef5e1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\BaseSystem\Navigation">
+      <UniqueIdentifier>{302d246b-b520-48de-8b1c-ae704a963a5d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -370,12 +370,6 @@
     <ClCompile Include="src\Game\CWall.cpp">
       <Filter>ソース ファイル\Game\Field\Object</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\CNavNode.cpp">
-      <Filter>ソース ファイル\Game\Navigation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\CNavManager.cpp">
-      <Filter>ソース ファイル\Game\Navigation</Filter>
-    </ClCompile>
     <ClCompile Include="src\BaseSystem\CImage3D.cpp">
       <Filter>ソース ファイル\BaseSystem\Effect</Filter>
     </ClCompile>
@@ -408,6 +402,12 @@
     </ClCompile>
     <ClCompile Include="src\CGaugeUI2D.cpp">
       <Filter>ソース ファイル\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseSystem\CNavManager.cpp">
+      <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseSystem\CNavNode.cpp">
+      <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -699,12 +699,6 @@
     <ClInclude Include="src\Game\CWall.h">
       <Filter>ソース ファイル\Game\Field\Object</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\CNavNode.h">
-      <Filter>ソース ファイル\Game\Navigation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\CNavManager.h">
-      <Filter>ソース ファイル\Game\Navigation</Filter>
-    </ClInclude>
     <ClInclude Include="src\BaseSystem\CImage3D.h">
       <Filter>ソース ファイル\BaseSystem\Effect</Filter>
     </ClInclude>
@@ -737,6 +731,12 @@
     </ClInclude>
     <ClInclude Include="src\CGaugeUI2D.h">
       <Filter>ソース ファイル\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BaseSystem\CNavManager.h">
+      <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BaseSystem\CNavNode.h">
+      <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

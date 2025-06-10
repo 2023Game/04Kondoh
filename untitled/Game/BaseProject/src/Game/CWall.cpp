@@ -4,6 +4,11 @@
 CWall::CWall(const CVector& pos, const CVector& angle, const CVector& size)
 	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
 {
+	// 位置と向きとサイズを設定
+	Position(pos);
+	Rotation(angle);
+	Scale(size);
+
 	// 壁のモデルデータ取得
 	mpModel = CResourceManager::Get<CModel>("Wall");
 
@@ -14,11 +19,6 @@ CWall::CWall(const CVector& pos, const CVector& angle, const CVector& size)
 	// 壁の経路探索用のコライダーを作成
 	CModel* navColModel = CResourceManager::Get<CModel>("WallNavCol");
 	mpNavColliderMesh = new CColliderMesh(this, ELayer::eWall, navColModel, true);
-
-	// 位置と向きとサイズを設定
-	Position(pos);
-	Rotation(angle);
-	Scale(size);
 }
 
 // デストラクタ
@@ -58,4 +58,9 @@ void CWall::Render()
 CCollider* CWall::GetFieldCol() const
 {
 	return mpColliderMesh;
+}
+
+CCollider* CWall::GetNavCol() const
+{
+	return mpNavColliderMesh;
 }

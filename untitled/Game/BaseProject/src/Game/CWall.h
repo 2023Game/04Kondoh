@@ -40,6 +40,9 @@ public:
 	// カメラとの当たり判定取得処理
 	CCollider* GetFieldCol()const;
 
+	// 経路探索用当たり判定取得処理
+	CCollider* GetNavCol() const;
+
 private:
 	CModel* mpModel;		// 壁のモデルデータ
 	CColliderMesh* mpColliderMesh;      // 壁のコリジョンデータ

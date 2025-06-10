@@ -28,9 +28,12 @@ CField::CField()
 
 	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);
 
-
 	CreateWalls();
-	//CreateFieldObjects();
+	for (CWall* wall : mWalls)
+	{
+		CNavManager::Instance()->AddCollider(wall->GetNavCol());
+	}
+
 	// 経路探索用のノードを作成
 	CreateNavNodes();
 }

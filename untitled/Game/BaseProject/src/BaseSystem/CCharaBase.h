@@ -87,6 +87,8 @@ public:
 
 	// –hŒä’†‚©
 	virtual bool IsGuarding() const;
+	// 
+	virtual bool IsGuardParry() const;
 	// Ž€‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©
 	bool IsDeath() const;
 

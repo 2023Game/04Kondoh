@@ -14,13 +14,23 @@ public:
 	// デストラクタ
 	~CFieldWall();
 
+	/// <summary>
+	/// レイとの壁との衝突判定（経路探索用）
+	/// </summary>
+	/// <param name="start">レイの開始位置</param>
+	/// <param name="end">レイの終了位置</param>
+	/// <param name="hit">衝突情報返却用</param>
+	/// <returns>衝突していたら、trueを返す</returns>
+	bool NavCollisionRay(const CVector& start, const CVector& end,
+		CHitInfo* hit);
+
 	// 更新
 	void Update();
 	// 描画
 	void Render();
 
 	// コライダ取得処理
-	CCollider* GetFieldCol()const;
+	CCollider* GetNavCol()const;
 
 private:
 	// ステージの壁のインスタンス

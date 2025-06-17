@@ -40,20 +40,23 @@ void CGameScene::Load()
 	//ここでゲーム中に必要な
 	//リソースの読み込みやクラスの生成を行う
 
-	CResourceManager::Load<CModel>  ("Field",         "Field\\Stage1_FieldFloor.obj");
+	CResourceManager::Load<CModel>  ("Field",         "Field\\Demo_FieldFloor.obj");
 	CResourceManager::Load<CModel>  ("FieldCol",      "Field\\Stage1_FieldFloorCol.obj");
-	CResourceManager::Load<CModel>	("FieldWall",	  "Field\\Object\\Wall\\FieldWallFirstStage.obj");
-	CResourceManager::Load<CModel>  ("FieldCube",     "Field\\Object\\cube.obj");
-	CResourceManager::Load<CModel>  ("FieldCylinder", "Field\\Object\\cylinder.obj");
+	CResourceManager::Load<CModel>	("FieldWall",	  "Field\\Object\\Wall\\Demo_FieldWall.obj");
+	CResourceManager::Load<CModel>	("FieldWallCol",  "Field\\Object\\Wall\\Demo_FieldWallCol.obj");
+	CResourceManager::Load<CModel>	("Stairs",		  "Field\\Object\\SpiralStatircase.obj");
 	CResourceManager::Load<CModel>  ("Wall",          "Field\\Object\\Wall\\Wall.obj");
 	CResourceManager::Load<CModel>  ("WallCol",       "Field\\Object\\Wall\\WallCol.obj");
 	CResourceManager::Load<CModel>  ("WallNavCol",    "Field\\Object\\Wall\\WallNavCol.obj");
 	CResourceManager::Load<CModelX> ("Player",        "Character\\Player\\T_Pose.x");
 	CResourceManager::Load<CModelX> ("EnemyA",        "Character\\EnemyA\\enemyA.x");
-	CResourceManager::Load<CTexture>("Laser",         "Effect\\laser.png");
-	CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
-	CResourceManager::Load<CModel>  ("Slash",         "Effect\\slash.obj");
 	CResourceManager::Load<CSound>  ("SlashSound",    "Sound\\SE\\slash.wav");
+
+	//CResourceManager::Load<CModel>  ("FieldCube",     "Field\\Object\\cube.obj");
+	//CResourceManager::Load<CModel>  ("FieldCylinder", "Field\\Object\\cylinder.obj");
+	//CResourceManager::Load<CTexture>("Laser",         "Effect\\laser.png");
+	//CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
+	//CResourceManager::Load<CModel>  ("Slash",         "Effect\\slash.obj");
 
 	// ゲームBGMを読み込み
 	CBGMManager::Instance()->Play(EBGMType::eGame);
@@ -61,12 +64,12 @@ void CGameScene::Load()
 	// 経路探索管理クラスを作成
 	new CNavManager();
 
-	CField* field = new CField();
 	CFieldWall* fieldWall = new CFieldWall();
+	CField* field = new CField();
 
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
-	player->Position(-50.0f, 0.94, 0.0f);
+	player->Position(0.0f, 1.0, 0.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
 
 	CEnemyA* enemyA = new CEnemyA

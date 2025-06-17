@@ -375,11 +375,11 @@ void CEnemyA::Update()
 	CDebugPrint::Print("　HP：%d\n", mHp);
 	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
 	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
-	CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
+	//CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
-	CDebugPrint::Print("　経過時間：%.2f\n", GetAnimationFrame());
-	CDebugPrint::Print("　戦闘時の待機時間：%.2f\n", mBattleIdletime);
+	//CDebugPrint::Print("　経過時間：%.2f\n", GetAnimationFrame());
+	//CDebugPrint::Print("　戦闘時の待機時間：%.2f\n", mBattleIdletime);
 	//CDebugPrint::Print("　円運動の移動角度：%.2f\n", mRandMoveAngle);
 	//CDebugPrint::Print("　パリィ出来たか：%s\n", mIsAttackParry ? "パリィOK" : "パリィNO");
 
@@ -1214,10 +1214,6 @@ void CEnemyA::UpdateBattleIdle()
 			
 			UpdateHorizonMove();
 			//UpdateForwardMove();
-			if (CanAttackPlayer(NEAR_ATTACK_RANGE))
-			{
-				ChangeState((int)EState::eChase);
-			}
 
 			// プレイヤーが見えなくなったら、見失った状態に戻す
 			if (!IsLookPlayer())

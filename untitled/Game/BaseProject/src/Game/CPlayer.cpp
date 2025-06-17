@@ -52,7 +52,7 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define JUMP_WALK_SPEED 1.0f
 #define JUMP_RUN_SPEED 1.5f
 #define JUMP_SPEED	1.5f
-#define GRAVITY		0.098f // 0.0625
+#define GRAVITY		0.08f // 0.0625
 #define JUMP_END_Y	1.0f  
 
 #define EVA_MOVE_DIST	90.0f  // 回避時の移動速度
@@ -473,16 +473,18 @@ void CPlayer::Update()
 	mpHpUI->SetCurrPoint(mHp);
 
 	CDebugPrint::Print("FPS:%f\n \n", Times::FPS());
+	CVector pos = Position();
 
-	CDebugPrint::Print("　HP：%d\n", (int)mHp);
-	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
-	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
 	CDebugPrint::Print("■プレイヤーの情報\n");
-	CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
-	CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
-	CDebugPrint::Print("　ノックバック距離：%f\n", mKnockBack);
-	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
-	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
+	CDebugPrint::Print("　HP：%d\n", (int)mHp);
+	CDebugPrint::Print("　座標：%.2f, %.2f, %.2f\n", pos.X(), pos.Y(), pos.Z());
+	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
+	//CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
+	//CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
+	//CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
+	//CDebugPrint::Print("　ノックバック距離：%f\n", mKnockBack);
+	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
+	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	CDebugPrint::Print("　\n");
 }
 

@@ -3,6 +3,7 @@
 #include "CMoveFloor.h"
 #include "CRotateFloor.h"
 #include "CLineEffect.h"
+#include "CFieldWall.h"
 #include "CWall.h"
 #include <assert.h>
 #include "CNavManager.h"
@@ -24,14 +25,21 @@ CField::CField()
 	spInstance = this;
 
 	mpModel = CResourceManager::Get<CModel>("Field");
-//	CModel* colModel = CResourceManager::Get<CModel>("FieldCol");
-
+	// コライダー設定
 	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);
+
+	CreateFieldObjects();
+
+	CNavManager* navManager = CNavManager::Instance();
+	CFieldWall* fieldWall = CFieldWall::Instance();
+
+	navManager->AddCollider(mpColliderMesh);
+	navManager->AddCollider(fieldWall->GetNavCol());
 
 	CreateWalls();
 	for (CWall* wall : mWalls)
 	{
-		CNavManager::Instance()->AddCollider(wall->GetNavCol());
+		navManager->AddCollider(wall->GetNavCol());
 	}
 
 	// 経路探索用のノードを作成
@@ -73,19 +81,30 @@ void CField::CreateWalls()
 
 }
 
-/*
+
 void CField::CreateFieldObjects()
 {
-	mpCubeModel = CResourceManager::Get<CModel>("FieldCube");
-	mpCylinderModel = CResourceManager::Get<CModel>("FieldCylinder");
+	mpStairsModel = CResourceManager::Get<CModel>("Stairs");
 
+	// 階段
+	new CMoveFloor
+	(
+		mpStairsModel,
+		CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 0.0f, 0.0f), 0.0f
+	);
 
+	//mpCubeModel = CResourceManager::Get<CModel>("FieldCube");
+	//mpCylinderModel = CResourceManager::Get<CModel>("FieldCylinder");
+
+		/*
 	new CMoveFloor
 	(
 		mpCubeModel,
 		CVector(0.0f, 10.0f, -50.0f), CVector(1.0f, 1.0f, 1.0f),
 		CVector(50.0f, 0.0f, 0.0f), 10.0f
 	);
+
 	new CRotateFloor
 	(
 		mpCylinderModel,
@@ -161,8 +180,9 @@ void CField::CreateFieldObjects()
 		CVector pos = CVector::Lerp(startPos, endPos, alpha);
 		le->AddPoint(pos, width, width);
 	}
+	*/
 }
-*/
+
 
 // 経路探索用のノードを作成
 void CField::CreateNavNodes()
@@ -194,11 +214,25 @@ bool CField::CollisionRay(const CVector& start, const CVector& end, CHitInfo* hi
 	// 衝突したかどうかのフラグ
 	bool isHit = false;
 
+	CFieldWall* fieldWall = CFieldWall::Instance();
+
 	//　フィールドのオブジェクトとの衝突判定
 	if (CCollider::CollisionRay(mpColliderMesh, start, end, &tHit))
 	{
 		*hit = tHit;
 		isHit = true;
+	}
+
+	if (fieldWall->NavCollisionRay(start, end, &tHit))
+	{
+		// まだ他に衝突していない場合か
+			// すでに衝突しているコライダーより近い場合は
+		if (!isHit || tHit.dist < hit->dist)
+		{
+			// 衝突情報を更新
+			*hit = tHit;
+			isHit = true;
+		}
 	}
 
 	// 壁との衝突判定
@@ -228,11 +262,25 @@ bool CField::NavCollisionRay(const CVector& start, const CVector& end, CHitInfo*
 	// 衝突したかどうかのフラグ
 	bool isHit = false;
 
+	CFieldWall* fieldWall = CFieldWall::Instance();
+
 	//　フィールドのオブジェクトとの衝突判定
 	if (CCollider::CollisionRay(mpColliderMesh, start, end, &tHit))
 	{
 		*hit = tHit;
 		isHit = true;
+	}
+
+	if (fieldWall->NavCollisionRay(start, end, &tHit))
+	{
+		// まだ他に衝突していない場合か
+			// すでに衝突しているコライダーより近い場合は
+		if (!isHit || tHit.dist < hit->dist)
+		{
+			// 衝突情報を更新
+			*hit = tHit;
+			isHit = true;
+		}
 	}
 
 	// 壁との衝突判定

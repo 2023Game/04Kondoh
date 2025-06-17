@@ -1,8 +1,7 @@
-# Blender 4.2.0 MTL File: 'BattleMan_Stage1.blend'
+# Blender 4.1.1 MTL File: 'AllStage.blend'
 # www.blender.org
 
-newmtl Wall
-Kd 0.095148 0.095148 0.095148
+newmtl material_01
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
@@ -15,18 +14,19 @@ Pc 0.000000
 Pcr 0.030000
 aniso 0.000000
 anisor 0.000000
+map_Kd Stone_Base_Color.png
 
-newmtl マテリアル.001
+newmtl material_02
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-Pr 0.500000
+Pr 0.508065
 Pm 0.000000
 Ps 0.000000
 Pc 0.000000
 Pcr 0.030000
 aniso 0.000000
 anisor 0.000000
-map_Kd C:/Users/PC_User/Downloads/stone_001.psd
+map_Kd Stone_Base_Color.png

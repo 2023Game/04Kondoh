@@ -57,6 +57,7 @@ private:
 
 	CModel* mpCubeModel;
 	CModel* mpCylinderModel;
+	CModel* mpStairsModel;
 
 	TexAnimData mEffectAnimData;
 

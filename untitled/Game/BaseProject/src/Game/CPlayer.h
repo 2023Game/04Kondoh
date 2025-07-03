@@ -9,6 +9,7 @@
 
 class CFlamethrower;
 class CGaugeUI2D;
+class CInteractObject;
 
 /*
 プレイヤークラス
@@ -256,4 +257,9 @@ private:
 	// 状態の文字列を取得
 	std::string GetStateStr(EState state) const;
 
+	// 一番近くにある調べるオブジェクトを取得
+	CInteractObject* GetNearInteractObj() const;
+	// 近くにある調べるオブジェクトのリスト
+	std::list<CInteractObject*> mNearInteractObjs;
+	CCollider* mpSearchCol;	// 調べるオブジェクトを探知するコライダー
 };

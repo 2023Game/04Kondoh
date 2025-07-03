@@ -33,8 +33,6 @@ CTaskManager::CTaskManager()
 // デストラクタ
 CTaskManager::~CTaskManager()
 {
-	// 三項演算子
-	// 条件式 ? tureの時の処理 : falseの時の処理
 	for (int i = 0; i < 2; i++)
 	{
 		std::list<CTask*>& list = i == 0 ? m3dTasks : m2dTasks;
@@ -288,6 +286,29 @@ void CTaskManager::Update()
 		if (IsUpdate(task))
 		{
 			task->Update();
+		}
+	}
+}
+
+// 後更新
+void CTaskManager::LateUpdate()
+{
+	// 3Dタスクリスト内のタスクを順番に更新
+	for (CTask* task : m3dTasks)
+	{
+		// 更新するタスクであれば、タスクの後更新を実行
+		if (IsUpdate(task))
+		{
+			task->LateUpdate();
+		}
+	}
+	// 2Dタスクリスト内のタスクを順番に更新
+	for (CTask* task : m2dTasks)
+	{
+		// 更新するタスクであれば、タスクの後更新を実行
+		if (IsUpdate(task))
+		{
+			task->LateUpdate();
 		}
 	}
 }

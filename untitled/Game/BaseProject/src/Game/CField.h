@@ -55,9 +55,8 @@ private:
 	// ステージ1の床のコリジョン
 	CColliderMesh* mpColliderMesh;
 
-	CModel* mpCubeModel;
-	CModel* mpCylinderModel;
-	CModel* mpStairsModel;
+	CModel* mpMoveFloor1Model;
+	CModel* mpMoveFloor2Model;
 
 	TexAnimData mEffectAnimData;
 

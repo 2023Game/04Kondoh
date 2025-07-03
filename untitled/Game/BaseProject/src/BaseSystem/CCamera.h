@@ -134,8 +134,8 @@ public:
 	/// <param name="ratio"></param>
 	void SetHitColliderRatio(float ratio);
 
-	// 更新
-	void Update() override;
+	// 後更新
+	void LateUpdate() override;
 
 	// 削除
 	void Kill() override;
@@ -163,9 +163,6 @@ protected:
 
 	CTransform* mFollowTargetTf;	// 追従するターゲットのCTransfrom
 	CVector mFollowOffsetPos;		// 追従ターゲットの位置から視点までのオフセット値
-
-	CTransform* mpLookAtTargetTf;	// 視点を向けるターゲット
-	CVector mLookOffsetPos;			// 視点を向けるターゲットの座標
 
 private:
 	// カメラを削除

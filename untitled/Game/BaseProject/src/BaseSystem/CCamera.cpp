@@ -16,7 +16,7 @@ CCamera::CCamera(const CVector& eye, const CVector& center, bool isMainCamera)
 	, mFovy(CAMERA_FOVY)
 	, mZNear(CAMERA_ZNEAR)
 	, mZFar(CAMERA_ZFAR)
-	, mHitColRatio(0.9f)
+	, mHitColRatio(1.0f)
 {
 	mTargetEye = eye;
 	LookAt(eye, center, CVector::up);
@@ -342,8 +342,8 @@ void CCamera::ApplyCollision()
 	}
 }
 
-// 更新
-void CCamera::Update()
+// 後更新
+void CCamera::LateUpdate()
 {
 	// 追従するターゲットが設定されていれば、
 	// カメラの位置を追従ターゲットの位置に合わせる

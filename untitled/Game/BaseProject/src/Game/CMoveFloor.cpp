@@ -23,6 +23,7 @@ CMoveFloor::~CMoveFloor()
 	}
 }
 
+
 void CMoveFloor::Update()
 {
 	float per = mElapsedTime / mMoveTime;

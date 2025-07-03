@@ -20,7 +20,7 @@ public:
 		const CVector& up, bool updateTargetEye = true) override;
 
 	// XV
-	void Update() override;
+	void LateUpdate() override;
 
 private:
 	CVector mFollowDefaultEyeVec;

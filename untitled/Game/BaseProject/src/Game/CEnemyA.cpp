@@ -371,10 +371,10 @@ void CEnemyA::Update()
 	// 現在の状態に合わせて視野範囲の色を変更
 	mpDebugFov->SetColor(GetStateColor(mState));
 
-	CDebugPrint::Print("■敵の情報\n");
-	CDebugPrint::Print("　HP：%d\n", mHp);
-	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
-	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
+	//CDebugPrint::Print("■敵の情報\n");
+	//CDebugPrint::Print("　HP：%d\n", mHp);
+	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
+	//CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
 	//CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());

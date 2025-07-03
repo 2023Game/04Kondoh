@@ -104,6 +104,9 @@
     <Filter Include="ソース ファイル\BaseSystem\Navigation">
       <UniqueIdentifier>{302d246b-b520-48de-8b1c-ae704a963a5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Field\Object\Gimmick">
+      <UniqueIdentifier>{2eeafc38-59a9-411f-9561-503fb485f320}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -379,35 +382,44 @@
     <ClCompile Include="src\Game\CPlayer.cpp">
       <Filter>ソース ファイル\Game\Character\Player</Filter>
     </ClCompile>
-    <ClCompile Include="src\CEnemyManager.cpp">
-      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CEnemyBase.cpp">
-      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\CGaugeUI3D.cpp">
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\CFieldWall.cpp">
-      <Filter>ソース ファイル\Game\Field</Filter>
-    </ClCompile>
     <ClCompile Include="src\BaseSystem\CFontData.cpp">
       <Filter>ソース ファイル\BaseSystem\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CGameOverScene.cpp">
-      <Filter>ソース ファイル\Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CGameOverUI.cpp">
-      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CGaugeUI2D.cpp">
-      <Filter>ソース ファイル\Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\BaseSystem\CNavManager.cpp">
       <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="src\BaseSystem\CNavNode.cpp">
       <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CLever.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CEnemyBase.cpp">
+      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CEnemyManager.cpp">
+      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CGameOverScene.cpp">
+      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CGameOverUI.cpp">
+      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CGaugeUI2D.cpp">
+      <Filter>ソース ファイル\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CFieldWall.cpp">
+      <Filter>ソース ファイル\Game\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GimmickDoor.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CInteractObject.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -708,35 +720,44 @@
     <ClInclude Include="src\Game\CPlayer.h">
       <Filter>ソース ファイル\Game\Character\Player</Filter>
     </ClInclude>
-    <ClInclude Include="src\CEnemyManager.h">
-      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CEnemyBase.h">
-      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\CGaugeUI3D.h">
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\CFieldWall.h">
-      <Filter>ソース ファイル\Game\Field</Filter>
-    </ClInclude>
     <ClInclude Include="src\BaseSystem\CFontData.h">
       <Filter>ソース ファイル\BaseSystem\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CGameOverScene.h">
-      <Filter>ソース ファイル\Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CGameOverUI.h">
-      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CGaugeUI2D.h">
-      <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\BaseSystem\CNavManager.h">
       <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="src\BaseSystem\CNavNode.h">
       <Filter>ソース ファイル\BaseSystem\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CLever.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CEnemyBase.h">
+      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CEnemyManager.h">
+      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CGameOverScene.h">
+      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CGameOverUI.h">
+      <Filter>ソース ファイル\Game\UI\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CGaugeUI2D.h">
+      <Filter>ソース ファイル\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CFieldWall.h">
+      <Filter>ソース ファイル\Game\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\GimmickDoor.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CInteractObject.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

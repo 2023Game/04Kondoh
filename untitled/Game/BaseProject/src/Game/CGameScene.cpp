@@ -1,18 +1,19 @@
 #include "CGameScene.h"
 #include "CSceneManager.h"
+#include "CGameMenu.h"
+#include "CLineEffect.h"
+#include "CNavManager.h"
+#include "CGameCamera.h"
+#include "CGameCamera2.h"
+#include "CInput.h"
+
 #include "CField.h"
 #include "CFieldWall.h"
 #include "CWall.h"
 #include "CPlayer.h"
 #include "CEnemyManager.h"
 #include "CEnemyA.h"
-#include "CGameCamera.h"
-#include "CGameCamera2.h"
-#include "CInput.h"
-#include "CGameMenu.h"
 #include "CBGMManager.h"
-#include "CLineEffect.h"
-#include "CNavManager.h"
 
 #define GAMEOVER_WAIT_TIME 0.5f //　ゲームオーバーシーン移行待機時間
 
@@ -40,20 +41,30 @@ void CGameScene::Load()
 	//ここでゲーム中に必要な
 	//リソースの読み込みやクラスの生成を行う
 
-	CResourceManager::Load<CModel>  ("Field",         "Field\\Demo_FieldFloor.obj");
-	CResourceManager::Load<CModel>  ("FieldCol",      "Field\\Stage1_FieldFloorCol.obj");
-	CResourceManager::Load<CModel>	("FieldWall",	  "Field\\Object\\Wall\\Demo_FieldWall.obj");
-	CResourceManager::Load<CModel>	("FieldWallCol",  "Field\\Object\\Wall\\Demo_FieldWallCol.obj");
-	CResourceManager::Load<CModel>	("Stairs",		  "Field\\Object\\SpiralStatircase.obj");
-	CResourceManager::Load<CModel>  ("Wall",          "Field\\Object\\Wall\\Wall.obj");
-	CResourceManager::Load<CModel>  ("WallCol",       "Field\\Object\\Wall\\WallCol.obj");
-	CResourceManager::Load<CModel>  ("WallNavCol",    "Field\\Object\\Wall\\WallNavCol.obj");
-	CResourceManager::Load<CModelX> ("Player",        "Character\\Player\\T_Pose.x");
-	CResourceManager::Load<CModelX> ("EnemyA",        "Character\\EnemyA\\enemyA.x");
-	CResourceManager::Load<CSound>  ("SlashSound",    "Sound\\SE\\slash.wav");
+	// ステージ
+	CResourceManager::Load<CModel>("Field",			"Field\\Demo_FieldFloor.obj");
+	CResourceManager::Load<CModel>("FieldCol",		"Field\\Stage1_FieldFloorCol.obj");
+	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\Demo_FieldWall.obj");
+	CResourceManager::Load<CModel>("FieldWallCol",	"Field\\Object\\Wall\\Demo_FieldWallCol.obj");
+	// オブジェクト
+	CResourceManager::Load<CModel>("Wall",			"Field\\Object\\Wall\\Wall.obj");
+	CResourceManager::Load<CModel>("WallCol",		"Field\\Object\\Wall\\WallCol.obj");
+	CResourceManager::Load<CModel>("WallNavCol",	"Field\\Object\\Wall\\WallNavCol.obj");
+	// ギミック
+	CResourceManager::Load<CModel>("MoveFloor1",	"Field\\Object\\MoveObject.obj");
+	CResourceManager::Load<CModel>("MoveFloor2",	"Field\\Object\\MoveObject_2.obj");
+	CResourceManager::Load<CModel>("LeverBase",		"Field\\Object\\Gimmick\\LeverBase.obj");
+	CResourceManager::Load<CModel>("Lever",			"Field\\Object\\Gimmick\\Lever.obj");
+	CResourceManager::Load<CModel>("RDuobleDoors",	"Field\\Object\\Gimmick\\RDoubleDoors.obj");
+	CResourceManager::Load<CModel>("LDuobleDoors",	"Field\\Object\\Gimmick\\LDoubleDoors.obj");
+	CResourceManager::Load<CModel>("Door",			"Field\\Object\\Gimmick\\Door.obj");
+	CResourceManager::Load<CModel>("RastDoor",		"Field\\Object\\Gimmick\\RastDoor.obj");
+	// キャラクター
+	CResourceManager::Load<CModelX>("Player",		"Character\\Player\\T_Pose.x");
+	CResourceManager::Load<CModelX>("EnemyA",		"Character\\EnemyA\\enemyA.x");
+	// サウンド
+	CResourceManager::Load<CSound>("SlashSound",	"Sound\\SE\\slash.wav");
 
-	//CResourceManager::Load<CModel>  ("FieldCube",     "Field\\Object\\cube.obj");
-	//CResourceManager::Load<CModel>  ("FieldCylinder", "Field\\Object\\cylinder.obj");
 	//CResourceManager::Load<CTexture>("Laser",         "Effect\\laser.png");
 	//CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
 	//CResourceManager::Load<CModel>  ("Slash",         "Effect\\slash.obj");
@@ -85,7 +96,7 @@ void CGameScene::Load()
 	enemyA->Scale(1.0f, 1.0f, 1.0f);
 	enemyA->Position(100.0f, 0.0f, 0.0f);
 
-	CEnemyA* enemyA2 = new CEnemyA
+	/*CEnemyA* enemyA2 = new CEnemyA
 	(
 		{
 			CVector(250.0f, 0.94f, 150.0f),
@@ -93,7 +104,7 @@ void CGameScene::Load()
 			CVector(150.0f, 0.94f, 250.0f),
 			CVector(250.0f, 0.94f, 250.0f),
 		}
-	);
+	);*/
 
 	// CGameCamera2のテスト
 	CVector atPos = player->Position() + CVector(0.0f, 10.0f, 0.0f);
@@ -104,6 +115,7 @@ void CGameScene::Load()
 		atPos
 	);
 	mainCamera->AddCollider(field->GetFieldCol());
+	mainCamera->AddCollider(fieldWall->GetFieldWallCol());
 
 	std::list<CWall*> walls = field->GetWalls();
 	for (CWall* wall : walls)

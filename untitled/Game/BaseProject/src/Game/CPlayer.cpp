@@ -12,6 +12,7 @@
 #include "CEnemyManager.h"
 #include "CEnemyA.h"
 #include "CGaugeUI2D.h"
+#include "CInteractObject.h"
 
 #include "CNavNode.h"
 #include "CNavManager.h"
@@ -22,8 +23,8 @@ CPlayer* CPlayer::spInstance = nullptr;
 
 #define PLAYER_HP			1000	// プレイヤーのHP
 #define PLAYER_CAP_UP		13.5f	// プレイヤーの高さ
-#define PLAYER_CAP_DWON		 2.5f	// プレイヤーの底
-#define PLAYER_WIDTH		 2.0f	// プレイヤーの幅
+#define PLAYER_CAP_DWON		 2.8f	// プレイヤーの底
+#define PLAYER_WIDTH		 3.0f	// プレイヤーの幅
 
 #define ATTACK1_CAP_UP		80.0f	// 攻撃コライダー1の上
 #define ATTACK1_CAP_DWON	0.0f	// 攻撃コライダー1の下
@@ -101,16 +102,16 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ ATTACK_ANIM_PATH"LeftAttackM.x",	false,	 60.0f,	 1.0f},	// 中左攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackL.x",	false,	 99.0f,	 1.0f},	// 強左攻撃
 
-	{ PLAYER_ANIM_PATH"GuardStart.x",	false,	 18.0f,	 0.01f},	// 防御開始
+	{ PLAYER_ANIM_PATH"GuardStart.x",	false,	 18.0f,	 0.01f},// 防御開始
 	{ PLAYER_ANIM_PATH"Guard.x",		 true,	 43.0f,	 1.0f},	// 防御中
-	{ PLAYER_ANIM_PATH"GuardEnd.x",		false,	 21.0f,	 0.01f},	// 防御終了
+	{ PLAYER_ANIM_PATH"GuardEnd.x",		false,	 21.0f,	 0.01f},// 防御終了
 	{ PLAYER_ANIM_PATH"GuardDamage.x",	false,	 24.0f,	 1.0f},	// 防御時の仰け反り
 	{ PLAYER_ANIM_PATH"GuardParry.x",	false,	 26.0f,	 1.0f},	// 防御時のパリィ
 	{ PLAYER_ANIM_PATH"Avoid.x",		false,	 50.0f,	 3.0f},	// 回避
 
 	{ PLAYER_ANIM_PATH"jump_start.x",	false,	 25.0f,	 1.0f},	// ジャンプ開始
 	{ PLAYER_ANIM_PATH"jump.x",			 true,	  1.0f,	 1.0f},	// ジャンプ中
-	{ PLAYER_ANIM_PATH"jump_end.x",		false,	 26.0f,	 1.0f},	// ジャンプ終了
+	{ PLAYER_ANIM_PATH"jump_end.x",		false,	 26.0f,	 2.0f},	// ジャンプ終了
 	{ PLAYER_ANIM_PATH"jump_Attack.x",	false,	 47.0f,	 1.0f},	// ジャンプ攻撃
 
 	{ PLAYER_ANIM_PATH"Damage1.x",		false,	 30.0f,	 1.0f},	// 仰け反り1
@@ -129,6 +130,7 @@ CPlayer::CPlayer()
 	, mElapsedTime(0.0f)
 	, mMoveSpeedY(0.0f)
 	, mpRideObject(nullptr)
+	, mpSearchCol(nullptr)
 	, mIsGrounded(false)
 	, mIsPlayedSlashSE(false)
 	, mIsSpawnedSlashEffect(false)
@@ -166,7 +168,8 @@ CPlayer::CPlayer()
 		CVector(0.0f, PLAYER_CAP_UP, 0.0f),
 		PLAYER_WIDTH, true
 	);
-	mpBodyCol->SetCollisionTags({ ETag::eEnemy, ETag::eField, ETag::eWall});
+	mpBodyCol->SetCollisionTags
+	({ ETag::eEnemy, ETag::eField, ETag::eRideableObject, ETag::eWall});
 	mpBodyCol->SetCollisionLayers
 	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,ELayer::eEnemy });
 
@@ -208,6 +211,18 @@ CPlayer::CPlayer()
 	mpAttackCol3->Translate(0.0f, 0.0f, -5.0f);
 	mpAttackCol3->SetEnable(false);
 
+	//
+	mpSearchCol = new CColliderSphere
+	(
+		this, ELayer::eInteractSearch,
+		10.0f
+	);
+	// 調べるオブジェクトのみ衝突するように設定
+	mpSearchCol->SetCollisionTags({ ETag::eInteractObject });
+	mpSearchCol->SetCollisionLayers({ ELayer::eInteractObj });
+	mpSearchCol->Position(0.0f, 5.3f, 0.0f);
+
+
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
 
 	// 経路探索用のノードを作成
@@ -241,6 +256,7 @@ CPlayer::~CPlayer()
 	SAFE_DELETE(mpAttackCol1);
 	SAFE_DELETE(mpAttackCol2);
 	SAFE_DELETE(mpAttackCol3);
+	SAFE_DELETE(mpSearchCol);
 
 	// 経路探索用のノードを破棄
 	CNavManager* navMgr = CNavManager::Instance();
@@ -396,7 +412,6 @@ void CPlayer::Update()
 
 	// 待機中とジャンプ中は、移動処理を行う
 	if (mState == EState::eBattleIdle
-		|| mState == EState::eJumpStart
 		|| mState == EState::eJump
 		|| mState == EState::eJumpEnd)
 	{
@@ -476,16 +491,19 @@ void CPlayer::Update()
 	CVector pos = Position();
 
 	CDebugPrint::Print("■プレイヤーの情報\n");
-	CDebugPrint::Print("　HP：%d\n", (int)mHp);
+	//CDebugPrint::Print("　HP：%d\n", (int)mHp);
 	CDebugPrint::Print("　座標：%.2f, %.2f, %.2f\n", pos.X(), pos.Y(), pos.Z());
 	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
-	//CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
+	//CDebugPrint::Print("　状態：", GetStateStr(mState).c_str());
 	//CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
 	//CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
 	//CDebugPrint::Print("　ノックバック距離：%f\n", mKnockBack);
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	CDebugPrint::Print("　\n");
+
+	// 調べるオブジェクトのリストをクリア
+	mNearInteractObjs.clear();
 }
 
 
@@ -547,10 +565,15 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 			// 押し戻しベクトルの分座標を移動
 			Position(Position() + adjust * hit.weight);
 		}
+		else if (other->Layer() == ELayer::eInteractObj)
+		{
+
+		}
 	}
+	// 攻撃用コライダーとの当たり判定
 	else if (self == mpAttackCol1 || self == mpAttackCol2 || self == mpAttackCol3)
 	{
-		if (other->Layer() == ELayer::eEnemy && other->Tag() == ETag::eEnemy)
+		if (other->Tag() == ETag::eEnemy && other->Layer() == ELayer::eEnemy)
 		{
 			// ヒットしたのがキャラクターかつ、
 			// まだ攻撃がヒットしていないキャラクターであれば
@@ -570,7 +593,37 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 				chara->TakeDamage(damage, stan, knockback, this);
 			}
 		}
+		//else if (other->Tag() == ETag::eInteractObject && other->Layer() == ELayer::eInteractObj)
+		//{
+		//	CInteractObject* obj = dynamic_cast<CInteractObject*>(other->Owner());
+		//	if (obj != nullptr && !IsAttackHitObj(obj))
+		//	{
 
+		//		// 攻撃ヒット済みリストに登録
+		//		AddAttackHitObj(obj);
+		//		obj->Interact();
+		//	}
+		//}
+	}
+	// 調べるオブジェクトの探知コライダーとの当たり判定
+	else if (self == mpSearchCol)
+	{
+		CInteractObject* obj = dynamic_cast<CInteractObject*>(other->Owner());
+		if (obj != nullptr)
+		{
+			// 衝突した調べるオブジェクトをリストに追加
+			mNearInteractObjs.push_back(obj);
+
+#if _DEBUG
+			// 探知範囲内に入ったオブジェクトの名前を表示
+			CDebugPrint::Print
+			(
+				"%s:%s\n",
+				obj->GetDebugName().c_str(),
+				obj->GetInteractStr().c_str()
+			);
+#endif
+		}
 	}
 }
 
@@ -773,6 +826,14 @@ void CPlayer::UpdateBattleIdle()
 		else if (CInput::Key('F'))
 		{
 			ChangeAvoid();
+		}
+		else if (CInput::Key('I'))
+		{
+			CInteractObject* obj = GetNearInteractObj();
+
+			if (obj == nullptr) return;
+
+			obj->Interact();
 		}
 	}
 }
@@ -1210,4 +1271,29 @@ std::string CPlayer::GetStateStr(EState state) const
 	case EState::eDeath:		return "死亡";
 	}
 	return "";
+}
+
+CInteractObject* CPlayer::GetNearInteractObj() const
+{
+	// 一番近くの調べるオブジェクトのポイント
+	CInteractObject* nearObj = nullptr;
+	float nearDist = 0.0f;	// 現在一番近くにある調べつオブジェクトまでの距離
+	CVector pos = Position();
+	// 探知範囲内の調べるオブジェクトを順番に調べる
+	for (CInteractObject* obj : mNearInteractObjs)
+	{
+		// 現在調べられない状態であれば、スルー
+		if (!obj->CanInteract()) continue;
+
+		float dist = (obj->Position() - pos).LengthSqr();
+		// 一番最初の調べるオブジェクトが、
+		// 求めた距離が現在の一番近いオブジェクトよりも近い場合は、
+		if (nearObj == nullptr || dist < nearDist)
+		{
+			// 一番近いオブジェクトを更新
+			nearObj = obj;
+			nearDist = dist;
+		}
+	}
+	return nearObj;
 }

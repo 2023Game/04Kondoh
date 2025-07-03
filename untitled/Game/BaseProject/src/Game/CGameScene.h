@@ -1,5 +1,6 @@
 #pragma once
 #include "CSceneBase.h"
+
 class CGameMenu;
 class CSound;
 

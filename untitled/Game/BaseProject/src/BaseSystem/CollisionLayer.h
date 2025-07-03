@@ -10,8 +10,10 @@ enum class ELayer
 	eWall,
 	ePlayer,
 	eEnemy,
+	eInteractObj,	// 調べるオブジェクト
+	eInteractSearch,// 調べつオブジェクト探知用
+	eObj,	// 普通のオブジェクト
 
-	eEye,		// キャラクターの視線
 	eAttackCol,	// 攻撃レイヤー
 };
 // 衝突判定レイヤーの初期化リスト

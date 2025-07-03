@@ -5,9 +5,10 @@
 #include "CLineEffect.h"
 #include "CFieldWall.h"
 #include "CWall.h"
-#include <assert.h>
+#include "CLever.h"
 #include "CNavManager.h"
 #include "CNavNode.h"
+#include <assert.h>
 
 // フィールドのインスタンス
 CField* CField::spInstance = nullptr;
@@ -28,14 +29,20 @@ CField::CField()
 	// コライダー設定
 	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);
 
-	CreateFieldObjects();
-
 	CNavManager* navManager = CNavManager::Instance();
 	CFieldWall* fieldWall = CFieldWall::Instance();
 
 	navManager->AddCollider(mpColliderMesh);
-	navManager->AddCollider(fieldWall->GetNavCol());
+	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
+
+	CLever* lever1 = new CLever(CVector(0.0f,5.0f, 0.0f));
+
+#if _DEBUG
+	lever1->SetDebugName("Lever1");
+#endif
+
+	// 壁を作成
 	CreateWalls();
 	for (CWall* wall : mWalls)
 	{
@@ -44,6 +51,8 @@ CField::CField()
 
 	// 経路探索用のノードを作成
 	CreateNavNodes();
+	// フィールドオブジェクトを作成
+	CreateFieldObjects();
 }
 
 CField::~CField()
@@ -84,27 +93,41 @@ void CField::CreateWalls()
 
 void CField::CreateFieldObjects()
 {
-	mpStairsModel = CResourceManager::Get<CModel>("Stairs");
 
-	// 階段
+	mpMoveFloor1Model = CResourceManager::Get<CModel>("MoveFloor1");
+	mpMoveFloor2Model = CResourceManager::Get<CModel>("MoveFloor2");
+
+	// 
 	new CMoveFloor
 	(
-		mpStairsModel,
-		CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
-		CVector(0.0f, 0.0f, 0.0f), 0.0f
+		mpMoveFloor1Model,
+		CVector(0.0f, 30.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 50.0f, 0.0f), 10.0f
 	);
 
-	//mpCubeModel = CResourceManager::Get<CModel>("FieldCube");
-	//mpCylinderModel = CResourceManager::Get<CModel>("FieldCylinder");
-
-		/*
+	// 
 	new CMoveFloor
 	(
-		mpCubeModel,
-		CVector(0.0f, 10.0f, -50.0f), CVector(1.0f, 1.0f, 1.0f),
-		CVector(50.0f, 0.0f, 0.0f), 10.0f
+		mpMoveFloor2Model,
+		CVector(0.0f, 25.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f,25.0f, 0.0f), 7.0f
+	);
+	// 
+	new CMoveFloor
+	(
+		mpMoveFloor2Model,
+		CVector(50.0f, 75.0f, 15.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 25.0f, 0.0f), 9.0f
+	);
+	// 
+	new CMoveFloor
+	(
+		mpMoveFloor2Model,
+		CVector(100.0f, 125.0f, 30.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 25.0f, 0.0f), 6.0f
 	);
 
+	/*
 	new CRotateFloor
 	(
 		mpCylinderModel,

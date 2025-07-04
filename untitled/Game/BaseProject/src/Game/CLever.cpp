@@ -22,35 +22,23 @@ CLever::CLever(const CVector& pos)
 	mpLeverBaseModel = CResourceManager::Get<CModel>("LeverBase");
 	mpLeverModel = CResourceManager::Get<CModel>("Lever");
 
-	mpLeverCol = new CColliderMesh
-	(
-		this, ELayer::eInteractObj,
-		mpLeverModel
-	);
+	mpLeverCol = new CColliderMesh(this, ELayer::eInteractObj,mpLeverModel);
 	mpLeverCol->SetCollisionTags({ ETag::ePlayer });
 	mpLeverCol->SetCollisionLayers({ ELayer::ePlayer, ELayer::eInteractSearch, ELayer::eAttackCol });
+	mpLeverCol->SetShow(true);
 
-	mpLeverBaseCol = new CColliderMesh
-	(
-		this, ELayer::eInteractObj,
-		mpLeverBaseModel
-	);
+	mpLeverBaseCol = new CColliderMesh(this, ELayer::eInteractObj,mpLeverBaseModel);
 	mpLeverBaseCol->SetCollisionTags({ ETag::ePlayer });
 	mpLeverBaseCol->SetCollisionLayers({ ELayer::ePlayer, ELayer::eAttackCol });
-
-	//mpColliderCol = new CColliderSphere
-	//(
-	//	this, ELayer::eInteractObj,
-	//	20.0f
-	//);
-	//mpColliderCol->SetCollisionTags({ ETag::ePlayer });
-	//mpColliderCol->SetCollisionLayers({ ELayer::ePlayer, ELayer::eInteractSearch });
+	mpLeverBaseCol->SetShow(true);
 
 	mInteractStr = "ƒIƒ“‚É‚·‚é";
 }
 
 CLever::~CLever()
 {
+	SAFE_DELETE(mpLeverBaseCol);
+	SAFE_DELETE(mpLeverCol);
 }
 
 void CLever::Interact()
@@ -103,7 +91,7 @@ void CLever::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
 	if (self == mpLeverCol || self == mpLeverBaseCol)
 	{
-		if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::ePlayer)
+		if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::eInteractSearch)
 		{
 
 		}

@@ -169,9 +169,9 @@ CPlayer::CPlayer()
 		PLAYER_WIDTH, true
 	);
 	mpBodyCol->SetCollisionTags
-	({ ETag::eEnemy, ETag::eField, ETag::eRideableObject, ETag::eWall});
+	({ ETag::eEnemy, ETag::eField, ETag::eRideableObject, ETag::eWall, ETag::eInteractObject });
 	mpBodyCol->SetCollisionLayers
-	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,ELayer::eEnemy });
+	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,ELayer::eEnemy, ELayer::eInteractObj });
 
 
 	// 攻撃用のコライダ１（剣の刃の部分）
@@ -182,8 +182,8 @@ CPlayer::CPlayer()
 		CVector(0.0f, 0.0f, ATTACK1_CAP_UP),
 		1.0f, true
 	);
-	mpAttackCol1->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall});
+	mpAttackCol1->SetCollisionTags({ ETag::eEnemy, ETag::eInteractObject });
+	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall, ELayer::eInteractObj });
 	mpAttackCol1->Rotate(CVector(-4.5f, 14.1f, 0.0f));
 	mpAttackCol1->SetEnable(false);
 
@@ -195,8 +195,8 @@ CPlayer::CPlayer()
 		CVector(0.0f, 0.0f, ATTACK2_CAP_DWON),
 		1.0, true
 	);
-	mpAttackCol2->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCol2->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall});
+	mpAttackCol2->SetCollisionTags({ ETag::eEnemy, ETag::eInteractObject });
+	mpAttackCol2->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall, ELayer::eInteractObj });
 	mpAttackCol2->Rotate(CVector(-4.5f, 14.1f, 0.0f));
 	mpAttackCol2->SetEnable(false);
 
@@ -206,8 +206,8 @@ CPlayer::CPlayer()
 		this, ELayer::eAttackCol,
 		25.0, true
 	);
-	mpAttackCol3->SetCollisionTags({ ETag::eEnemy });
-	mpAttackCol3->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall});
+	mpAttackCol3->SetCollisionTags({ ETag::eEnemy, ETag::eInteractObject });
+	mpAttackCol3->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall, ELayer::eInteractObj });
 	mpAttackCol3->Translate(0.0f, 0.0f, -5.0f);
 	mpAttackCol3->SetEnable(false);
 
@@ -560,14 +560,19 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 		{
 			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
 			CVector adjust = hit.adjust;
-			//adjust.Y(0.0f);
+			adjust.Y(0.0f);
 
 			// 押し戻しベクトルの分座標を移動
 			Position(Position() + adjust * hit.weight);
 		}
 		else if (other->Layer() == ELayer::eInteractObj)
 		{
+			// 坂道で滑らないように、押し戻しベクトルのXとZの値を0にする
+			CVector adjust = hit.adjust;
+			adjust.Y(0.0f);
 
+			// 押し戻しベクトルの分座標を移動
+			Position(Position() + adjust * hit.weight);
 		}
 	}
 	// 攻撃用コライダーとの当たり判定

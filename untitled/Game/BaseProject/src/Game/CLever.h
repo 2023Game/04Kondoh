@@ -25,8 +25,8 @@ private:
 	CModel* mpLeverBaseModel;	// レバーの土台のモデル
 	CModel* mpLeverModel;		// レバーのモデル
 
-	CCollider* mpLeverBaseCol;// レバーの土台コライダー
-	CCollider* mpLeverCol;	// レバーのコライダー
+	CColliderMesh* mpLeverBaseCol;// レバーの土台コライダー
+	CColliderMesh* mpLeverCol;	// レバーのコライダー
 
 	CTransform* mpParentObj;
 

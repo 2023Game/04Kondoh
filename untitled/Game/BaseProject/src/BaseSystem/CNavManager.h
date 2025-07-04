@@ -16,7 +16,7 @@ public:
 	// デストラクタ
 	~CNavManager();
 
-	// 経路探索用のノードを追加
+	// 経路単サック用のノードを追加
 	void AddNode(CNavNode* node);
 	// 経路探索用のノードを取り除く
 	void RemoveNode(CNavNode* node);
@@ -38,6 +38,13 @@ public:
 	/// <param name="route">最短経路返却用</param>
 	/// <returns>経路が繋がっている場合は、trueを返す</returns>
 	bool Navigate(CNavNode* start, CNavNode* goal, std::vector<CNavNode*>& route);
+
+	/// <summary>
+	/// 指定した経路が繋がっているかどうか
+	/// </summary>
+	/// <param name="route">繋がっているか確認する経路</param>
+	/// <returns>trueならば、経路が繋がっている</returns>
+	bool IsRouteValid(const std::vector<CNavNode*>& route) const;
 
 	/// <summary>
 	/// 遮蔽物チェックに使用するコライダーを追加

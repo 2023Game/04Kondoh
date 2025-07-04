@@ -22,7 +22,13 @@ CFieldWall::CFieldWall()
 	// ステージ壁のコライダを作成
 	CModel* fieldWallColMesh = CResourceManager::Get<CModel>("FieldWallCol");
 
-	mpColliderMesh = new CColliderMesh(this, ELayer::eWall, fieldWallColMesh, true);
+	mpColliderMesh = new CColliderMesh
+	(
+		this, ELayer::eWall, fieldWallColMesh,
+		true, 1.0f,
+		8, 2, 8
+	);
+	mpColliderMesh->SetShow(true);
 }
 
 // デストラクタ

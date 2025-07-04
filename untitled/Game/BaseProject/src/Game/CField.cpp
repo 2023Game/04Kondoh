@@ -27,7 +27,12 @@ CField::CField()
 
 	mpModel = CResourceManager::Get<CModel>("Field");
 	// コライダー設定
-	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);
+	mpColliderMesh = new CColliderMesh
+	(
+		this, ELayer::eField, mpModel,
+		true
+	);
+	mpColliderMesh->SetShow(true);
 
 	CNavManager* navManager = CNavManager::Instance();
 	CFieldWall* fieldWall = CFieldWall::Instance();
@@ -36,7 +41,7 @@ CField::CField()
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
 
-	CLever* lever1 = new CLever(CVector(0.0f,5.0f, 0.0f));
+	CLever* lever1 = new CLever(CVector(0.0f, 5.0f, 0.0f));
 
 #if _DEBUG
 	lever1->SetDebugName("Lever1");
@@ -335,7 +340,7 @@ void CField::Render()
 }
 
 
-CCollider* CField::GetFieldCol() const
+CColliderMesh* CField::GetFieldCol() const
 {
 	return mpColliderMesh;
 }

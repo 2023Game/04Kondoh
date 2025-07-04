@@ -36,7 +36,7 @@ public:
 	void Render();
 
 	// コライダ取得処理
-	CCollider* GetFieldCol()const;
+	CColliderMesh* GetFieldCol()const;
 	// 生成した壁のリストを取得
 	std::list<CWall*> GetWalls() const;
 

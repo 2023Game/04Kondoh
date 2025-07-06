@@ -84,7 +84,7 @@ void CLever::Render()
 
 	CMatrix rotM;
 	rotM.RotateX(mLeverAngle);
-	mpLeverModel->Render(m * rotM);
+	mpLeverModel->Render(rotM * m);
 }
 
 void CLever::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)

@@ -61,20 +61,22 @@ bool CLever::IsOn() const
 
 void CLever::Update()
 {
-	if (!mIsPlaying) return;
-
-	if (mElapsedTime < ROT_TIME)
+	if (mIsPlaying)
 	{
-		float percent = mElapsedTime / ROT_TIME;
-		mLeverAngle = Math::Lerp(mStartAngle, mEndAngle, percent);
+		if (mElapsedTime < ROT_TIME)
+		{
+			float percent = mElapsedTime / ROT_TIME;
+			mLeverAngle = Math::Lerp(mStartAngle, mEndAngle, percent);
 
-		mElapsedTime += Times::DeltaTime();
+			mElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			mLeverAngle = mEndAngle;
+			mIsPlaying = false;
+		}
 	}
-	else
-	{
-		mLeverAngle = mEndAngle;
-		mIsPlaying = false;
-	}
+	mpLeverCol->Rotation(-mLeverAngle, 0.0f, 0.0f);
 }
 
 void CLever::Render()

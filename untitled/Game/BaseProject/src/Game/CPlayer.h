@@ -89,47 +89,6 @@ public:
 	void Render();
 
 private:
-	// キーの入力情報から移動ベクトルを求める
-	CVector CalcMoveVec(bool force = false) const;
-	/// <summary>
-	/// ダメージ量を計算して返す
-	/// </summary>
-	/// <param name="taker">ダメージを受けるキャラ</param>
-	/// <param name="outDamage">ダメージ量を返す用</param>
-	/// <param name="outStan">怯み度を返す用</param>
-	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
-
-	// 非戦闘時の待機状態
-//	void UpdateIdle();
-	// 戦闘時の待機状態
-	void UpdateBattleIdle();
-	// 攻撃処理
-	void UpdateAttack();
-	// 防御開始処理
-	void UpdateGuardStart();
-	// 防御中処理
-	void UpdateGuard();
-	// 防御終了
-	void UpdateGuardEnd();
-	// 防御パリィ処理
-	void UpdateGuardParry();
-	// 回避処理
-	void UpdateAvoid();
-
-	// ジャンプ開始
-	void UpdateJumpStart();
-	// ジャンプ中
-	void UpdateJump();
-	// ジャンプ終了
-	void UpdateJumpEnd();
-	// 移動の更新処理
-	void UpdateMove();
-
-	// 仰け反り処理
-	void UpdateHit();
-	// 死亡処理
-	void UpdateDeath();
-
 
 	// アニメーションの種類
 	enum class EAnimType
@@ -180,8 +139,53 @@ private:
 
 		Num
 	};
+
 	// アニメーション切り替え
 	void ChangeAnimation(EAnimType type, bool restart = false);
+
+	// キーの入力情報から移動ベクトルを求める
+	CVector CalcMoveVec(bool force = false) const;
+	/// <summary>
+	/// ダメージ量を計算して返す
+	/// </summary>
+	/// <param name="taker">ダメージを受けるキャラ</param>
+	/// <param name="outDamage">ダメージ量を返す用</param>
+	/// <param name="outStan">怯み度を返す用</param>
+	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
+
+	bool HittingWallOfForward(float range);
+
+	// 非戦闘時の待機状態
+//	void UpdateIdle();
+	// 戦闘時の待機状態
+	void UpdateBattleIdle();
+	// 攻撃処理
+	void UpdateAttack();
+	// 防御開始処理
+	void UpdateGuardStart();
+	// 防御中処理
+	void UpdateGuard();
+	// 防御終了
+	void UpdateGuardEnd();
+	// 防御パリィ処理
+	void UpdateGuardParry();
+	// 回避処理
+	void UpdateAvoid();
+
+	// ジャンプ開始
+	void UpdateJumpStart();
+	// ジャンプ中
+	void UpdateJump();
+	// ジャンプ終了
+	void UpdateJumpEnd();
+	// 移動の更新処理
+	void UpdateMove();
+
+	// 仰け反り処理
+	void UpdateHit();
+	// 死亡処理
+	void UpdateDeath();
+
 
 	// 攻撃方向や、攻撃の威力によって
 	// 切り替えるアニメーションの種類を取得
@@ -221,6 +225,10 @@ private:
 
 	bool mIsGrounded;	// 接地しているかどうか
 	CVector mGroundNormal;	// 接地している地面の法線
+
+	bool mIsHittingWall;	// 壁に当たっているかどうか？
+	CVector mHitWallPos;	// 壁に当たった時の座標
+	CVector mHitWallNormal;	// 壁に当たった時の法線
 
 	// 本体のコライダ
 	CCollider* mpBodyCol;

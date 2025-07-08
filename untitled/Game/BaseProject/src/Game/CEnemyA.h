@@ -61,9 +61,6 @@ public:
 
 private:
 
-	// ダメージ計算
-	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
-
 	// アニメーションの種類
 	enum class EAnimType
 	{
@@ -146,6 +143,9 @@ private:
 	void ChangeAttackType(int attacktype) override;
 
 	// TODO:待機行動のクラスを作る
+
+	// ダメージ計算
+	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
 
 	// プレイヤーが視野範囲内に入ったかどうか
 	bool IsFoundPlayer() const;

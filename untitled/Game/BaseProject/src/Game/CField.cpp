@@ -40,6 +40,7 @@ CField::CField()
 	navManager->AddCollider(mpColliderMesh);
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
+
 	CLever* lever1 = new CLever(CVector(0.0f, 10.0f, 0.0f));
 
 #if _DEBUG

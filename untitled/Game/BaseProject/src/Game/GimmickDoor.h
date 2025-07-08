@@ -7,7 +7,7 @@ class CLever;
 
 class CGimmickDoor : public CObjectBase
 {
-	CGimmickDoor(CVector pos, CVector rot, CVector size);
+	CGimmickDoor(CVector pos, CVector angle, CVector size);
 
 	~CGimmickDoor();
 
@@ -21,9 +21,13 @@ private:
 	CModel* mpDoorModel;
 	CModel* mpRDoubleDoorsModel;
 	CModel* mpLDoubleDoorsModel;
-	CModel* mpRastDoor;
+	CModel* mpRastDoorModel;
 
-	CColliderMesh* mpColliderMesh;
+	CColliderMesh* mpDoorCol;
+	CColliderMesh* mpRDoubleDoorsCol;
+	CColliderMesh* mpLDoubleDoorsCol;
+	CColliderMesh* mpRastDoorCol;
+
 	// このドアを開くために押す必要のあるスイッチのリスト
 	std::list<CLever*> mpLevers;
 	bool mIsOpened;

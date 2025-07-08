@@ -55,9 +55,9 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>("MoveFloor2",	"Field\\Object\\MoveObject_2.obj");
 	CResourceManager::Load<CModel>("LeverBase",		"Field\\Object\\Gimmick\\LeverBase.obj");
 	CResourceManager::Load<CModel>("Lever",			"Field\\Object\\Gimmick\\Lever.obj");
+	CResourceManager::Load<CModel>("Door",			"Field\\Object\\Gimmick\\Door.obj");
 	CResourceManager::Load<CModel>("RDuobleDoors",	"Field\\Object\\Gimmick\\RDoubleDoors.obj");
 	CResourceManager::Load<CModel>("LDuobleDoors",	"Field\\Object\\Gimmick\\LDoubleDoors.obj");
-	CResourceManager::Load<CModel>("Door",			"Field\\Object\\Gimmick\\Door.obj");
 	CResourceManager::Load<CModel>("RastDoor",		"Field\\Object\\Gimmick\\RastDoor.obj");
 	// キャラクター
 	CResourceManager::Load<CModelX>("Player",		"Character\\Player\\T_Pose.x");

@@ -2,9 +2,6 @@
 
 // コンストラクタ
 CGimmickDoor::CGimmickDoor(CVector pos, CVector angle, CVector size)
-	: mIsOpened(false)
-	, mAnimTime(1.0f)
-	, mElapsedTime(0.0f)
 {
 	// 位置と向きとサイズを設定
 	Position(pos);
@@ -118,4 +115,5 @@ void CGimmickDoor::Render()
 {
 }
 */
+
 

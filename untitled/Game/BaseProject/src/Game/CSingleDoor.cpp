@@ -1,7 +1,9 @@
 #include "CSingleDoor.h"
+#include "GimmickDoor.h"
 
 CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
-	: mIsOpened(false)
+	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
+	, mIsOpened(false)
 	, mAnimTime(1.0f)
 	, mElapsedTime(0.0f)
 	, mIsPlaying(false)
@@ -11,7 +13,7 @@ CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
 	Rotation(angle);
 	Scale(size);
 
-	mpDoorModel = CResourceManager::Get<CModel>("Door");
+	mpDoorModel = CResourceManager::Get<CModel>("SingleDoor");
 	mpDoorCol = new CColliderMesh(this, ELayer::eWall, mpDoorModel);
 }
 
@@ -32,6 +34,16 @@ void CSingleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
 	mClosePos = closePos;
 	Position(mIsOpened ? mOpenPos : mClosePos);
 }
+
+bool CSingleDoor::IsSwitchOn() const
+{
+	for (CInteractObject* sw : mpInputObjs)
+	{
+		if (!sw->IsOnInteractObj()) return false;
+	}
+	return true;
+}
+
 
 void CSingleDoor::Update()
 {
@@ -98,3 +110,4 @@ void CSingleDoor::Render()
 {
 	mpDoorModel->Render(Matrix());
 }
+

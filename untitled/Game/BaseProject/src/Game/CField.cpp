@@ -26,18 +26,20 @@ CField::CField()
 	assert(spInstance == nullptr);
 	spInstance = this;
 
-	mpModel = CResourceManager::Get<CModel>("Field");
+	CNavManager* navManager = CNavManager::Instance();
+	CFieldWall* fieldWall = CFieldWall::Instance();
+
+	mpFieldFloorModel = CResourceManager::Get<CModel>("Field");
+
 	// ƒRƒ‰ƒCƒ_[Ý’è
 	mpColliderMesh = new CColliderMesh
 	(
-		this, ELayer::eField, mpModel,
+		this, ELayer::eField, mpFieldFloorModel,
 		true
 	);
 	mpColliderMesh->SetShow(true);
 
-	CNavManager* navManager = CNavManager::Instance();
-	CFieldWall* fieldWall = CFieldWall::Instance();
-
+	// 
 	navManager->AddCollider(mpColliderMesh);
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
@@ -49,9 +51,9 @@ CField::CField()
 
 	CSingleDoor* singleDoor1 = new CSingleDoor
 	(
-		CVector(30.0f, 0.0f, 0.0f),
+		CVector(0.0f, 10.0f, 20.0f),
 		CVector(0.0f, 0.0f, 0.0f),
-		CVector(0.0f, 0.0f, 0.0f)
+		CVector(1.0f, 1.0f, 1.0f)
 	);
 	singleDoor1->SetAnimPos
 	(
@@ -62,6 +64,7 @@ CField::CField()
 
 	// •Ç‚ðì¬
 	CreateWalls();
+
 	for (CWall* wall : mWalls)
 	{
 		navManager->AddCollider(wall->GetNavCol());
@@ -146,48 +149,6 @@ void CField::CreateFieldObjects()
 	);
 
 	/*
-	new CRotateFloor
-	(
-		mpCylinderModel,
-		CVector(-40.0f, 15.0f, 20.0f), CVector(1.0f, 1.0f, 1.0f),
-		1.0f
-	);
-
-	// “®‚©‚È‚¢°‡@
-	new CMoveFloor
-	(
-		mpCubeModel,
-		CVector(20.0f, 10.0f, 0.0f), CVector(0.5f, 1.0f, 0.25f),
-		CVector(0.0f, 0.0f, 0.0f), 5.0f
-	);
-	// “®‚­°‡@
-	new CMoveFloor
-	(
-		mpCubeModel,
-		CVector(60.0f, 20.0f, 0.0f), CVector(0.25f, 1.0f, 0.25f),
-		CVector(20.0f, 0.0f, 0.0f), 5.0f
-	);
-	// “®‚©‚È‚¢°‡A
-	new CMoveFloor
-	(
-		mpCubeModel,
-		CVector(100.0f, 20.0f, 0.0f), CVector(0.25f, 1.0f, 0.25f),
-		CVector(0.0f, 0.0f, 0.0f), 5.0f
-	);
-	// ‰ñ“]‚·‚é°‡@
-	new CRotateFloor
-	(
-		mpCubeModel,
-		CVector(135.0f, 20.0f, 0.0f), CVector(1.0f, 1.0f, 0.25f),
-		0.5f
-	);
-	// “®‚©‚È‚¢°‡A
-	new CMoveFloor
-	(
-		mpCubeModel,
-		CVector(135.0f, 20.0f, -35.0f), CVector(0.25f, 1.0f, 0.25f),
-		CVector(0.0f, 0.0f, 0.0f), 5.0f
-	);
 	// “®‚©‚È‚¢°‡A
 	new CMoveFloor
 	(
@@ -349,7 +310,7 @@ void CField::Update()
 
 void CField::Render()
 {
-	mpModel->Render(Matrix());
+	mpFieldFloorModel->Render(Matrix());
 }
 
 

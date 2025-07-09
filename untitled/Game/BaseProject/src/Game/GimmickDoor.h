@@ -13,7 +13,7 @@ class CGimmickDoor : public CObjectBase
 	// デストラクタ
 	~CGimmickDoor();
 
-
+	/*
 	// 接続するスイッチを追加
 	void AddInputObjs(CInteractObject* sw);
 	//アニメーションするときの移動位置
@@ -38,6 +38,7 @@ private:
 	float mAnimTime;
 	float mElapsedTime;
 
+	*/
 	// 各ドアのモデルデータ
 
 	CModel* mpRDoubleDoorsModel;
@@ -48,4 +49,5 @@ private:
 	CColliderMesh* mpRDoubleDoorsCol;
 	CColliderMesh* mpLDoubleDoorsCol;
 	CColliderMesh* mpRastDoorCol;
+	
 };

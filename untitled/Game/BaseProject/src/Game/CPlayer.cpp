@@ -803,19 +803,19 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 	
 }
 
-bool CPlayer::HittingWallOfForward(float range)
-{
-	CVector forward = CVector::forward.Normalized();
-
-	// 自身の正面方向のベクトルの内積を求めて角度を出す
-	float dot = CVector::Dot(mHitWallNormal, forward);
-	// 視野角度のラジアンを求める
-	float angleR = Math::DegreeToRadian(range);
-	// 求めた内積と視野角度で、視野範囲か判断する
-	if (dot < cosf(angleR)) return true;
-
-	return false;
-}
+//bool CPlayer::HittingWallOfForward(float range)
+//{
+//	CVector forward = CVector::forward.Normalized();
+//
+//	// 自身の正面方向のベクトルの内積を求めて角度を出す
+//	float dot = CVector::Dot(mHitWallNormal, forward);
+//	// 視野角度のラジアンを求める
+//	float angleR = Math::DegreeToRadian(range);
+//	// 求めた内積と視野角度で、視野範囲か判断する
+//	if (dot < cosf(angleR)) return true;
+//
+//	return false;
+//}
 
 // 非戦闘時の待機状態
 //void CPlayer::UpdateIdle()
@@ -1005,16 +1005,8 @@ void CPlayer::UpdateAvoid()
 				CVector current = VectorZ();
 				CVector forward = CVector::Slerp(current, mAvoidDir, 0.5);
 				Rotation(CQuaternion::LookRotation(forward));
-
-				if (mIsHittingWall && HittingWallOfForward(90.0f))
-				{
-					mMoveSpeed = CVector::zero;
-				}
-				else
-				{
-					// 回避時の移動速度を求める
-					mMoveSpeed = mAvoidDir * EVA_MOVE_DIST * Times::DeltaTime();
-				}
+				// 回避時の移動速度を求める
+				mMoveSpeed = mAvoidDir * EVA_MOVE_DIST * Times::DeltaTime();
 			}
 			else
 			{

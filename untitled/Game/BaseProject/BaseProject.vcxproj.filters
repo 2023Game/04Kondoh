@@ -107,6 +107,9 @@
     <Filter Include="ソース ファイル\Game\Field\Object\Gimmick">
       <UniqueIdentifier>{2eeafc38-59a9-411f-9561-503fb485f320}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors">
+      <UniqueIdentifier>{be1a9c3e-4ce2-4622-9a8f-bf4e67c80756}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -415,11 +418,14 @@
     <ClCompile Include="src\Game\CFieldWall.cpp">
       <Filter>ソース ファイル\Game\Field</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\GimmickDoor.cpp">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\CInteractObject.cpp">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CSingleDoor.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GimmickDoor.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -753,11 +759,14 @@
     <ClInclude Include="src\Game\CFieldWall.h">
       <Filter>ソース ファイル\Game\Field</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\GimmickDoor.h">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\CInteractObject.h">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CSingleDoor.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\GimmickDoor.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

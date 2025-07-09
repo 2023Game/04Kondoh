@@ -1,60 +1,41 @@
-#include "GimmickDoor.h"
+#include "CSingleDoor.h"
 
-// コンストラクタ
-CGimmickDoor::CGimmickDoor(CVector pos, CVector angle, CVector size)
+CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
 	: mIsOpened(false)
 	, mAnimTime(1.0f)
 	, mElapsedTime(0.0f)
+	, mIsPlaying(false)
 {
 	// 位置と向きとサイズを設定
 	Position(pos);
 	Rotation(angle);
 	Scale(size);
 
-	mpRDoubleDoorsModel = CResourceManager::Get<CModel>("RDuobleDoors");
-	mpRDoubleDoorsCol = new CColliderMesh(this, ELayer::eWall, mpRDoubleDoorsModel);
-
-	mpLDoubleDoorsModel = CResourceManager::Get<CModel>("LDuobleDoors");
-	mpLDoubleDoorsCol = new CColliderMesh(this, ELayer::eWall, mpLDoubleDoorsModel);
-
-	mpRastDoorModel = CResourceManager::Get<CModel>("RastDoor");
-	mpRastDoorCol = new CColliderMesh(this, ELayer::eWall, mpRastDoorModel);
+	mpDoorModel = CResourceManager::Get<CModel>("Door");
+	mpDoorCol = new CColliderMesh(this, ELayer::eWall, mpDoorModel);
 }
 
-// デストラクタ
-CGimmickDoor::~CGimmickDoor()
+CSingleDoor::~CSingleDoor()
 {
-	SAFE_DELETE(mpRDoubleDoorsCol);
-	SAFE_DELETE(mpLDoubleDoorsCol);
-	SAFE_DELETE(mpRastDoorCol);
+	SAFE_DELETE(mpDoorCol);
 }
 
-/*
 // 接続するスイッチを設定
-void CGimmickDoor::AddInputObjs(CInteractObject* sw)
+void CSingleDoor::AddInputObjs(CInteractObject* sw)
 {
 	mpInputObjs.push_back(sw);
 }
 
-void CGimmickDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
+void CSingleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
 {
 	mOpenPos = openPos;
 	mClosePos = closePos;
+	Position(mIsOpened ? mOpenPos : mClosePos);
 }
 
-bool CGimmickDoor::IsSwitchOn() const
+void CSingleDoor::Update()
 {
-	for (CInteractObject* sw : mpInputObjs)
-	{
-		if (!sw->IsOnInteractObj()) return false;
-	}
-	return true;
-}
-
-// 更新処理
-void CGimmickDoor::Update()
-{
-	// 開閉アニメーション中か
+	/// 開閉アニメーション中か
 	if (mIsPlaying)
 	{
 		// 扉を開く場合
@@ -95,6 +76,7 @@ void CGimmickDoor::Update()
 	else
 	{
 		bool isSwitchOn = IsSwitchOn();
+
 		// スイッチがオンの状態で閉じたままであれば、
 		if (isSwitchOn && !mIsOpened)
 		{
@@ -110,12 +92,9 @@ void CGimmickDoor::Update()
 			mIsPlaying = true;
 		}
 	}
-	
 }
 
-// 描画処理
-void CGimmickDoor::Render()
+void CSingleDoor::Render()
 {
+	mpDoorModel->Render(Matrix());
 }
-*/
-

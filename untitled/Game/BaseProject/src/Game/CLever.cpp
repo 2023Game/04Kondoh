@@ -9,8 +9,6 @@
 CLever::CLever(const CVector& pos)
 	: mpLeverBaseModel(nullptr)
 	, mpLeverModel(nullptr)
-	, mIsPlaying(false)
-	, mIsOn(false)
 	, mLeverAngle(ROT_ANGLE)
 	, mStartAngle(0)
 	, mEndAngle(0)
@@ -45,19 +43,16 @@ void CLever::Interact()
 {
 	if (mIsPlaying) return;
 
-	mIsOn = !mIsOn;
-	mInteractStr = mIsOn ? "オフにする" : "オンにする";
+	mIsOnIntaractObj = !mIsOnIntaractObj;
+	mInteractStr = mIsOnIntaractObj ? "オフにする" : "オンにする";
 	// レバーの角度を変える
 	mStartAngle = mLeverAngle;
-	mEndAngle = mIsOn ? ROT_ANGLE : -ROT_ANGLE;
+	mEndAngle = mIsOnIntaractObj ? ROT_ANGLE : -ROT_ANGLE;
 	mElapsedTime = 0.0f;
 	mIsPlaying = true;
 }
 
-bool CLever::IsOn() const
-{
-	return false;
-}
+
 
 void CLever::Update()
 {

@@ -4,6 +4,8 @@
 CInteractObject::CInteractObject(ETaskPriority prio, int sortOrder, ETaskPauseType pause)
 	: CObjectBase(ETag::eInteractObject, prio, sortOrder, pause)
 	, mInteractStr("調べる")
+	, mIsPlaying(false)
+	, mIsOnIntaractObj(false)
 
 #if _DEBUG	
 	, mDebugName("InteractObj")
@@ -21,6 +23,12 @@ bool CInteractObject::CanInteract() const
 {
 	return true;
 }
+
+bool CInteractObject::IsOnInteractObj() const
+{
+	return mIsOnIntaractObj;
+}
+
 
 // 調べる内容のテキストを返す
 std::string CInteractObject::GetInteractStr() const

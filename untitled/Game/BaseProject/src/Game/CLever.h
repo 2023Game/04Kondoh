@@ -12,8 +12,6 @@ public:
 	// 調べる
 	void Interact() override;
 
-	bool IsOn() const;
-
 	// 更新処理
 	void Update() override;
 	// 描画処理
@@ -30,8 +28,7 @@ private:
 
 	CTransform* mpParentObj;
 
-	bool mIsPlaying;	// レバーのアニメーション再生中か
-	bool mIsOn;			// レバーがオンになっているか
+
 
 
 	float mLeverAngle;	// レバーの現在の角度

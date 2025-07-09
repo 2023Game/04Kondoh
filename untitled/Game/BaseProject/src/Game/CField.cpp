@@ -6,6 +6,7 @@
 #include "CFieldWall.h"
 #include "CWall.h"
 #include "CLever.h"
+#include "CSingleDoor.h"
 #include "CNavManager.h"
 #include "CNavNode.h"
 #include <assert.h>
@@ -42,10 +43,22 @@ CField::CField()
 
 
 	CLever* lever1 = new CLever(CVector(0.0f, 10.0f, 0.0f));
-
 #if _DEBUG
 	lever1->SetDebugName("Lever1");
 #endif
+
+	CSingleDoor* singleDoor1 = new CSingleDoor
+	(
+		CVector(30.0f, 0.0f, 0.0f),
+		CVector(0.0f, 0.0f, 0.0f),
+		CVector(0.0f, 0.0f, 0.0f)
+	);
+	singleDoor1->SetAnimPos
+	(
+		CVector(30.0f, 0.0f, 50.0f),
+		CVector(30.0f, 0.0f, 0.0f)
+	);
+	singleDoor1->AddInputObjs(lever1);
 
 	// •Ç‚ğì¬
 	CreateWalls();

@@ -153,7 +153,7 @@ private:
 	/// <param name="outStan">‹¯‚İ“x‚ğ•Ô‚·—p</param>
 	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
 
-	bool HittingWallOfForward(float range);
+//	bool HittingWallOfForward(float range);
 
 	// ”ñí“¬‚Ì‘Ò‹@ó‘Ô
 //	void UpdateIdle();

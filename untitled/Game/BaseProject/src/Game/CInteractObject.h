@@ -16,12 +16,17 @@ public:
 
 	// 調べられる状態かどうか
 	virtual bool CanInteract() const;
+
 	// 調べる（絶対！！継承先で実装）
 	// 純粋仮想関数 (関数() = 0;)
 	virtual void Interact() = 0;
+	// インタラクトオブジェクトがオンになったか
+	virtual bool IsOnInteractObj() const;
 
 	// 調べる内容のテキストを返す
 	std::string GetInteractStr() const;
+
+
 
 #if _DEBUG	
 	// デバッグ表示用の名前を取得
@@ -31,7 +36,16 @@ public:
 #endif
 
 protected:
+
+	bool mIsPlaying;	// アニメーション再生中か
+	bool mIsOnIntaractObj;	// オンになっているか
+
+	// 入力オブジェクトのリスト
+	std::list<CInteractObject*> mpInputObjs;
+
 	std::string mInteractStr;	// 調べる内容のテキスト
+
+
 
 #if _DEBUG
 	std::string mDebugName;	// デバッグ表示用

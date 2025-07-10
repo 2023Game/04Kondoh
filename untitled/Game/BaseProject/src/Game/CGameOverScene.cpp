@@ -1,13 +1,13 @@
 #include "CGameOverScene.h"
 #include "CSceneManager.h"
-#include "CGameScene.h"
 #include "CCamera.h"
 #include "CSound.h"
 #include "CBGMManager.h"
 #include "CGameOverUI.h"
 
 CGameOverScene::CGameOverScene()
-	:CSceneBase(EScene::eGameOver)
+	: CSceneBase(EScene::eGameOver)
+	, mpGameOverUI(nullptr)
 {
 }
 

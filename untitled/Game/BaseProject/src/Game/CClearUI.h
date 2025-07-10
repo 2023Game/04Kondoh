@@ -1,19 +1,18 @@
 #pragma once
 #include "CTask.h"
 
-class CFont;
 class CImage;
 class CExpandButton;
 
-class CGameOverUI : public CTask
+class CClearUI : public CTask
 {
 public:
 	// コンストラクタ
-	CGameOverUI();
+	CClearUI();
 	// デストラクタ
-	~CGameOverUI();
+	~CClearUI();
 
-	// ゲームオーバ画面終了か
+	// クリア画面終了か
 	bool IsEnd() const;
 	// ゲームを開始するか
 	bool IsStartGame() const;
@@ -26,13 +25,11 @@ public:
 	void Render() override;
 private:
 
-	// ゲームオーバの状態
 	enum class EState
 	{
-		eOpen,		// 待機状態
-		eSelect,	// メニュー選択
+		eOpen,
+		eSelect
 	};
-	// 状態切り替え
 	void ChangeState(EState state);
 
 	// 待機状態
@@ -40,17 +37,17 @@ private:
 	// メニュー選択
 	void UpdateSelect();
 
-	// [CONTINUE]クリック時のコールバック関数
-	void OnClickContinue();
+	// [ReStart]クリック時のコールバック関数
+	void OnClickReStart();
 	// [QUIT]クリック時のコールバック関数
 	void OnClickQuit();
 
-	EState mState;
+	EState mState;		
 	int mStateStep;		// 状態内でのステップ管理
 	int mSelectIndex;	// 現在選択している項目
 	float mElapsedTime;	// 経過時間計測用
-	bool mIsEnd;		// ゲームオーバ画面終了フラグ
+	bool mIsEnd;		// クリア画面終了フラグ
 
-	CImage* mpGameOverBg;	// ゲームオーバ背景イメージ
+	CImage* mpGameClearBg;	// ゲームクリア背景イメージ
 	std::vector<CExpandButton*> mButtons;
 };

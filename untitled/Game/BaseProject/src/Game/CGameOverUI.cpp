@@ -13,9 +13,10 @@
 #define OPENED_WAIT_TIME 0.5f
 
 CGameOverUI::CGameOverUI()
-	:CTask(ETaskPriority::eUI, 0, ETaskPauseType::eDefault)
+	: CTask(ETaskPriority::eUI, 0, ETaskPauseType::eDefault)
 	, mState(EState::eOpen)
 	, mStateStep(0)
+	, mSelectIndex(0)
 	, mElapsedTime(0.0f)
 	, mIsEnd(false)
 {

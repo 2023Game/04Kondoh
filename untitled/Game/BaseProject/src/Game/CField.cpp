@@ -26,21 +26,24 @@ CField::CField()
 	assert(spInstance == nullptr);
 	spInstance = this;
 
-	CNavManager* navManager = CNavManager::Instance();
-	CFieldWall* fieldWall = CFieldWall::Instance();
-
-	mpFieldFloorModel = CResourceManager::Get<CModel>("Field");
-
-	// コライダー設定
-	mpColliderMesh = new CColliderMesh
+	// 床のモデル
+	mpFieldModel = CResourceManager::Get<CModel>("Field");
+	// 床のコライダー設定
+	mpFieldCol = new CColliderMesh
 	(
-		this, ELayer::eField, mpFieldFloorModel,
+		this, ELayer::eField, mpFieldModel,
 		true
 	);
-	mpColliderMesh->SetShow(true);
+	mpFieldCol->SetShow(true);
 
-	// 
-	navManager->AddCollider(mpColliderMesh);
+	// 背景のモデル
+	mpBackGroundModel = CResourceManager::Get<CModel>("BackGround");
+
+	// インスタンス取得
+	CNavManager* navManager = CNavManager::Instance();
+	CFieldWall* fieldWall = CFieldWall::Instance();
+	// 遮蔽物になるコライダーに追加する
+	navManager->AddCollider(mpFieldCol);
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
 
@@ -79,10 +82,10 @@ CField::CField()
 CField::~CField()
 {
 	spInstance = nullptr;
-	if (mpColliderMesh != nullptr)
+	if (mpFieldCol != nullptr)
 	{
-		delete mpColliderMesh;
-		mpColliderMesh = nullptr;
+		delete mpFieldCol;
+		mpFieldCol = nullptr;
 	}
 }
 
@@ -219,7 +222,7 @@ bool CField::CollisionRay(const CVector& start, const CVector& end, CHitInfo* hi
 	CFieldWall* fieldWall = CFieldWall::Instance();
 
 	//　フィールドのオブジェクトとの衝突判定
-	if (CCollider::CollisionRay(mpColliderMesh, start, end, &tHit))
+	if (CCollider::CollisionRay(mpFieldCol, start, end, &tHit))
 	{
 		*hit = tHit;
 		isHit = true;
@@ -267,7 +270,7 @@ bool CField::NavCollisionRay(const CVector& start, const CVector& end, CHitInfo*
 	CFieldWall* fieldWall = CFieldWall::Instance();
 
 	//　フィールドのオブジェクトとの衝突判定
-	if (CCollider::CollisionRay(mpColliderMesh, start, end, &tHit))
+	if (CCollider::CollisionRay(mpFieldCol, start, end, &tHit))
 	{
 		*hit = tHit;
 		isHit = true;
@@ -310,13 +313,14 @@ void CField::Update()
 
 void CField::Render()
 {
-	mpFieldFloorModel->Render(Matrix());
+	mpFieldModel->Render(Matrix());
+	mpBackGroundModel->Render(Matrix());
 }
 
 
 CColliderMesh* CField::GetFieldCol() const
 {
-	return mpColliderMesh;
+	return mpFieldCol;
 }
 
 

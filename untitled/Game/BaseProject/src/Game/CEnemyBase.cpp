@@ -67,7 +67,7 @@ void CEnemyBase::DeleteObject(CObjectBase* obj)
 	}
 }
 
-// パリィ出来るかどうか
+// アタックパリィ出来るかどうか
 bool CEnemyBase::CheckAttackParry(EAttackDir dir, EAttackPower power) const
 {
 	// ベースクラスのパリー条件を満たしていない場合、パリィ出来ない
@@ -86,6 +86,7 @@ bool CEnemyBase::CheckAttackParry(EAttackDir dir, EAttackPower power) const
 	return true;
 }
 
+// ガードパリィ出来るかどうか
 bool CEnemyBase::CheckGuardParry() const
 {
 	const AttackData& data = (*mpAttackData)[mAttackType];
@@ -98,6 +99,7 @@ bool CEnemyBase::CheckGuardParry() const
 	return true;
 }
 
+// 指定のステートか
 bool CEnemyBase::IsState(int state)
 {
 	if ((int)mState == state) return true;

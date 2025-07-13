@@ -349,7 +349,7 @@ void CEnemyA::Update()
 	case (int)EState::eHit:			UpdateHit();		break;	// 仰け反り状態
 	case (int)EState::eStun:		UpdateStun();		break;	// 混乱状態
 	case (int)EState::eStunWait:	UpdateStunWait();	break;	// 混乱待ち状態
-	case (int)EState::eTakeParry:	UpdateParry();		break;	// パリィ状態
+	case (int)EState::eParried:		UpdateParried();	break;	// パリィされた状態
 	case (int)EState::eDeath:		UpdateDeath();		break;	// 死亡状態
 	}
 
@@ -531,7 +531,7 @@ void CEnemyA::TakeDamage(int damage, float stan, float knockback, CObjectBase* c
 
 void CEnemyA::Parry()
 {
-	ChangeState((int)EState::eTakeParry);
+	ChangeState((int)EState::eParried);
 }
 
 // 仰け反り処理
@@ -1391,6 +1391,7 @@ void CEnemyA::UpdateGuard()
 // 回避時の更新処理
 void CEnemyA::UpdateAvoid()
 {
+
 }
 
 // 仰け反り時の更新処理
@@ -1507,7 +1508,8 @@ void CEnemyA::UpdateStunWait()
 	}
 }
 
-void CEnemyA::UpdateParry()
+// パリィされた時の更新処理
+void CEnemyA::UpdateParried()
 {
 	switch (mStateStep)
 	{
@@ -2024,7 +2026,7 @@ std::string CEnemyA::GetStateStr(int state) const
 	case (int)EState::eHit:			return "仰け反り";
 	case (int)EState::eStun:		return "混乱";
 	case (int)EState::eStunWait:	return "混乱待ち時間";
-	case (int)EState::eTakeParry:		return "パリィ";
+	case (int)EState::eParried:		return "パリィ";
 	case (int)EState::eDeath:		return "死亡";
 	}
 	return "";

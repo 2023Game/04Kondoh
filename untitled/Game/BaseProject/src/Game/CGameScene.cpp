@@ -13,6 +13,7 @@
 #include "CPlayer.h"
 #include "CEnemyManager.h"
 #include "CEnemyA.h"
+#include "CEnemyBase.h"
 #include "CBGMManager.h"
 
 #define GAMEOVER_WAIT_TIME 0.5f //　ゲームオーバーシーン移行待機時間
@@ -43,9 +44,9 @@ void CGameScene::Load()
 
 	// ステージ
 	CResourceManager::Load<CModel>("Field",			"Field\\Demo_FieldFloor.obj");
-	CResourceManager::Load<CModel>("FieldCol",		"Field\\Stage1_FieldFloorCol.obj");
 	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\Demo_FieldWall.obj");
 	CResourceManager::Load<CModel>("FieldWallCol",	"Field\\Object\\Wall\\Demo_FieldWallCol.obj");
+	CResourceManager::Load<CModel>("BackGround",	"Field\\BackGround.obj");
 	// オブジェクト
 	CResourceManager::Load<CModel>("Wall",			"Field\\Object\\Wall\\Wall.obj");
 	CResourceManager::Load<CModel>("WallCol",		"Field\\Object\\Wall\\WallCol.obj");
@@ -90,7 +91,6 @@ void CGameScene::Load()
 			CVector(  0.0f, 0.94f,   0.0f),
 			CVector(  0.0f, 0.94f, 100.0f),
 			CVector(100.0f, 0.94f, 100.0f),
-			CVector( 50.0f, 2.0f,   50.0f),
 		}
 	);
 	enemyA->Scale(1.0f, 1.0f, 1.0f);
@@ -164,4 +164,13 @@ void CGameScene::Update()
 			mpGameMenu->Open();
 		}
 	}
+}
+
+void CGameScene::RandomRespawn(CEnemyBase* enemy, int rand)
+{
+
+	while ()
+	if (enemy != nullptr) return;
+
+
 }

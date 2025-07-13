@@ -13,7 +13,7 @@ CClearUI::CClearUI()
 	(
 		CVector2(WINDOW_WIDTH * 0.5f, 450.0f),
 		CVector2(220.0f, 140.0f),
-		ETaskPriority::eUI, ETaskPauseType::eGame,
+		ETaskPriority::eUI, 0, ETaskPauseType::eGame,
 		false, false
 	);
 	//btn1

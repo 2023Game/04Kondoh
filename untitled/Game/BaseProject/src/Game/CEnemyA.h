@@ -119,7 +119,7 @@ private:
 		eHit,			// 仰け反り
 		eStun,			// 混乱
 		eStunWait,		// 混乱待ち時間
-		eTakeParry,		// パリィされた時
+		eParried,		// パリィされた時
 		eDeath,			// 死亡
 	};
 	//状態切り替え
@@ -215,8 +215,8 @@ private:
 	void UpdateStun();
 	// 混乱待ちの更新処理
 	void UpdateStunWait();
-	// パリィ時の更新処理
-	void UpdateParry();
+	// パリィされた時の更新処理
+	void UpdateParried();
 	// 死亡時の更新処理
 	void UpdateDeath();
 

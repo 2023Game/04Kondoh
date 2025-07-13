@@ -51,9 +51,11 @@ private:
 	static CField* spInstance;
 
 	// ステージ1の床のモデル
-	CModel* mpFieldFloorModel;
+	CModel* mpFieldModel;
+	CModel* mpBackGroundModel;
 	// ステージ1の床のコリジョン
-	CColliderMesh* mpColliderMesh;
+	CColliderMesh* mpFieldCol;
+
 
 	CModel* mpMoveFloor1Model;
 	CModel* mpMoveFloor2Model;

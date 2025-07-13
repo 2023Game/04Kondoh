@@ -12,6 +12,8 @@ public:
 	CGameScene();
 	//デストラクタ
 	~CGameScene();
+	// ランダムリスポーン
+	void RandomRespawn(CEnemyBase* enemy, int rand);
 	//シーン読み込み
 	void Load();
 	//シーンの更新処理

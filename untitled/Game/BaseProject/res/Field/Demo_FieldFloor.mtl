@@ -14,7 +14,7 @@ Pc 0.000000
 Pcr 0.030000
 aniso 0.000000
 anisor 0.000000
-map_Kd Stone_Base_Color.png
+map_Kd Texture/Stone_Base_Color.png
 
 newmtl material_01
 Ks 0.500000 0.500000 0.500000
@@ -29,7 +29,7 @@ Pc 0.000000
 Pcr 0.030000
 aniso 0.000000
 anisor 0.000000
-map_Kd Object/Wall/Stone_Base_Color.png
+map_Kd Texture/Stone_Base_Color.png
 
 newmtl material_02
 Ks 0.500000 0.500000 0.500000
@@ -44,4 +44,4 @@ Pc 0.000000
 Pcr 0.030000
 aniso 0.000000
 anisor 0.000000
-map_Kd Stone_Base_Color.png
+map_Kd Texture/Stone_Base_Color.png

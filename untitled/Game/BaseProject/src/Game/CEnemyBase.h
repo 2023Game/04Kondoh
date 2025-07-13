@@ -44,9 +44,9 @@ public:
 	//オブジェクトを削除を伝える関数
 	void DeleteObject(CObjectBase* obj) override;
 
-	// パリィ出来るかどうか
+	// アタックパリィ出来るかどうか
 	bool CheckAttackParry(EAttackDir dir, EAttackPower power) const override;
-
+	// ガードパリィ出来るかどうか
 	bool CheckGuardParry() const override;
 
 	/// <summary>
@@ -62,7 +62,6 @@ public:
 
 	// 更新
 	void Update() override;
-
 	// 描画
 	void Render() override;
 
@@ -76,10 +75,8 @@ protected:
 
 	// 状態切り替え
 	virtual void ChangeState(int state);
-
 	// 攻撃タイプ切り替え
 	virtual void ChangeAttackType(int attacktype);
-
 	// アニメーション切り替え
 	void ChangeAnimation(int type, bool restart = false);
 

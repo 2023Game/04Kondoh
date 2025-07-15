@@ -15,7 +15,8 @@
 #include "CEnemyA.h"
 #include "CBGMManager.h"
 
-#define GAMEOVER_WAIT_TIME 0.5f //　ゲームオーバーシーン移行待機時間
+#define GAMEOVER_WAIT_TIME 0.5f // ゲームオーバーシーン移行待機時間
+#define RESPAWN_INTERVAL 2.0f	// リスポーンまでの間隔
 
 //コンストラクタ
 CGameScene::CGameScene()
@@ -23,6 +24,7 @@ CGameScene::CGameScene()
 	, mpGameMenu(nullptr)
 	, mElapsedTime(0.0f)
 	, mSpawnCount(0)
+	, mRespawnElapsedTime(0.0f)
 {
 }
 
@@ -83,24 +85,6 @@ void CGameScene::Load()
 	player->Scale(1.0f, 1.0f, 1.0f);
 	player->Position(10.0f, 1.0, 0.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
-
-	CEnemyA* enemyA = new CEnemyA
-	({
-			CVector(100.0f, 0.94f,   0.0f),
-			CVector(0.0f, 0.94f,   0.0f),
-			CVector(0.0f, 0.94f, 100.0f),
-			CVector(100.0f, 0.94f, 100.0f),
-		});
-
-	/*CEnemyA* enemyA2 = new CEnemyA
-	(
-		{
-			CVector(250.0f, 0.94f, 150.0f),
-			CVector(150.0f, 0.94f, 150.0f),
-			CVector(150.0f, 0.94f, 250.0f),
-			CVector(250.0f, 0.94f, 250.0f),
-		}
-	);*/
 
 	// CGameCamera2のテスト
 	CVector atPos = player->Position() + CVector(0.0f, 10.0f, 0.0f);
@@ -171,23 +155,25 @@ void CGameScene::RandomRespawn()
 	// ※今のところはリスポーン処理だけを作っています。
 
 	CEnemyManager* enemyMgr = CEnemyManager::Instance();
-	while (enemy->GetEnemies().size() < 2)
+	if (enemyMgr->GetEnemies().size() < 2)
 	{
-		int count = mSpawnCount;
-		if (count > 10) break;
-
-		CEnemyA* enemyA = new CEnemyA
-		({
-				CVector(100.0f, 0.94f,   0.0f),
-				CVector(0.0f, 0.94f,   0.0f),
-				CVector(0.0f, 0.94f, 100.0f),
-				CVector(100.0f, 0.94f, 100.0f),
-		});
-		enemyA->Scale(1.0f, 1.0f, 1.0f);
-		enemyA->Position(100.0f, 0.0f, 0.0f);
-		enemy->Add(enemyA);
-		mSpawnCount++;
+		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
+		{
+			mRespawnElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			CEnemyA* enemyA = new CEnemyA
+			({
+					CVector(100.0f, 0.94f,   0.0f),
+					CVector(0.0f, 0.94f,   0.0f),
+					CVector(0.0f, 0.94f, 100.0f),
+					CVector(100.0f, 0.94f, 100.0f),
+			});
+			enemyA->Scale(1.0f, 1.0f, 1.0f);
+			enemyA->Position(100.0f, 0.0f, 0.0f);
+			mSpawnCount++;
+			mRespawnElapsedTime -= RESPAWN_INTERVAL;
+		}
 	}
-
-
 }

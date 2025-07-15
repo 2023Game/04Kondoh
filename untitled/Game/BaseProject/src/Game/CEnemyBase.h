@@ -36,6 +36,13 @@ public:
 		float guardParryEndFrame;		// ガードパリィ出来るアニメーション終了フレーム
 	};
 
+	struct PointData
+	{
+		CVector pos;
+		bool respawnPoint;
+		CVector patrolPoint;
+	};
+
 	// コンストラクタ
 	CEnemyBase();
 	//デストラクタ
@@ -64,12 +71,6 @@ public:
 	void Update() override;
 	// 描画
 	void Render() override;
-
-	// 現在出現している敵のリストのgetter
-	//const std::list<CEnemyBase*>& GetEnemies() const;
-
-private:
-
 
 
 protected:

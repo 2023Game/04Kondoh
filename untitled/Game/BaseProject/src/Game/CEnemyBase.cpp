@@ -8,6 +8,9 @@
 
 #define GRAVITY 0.0625f;
 
+
+
+
 // コンストラクタ
 CEnemyBase::CEnemyBase()
 	:CXCharacter(ETag::eEnemy, ETaskPriority::eEnemy)
@@ -279,10 +282,6 @@ void CEnemyBase::Render()
 	CXCharacter::Render();
 }
 
-//const std::list<CEnemyBase*>& CEnemyBase::GetEnemies() const
-//{
-//	return mCurreEnemies;
-//}
 
 
 

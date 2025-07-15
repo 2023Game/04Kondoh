@@ -5,7 +5,8 @@
 #include "CBGMManager.h"
 
 CClearScene::CClearScene()
-	:CSceneBase(EScene::eGameClear)
+	: CSceneBase(EScene::eGameClear)
+	, mpClearUI(nullptr)
 {
 }
 
@@ -15,7 +16,11 @@ CClearScene::~CClearScene()
 
 void CClearScene::Load()
 {
+	CCamera* mainCamera = new CCamera
+	(
+		CVector(0.0f,0.0f,0.0f),
 
+		)
 }
 
 void CClearScene::Update()

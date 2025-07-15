@@ -15,6 +15,7 @@
 #define DAMAGEHIT_PATH "Character\\EnemyA\\anim\\DamageHit\\"
 #define CHANCEHIT_PATH "Character\\EnemyA\\anim\\ChanceHit\\"
 
+#define ENEMY_HP 100
 #define ENEMY_HEIGHT 16.0f      // 敵の高さ
 #define ENEMY_SOLE   5.0f       // 敵の底
 #define ENEMY_WIDTH  5.0f       // 敵の半径
@@ -171,7 +172,7 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 {
 	//この敵キャラの攻撃データを設定
 	mpAttackData = &ATTACK_DATA;
-	mMaxHp = 10;
+	mMaxHp = ENEMY_HP;
 	mHp = mMaxHp;
 
 	// ゲージのオフセット位置を設定

@@ -84,6 +84,13 @@ void CGameScene::Load()
 	player->Position(10.0f, 1.0, 0.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
 
+	CEnemyA* enemyA = new CEnemyA
+	({
+			CVector(100.0f, 0.94f,   0.0f),
+			CVector(0.0f, 0.94f,   0.0f),
+			CVector(0.0f, 0.94f, 100.0f),
+			CVector(100.0f, 0.94f, 100.0f),
+		});
 
 	/*CEnemyA* enemyA2 = new CEnemyA
 	(
@@ -153,30 +160,29 @@ void CGameScene::Update()
 			mpGameMenu->Open();
 		}
 	}
-	CEnemyManager* enemyMgr = CEnemyManager::Instance();
 
-	RandomRespawn(enemyMgr);
+	RandomRespawn();
 
 }
 
 // ランダムリスポーン
-void CGameScene::RandomRespawn(CEnemyManager* enemy)
+void CGameScene::RandomRespawn()
 {
 	// ※今のところはリスポーン処理だけを作っています。
 
+	CEnemyManager* enemyMgr = CEnemyManager::Instance();
 	while (enemy->GetEnemies().size() < 2)
 	{
-		if (mSpawnCount > 10) break;
+		int count = mSpawnCount;
+		if (count > 10) break;
 
 		CEnemyA* enemyA = new CEnemyA
-		(
-			{
+		({
 				CVector(100.0f, 0.94f,   0.0f),
 				CVector(0.0f, 0.94f,   0.0f),
 				CVector(0.0f, 0.94f, 100.0f),
 				CVector(100.0f, 0.94f, 100.0f),
-			}
-		);
+		});
 		enemyA->Scale(1.0f, 1.0f, 1.0f);
 		enemyA->Position(100.0f, 0.0f, 0.0f);
 		enemy->Add(enemyA);

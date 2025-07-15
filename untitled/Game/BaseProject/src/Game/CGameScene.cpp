@@ -13,7 +13,6 @@
 #include "CPlayer.h"
 #include "CEnemyManager.h"
 #include "CEnemyA.h"
-#include "CEnemyBase.h"
 #include "CBGMManager.h"
 
 #define GAMEOVER_WAIT_TIME 0.5f //　ゲームオーバーシーン移行待機時間
@@ -23,6 +22,7 @@ CGameScene::CGameScene()
 	: CSceneBase(EScene::eGame)
 	, mpGameMenu(nullptr)
 	, mElapsedTime(0.0f)
+	, mSpawnCount(0)
 {
 }
 
@@ -84,17 +84,6 @@ void CGameScene::Load()
 	player->Position(10.0f, 1.0, 0.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
 
-	CEnemyA* enemyA = new CEnemyA
-	(
-		{
-			CVector(100.0f, 0.94f,   0.0f),
-			CVector(  0.0f, 0.94f,   0.0f),
-			CVector(  0.0f, 0.94f, 100.0f),
-			CVector(100.0f, 0.94f, 100.0f),
-		}
-	);
-	enemyA->Scale(1.0f, 1.0f, 1.0f);
-	enemyA->Position(100.0f, 0.0f, 0.0f);
 
 	/*CEnemyA* enemyA2 = new CEnemyA
 	(
@@ -164,13 +153,37 @@ void CGameScene::Update()
 			mpGameMenu->Open();
 		}
 	}
+	CEnemyManager* enemyMgr = CEnemyManager::Instance();
+
+	RandomRespawn(enemyMgr);
+
 }
 
-void CGameScene::RandomRespawn(CEnemyBase* enemy, int rand)
+// ランダムリスポーン
+void CGameScene::RandomRespawn(CEnemyManager* enemy)
 {
+	// ※今のところはリスポーン処理だけを作っています。
+	int size = enemy->GetEnemies().size();
 
-	while ()
-	if (enemy != nullptr) return;
+	while (size < 2)
+	{
+		if (mSpawnCount > 10) break;
+		else  continue;
+
+		CEnemyA* enemyA = new CEnemyA
+		(
+			{
+				CVector(100.0f, 0.94f,   0.0f),
+				CVector(0.0f, 0.94f,   0.0f),
+				CVector(0.0f, 0.94f, 100.0f),
+				CVector(100.0f, 0.94f, 100.0f),
+			}
+		);
+		enemyA->Scale(1.0f, 1.0f, 1.0f);
+		enemyA->Position(100.0f, 0.0f, 0.0f);
+		enemy->Add(enemyA);
+		mSpawnCount++;
+	}
 
 
 }

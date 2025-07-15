@@ -44,6 +44,13 @@ void CEnemyManager::Remove(CEnemyBase* enemy)
 	mEnemies.remove(enemy);
 }
 
+const std::list<CEnemyBase*>& CEnemyManager::GetEnemies()
+{
+	return mEnemies;
+}
+
+
+
 
 
 //CEnemyBase* CEnemyManager::FindLockOnTarget(float angle, float length) const

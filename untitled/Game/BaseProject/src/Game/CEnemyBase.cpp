@@ -279,5 +279,10 @@ void CEnemyBase::Render()
 	CXCharacter::Render();
 }
 
+//const std::list<CEnemyBase*>& CEnemyBase::GetEnemies() const
+//{
+//	return mCurreEnemies;
+//}
+
 
 

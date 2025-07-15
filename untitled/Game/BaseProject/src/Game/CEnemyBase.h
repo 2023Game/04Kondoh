@@ -65,6 +65,13 @@ public:
 	// 描画
 	void Render() override;
 
+	// 現在出現している敵のリストのgetter
+	//const std::list<CEnemyBase*>& GetEnemies() const;
+
+private:
+
+
+
 protected:
 
 	// 指定のステートか

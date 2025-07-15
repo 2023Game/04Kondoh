@@ -13,7 +13,7 @@ public:
 	//デストラクタ
 	~CGameScene();
 	// ランダムリスポーン
-	void RandomRespawn(CEnemyBase* enemy, int rand);
+	void RandomRespawn(CEnemyManager* enemy);
 	//シーン読み込み
 	void Load();
 	//シーンの更新処理
@@ -21,6 +21,8 @@ public:
 
 private:
 	float mElapsedTime; // 経過時間計測用
+
+	int mSpawnCount;	// 敵のリスポーン数
 
 	CSound* mpGameBGM;
 	CGameMenu* mpGameMenu;

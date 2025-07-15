@@ -16,6 +16,8 @@ public:
 	// 敵をリストから削除
 	void Remove(CEnemyBase* enemy);
 
+	const std::list<CEnemyBase*>& GetEnemies();
+
 
 private:
 	// コンストラクタ
@@ -27,5 +29,7 @@ private:
 	static CEnemyManager* spInstance;
 	// 敵のリスト
 	std::list<CEnemyBase*> mEnemies;
+	// 現在出現している敵のリスト
+	const std::list<CEnemyBase*> mCurreEnemies;
 
 };

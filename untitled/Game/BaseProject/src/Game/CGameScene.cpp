@@ -163,12 +163,10 @@ void CGameScene::Update()
 void CGameScene::RandomRespawn(CEnemyManager* enemy)
 {
 	// ※今のところはリスポーン処理だけを作っています。
-	int size = enemy->GetEnemies().size();
 
-	while (size < 2)
+	while (enemy->GetEnemies().size() < 2)
 	{
 		if (mSpawnCount > 10) break;
-		else  continue;
 
 		CEnemyA* enemyA = new CEnemyA
 		(

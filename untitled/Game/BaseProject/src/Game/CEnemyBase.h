@@ -101,8 +101,6 @@ protected:
 	const std::vector<AnimData>* mpAnimData;
 	// 攻撃データのテーブル
 	const std::vector<AttackData>* mpAttackData;
-	// ポイントデータのテーブル
-	const std::vector<PointData>* mpPointData;
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度

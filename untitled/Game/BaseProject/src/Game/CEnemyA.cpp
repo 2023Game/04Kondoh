@@ -153,8 +153,8 @@ const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 };
 
 // コンストラクタ
-CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
-	:mFovAngle(FOV_ANGLE)
+CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
+	: mFovAngle(FOV_ANGLE)
 	, mFovLength(FOV_LENGTH)
 	, mPlayerAttackAngle(PLAYER_ATTACK_ANGLE)
 	, mPlayerAttackLength(PLAYER_ATTACK_LENGTH)
@@ -171,6 +171,8 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	, mNextPatrolIndex(-1)
 	, mNextMoveIndex(0)
 {
+	Position(pos);
+
 	//この敵キャラの攻撃データを設定
 	mpAttackData = &ATTACK_DATA;
 	mMaxHp = ENEMY_HP;
@@ -286,6 +288,9 @@ CEnemyA::CEnemyA(std::vector<CVector> patrolPoints)
 	mIdleTime = Math::Rand(0.0f, 5.0f);
 	// 円運動の移動角度をランダムで決める（１回だけだよ）
 	mRandMoveAngle = Math::Rand(-30.0f, 30.0f);
+
+	// 初回に更新処理を呼んでモデルの位置を調整
+	CXCharacter::Update();
 }
 
 CEnemyA::~CEnemyA()

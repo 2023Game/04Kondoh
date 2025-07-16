@@ -20,33 +20,49 @@
 #define RESPAWN_INTERVAL 2.0f	// リスポーンまでの間隔
 
 // 敵のポイントデータのテーブル
-const std::vector<RespawnData> POINT_DATA =
+const std::vector<RespawnData> RESPAWN_DATA =
 {
 	{ 
-		CVector(0.0f, 0.94f, 0.0f),
+		CVector(140.0f, 0.94f, 0.0f),
 		{
-			CVector(100.0f, 0.94f,   0.0f),
-			CVector(0.0f, 0.94f,   0.0f),
-			CVector(0.0f, 0.94f, 100.0f),
-			CVector(100.0f, 0.94f, 100.0f),
+			CVector( 110.0f, 0.94f,    0.0f),
+			CVector(   0.0f, 0.94f, -110.0f),
+			CVector( 110.0f, 0.94f,  110.0f),
+			CVector(-110.0f, 0.94f, -110.0f),
 		}
 	},
 	{
-		CVector(140.0f, 0.94f, 0.0f),
+		CVector(-140.0f, 0.94f, 0.0f),
 		{
-			CVector(100.0f, 0.94f,   0.0f),
-			CVector(0.0f, 0.94f,   0.0f),
-			CVector(0.0f, 0.94f, 100.0f),
-			CVector(100.0f, 0.94f, 100.0f),
+			CVector( 110.0f, 0.94f,    0.0f),
+			CVector(   0.0f, 0.94f, -110.0f),
+			CVector( 110.0f, 0.94f,  110.0f),
+			CVector(-110.0f, 0.94f, -110.0f),
 		}
 	},
-	{ CVector(0.0f, 0.94f, 140.0f),		false },
-	{ CVector(-140.0f, 0.94f, 0.0f),	false },
-	{ CVector(0.0f, 0.94f, -140.0f),	false },
-	{ CVector(110.0f, 0.94f, 110.0f),	false },
-	{ CVector(110.0f, 0.94f, -110.0f),	false },
-	{ CVector(-110.0f, 0.94f, 110.0f),	false },
-	{ CVector(-110.0f, 0.94f, -110.0f),	false },
+	{
+		CVector(0.0f, 0.94f, 140.0f),
+		{
+			CVector(110.0f, 0.94f,    0.0f),
+			CVector(0.0f, 0.94f, -110.0f),
+			CVector(110.0f, 0.94f,  110.0f),
+			CVector(-110.0f, 0.94f, -110.0f),
+		}
+	},
+	{ 
+		CVector(0.0f, 0.94f, -140.0f),
+		{
+			CVector( 110.0f, 0.94f,    0.0f),
+			CVector(  0.0f,  0.94f, -110.0f),
+			CVector( 110.0f, 0.94f,  110.0f),
+			CVector(-110.0f, 0.94f, -110.0f),
+		}
+	},
+	//{ CVector(0.0f, 0.94f, -140.0f),	false },
+	//{ CVector(110.0f, 0.94f, 110.0f),	false },
+	//{ CVector(110.0f, 0.94f, -110.0f),	false },
+	//{ CVector(-110.0f, 0.94f, 110.0f),	false },
+	//{ CVector(-110.0f, 0.94f, -110.0f),	false },
 };
 
 //コンストラクタ
@@ -144,6 +160,8 @@ void CGameScene::Load()
 void CGameScene::Update()
 {
 	CPlayer* player = CPlayer::Instance();
+	CEnemyManager* enemies = CEnemyManager::Instance();
+
 	//BGM再生中でなければ、BGMを再生
 	/*if (!mpGameBGM->IsPlaying())
 	{
@@ -160,6 +178,11 @@ void CGameScene::Update()
 		{
 			CSceneManager::Instance()->LoadScene(EScene::eGameOver);
 		}
+	}
+
+	if (mSpawnCount == 10 && enemies->GetEnemies().size() == 0)
+	{
+		CSceneManager::Instance()->LoadScene(EScene::eGameClear);
 	}
 
 	if (CInput::PushKey('H'))
@@ -183,7 +206,7 @@ void CGameScene::Update()
 // ランダムリスポーン
 void CGameScene::RandomRespawn()
 {
-	// ※今のところはリスポーン処理だけを作っています。
+	if (mSpawnCount >= 10) return;
 
 	CEnemyManager* enemyMgr = CEnemyManager::Instance();
 
@@ -195,24 +218,23 @@ void CGameScene::RandomRespawn()
 		}
 		else
 		{
-			CEnemyA* enemyA = new CEnemyA
-			({
-			});
+			int index = Math::Rand(0, RESPAWN_DATA.size() - 1);
+			const RespawnData& data = RESPAWN_DATA[index];
+			CEnemyA* enemyA = new CEnemyA(data.respawnPoint, data.patrolPoints);
 			enemyA->Scale(1.0f, 1.0f, 1.0f);
-			enemyA->Position(100.0f, 0.0f, 0.0f);
 			mSpawnCount++;
 			mRespawnElapsedTime -= RESPAWN_INTERVAL;
 		}
 	}
 }
 
-CVector CGameScene::RandomPoint()
-{
-	int maxSize = POINT_DATA.size();
-	int minSize = maxSize - (maxSize - 1);
-	int randPoint = Math::Rand(minSize, maxSize);
-
-	//const CEnemyBase::PointData& data = (CEnemyBase::mpPointData
-
-	//return CVector();
-}
+//CVector CGameScene::RandomPoint()
+//{
+//	int maxSize = POINT_DATA.size();
+//	int minSize = maxSize - (maxSize - 1);
+//	int randPoint = Math::Rand(minSize, maxSize);
+//
+//	//const CEnemyBase::PointData& data = (CEnemyBase::mpPointData
+//
+//	//return CVector();
+//}

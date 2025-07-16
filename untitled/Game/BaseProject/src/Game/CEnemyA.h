@@ -19,7 +19,7 @@ class CEnemyA : public CEnemyBase
 
 public:
 	// コンストラクタ
-	CEnemyA(std::vector<CVector> patrolPoints);
+	CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints);
 	~CEnemyA();
 	// オブジェクト削除処理
 	void DeleteObject(CObjectBase* obj) override;

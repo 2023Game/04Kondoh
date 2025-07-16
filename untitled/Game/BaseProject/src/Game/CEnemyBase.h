@@ -7,6 +7,14 @@
 
 class CGaugeUI3D;
 
+// リスポーンポイント
+struct RespawnData
+{
+	CVector respawnPoint;
+	std::vector<CVector> patrolPoints;
+};
+
+
 /*
 エネミーベースクラス
 キャラクタークラスを継承
@@ -36,12 +44,6 @@ public:
 		float guardParryEndFrame;		// ガードパリィ出来るアニメーション終了フレーム
 	};
 
-	// リスポーンポイント
-	struct PointData
-	{
-		CVector respawnPoint;
-		bool isRespawnPoint;
-	};
 
 	// コンストラクタ
 	CEnemyBase();
@@ -71,8 +73,6 @@ public:
 	void Update() override;
 	// 描画
 	void Render() override;
-
-	const std::vector<CEnemyBase::PointData*>& GetPoints();
 
 protected:
 

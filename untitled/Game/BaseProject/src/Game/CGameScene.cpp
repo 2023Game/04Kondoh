@@ -20,10 +20,26 @@
 #define RESPAWN_INTERVAL 2.0f	// リスポーンまでの間隔
 
 // 敵のポイントデータのテーブル
-const std::vector<CEnemyBase::PointData> POINT_DATA =
+const std::vector<RespawnData> POINT_DATA =
 {
-	{ CVector(0.0f, 0.94f, 0.0f),		false },
-	{ CVector(140.0f, 0.94f, 0.0f),		false },
+	{ 
+		CVector(0.0f, 0.94f, 0.0f),
+		{
+			CVector(100.0f, 0.94f,   0.0f),
+			CVector(0.0f, 0.94f,   0.0f),
+			CVector(0.0f, 0.94f, 100.0f),
+			CVector(100.0f, 0.94f, 100.0f),
+		}
+	},
+	{
+		CVector(140.0f, 0.94f, 0.0f),
+		{
+			CVector(100.0f, 0.94f,   0.0f),
+			CVector(0.0f, 0.94f,   0.0f),
+			CVector(0.0f, 0.94f, 100.0f),
+			CVector(100.0f, 0.94f, 100.0f),
+		}
+	},
 	{ CVector(0.0f, 0.94f, 140.0f),		false },
 	{ CVector(-140.0f, 0.94f, 0.0f),	false },
 	{ CVector(0.0f, 0.94f, -140.0f),	false },
@@ -181,10 +197,6 @@ void CGameScene::RandomRespawn()
 		{
 			CEnemyA* enemyA = new CEnemyA
 			({
-					CVector(100.0f, 0.94f,   0.0f),
-					CVector(0.0f, 0.94f,   0.0f),
-					CVector(0.0f, 0.94f, 100.0f),
-					CVector(100.0f, 0.94f, 100.0f),
 			});
 			enemyA->Scale(1.0f, 1.0f, 1.0f);
 			enemyA->Position(100.0f, 0.0f, 0.0f);

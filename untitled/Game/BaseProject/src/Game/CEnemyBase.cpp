@@ -282,6 +282,11 @@ void CEnemyBase::Render()
 	CXCharacter::Render();
 }
 
+const std::vector<CEnemyBase::PointData*>& CEnemyBase::GetPoints()
+{
+	return mpPointData;
+}
+
 
 
 

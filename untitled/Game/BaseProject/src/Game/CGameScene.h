@@ -14,6 +14,8 @@ public:
 	~CGameScene();
 	// ランダムリスポーン
 	void RandomRespawn();
+	// ランダムで
+	CVector RandomPoint();
 	//シーン読み込み
 	void Load();
 	//シーンの更新処理
@@ -24,6 +26,8 @@ private:
 
 	int mSpawnCount;	// 敵のリスポーン数
 	float mRespawnElapsedTime;	//リスポーン経過時間計測用
+
+	std::vector<CEnemyBase*> point;
 
 	CSound* mpGameBGM;
 	CGameMenu* mpGameMenu;

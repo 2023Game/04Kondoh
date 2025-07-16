@@ -6,6 +6,7 @@
 #include "CGameCamera.h"
 #include "CGameCamera2.h"
 #include "CInput.h"
+#include "Maths.h"
 
 #include "CField.h"
 #include "CFieldWall.h"
@@ -17,6 +18,20 @@
 
 #define GAMEOVER_WAIT_TIME 0.5f // ゲームオーバーシーン移行待機時間
 #define RESPAWN_INTERVAL 2.0f	// リスポーンまでの間隔
+
+// 敵のポイントデータのテーブル
+const std::vector<CEnemyBase::PointData> POINT_DATA =
+{
+	{ CVector(0.0f, 0.94f, 0.0f),		false },
+	{ CVector(140.0f, 0.94f, 0.0f),		false },
+	{ CVector(0.0f, 0.94f, 140.0f),		false },
+	{ CVector(-140.0f, 0.94f, 0.0f),	false },
+	{ CVector(0.0f, 0.94f, -140.0f),	false },
+	{ CVector(110.0f, 0.94f, 110.0f),	false },
+	{ CVector(110.0f, 0.94f, -110.0f),	false },
+	{ CVector(-110.0f, 0.94f, 110.0f),	false },
+	{ CVector(-110.0f, 0.94f, -110.0f),	false },
+};
 
 //コンストラクタ
 CGameScene::CGameScene()
@@ -155,6 +170,7 @@ void CGameScene::RandomRespawn()
 	// ※今のところはリスポーン処理だけを作っています。
 
 	CEnemyManager* enemyMgr = CEnemyManager::Instance();
+
 	if (enemyMgr->GetEnemies().size() < 2)
 	{
 		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
@@ -176,4 +192,15 @@ void CGameScene::RandomRespawn()
 			mRespawnElapsedTime -= RESPAWN_INTERVAL;
 		}
 	}
+}
+
+CVector CGameScene::RandomPoint()
+{
+	int maxSize = POINT_DATA.size();
+	int minSize = maxSize - (maxSize - 1);
+	int randPoint = Math::Rand(minSize, maxSize);
+
+	//const CEnemyBase::PointData& data = (CEnemyBase::mpPointData
+
+	//return CVector();
 }

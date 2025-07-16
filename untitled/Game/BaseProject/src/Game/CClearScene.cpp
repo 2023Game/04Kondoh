@@ -16,11 +16,6 @@ CClearScene::~CClearScene()
 
 void CClearScene::Load()
 {
-	CCamera* mainCamera = new CCamera
-	(
-		CVector(0.0f,0.0f,0.0f),
-
-		)
 }
 
 void CClearScene::Update()

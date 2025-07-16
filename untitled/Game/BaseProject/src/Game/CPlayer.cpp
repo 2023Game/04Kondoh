@@ -10,7 +10,6 @@
 #include "Maths.h"
 #include "CField.h"
 #include "CEnemyManager.h"
-#include "CEnemyA.h"
 #include "CGaugeUI2D.h"
 #include "CInteractObject.h"
 

@@ -36,11 +36,11 @@ public:
 		float guardParryEndFrame;		// ガードパリィ出来るアニメーション終了フレーム
 	};
 
+	// リスポーンポイント
 	struct PointData
 	{
-		CVector pos;
-		bool respawnPoint;
-		CVector patrolPoint;
+		CVector respawnPoint;
+		bool isRespawnPoint;
 	};
 
 	// コンストラクタ
@@ -72,6 +72,7 @@ public:
 	// 描画
 	void Render() override;
 
+	const std::vector<CEnemyBase::PointData*>& GetPoints();
 
 protected:
 
@@ -100,6 +101,8 @@ protected:
 	const std::vector<AnimData>* mpAnimData;
 	// 攻撃データのテーブル
 	const std::vector<AttackData>* mpAttackData;
+	// ポイントデータのテーブル
+	const std::vector<PointData>* mpPointData;
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度

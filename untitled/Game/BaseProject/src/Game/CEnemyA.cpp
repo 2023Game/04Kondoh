@@ -129,6 +129,7 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 
 };
 
+// プレイヤーの攻撃データのテーブル
 const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 {
 	// 指定なし

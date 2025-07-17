@@ -1,7 +1,7 @@
-#include "CClearUI.h"
+#include "CGameClear.h"
 #include "CExpandButton.h"
 
-CClearUI::CClearUI()
+CGameClear::CGameClear()
 	: CTask(ETaskPriority::eUI, 0, ETaskPauseType::eDefault)
 	, mState(EState::eOpen)
 	, mStateStep(0)
@@ -9,6 +9,13 @@ CClearUI::CClearUI()
 	, mElapsedTime(0.0f)
 	, mIsEnd(false)
 {
+	mpBackground = new CImage
+	(
+		"UI/clear_back",
+		ETaskPriority::eUI, 0, ETaskPauseType::eMenu,
+		false, false
+	);
+
 	CExpandButton* btn1 = new CExpandButton
 	(
 		CVector2(WINDOW_WIDTH * 0.5f, 450.0f),
@@ -19,26 +26,26 @@ CClearUI::CClearUI()
 	//btn1
 }
 
-CClearUI::~CClearUI()
+CGameClear::~CGameClear()
 {
 }
 
-bool CClearUI::IsEnd() const
+bool CGameClear::IsEnd() const
 {
 	return mIsEnd;
 }
 
-bool CClearUI::IsStartGame() const
+bool CGameClear::IsStartGame() const
 {
 	return mSelectIndex == 0;
 }
 
-bool CClearUI::IsExitGame() const
+bool CGameClear::IsExitGame() const
 {
 	return mSelectIndex == 1;
 }
 
-void CClearUI::Update()
+void CGameClear::Update()
 {
 	switch (mState)
 	{
@@ -53,11 +60,11 @@ void CClearUI::Update()
 
 }
 
-void CClearUI::Render()
+void CGameClear::Render()
 {
 }
 
-void CClearUI::ChangeState(EState state)
+void CGameClear::ChangeState(EState state)
 {
 	if (state == mState) return;
 	mState = state;
@@ -65,7 +72,7 @@ void CClearUI::ChangeState(EState state)
 	mElapsedTime = 0.0f;
 }
 
-void CClearUI::OnClickReStart()
+void CGameClear::OnClickReStart()
 {
 	if (mIsEnd) return;
 
@@ -73,7 +80,7 @@ void CClearUI::OnClickReStart()
 	mIsEnd = true;
 }
 
-void CClearUI::OnClickQuit()
+void CGameClear::OnClickQuit()
 {
 	if (mIsEnd) return;
 
@@ -81,12 +88,12 @@ void CClearUI::OnClickQuit()
 	mIsEnd = true;
 }
 
-void CClearUI::UpdateOpen()
+void CGameClear::UpdateOpen()
 {
 
 }
 
-void CClearUI::UpdateSelect()
+void CGameClear::UpdateSelect()
 {
 
 }

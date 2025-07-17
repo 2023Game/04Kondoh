@@ -433,7 +433,7 @@
     <ClCompile Include="src\Game\CClearScene.cpp">
       <Filter>ソース ファイル\Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\CClearUI.cpp">
+    <ClCompile Include="src\Game\CGameClear.cpp">
       <Filter>ソース ファイル\Game\UI\GameClear</Filter>
     </ClCompile>
   </ItemGroup>
@@ -780,7 +780,7 @@
     <ClInclude Include="src\Game\CClearScene.h">
       <Filter>ソース ファイル\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\CClearUI.h">
+    <ClInclude Include="src\Game\CGameClear.h">
       <Filter>ソース ファイル\Game\UI\GameClear</Filter>
     </ClInclude>
   </ItemGroup>

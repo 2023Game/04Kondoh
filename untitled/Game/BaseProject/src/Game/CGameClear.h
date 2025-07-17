@@ -1,16 +1,18 @@
 #pragma once
 #include "CTask.h"
+#include "CImage.h"
+#include <vector>
 
 class CImage;
 class CExpandButton;
 
-class CClearUI : public CTask
+class CGameClear : public CTask
 {
 public:
 	// コンストラクタ
-	CClearUI();
+	CGameClear();
 	// デストラクタ
-	~CClearUI();
+	~CGameClear();
 
 	// クリア画面終了か
 	bool IsEnd() const;
@@ -48,6 +50,6 @@ private:
 	float mElapsedTime;	// 経過時間計測用
 	bool mIsEnd;		// クリア画面終了フラグ
 
-	CImage* mpGameClearBg;	// ゲームクリア背景イメージ
+	CImage* mpBackground;	// ゲームクリア背景イメージ
 	std::vector<CExpandButton*> mButtons;
 };

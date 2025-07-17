@@ -3,7 +3,7 @@
 #include "CInput.h"
 #include "CImage.h"
 
-class CClearUI;
+class CGameClear;
 
 class CClearScene : public CSceneBase
 {
@@ -18,6 +18,6 @@ public:
 	void Update();
 
 private:
-	CClearUI* mpClearUI;
+	CGameClear* mpClearUI;
 
 };

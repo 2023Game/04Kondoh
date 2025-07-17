@@ -77,7 +77,7 @@
     <ClCompile Include="src\Game\CApplication.cpp" />
     <ClCompile Include="src\Game\CBullet.cpp" />
     <ClCompile Include="src\Game\CClearScene.cpp" />
-    <ClCompile Include="src\Game\CClearUI.cpp" />
+    <ClCompile Include="src\Game\CGameClear.cpp" />
     <ClCompile Include="src\Game\CDebugFieldOfView.cpp" />
     <ClCompile Include="src\Game\CEnemyA.cpp" />
     <ClCompile Include="src\Game\CEnemyBase.cpp" />
@@ -195,7 +195,7 @@
     <ClInclude Include="src\Game\CApplication.h" />
     <ClInclude Include="src\Game\CBullet.h" />
     <ClInclude Include="src\Game\CClearScene.h" />
-    <ClInclude Include="src\Game\CClearUI.h" />
+    <ClInclude Include="src\Game\CGameClear.h" />
     <ClInclude Include="src\Game\CDebugFieldOfView.h" />
     <ClInclude Include="src\Game\CEnemyA.h" />
     <ClInclude Include="src\Game\CEnemyBase.h" />

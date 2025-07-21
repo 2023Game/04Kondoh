@@ -14,6 +14,10 @@ public:
 	// デストラクタ
 	~CGameClear();
 
+	void Open();
+	void Close();
+	bool IsOpened() const;
+
 	// クリア画面終了か
 	bool IsEnd() const;
 	// ゲームを開始するか
@@ -49,6 +53,7 @@ private:
 	int mSelectIndex;	// 現在選択している項目
 	float mElapsedTime;	// 経過時間計測用
 	bool mIsEnd;		// クリア画面終了フラグ
+	bool mIsOpened;
 
 	CImage* mpBackground;	// ゲームクリア背景イメージ
 	std::vector<CExpandButton*> mButtons;

@@ -2,6 +2,7 @@
 #include "CSceneBase.h"
 
 class CGameMenu;
+class CGameClear;
 class CSound;
 
 //タイトルシーン
@@ -29,4 +30,6 @@ private:
 
 	CSound* mpGameBGM;
 	CGameMenu* mpGameMenu;
+	CGameClear* mpGameClear;
+
 };

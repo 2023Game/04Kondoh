@@ -1,6 +1,7 @@
 #include "CGameScene.h"
 #include "CSceneManager.h"
 #include "CGameMenu.h"
+#include "CGameClear.h"
 #include "CLineEffect.h"
 #include "CNavManager.h"
 #include "CGameCamera.h"
@@ -18,6 +19,7 @@
 
 #define GAMEOVER_WAIT_TIME 0.5f // ゲームオーバーシーン移行待機時間
 #define RESPAWN_INTERVAL 2.0f	// リスポーンまでの間隔
+#define MAX_RESPAWN 2	// 最大リスポーン数
 
 // 敵のポイントデータのテーブル
 const std::vector<RespawnData> RESPAWN_DATA =
@@ -180,9 +182,12 @@ void CGameScene::Update()
 		}
 	}
 
-	if (mSpawnCount == 10 && enemies->GetEnemies().size() == 0)
+	if (mSpawnCount == MAX_RESPAWN && enemies->GetEnemies().size() == 0)
 	{
-		CSceneManager::Instance()->LoadScene(EScene::eGameClear);
+		if (!mpGameClear->IsOpened())
+		{
+			mpGameClear->Open();
+		}
 	}
 
 	if (CInput::PushKey('H'))
@@ -206,7 +211,7 @@ void CGameScene::Update()
 // ランダムリスポーン
 void CGameScene::RandomRespawn()
 {
-	if (mSpawnCount >= 10) return;
+	if (mSpawnCount >= MAX_RESPAWN) return;
 
 	CEnemyManager* enemyMgr = CEnemyManager::Instance();
 

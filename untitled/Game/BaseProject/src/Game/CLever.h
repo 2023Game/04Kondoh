@@ -24,16 +24,11 @@ private:
 	CModel* mpLeverModel;		// レバーのモデル
 
 	CColliderMesh* mpLeverBaseCol;// レバーの土台コライダー
-	CColliderMesh* mpLeverCol;	// レバーのコライダー
-
-	CTransform* mpParentObj;
-
-
-
+	CColliderCapsule* mpLeverCol;	// レバーのコライダー
 
 	float mLeverAngle;	// レバーの現在の角度
 	float mStartAngle;	// レバー回転開始時の角度
 	float mEndAngle;	// レバー回転終了時の角度
-	float mElapsedTime;
+	float mElapsedTime;	// 経過時間計測用
 
 };

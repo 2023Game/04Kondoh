@@ -56,5 +56,6 @@ private:
 	bool mIsOpened;
 
 	CImage* mpBackground;	// ゲームクリア背景イメージ
+	CImage* mpClearText;	// クリア時のテキスト
 	std::vector<CExpandButton*> mButtons;
 };

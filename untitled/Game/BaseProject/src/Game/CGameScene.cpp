@@ -19,7 +19,8 @@
 
 #define GAMEOVER_WAIT_TIME 0.5f // ゲームオーバーシーン移行待機時間
 #define RESPAWN_INTERVAL 2.0f	// リスポーンまでの間隔
-#define MAX_RESPAWN 2	// 最大リスポーン数
+#define MAX_RESPAWN 1	// 最大リスポーン数
+#define RESPAWN 1
 
 // 敵のポイントデータのテーブル
 const std::vector<RespawnData> RESPAWN_DATA =
@@ -71,6 +72,7 @@ const std::vector<RespawnData> RESPAWN_DATA =
 CGameScene::CGameScene()
 	: CSceneBase(EScene::eGame)
 	, mpGameMenu(nullptr)
+	, mpGameClear(nullptr)
 	, mElapsedTime(0.0f)
 	, mSpawnCount(0)
 	, mRespawnElapsedTime(0.0f)
@@ -156,6 +158,7 @@ void CGameScene::Load()
 
 	// ゲームメニューを作成
 	mpGameMenu = new CGameMenu();
+	mpGameClear = new CGameClear();
 }
 
 //シーンの更新処理
@@ -215,7 +218,7 @@ void CGameScene::RandomRespawn()
 
 	CEnemyManager* enemyMgr = CEnemyManager::Instance();
 
-	if (enemyMgr->GetEnemies().size() < 2)
+	if (enemyMgr->GetEnemies().size() < RESPAWN)
 	{
 		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
 		{

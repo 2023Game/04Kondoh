@@ -1,10 +1,12 @@
 #include "CLever.h"
 #include "CColliderMesh.h"
-#include "CColliderSphere.h"
+#include "CColliderCapsule.h"
 #include "Maths.h"
 
 #define ROT_ANGLE 45.0f
 #define ROT_TIME 1.0f
+#define LEVER_START CVector(0.0f, 0.0f ,0.0f)
+#define LEVER_END CVector(0.0f, 7.0f ,0.0f)
 
 CLever::CLever(const CVector& pos)
 	: mpLeverBaseModel(nullptr)
@@ -20,7 +22,13 @@ CLever::CLever(const CVector& pos)
 	mpLeverBaseModel = CResourceManager::Get<CModel>("LeverBase");
 	mpLeverModel = CResourceManager::Get<CModel>("Lever");
 
-	mpLeverCol = new CColliderMesh(this, ELayer::eInteractObj,mpLeverModel);
+	mpLeverCol = new CColliderCapsule
+	(
+		this, ELayer::eInteractObj,
+		LEVER_START,
+		LEVER_END,
+		1.5f
+	);
 	mpLeverCol->SetCollisionTags({ ETag::ePlayer });
 	mpLeverCol->SetCollisionLayers({ ELayer::ePlayer, ELayer::eInteractSearch, ELayer::eAttackCol });
 	mpLeverCol->SetShow(true);
@@ -53,7 +61,6 @@ void CLever::Interact()
 }
 
 
-
 void CLever::Update()
 {
 	if (mIsPlaying)
@@ -84,13 +91,8 @@ void CLever::Render()
 	mpLeverModel->Render(rotM * m);
 }
 
+
+
 void CLever::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {
-	if (self == mpLeverCol || self == mpLeverBaseCol)
-	{
-		if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::eInteractSearch)
-		{
-
-		}
-	}
 }

@@ -15,12 +15,12 @@ public:
 	~CGameScene();
 	// ランダムリスポーン
 	void RandomRespawn();
-	// ランダムで
-	CVector RandomPoint();
 	//シーン読み込み
 	void Load();
 	//シーンの更新処理
 	void Update();
+
+
 
 private:
 	float mElapsedTime; // 経過時間計測用

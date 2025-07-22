@@ -602,17 +602,17 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 				chara->TakeDamage(damage, stan, knockback, this);
 			}
 		}
-		//else if (other->Tag() == ETag::eInteractObject && other->Layer() == ELayer::eInteractObj)
-		//{
-		//	CInteractObject* obj = dynamic_cast<CInteractObject*>(other->Owner());
-		//	if (obj != nullptr && !IsAttackHitObj(obj))
-		//	{
+		else if (other->Tag() == ETag::eInteractObject && other->Layer() == ELayer::eInteractObj)
+		{
+			CInteractObject* obj = dynamic_cast<CInteractObject*>(other->Owner());
+			if (obj != nullptr && !IsAttackHitObj(obj))
+			{
 
-		//		// 攻撃ヒット済みリストに登録
-		//		AddAttackHitObj(obj);
-		//		obj->Interact();
-		//	}
-		//}
+				// 攻撃ヒット済みリストに登録
+				AddAttackHitObj(obj);
+				obj->Interact();
+			}
+		}
 	}
 	// 調べるオブジェクトの探知コライダーとの当たり判定
 	else if (self == mpSearchCol)

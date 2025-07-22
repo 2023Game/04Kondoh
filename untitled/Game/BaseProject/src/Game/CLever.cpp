@@ -8,7 +8,7 @@
 #define LEVER_START CVector(0.0f, 0.0f ,0.0f)
 #define LEVER_END CVector(0.0f, 7.0f ,0.0f)
 
-CLever::CLever(const CVector& pos)
+CLever::CLever(const CVector& pos, const CVector& angle)
 	: mpLeverBaseModel(nullptr)
 	, mpLeverModel(nullptr)
 	, mLeverAngle(ROT_ANGLE)
@@ -18,6 +18,7 @@ CLever::CLever(const CVector& pos)
 {
 	// 位置と向きとサイズを設定
 	Position(pos);
+	Rotation(angle);
 
 	mpLeverBaseModel = CResourceManager::Get<CModel>("LeverBase");
 	mpLeverModel = CResourceManager::Get<CModel>("Lever");

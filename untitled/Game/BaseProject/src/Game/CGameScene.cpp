@@ -134,7 +134,7 @@ void CGameScene::Load()
 
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
-	player->Position(10.0f, 1.0, 0.0f);
+	player->Position(-270.0f, 175.0f, 100.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
 
 	// CGameCamera2‚ÌƒeƒXƒg

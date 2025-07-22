@@ -6,7 +6,7 @@
 class CLever : public CInteractObject
 {
 public:
-	CLever(const CVector& pos);
+	CLever(const CVector& pos, const CVector& angle);
 	~CLever();
 
 	// ’²‚×‚é

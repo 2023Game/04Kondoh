@@ -46,8 +46,8 @@ CField::CField()
 	navManager->AddCollider(mpFieldCol);
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
-
-	CLever* lever1 = new CLever(CVector(0.0f, 10.0f, 0.0f));
+	// ƒŒƒo[
+	CLever* lever1 = new CLever(CVector(-270.0f, 175.0f, 90.0f), CVector(90.0f, 163.0f, 0.0f));
 #if _DEBUG
 	lever1->SetDebugName("Lever1");
 #endif

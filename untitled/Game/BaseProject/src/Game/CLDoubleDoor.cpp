@@ -4,7 +4,7 @@
 
 // コンストラクタ
 CLDoubleDoor::CLDoubleDoor(CVector pos, CVector angle, CVector size)
-	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
+	: mAnimTime(0.0f)
 {
 	Position(pos);
 	Rotation(angle);

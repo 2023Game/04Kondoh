@@ -4,7 +4,7 @@
 
 class CInteractObject;
 
-class CLDoubleDoor : public CObjectBase
+class CLDoubleDoor : public CDoubleDoors
 {
 public:
 	// コンストラクタ

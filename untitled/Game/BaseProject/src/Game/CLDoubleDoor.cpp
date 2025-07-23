@@ -1,53 +1,41 @@
-#include "CSingleDoor.h"
+#include "CDoubleDoors.h"
+#include "CLDoubleDoor.h"
 #include "CInteractObject.h"
 
-CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
+// コンストラクタ
+CLDoubleDoor::CLDoubleDoor(CVector pos, CVector angle, CVector size)
 	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
-	, mIsOpened(false)
-	, mAnimTime(1.0f)
-	, mElapsedTime(0.0f)
-	, mIsPlaying(false)
 {
-	// 位置と向きとサイズを設定
 	Position(pos);
 	Rotation(angle);
 	Scale(size);
 
-	mpDoorModel = CResourceManager::Get<CModel>("SingleDoor");
-	mpDoorCol = new CColliderMesh(this, ELayer::eWall, mpDoorModel);
+	mpLDoorModel = CResourceManager::Get<CModel>("LDuobleDoors");
+	mpLDoorCol = new CColliderMesh(this, ELayer::eWall, mpLDoorModel);
 }
 
-CSingleDoor::~CSingleDoor()
+// デストラクタ
+CLDoubleDoor::~CLDoubleDoor()
 {
-	SAFE_DELETE(mpDoorCol);
+	SAFE_DELETE(mpLDoorCol);
 }
 
-// 接続するスイッチを設定
-void CSingleDoor::AddInputObjs(CInteractObject* sw)
+// 接続するスイッチを追加
+void CLDoubleDoor::AddInputObjs(CInteractObject* sw)
 {
 	mpInputObjs.push_back(sw);
 }
 
-void CSingleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
+// 扉の開閉した時の各座標を設定
+void CLDoubleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
 {
 	mOpenPos = openPos;
 	mClosePos = closePos;
 	Position(mIsOpened ? mOpenPos : mClosePos);
 }
 
-
-
-bool CSingleDoor::IsSwitchOn() const
-{
-	for (CInteractObject* sw : mpInputObjs)
-	{
-		if (!sw->IsOnInteractObj()) return false;
-	}
-	return true;
-}
-
-
-void CSingleDoor::Update()
+// 更新処理
+void CLDoubleDoor::Update()
 {
 	/// 開閉アニメーション中か
 	if (mIsPlaying)
@@ -89,7 +77,7 @@ void CSingleDoor::Update()
 	}
 	else
 	{
-		bool isSwitchOn = IsSwitchOn();
+		bool isSwitchOn = CDoubleDoors::IsSwitchOn();
 
 		// スイッチがオンの状態で閉じたままであれば、
 		if (isSwitchOn && !mIsOpened)
@@ -108,8 +96,8 @@ void CSingleDoor::Update()
 	}
 }
 
-void CSingleDoor::Render()
+// 描画処理
+void CLDoubleDoor::Render()
 {
-	mpDoorModel->Render(Matrix());
+	mpLDoorModel->Render(Matrix());
 }
-

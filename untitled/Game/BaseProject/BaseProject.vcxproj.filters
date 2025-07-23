@@ -436,6 +436,15 @@
     <ClCompile Include="src\Game\CGameClear.cpp">
       <Filter>ソース ファイル\Game\UI\GameClear</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\CLDoubleDoor.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CRDoubleDoor.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CDoubleDoors.cpp">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -782,6 +791,15 @@
     </ClInclude>
     <ClInclude Include="src\Game\CGameClear.h">
       <Filter>ソース ファイル\Game\UI\GameClear</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CLDoubleDoor.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CRDoubleDoor.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CDoubleDoors.h">
+      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

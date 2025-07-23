@@ -77,6 +77,8 @@
     <ClCompile Include="src\Game\CApplication.cpp" />
     <ClCompile Include="src\Game\CBullet.cpp" />
     <ClCompile Include="src\Game\CClearScene.cpp" />
+    <ClCompile Include="src\Game\CDoubleDoors.cpp" />
+    <ClCompile Include="src\Game\CLDoubleDoor.cpp" />
     <ClCompile Include="src\Game\CGameClear.cpp" />
     <ClCompile Include="src\Game\CDebugFieldOfView.cpp" />
     <ClCompile Include="src\Game\CEnemyA.cpp" />
@@ -99,6 +101,7 @@
     <ClCompile Include="src\Game\CLever.cpp" />
     <ClCompile Include="src\Game\CMoveFloor.cpp" />
     <ClCompile Include="src\Game\CPlayer.cpp" />
+    <ClCompile Include="src\Game\CRDoubleDoor.cpp" />
     <ClCompile Include="src\Game\CRideabeObject.cpp" />
     <ClCompile Include="src\Game\CRotateFloor.cpp" />
     <ClCompile Include="src\Game\CSingleDoor.cpp" />
@@ -195,6 +198,8 @@
     <ClInclude Include="src\Game\CApplication.h" />
     <ClInclude Include="src\Game\CBullet.h" />
     <ClInclude Include="src\Game\CClearScene.h" />
+    <ClInclude Include="src\Game\CDoubleDoors.h" />
+    <ClInclude Include="src\Game\CLDoubleDoor.h" />
     <ClInclude Include="src\Game\CGameClear.h" />
     <ClInclude Include="src\Game\CDebugFieldOfView.h" />
     <ClInclude Include="src\Game\CEnemyA.h" />
@@ -217,6 +222,7 @@
     <ClInclude Include="src\Game\CLever.h" />
     <ClInclude Include="src\Game\CMoveFloor.h" />
     <ClInclude Include="src\Game\CPlayer.h" />
+    <ClInclude Include="src\Game\CRDoubleDoor.h" />
     <ClInclude Include="src\Game\CRideableObject.h" />
     <ClInclude Include="src\Game\CRotateFloor.h" />
     <ClInclude Include="src\Game\CSingleDoor.h" />

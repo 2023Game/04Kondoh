@@ -30,9 +30,9 @@ void CSingleDoor::AddInputObjs(CInteractObject* sw)
 
 void CSingleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
 {
-	mOpenPos = openPos;
-	mClosePos = closePos;
-	Position(mIsOpened ? mOpenPos : mClosePos);
+	mOpenPosR = openPos;
+	mClosePosR = closePos;
+	Position(mIsOpened ? mOpenPosR : mClosePosR);
 }
 
 
@@ -58,13 +58,13 @@ void CSingleDoor::Update()
 			if (mElapsedTime < mAnimTime)
 			{
 				float per = mElapsedTime / mAnimTime;
-				CVector pos = CVector::Lerp(mClosePos, mOpenPos, per);
+				CVector pos = CVector::Lerp(mClosePosR, mOpenPosR, per);
 				Position(pos);
 				mElapsedTime += Times::DeltaTime();
 			}
 			else
 			{
-				Position(mOpenPos);
+				Position(mOpenPosR);
 				mElapsedTime = 0.0f;
 				mIsPlaying = false;
 			}
@@ -75,13 +75,13 @@ void CSingleDoor::Update()
 			if (mElapsedTime < mAnimTime)
 			{
 				float per = mElapsedTime / mAnimTime;
-				CVector pos = CVector::Lerp(mOpenPos, mClosePos, per);
+				CVector pos = CVector::Lerp(mOpenPosR, mClosePosR, per);
 				Position(pos);
 				mElapsedTime += Times::DeltaTime();
 			}
 			else
 			{
-				Position(mClosePos);
+				Position(mClosePosR);
 				mElapsedTime = 0.0f;
 				mIsPlaying = false;
 			}

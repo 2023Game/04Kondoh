@@ -43,7 +43,10 @@ public:
 private:
 	// 壁を生成
 	void CreateWalls();
+	// フィールドオブジェクトを作成
 	void CreateFieldObjects();
+	// ギミックを作成
+	void CreateGimmick();
 	// 経路探索用のノードを作成
 	void CreateNavNodes();
 	 
@@ -56,7 +59,7 @@ private:
 	// ステージ1の床のコリジョン
 	CColliderMesh* mpFieldCol;
 
-
+	// フィールドオブジェクトのモデル
 	CModel* mpMoveFloor1Model;
 	CModel* mpMoveFloor2Model;
 

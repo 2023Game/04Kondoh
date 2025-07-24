@@ -3,12 +3,13 @@
 #include "CInteractObject.h"
 
 // コンストラクタ
-CLDoubleDoor::CLDoubleDoor(CVector pos, CVector angle, CVector size)
+CLDoubleDoor::CLDoubleDoor(CVector pos)
 	: mAnimTime(0.0f)
+	, mElapsedTime(0.0f)
+	, mIsOpened(false)
+	, mIsPlaying(false)
 {
 	Position(pos);
-	Rotation(angle);
-	Scale(size);
 
 	mpLDoorModel = CResourceManager::Get<CModel>("LDuobleDoors");
 	mpLDoorCol = new CColliderMesh(this, ELayer::eWall, mpLDoorModel);
@@ -18,20 +19,6 @@ CLDoubleDoor::CLDoubleDoor(CVector pos, CVector angle, CVector size)
 CLDoubleDoor::~CLDoubleDoor()
 {
 	SAFE_DELETE(mpLDoorCol);
-}
-
-// 接続するスイッチを追加
-void CLDoubleDoor::AddInputObjs(CInteractObject* sw)
-{
-	mpInputObjs.push_back(sw);
-}
-
-// 扉の開閉した時の各座標を設定
-void CLDoubleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
-{
-	mOpenPos = openPos;
-	mClosePos = closePos;
-	Position(mIsOpened ? mOpenPos : mClosePos);
 }
 
 // 更新処理
@@ -46,13 +33,13 @@ void CLDoubleDoor::Update()
 			if (mElapsedTime < mAnimTime)
 			{
 				float per = mElapsedTime / mAnimTime;
-				CVector pos = CVector::Lerp(mClosePos, mOpenPos, per);
+				CVector pos = CVector::Lerp(mClosePosL, mOpenPosL, per);
 				Position(pos);
 				mElapsedTime += Times::DeltaTime();
 			}
 			else
 			{
-				Position(mOpenPos);
+				Position(mOpenPosL);
 				mElapsedTime = 0.0f;
 				mIsPlaying = false;
 			}
@@ -63,13 +50,13 @@ void CLDoubleDoor::Update()
 			if (mElapsedTime < mAnimTime)
 			{
 				float per = mElapsedTime / mAnimTime;
-				CVector pos = CVector::Lerp(mOpenPos, mClosePos, per);
+				CVector pos = CVector::Lerp(mOpenPosL, mClosePosL, per);
 				Position(pos);
 				mElapsedTime += Times::DeltaTime();
 			}
 			else
 			{
-				Position(mClosePos);
+				Position(mClosePosL);
 				mElapsedTime = 0.0f;
 				mIsPlaying = false;
 			}
@@ -77,7 +64,7 @@ void CLDoubleDoor::Update()
 	}
 	else
 	{
-		bool isSwitchOn = CDoubleDoors::IsSwitchOn();
+		bool isSwitchOn = IsSwitchOn();
 
 		// スイッチがオンの状態で閉じたままであれば、
 		if (isSwitchOn && !mIsOpened)

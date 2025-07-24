@@ -25,8 +25,8 @@ private:
 	// スイッチを押して扉が開くかどうか
 	bool IsSwitchOn() const;
 
-	CVector mOpenPos; // 開いた時の位置
-	CVector mClosePos;// 閉まった時の位置
+	CVector mOpenPosR; // 開いた時の位置
+	CVector mClosePosR;// 閉まった時の位置
 
 	float mAnimTime;
 	float mElapsedTime;

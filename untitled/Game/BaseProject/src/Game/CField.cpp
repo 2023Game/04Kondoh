@@ -7,6 +7,7 @@
 #include "CWall.h"
 #include "CLever.h"
 #include "CSingleDoor.h"
+#include "CDoubleDoors.h"
 #include "CNavManager.h"
 #include "CNavNode.h"
 #include <assert.h>
@@ -45,25 +46,6 @@ CField::CField()
 	// 遮蔽物になるコライダーに追加する
 	navManager->AddCollider(mpFieldCol);
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
-
-	// レバー
-	CLever* lever1 = new CLever(CVector(-270.0f, 175.0f, 90.0f), CVector(90.0f, 163.0f, 0.0f));
-#if _DEBUG
-	lever1->SetDebugName("Lever1");
-#endif
-
-	CSingleDoor* singleDoor1 = new CSingleDoor
-	(
-		CVector(0.0f, 10.0f, 20.0f),
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(1.0f, 1.0f, 1.0f)
-	);
-	singleDoor1->SetAnimPos
-	(
-		CVector(30.0f, 0.0f, 50.0f),
-		CVector(30.0f, 0.0f, 0.0f)
-	);
-	singleDoor1->AddInputObjs(lever1);
 
 	// 壁を作成
 	CreateWalls();
@@ -186,6 +168,48 @@ void CField::CreateFieldObjects()
 		le->AddPoint(pos, width, width);
 	}
 	*/
+}
+
+void CField::CreateGimmick()
+{
+//	// レバー
+	CLever* lever1 = new CLever(CVector(-270.0f, 175.0f, 90.0f), CVector(90.0f, 163.0f, 0.0f));
+#if _DEBUG
+	lever1->SetDebugName("Lever1");
+#endif
+
+	CSingleDoor* singleDoor1 = new CSingleDoor
+	(
+		CVector(0.0f, 10.0f, 20.0f),
+		CVector(0.0f, 0.0f, 0.0f),
+		CVector(1.0f, 1.0f, 1.0f)
+	);
+	singleDoor1->SetAnimPos
+	(
+		CVector(30.0f, 0.0f, 50.0f),
+		CVector(30.0f, 0.0f, 0.0f)
+	);
+	singleDoor1->AddInputObjs(lever1);
+
+	// レバー
+	CLever* lever2 = new CLever(CVector(0.0f, 0.0f, 90.0f), CVector(0.0f, 0.0f, 0.0f));
+#if _DEBUG
+	lever2->SetDebugName("Lever2");
+#endif
+	// 
+	CDoubleDoors* doubleDoors1 = new CDoubleDoors();
+	doubleDoors1->Position(-50.0f, 0.0f, 0.0f); 
+	doubleDoors1->SetAnimPosL
+	(
+		CVector(-80.0f, 0.0f, 0.0f),
+		CVector(-50.0f, 0.0f, 0.0f)
+	);
+	doubleDoors1->SetAnimPosR
+	(
+		CVector(-80.0f, 0.0f, 0.0f),
+		CVector(-110.0f, 0.0f, 0.0f)
+	);
+	doubleDoors1->AddInputObjs(lever2);
 }
 
 

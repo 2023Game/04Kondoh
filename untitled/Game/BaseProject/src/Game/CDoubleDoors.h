@@ -1,4 +1,5 @@
 #pragma once
+#include "CObjectBase.h"
 
 class CInteractObject;
 class CLDoubleDoor;
@@ -29,6 +30,8 @@ protected:
 	CVector mClosePosL;	// 左扉の閉まった時の位置
 	CVector mOpenPosR;	// 右扉の開いた時の位置
 	CVector mClosePosR;	// 右扉の閉まった時の位置
+
+	bool mIsOpened;
 
 private:
 

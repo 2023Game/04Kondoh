@@ -6,6 +6,9 @@
 
 CDoubleDoors::CDoubleDoors()
 	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
+	, mIsOpened(false)
+	, mpLDoor(nullptr)
+	, mpRDoor(nullptr)
 {
 
 	mpLDoor = new CLDoubleDoor(CVector(0.0f, 0.0f, 0.0f));
@@ -22,7 +25,7 @@ void CDoubleDoors::SetAnimPosL(const CVector& openPosL, const CVector& closePosL
 {
 	mOpenPosL = openPosL;
 	mClosePosL = closePosL;
-	//Position(mIsOpened ? mOpenPosL : mClosePosL);
+	Position(mIsOpened ? mOpenPosL : mClosePosL);
 }
 
 // 右扉の開閉した時の各座標を設定
@@ -30,7 +33,7 @@ void CDoubleDoors::SetAnimPosR(const CVector& openPosR, const CVector& closePosR
 {
 	mOpenPosR = openPosR;
 	mClosePosR = closePosR;
-	//Position(mIsOpened ? mOpenPosR : mClosePosR);
+	Position(mIsOpened ? mOpenPosR : mClosePosR);
 }
 
 

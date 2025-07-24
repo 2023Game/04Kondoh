@@ -5,7 +5,6 @@
 CRDoubleDoor::CRDoubleDoor(CVector pos)
 	: mAnimTime(0.0f)
 	, mElapsedTime(0.0f)
-	, mIsOpened(false)
 	, mIsPlaying(false)
 {
 	Position(pos);

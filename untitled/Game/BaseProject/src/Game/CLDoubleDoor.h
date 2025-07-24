@@ -27,7 +27,6 @@ private:
 	float mAnimTime;
 	float mElapsedTime;
 
-	bool mIsOpened;
 	bool mIsPlaying;
 
 	CModel* mpLDoorModel;		// ¶”à‚Ìƒ‚ƒfƒ‹

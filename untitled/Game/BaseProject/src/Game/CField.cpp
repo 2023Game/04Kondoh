@@ -59,6 +59,8 @@ CField::CField()
 	CreateNavNodes();
 	// フィールドオブジェクトを作成
 	CreateFieldObjects();
+
+	CreateGimmick();
 }
 
 CField::~CField()

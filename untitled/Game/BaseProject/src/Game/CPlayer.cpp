@@ -159,7 +159,7 @@ CPlayer::CPlayer()
 	// 最初は待機アニメーションを再生
 	ChangeAnimation(EAnimType::eBattleTPose);
 
-	// カプセルコライダー作成
+	// プレイヤー本体コライダー
 	mpBodyCol = new CColliderCapsule
 	(
 		this, ELayer::ePlayer,
@@ -210,7 +210,7 @@ CPlayer::CPlayer()
 	mpAttackCol3->Translate(0.0f, 0.0f, -5.0f);
 	mpAttackCol3->SetEnable(false);
 
-	//
+	// 調べるオブジェクトを探知するコライダー
 	mpSearchCol = new CColliderSphere
 	(
 		this, ELayer::eInteractSearch,
@@ -220,7 +220,6 @@ CPlayer::CPlayer()
 	mpSearchCol->SetCollisionTags({ ETag::eInteractObject });
 	mpSearchCol->SetCollisionLayers({ ELayer::eInteractObj });
 	mpSearchCol->Position(0.0f, 5.3f, 0.0f);
-
 
 	mpSlashSE = CResourceManager::Get<CSound>("SlashSound");
 

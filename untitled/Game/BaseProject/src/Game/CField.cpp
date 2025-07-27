@@ -60,7 +60,7 @@ CField::CField()
 	// フィールドオブジェクトを作成
 	CreateFieldObjects();
 
-	CreateGimmick();
+	//CreateGimmick();
 }
 
 CField::~CField()

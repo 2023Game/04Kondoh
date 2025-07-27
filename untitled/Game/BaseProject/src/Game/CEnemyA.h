@@ -282,6 +282,8 @@ private:
 	CColliderSphere* mpLFootCol;
 	// 右足の球コライダ
 	CColliderSphere* mpRFootCol;
+	// 攻撃用のコライダ４（頭の部分）
+	CColliderSphere* mpHeadCol;
 	// 戦闘相手
 	CObjectBase* mpBattleTarget;
 

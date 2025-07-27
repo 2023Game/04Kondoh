@@ -244,6 +244,16 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	mpRFootCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
 	mpRFootCol->SetEnable(false);
 
+	// 頭の球コライダ
+	mpHeadCol = new CColliderSphere
+	(
+		this, ELayer::eAttackCol,
+		25.0, true
+	);
+	mpHeadCol->SetCollisionTags({ ETag::eField, ETag::ePlayer });
+	mpHeadCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
+	mpHeadCol-> SetEnable(false);
+
 	// プレイヤーが存在しない場合は、範囲外とする
 	CPlayer* player = CPlayer::Instance();
 
@@ -266,23 +276,26 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	}
 
 	// 左手のボーンを取得
-	CModelXFrame* LHand = mpModel->FinedFrame("Armature_mixamorig_LeftHand");
-	const CMatrix& LhandMTX = LHand->CombinedMatrix();
+	CModelXFrame* handL = mpModel->FinedFrame("Armature_mixamorig_LeftHand");
+	const CMatrix& lHandMTX = handL->CombinedMatrix();
 	// 右手のボーンを取得
-	CModelXFrame* RHand = mpModel->FinedFrame("Armature_mixamorig_RightHand");
-	const CMatrix& RhandMTX = RHand->CombinedMatrix();
+	CModelXFrame* handR = mpModel->FinedFrame("Armature_mixamorig_RightHand");
+	const CMatrix& rHandMTX = handR->CombinedMatrix();
 	// 左足のボーンを取得
-	CModelXFrame* LFoot = mpModel->FinedFrame("Armature_mixamorig_LeftFoot");
-	const CMatrix& LfootMTX = LFoot->CombinedMatrix();
+	CModelXFrame* footL = mpModel->FinedFrame("Armature_mixamorig_LeftFoot");
+	const CMatrix& lFootMTX = footL->CombinedMatrix();
 	// 右足のボーンを取得
-	CModelXFrame* RFoot = mpModel->FinedFrame("Armature_mixamorig_RightFoot");
-	const CMatrix& RfootMTX = RFoot->CombinedMatrix();
+	CModelXFrame* footR = mpModel->FinedFrame("Armature_mixamorig_RightFoot");
+	const CMatrix& rFootMTX = footR->CombinedMatrix();
+	// 
+	CModelXFrame* head = mpModel->FinedFrame("Armature_mixamorig_Head");
+	const CMatrix& headMTX = head->CombinedMatrix();
 
 	// 攻撃用のコライダーを行列に設定
-	mpLHandCol->SetAttachMtx(&LhandMTX);
-	mpRHandCol->SetAttachMtx(&RhandMTX);
-	mpLFootCol->SetAttachMtx(&LfootMTX);
-	mpRFootCol->SetAttachMtx(&RfootMTX);
+	mpLHandCol->SetAttachMtx(&lHandMTX);
+	mpRHandCol->SetAttachMtx(&rHandMTX);
+	mpLFootCol->SetAttachMtx(&lFootMTX);
+	mpRFootCol->SetAttachMtx(&rFootMTX);
 
 	// 待機最大時間をランダムで決める（１回だけだよ）
 	mIdleTime = Math::Rand(0.0f, 5.0f);

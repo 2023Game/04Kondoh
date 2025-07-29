@@ -260,7 +260,7 @@ CPlayer::~CPlayer()
 	CNavManager* navMgr = CNavManager::Instance();
 	if (navMgr != nullptr)
 	{
-		SAFE_DELETE(mpNavNode);
+		mpNavNode->Kill();
 	}
 
 	spInstance = nullptr;

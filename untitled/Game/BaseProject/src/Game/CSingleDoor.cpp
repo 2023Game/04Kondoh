@@ -1,6 +1,7 @@
 #include "CSingleDoor.h"
 #include "CInteractObject.h"
 
+// コンストラクタ
 CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
 	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
 	, mIsOpened(false)
@@ -17,6 +18,7 @@ CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
 	mpDoorCol = new CColliderMesh(this, ELayer::eWall, mpDoorModel);
 }
 
+// デストラクタ
 CSingleDoor::~CSingleDoor()
 {
 	SAFE_DELETE(mpDoorCol);
@@ -28,15 +30,15 @@ void CSingleDoor::AddInputObjs(CInteractObject* sw)
 	mpInputObjs.push_back(sw);
 }
 
+// 扉の開閉した時の各座標を設定
 void CSingleDoor::SetAnimPos(const CVector& openPos, const CVector& closePos)
 {
-	mOpenPosR = openPos;
-	mClosePosR = closePos;
-	Position(mIsOpened ? mOpenPosR : mClosePosR);
+	mOpenPos = openPos;
+	mClosePos = closePos;
+	Position(mIsOpened ? mClosePos : mOpenPos);
 }
 
-
-
+// スイッチを押して扉が開くかどうか
 bool CSingleDoor::IsSwitchOn() const
 {
 	for (CInteractObject* sw : mpInputObjs)
@@ -46,25 +48,25 @@ bool CSingleDoor::IsSwitchOn() const
 	return true;
 }
 
-
+// 更新処理
 void CSingleDoor::Update()
 {
 	/// 開閉アニメーション中か
 	if (mIsPlaying)
 	{
 		// 扉を開く場合
-		if (mIsOpened)
+		if (!mIsOpened)
 		{
 			if (mElapsedTime < mAnimTime)
 			{
 				float per = mElapsedTime / mAnimTime;
-				CVector pos = CVector::Lerp(mClosePosR, mOpenPosR, per);
+				CVector pos = CVector::Lerp(mClosePos, mOpenPos, per);
 				Position(pos);
 				mElapsedTime += Times::DeltaTime();
 			}
 			else
 			{
-				Position(mOpenPosR);
+				Position(mOpenPos);
 				mElapsedTime = 0.0f;
 				mIsPlaying = false;
 			}
@@ -75,13 +77,13 @@ void CSingleDoor::Update()
 			if (mElapsedTime < mAnimTime)
 			{
 				float per = mElapsedTime / mAnimTime;
-				CVector pos = CVector::Lerp(mOpenPosR, mClosePosR, per);
+				CVector pos = CVector::Lerp(mOpenPos, mClosePos, per);
 				Position(pos);
 				mElapsedTime += Times::DeltaTime();
 			}
 			else
 			{
-				Position(mClosePosR);
+				Position(mClosePos);
 				mElapsedTime = 0.0f;
 				mIsPlaying = false;
 			}
@@ -108,6 +110,7 @@ void CSingleDoor::Update()
 	}
 }
 
+// 描画処理
 void CSingleDoor::Render()
 {
 	mpDoorModel->Render(Matrix());

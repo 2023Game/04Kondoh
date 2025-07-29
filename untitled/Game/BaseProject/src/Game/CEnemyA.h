@@ -183,7 +183,9 @@ private:
 	void LookAtBattleTarget(bool immediate = false);
 
 	// 次に巡回するポイントを変更
-	void ChangePatrolPoint();
+	bool ChangePatrolPoint();
+	// 巡回ルートを更新する
+	bool UpdatePatrolRoute();
 
 
 	// ↓ステートベースAI↓

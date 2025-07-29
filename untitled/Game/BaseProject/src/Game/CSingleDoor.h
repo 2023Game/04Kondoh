@@ -10,7 +10,7 @@ public:
 	// コンストラクタ
 	CSingleDoor(CVector pos, CVector angle, CVector size);
 	// デストラクタ
-	~CSingleDoor();
+	virtual ~CSingleDoor();
 
 	// 接続するスイッチを追加
 	void AddInputObjs(CInteractObject* sw);
@@ -25,8 +25,8 @@ private:
 	// スイッチを押して扉が開くかどうか
 	bool IsSwitchOn() const;
 
-	CVector mOpenPosR; // 開いた時の位置
-	CVector mClosePosR;// 閉まった時の位置
+	CVector mOpenPos; // 開いた時の位置
+	CVector mClosePos;// 閉まった時の位置
 
 	float mAnimTime;
 	float mElapsedTime;

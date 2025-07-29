@@ -137,7 +137,16 @@ void CCharaBase::TakeDamage(int damage, float stun, float knockback, CObjectBase
 		}
 		else
 		{
-			if (!IsAttacking())
+			if (IsAttacking())
+			{
+				if (mStunPoints > mStunThreshold / 2)
+				{
+					mKnockBack = knockback;
+					// 怯み度がしきい値を超えて無い場合、仰け反り処理
+					Hit();
+				}
+			}
+			else
 			{
 				mKnockBack = knockback;
 				// 怯み度がしきい値を超えて無い場合、仰け反り処理

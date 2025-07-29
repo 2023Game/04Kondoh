@@ -8,9 +8,6 @@
 
 #define GRAVITY 0.0625f;
 
-
-
-
 // コンストラクタ
 CEnemyBase::CEnemyBase()
 	:CXCharacter(ETag::eEnemy, ETaskPriority::eEnemy)

@@ -81,7 +81,7 @@
 #define PLAYER_ATTACK_LENGTH	50.0f	// 攻撃範囲の距離
 
 #define IDLE_TIME_MIN 0.0f			// 待機時の最短待機時間
-#define IDLE_TIME_MAX 10.0f			// 待機時の最長待機時間
+#define IDLE_TIME_MAX 6.0f			// 待機時の最長待機時間
 #define BATTLE_IDLE_TIME_MIN 0.0f	// 戦闘待機時の最短待機時間
 #define BATTLE_IDLE_TIME_MAX 2.0f	// 戦闘待機時の最長待機時間
 
@@ -296,6 +296,7 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	mpRHandCol->SetAttachMtx(&rHandMTX);
 	mpLFootCol->SetAttachMtx(&lFootMTX);
 	mpRFootCol->SetAttachMtx(&rFootMTX);
+	mpHeadCol->SetAttachMtx(&headMTX);
 
 	// 待機最大時間をランダムで決める（１回だけだよ）
 	mIdleTime = Math::Rand(0.0f, 5.0f);
@@ -313,6 +314,7 @@ CEnemyA::~CEnemyA()
 	SAFE_DELETE(mpRHandCol);
 	SAFE_DELETE(mpLFootCol);
 	SAFE_DELETE(mpRFootCol);
+	SAFE_DELETE(mpHeadCol);
 
 	// 視野範囲のデバッグ表示が存在したら、一緒に削除する
 	if (mpDebugFov != nullptr)
@@ -325,8 +327,8 @@ CEnemyA::~CEnemyA()
 	CNavManager* navMgr = CNavManager::Instance();
 	if (navMgr != nullptr)
 	{
-		SAFE_DELETE(mpNavNode);
-		SAFE_DELETE(mpLostPlayerNode);
+		mpNavNode->Kill();
+		mpLostPlayerNode->Kill();
 
 		//	巡回ポイントに配置したノードも全て削除
 		auto itr = mPatrolPoints.begin();
@@ -334,7 +336,7 @@ CEnemyA::~CEnemyA()
 		while (itr != end)
 		{
 			CNavNode* del = *itr;
-			delete del;
+			del->Kill();
 			itr++;
 		}
 		mPatrolPoints.clear();
@@ -376,11 +378,18 @@ void CEnemyA::Update()
 	// キャラクターの更新
 	CEnemyBase::Update(); 
 
+	// 経路探索用のノード座標を更新
+	if (mpNavNode != nullptr)
+	{
+		mpNavNode->SetPos(Position());
+	}
+
 	// コライダを更新
 	mpLHandCol->Update();
 	mpRHandCol->Update();
 	mpLFootCol->Update();
 	mpRFootCol->Update();
+	mpHeadCol->Update();
 
 	// 経路探索用のノードが存在すれば、座標を更新
 	if (mpNavNode != nullptr)
@@ -505,6 +514,10 @@ void CEnemyA::AttackStart()
 	{
 		mpRFootCol->SetEnable(true);
 	}
+	else if (mAttackType == (int)EAttackType::eHeadButt)
+	{
+		mpHeadCol->SetEnable(true);
+	}
 }
 
 void CEnemyA::AttackEnd()
@@ -517,6 +530,7 @@ void CEnemyA::AttackEnd()
 	mpRHandCol->SetEnable(false);
 	mpLFootCol->SetEnable(false);
 	mpRFootCol->SetEnable(false);
+	mpHeadCol->SetEnable(false);
 }
 
 bool CEnemyA::IsGuarding() const
@@ -1041,11 +1055,13 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 }
 
 // 次に巡回するポイントを変更
-void CEnemyA::ChangePatrolPoint()
+bool CEnemyA::ChangePatrolPoint()
 {
+	// 自身の経路探索用ノードが更新中の場合は、処理しない
+	if (mpNavNode->IsUpdaing()) return false;
 	// 巡回ポイントが設定されていない場合は、処理しない
 	int size = mPatrolPoints.size();
-	if (size == 0) return;
+	if (size == 0) return false;
 
 	// 巡回開始時であれば、一番近い巡回ポイントを選択
 	if (mNextPatrolIndex == -1)
@@ -1080,26 +1096,33 @@ void CEnemyA::ChangePatrolPoint()
 		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
 	}
 
-	// 次に巡回するポイントが決まった場合
-	if (mNextPatrolIndex >= 0)
-	{
-		CNavManager* navMgr = CNavManager::Instance();
-		if (navMgr != nullptr)
-		{
-			// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
-			// 各ノードへの接続情報を更新
-			for (CNavNode* node : mPatrolPoints)
-			{
-				node->SetPos(node->GetPos());
-			}
+	return mNextPatrolIndex >= 0;
+}
 
-			// 巡回ポイントまでの最短経路を求める
-			if (navMgr->Navigate(mpNavNode, mPatrolPoints[mNextPatrolIndex], mMoveRoute))
-			{
-				// 次の目的地のインデックスを設定
-				mNextMoveIndex = 1;
-			}
-		}
+bool CEnemyA::UpdatePatrolRoute()
+{
+	// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
+	// 各ノードへの接続情報を更新
+	for (CNavNode* node : mPatrolPoints)
+	{
+		node->SetPos(node->GetPos());
+	}
+
+	if (!(0 <= mNextPatrolIndex && mNextPatrolIndex < mPatrolPoints.size())) return false;
+
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr == nullptr) return false;
+
+	// 自身のノードが更新中ならば、経路探索を行わない
+	if (mpNavNode->IsUpdaing()) return false;
+	// 巡回ポイントが更新中ならば、経路探索を行わない
+	CNavNode* patrolPoint = mPatrolPoints[mNextPatrolIndex];
+	if (patrolPoint->IsUpdaing()) return false;
+	// 巡回ポイントまでの最短経路を求める
+	if (navMgr->Navigate(mpNavNode, patrolPoint, mMoveRoute))
+	{
+		// 次の目的地のインデックスを設定
+		mNextMoveIndex = 1;
 	}
 }
 
@@ -1143,11 +1166,20 @@ void CEnemyA::UpdatePatrol()
 		// ステップ0：巡回ポイントを求める
 	case 0:
 		mNextPatrolIndex = -1;
-		ChangePatrolPoint();
-		mStateStep++;
+		if (ChangePatrolPoint())
+		{
+			mStateStep++;
+		}
 		break;
-		// ステップ1：巡回ポイントまで移動
+	// ステップ1：巡回ポイントまでの経路探索
 	case 1:
+		if (UpdatePatrolRoute())
+		{
+			mStateStep++;
+		}
+		break;
+	// ステップ2：巡回ポイントまで移動
+	case 2:
 	{
 		ChangeAnimation((int)EAnimType::eWalk);
 		// 最短経路の次のノードまで移動
@@ -1164,8 +1196,8 @@ void CEnemyA::UpdatePatrol()
 		}
 		break;
 	}
-		// ステップ2：移動後の待機
-	case 2:
+	// ステップ3：移動後の待機
+	case 3:
 		ChangeAnimation((int)EAnimType::eIdle);
 		if (mElapsedTime < PATROL_INTERVAL)
 		{
@@ -1175,9 +1207,11 @@ void CEnemyA::UpdatePatrol()
 		{
 			// 待機最大時間をランダムで決める
 			mIdleTime = Math::Rand(IDLE_TIME_MIN, IDLE_TIME_MAX);
-			ChangePatrolPoint();
-			mStateStep = 1;
-			mElapsedTime = 0.0f;
+			if (ChangePatrolPoint())
+			{
+				mStateStep = 1;
+				mElapsedTime = 0.0f;
+			}
 		}
 		break;
 	}
@@ -1291,13 +1325,18 @@ void CEnemyA::UpdateChase()
 	CNavManager* navMgr = CNavManager::Instance();
 	if (navMgr != nullptr)
 	{
+		// 自身のノードとプレイヤーのノードが更新中でなければ、
 		// 自身のノードからプレイヤーのノードまでの最短距離を求める
 		CNavNode* playerNode = player->GetNavNode();
-		if (navMgr->Navigate(mpNavNode, playerNode, mMoveRoute))
+		if (!mpNavNode->IsUpdaing() && 
+			playerNode != nullptr && !playerNode->IsUpdaing())
 		{
-			// 自身のノードからプレイヤーのノードまで繋がっていたら、
-			// 移動する位置を次のノードの位置に設定
-			targetPos = mMoveRoute[1]->GetPos();
+			if (navMgr->Navigate(mpNavNode, playerNode, mMoveRoute))
+			{
+				// 自身のノードからプレイヤーのノードまで繋がっていたら、
+				// 移動する位置を次のノードの位置に設定
+				targetPos = mMoveRoute[1]->GetPos();
+			}
 		}
 	}
 	// 移動処理
@@ -1316,7 +1355,9 @@ void CEnemyA::UpdateChase()
 void CEnemyA::UpdateLost()
 {
 	CNavManager* navMgr = CNavManager::Instance();
-	if (navMgr == nullptr)
+	CPlayer* target = CPlayer::Instance();
+
+	if (navMgr == nullptr || target == nullptr)
 	{
 		// 戦闘状態終了
 		mIsBattle = false;
@@ -1336,32 +1377,49 @@ void CEnemyA::UpdateLost()
 
 	switch (mStateStep)
 	{
-		// ステップ0：見失った位置までの最短経路を求める
 	case 0:
-		if (navMgr->Navigate(mpNavNode, mpLostPlayerNode, mMoveRoute))
+		mElapsedTime = 0.0f;
+		mStateStep++;
+		break;
+		// ステップ1：見失った位置までの最短経路を求める
+	case 1:
+		// 
+		mpLostPlayerNode->SetPos(target->Position());
+
+		// 自身のノードと見失った位置のノードが更新中でなければ
+		if (!mpNavNode->IsUpdaing() && !mpLostPlayerNode->IsUpdaing())
 		{
-			// 見失った位置まで経路が繋がっていたら、次のステップへ
-			mNextMoveIndex = 1;
-			mStateStep++;
-		}
-		else
-		{
-			// 経路が繋がっていなければ、待機状態へ戻す
-			ChangeState((int)EState::eIdle);
+			if (!navMgr->Navigate(mpNavNode, mpLostPlayerNode, mMoveRoute))
+			{
+				// 経路が繋がっていなければ、待機状態へ戻す
+				ChangeState((int)EState::eIdle);
+				mpLostPlayerNode->SetEnable(false);
+
+			}
+			else
+			{
+				// 見失った位置まで経路が繋がっていたら、次のステップへ
+				mNextMoveIndex = 1;
+				mStateStep++;
+			}
 		}
 		break;
-	case 1:
-		// プレイヤーを見失った位置まで移動
-		if (MoveTo(mMoveRoute[mNextMoveIndex]->GetPos(), RUN_SPEED))
+	case 2:
+		// 次の移動先のインデックス値が不正値でなければ
+		if (0 <= mNextMoveIndex && mNextMoveIndex < mMoveRoute.size())
 		{
-			mNextMoveIndex++;
-			if (mNextMoveIndex >= mMoveRoute.size())
+			// プレイヤーを見失った位置まで移動
+			if (MoveTo(mMoveRoute[mNextMoveIndex]->GetPos(), RUN_SPEED))
 			{
-				// 戦闘状態終了
-				mIsBattle = false;
-				mpBattleTarget = nullptr;
-				// 移動が終われば、待機状態へ移行
-				ChangeState((int)EState::eIdle);
+				mNextMoveIndex++;
+				if (mNextMoveIndex >= mMoveRoute.size())
+				{
+					// 戦闘状態終了
+					mIsBattle = false;
+					mpBattleTarget = nullptr;
+					// 移動が終われば、待機状態へ移行
+					ChangeState((int)EState::eIdle);
+				}
 			}
 		}
 		break;

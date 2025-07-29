@@ -1,9 +1,8 @@
 #pragma once
 #include "CObjectBase.h"
 
+class CSingleDoor;
 class CInteractObject;
-class CLDoubleDoor;
-class CRDoubleDoor;
 
 class CDoubleDoors : public CObjectBase
 {
@@ -22,23 +21,10 @@ public:
 	// 更新処理
 	void Update();
 
-protected:
-
-	bool IsSwitchOn() const;
-
-	CVector mOpenPosL;	// 左扉の開いた時の位置
-	CVector mClosePosL;	// 左扉の閉まった時の位置
-	CVector mOpenPosR;	// 右扉の開いた時の位置
-	CVector mClosePosR;	// 右扉の閉まった時の位置
+private:
 
 	bool mIsOpened;
 
-private:
-
-	// 入力系のオブジェクトリスト
-	std::list<CInteractObject*> mpInputObjs;
-
-	CLDoubleDoor* mpLDoor;
-	CRDoubleDoor* mpRDoor;
-
+	CSingleDoor* mpLDoor;
+	CSingleDoor* mpRDoor;
 };

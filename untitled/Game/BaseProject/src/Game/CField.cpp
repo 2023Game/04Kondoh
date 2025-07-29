@@ -60,7 +60,7 @@ CField::CField()
 	// フィールドオブジェクトを作成
 	CreateFieldObjects();
 
-	//CreateGimmick();
+	CreateGimmick();
 }
 
 CField::~CField()
@@ -79,9 +79,9 @@ void CField::CreateWalls()
 	// 壁１作成
 	CWall* wall = new CWall
 	(
-		CVector(20.0f, 0.94f, 0.0f),
+		CVector(-369.0f, 0.0f, 0.0f),
 		CVector(0.0f, 90.0f, 0.0f),
-		CVector(5.0f, 5.0f, 5.0f)
+		CVector(7.0f, 8.0f, 6.0f)
 
 	);
 	mWalls.push_back(wall);
@@ -94,8 +94,6 @@ void CField::CreateWalls()
 		CVector(  5.0f,  5.0f,  5.0f)
 	);
 	mWalls.push_back(wall);
-
-
 }
 
 
@@ -194,24 +192,23 @@ void CField::CreateGimmick()
 	singleDoor1->AddInputObjs(lever1);
 
 	// レバー
-	CLever* lever2 = new CLever(CVector(0.0f, 0.0f, 90.0f), CVector(0.0f, 0.0f, 0.0f));
-#if _DEBUG
-	lever2->SetDebugName("Lever2");
-#endif
-	// 
-	CDoubleDoors* doubleDoors1 = new CDoubleDoors();
-	doubleDoors1->Position(-50.0f, 0.0f, 0.0f); 
-	doubleDoors1->SetAnimPosL
-	(
-		CVector(-80.0f, 0.0f, 0.0f),
-		CVector(-50.0f, 0.0f, 0.0f)
-	);
-	doubleDoors1->SetAnimPosR
-	(
-		CVector(-80.0f, 0.0f, 0.0f),
-		CVector(-110.0f, 0.0f, 0.0f)
-	);
-	doubleDoors1->AddInputObjs(lever2);
+//	CLever* lever2 = new CLever(CVector(0.0f, 10.0f, 90.0f), CVector(0.0f, 0.0f, 0.0f));
+//#if _DEBUG
+//	lever2->SetDebugName("Lever2");
+//#endif
+//	// 
+//	CDoubleDoors* doubleDoors1 = new CDoubleDoors();
+//	doubleDoors1->SetAnimPosL
+//	(
+//		CVector(-368.0f, 0.0f, 31.0f),
+//		CVector(-368.0f, 0.0f, -74.0f)
+//	);
+//	doubleDoors1->SetAnimPosR
+//	(
+//		CVector(-368.0f, 0.0f, 0.0f),
+//		CVector(-368.0f, 180.0f, 74.0f)
+//	);
+//	doubleDoors1->AddInputObjs(lever2);
 }
 
 

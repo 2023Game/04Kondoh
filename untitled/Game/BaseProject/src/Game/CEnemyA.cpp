@@ -84,6 +84,7 @@
 #define IDLE_TIME_MAX 6.0f			// 待機時の最長待機時間
 #define BATTLE_IDLE_TIME_MIN 0.0f	// 戦闘待機時の最短待機時間
 #define BATTLE_IDLE_TIME_MAX 2.0f	// 戦闘待機時の最長待機時間
+#define LOST_TIME 5.0f		// 壁に引っかかった時の追跡処理有効時間
 
 #define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
@@ -403,7 +404,7 @@ void CEnemyA::Update()
 	//CDebugPrint::Print("■敵の情報\n");
 	//CDebugPrint::Print("　HP：%d\n", mHp);
 	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
-	//CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
+	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
 	//CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
@@ -597,7 +598,9 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 	CEnemyBase::Collision(self, other, hit);
 
 	if (self == mpLHandCol || self == mpRHandCol 
-		|| self == mpLFootCol || self == mpRFootCol)
+		|| self == mpLFootCol || self == mpRFootCol
+		|| self == mpHeadCol
+		)
 	{
 		if (other->Tag() == ETag::ePlayer && other->Layer() == ELayer::ePlayer)
 		{
@@ -1411,7 +1414,6 @@ void CEnemyA::UpdateLost()
 			// プレイヤーを見失った位置まで移動
 			if (MoveTo(mMoveRoute[mNextMoveIndex]->GetPos(), RUN_SPEED))
 			{
-				mNextMoveIndex++;
 				if (mNextMoveIndex >= mMoveRoute.size())
 				{
 					// 戦闘状態終了
@@ -1419,6 +1421,21 @@ void CEnemyA::UpdateLost()
 					mpBattleTarget = nullptr;
 					// 移動が終われば、待機状態へ移行
 					ChangeState((int)EState::eIdle);
+				}
+				else
+				{
+					if (mElapsedTime <= LOST_TIME)
+					{
+						mElapsedTime += Times::DeltaTime();
+					}
+					else
+					{
+						// 戦闘状態終了
+						mIsBattle = false;
+						mpBattleTarget = nullptr;
+						// 移動が終われば、待機状態へ移行
+						ChangeState((int)EState::eIdle);
+					}
 				}
 			}
 		}

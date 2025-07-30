@@ -288,16 +288,17 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	// 右足のボーンを取得
 	CModelXFrame* footR = mpModel->FinedFrame("Armature_mixamorig_RightFoot");
 	const CMatrix& rFootMTX = footR->CombinedMatrix();
-	// 
+	// 頭の行列を取得
 	CModelXFrame* head = mpModel->FinedFrame("Armature_mixamorig_Head");
-	const CMatrix& headMTX = head->CombinedMatrix();
+	mpHeadMtx = &head->CombinedMatrix();
+
 
 	// 攻撃用のコライダーを行列に設定
 	mpLHandCol->SetAttachMtx(&lHandMTX);
 	mpRHandCol->SetAttachMtx(&rHandMTX);
 	mpLFootCol->SetAttachMtx(&lFootMTX);
 	mpRFootCol->SetAttachMtx(&rFootMTX);
-	mpHeadCol->SetAttachMtx(&headMTX);
+	mpHeadCol->SetAttachMtx(mpHeadMtx);
 
 	// 待機最大時間をランダムで決める（１回だけだよ）
 	mIdleTime = Math::Rand(0.0f, 5.0f);
@@ -478,6 +479,16 @@ void CEnemyA::Render()
 				2.0f
 			);
 		}
+	}
+
+	if (mpHeadMtx != nullptr)
+	{
+		CMatrix m;
+		m.RotateX(-90.0f);
+		m = m * (*mpHeadMtx);
+		CVector start = m.Position();
+		CVector end = start + m.VectorZ() * 100.0f;
+		Primitive::DrawLine(start, end, CColor::blue, 2.0f);
 	}
 }
 
@@ -728,7 +739,7 @@ bool CEnemyA::IsFoundPlayer() const
 	// 長さを１にする
 	CVector dir = vec.Normalized();
 	// 自身の正面方向のベクトルを取得
-	CVector forward = VectorZ();
+	CVector forward = GetHeadForwardVec();
 	// プレイヤーまでのベクトルと
 	// 自身の正面方向のベクトルの内積を求めて角度を出す
 	float dot = CVector::Dot(dir, forward);
@@ -1055,6 +1066,18 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 		);
 		Rotation(CQuaternion::LookRotation(forward));
 	}
+}
+
+CVector CEnemyA::GetHeadForwardVec() const
+{
+	if (mpHeadMtx == nullptr) return VectorZ();
+
+	CMatrix m;
+	m.RotateX(-90.0f);
+	m = m * (*mpHeadMtx);
+	CVector vec = m.VectorZ();
+	vec.Y(0.0f);
+	return vec.Normalized();
 }
 
 // 次に巡回するポイントを変更
@@ -1394,6 +1417,9 @@ void CEnemyA::UpdateLost()
 		{
 			if (!navMgr->Navigate(mpNavNode, mpLostPlayerNode, mMoveRoute))
 			{
+				// 戦闘状態終了
+				mIsBattle = false;
+				mpBattleTarget = nullptr;
 				// 経路が繋がっていなければ、待機状態へ戻す
 				ChangeState((int)EState::eIdle);
 				mpLostPlayerNode->SetEnable(false);

@@ -182,6 +182,9 @@ private:
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);
 
+	// 頭の正面方向ベクトルを取得
+	CVector GetHeadForwardVec() const;
+
 	// 次に巡回するポイントを変更
 	bool ChangePatrolPoint();
 	// 巡回ルートを更新する
@@ -286,6 +289,9 @@ private:
 	CColliderSphere* mpRFootCol;
 	// 攻撃用のコライダ４（頭の部分）
 	CColliderSphere* mpHeadCol;
+
+	const CMatrix* mpHeadMtx;
+
 	// 戦闘相手
 	CObjectBase* mpBattleTarget;
 

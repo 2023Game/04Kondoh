@@ -290,7 +290,11 @@ private:
 	// 攻撃用のコライダ４（頭の部分）
 	CColliderSphere* mpHeadCol;
 
+	// 頭の行列を取得
 	const CMatrix* mpHeadMtx;
+#if _DEBUG
+	CMatrix mHeadForwardMtx;
+#endif
 
 	// 戦闘相手
 	CObjectBase* mpBattleTarget;

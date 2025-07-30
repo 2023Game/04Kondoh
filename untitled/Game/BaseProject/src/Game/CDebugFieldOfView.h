@@ -15,6 +15,8 @@ public:
 	void SetOwner(CObjectBase* owner);
 	// 視野範囲を設定
 	void Set(float angle, float length);
+	// 視野範囲行列を設定
+	void SetMatrix(CMatrix* mtx);
 
 	// 更新処理
 	void Update() override;
@@ -22,8 +24,9 @@ public:
 	void Render() override;
 
 private:
-	CObjectBase* mpOwner;  // 表示する対象のポインタ
-	float mFovAngle;       // 視野範囲の角度（ディグリー）
-	float mFovLength;      // 視野範囲の距離
+	CObjectBase* mpOwner;	// 表示する対象のポインタ
+	CMatrix* mpMatrix;		// 視野範囲の行列
+	float mFovAngle;		// 視野範囲の角度（ディグリー）
+	float mFovLength;		// 視野範囲の距離
 
 };

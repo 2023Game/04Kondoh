@@ -8,6 +8,7 @@ enum class ETag
 
 	eField,	// フィールドを構成するオブジェクト
 	eWall,	// 壁
+	eDoor,	// 扉
 	eRideableObject,	// 乗ることができるオブジェクト
 	eInteractObject,	// 調べられるオブジェクト
 	eItem,	// アイテムのオブジェクト

@@ -3,8 +3,8 @@
 
 // コンストラクタ
 CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
-	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
-	, mIsOpened(false)
+	: CObjectBase(ETag::eDoor, ETaskPriority::eBackground)
+	, mIsOpened(true)
 	, mAnimTime(1.0f)
 	, mElapsedTime(0.0f)
 	, mIsPlaying(false)
@@ -15,7 +15,8 @@ CSingleDoor::CSingleDoor(CVector pos, CVector angle, CVector size)
 	Scale(size);
 
 	mpDoorModel = CResourceManager::Get<CModel>("SingleDoor");
-	mpDoorCol = new CColliderMesh(this, ELayer::eWall, mpDoorModel);
+	mpDoorCol = new CColliderMesh(this, ELayer::eWall, mpDoorModel, true);
+	mpDoorCol->SetShow(true);
 }
 
 // デストラクタ

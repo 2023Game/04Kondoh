@@ -8,7 +8,8 @@ class CDoubleDoors : public CObjectBase
 {
 public:
 	// コンストラクタ
-	CDoubleDoors();
+	CDoubleDoors(const CVector& posL,const CVector& posR,
+				 const CVector& angle, const CVector& size);
 	// デストラクタ
 	~CDoubleDoors();
 

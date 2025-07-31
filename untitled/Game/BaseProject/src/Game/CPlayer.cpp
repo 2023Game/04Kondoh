@@ -168,9 +168,11 @@ CPlayer::CPlayer()
 		PLAYER_WIDTH, true
 	);
 	mpBodyCol->SetCollisionTags
-	({ ETag::eEnemy, ETag::eField, ETag::eRideableObject, ETag::eWall, ETag::eInteractObject });
+	({ ETag::eEnemy, ETag::eField, ETag::eRideableObject, 
+		ETag::eWall, ETag::eInteractObject, ETag::eDoor });
 	mpBodyCol->SetCollisionLayers
-	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,ELayer::eEnemy, ELayer::eInteractObj });
+	({ ELayer::eField, ELayer::eWall,ELayer::eAttackCol,
+		ELayer::eEnemy, ELayer::eInteractObj });
 
 
 	// UŒ‚—p‚ÌƒRƒ‰ƒCƒ_‚PiŒ•‚Ìn‚Ì•”•ªj
@@ -182,7 +184,8 @@ CPlayer::CPlayer()
 		1.0f, true
 	);
 	mpAttackCol1->SetCollisionTags({ ETag::eEnemy, ETag::eInteractObject });
-	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall, ELayer::eInteractObj });
+	mpAttackCol1->SetCollisionLayers({ ELayer::eEnemy, ELayer::eWall, 
+		ELayer::eInteractObj });
 	mpAttackCol1->Rotate(CVector(-4.5f, 14.1f, 0.0f));
 	mpAttackCol1->SetEnable(false);
 

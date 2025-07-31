@@ -28,7 +28,7 @@ CFieldWall::CFieldWall()
 		true, 1.0f,
 		8, 2, 8
 	);
-	mpColliderMesh->SetShow(true);
+	//mpColliderMesh->SetShow(true);
 }
 
 // デストラクタ

@@ -2,26 +2,18 @@
 #include "CSingleDoor.h"
 #include "CInteractObject.h"
 
+#define ROTATE_Y CVector(0.0f, 180.0f, 0.0f)
 
-CDoubleDoors::CDoubleDoors()
-	: CObjectBase(ETag::eWall, ETaskPriority::eBackground)
+CDoubleDoors::CDoubleDoors(const CVector& posL, const CVector& posR,
+	const CVector& angle, const CVector& size)
+	: CObjectBase(ETag::eDoor, ETaskPriority::eBackground)
 	, mIsOpened(false)
 	, mpLDoor(nullptr)
 	, mpRDoor(nullptr)
 {
 
-	mpLDoor = new CSingleDoor
-	(
-		CVector(50.0f, 0.0f, 0.0f),
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(1.0f, 1.0f, 1.0f)
-	);
-	mpRDoor = new CSingleDoor
-	(
-		CVector(50.0f, 0.0f, 0.0f),
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(1.0f, 1.0f, 1.0f)
-	);
+	mpLDoor = new CSingleDoor(posL, angle, size);
+	mpRDoor = new CSingleDoor(posR, -angle + ROTATE_Y, size);
 }
 
 CDoubleDoors::~CDoubleDoors()

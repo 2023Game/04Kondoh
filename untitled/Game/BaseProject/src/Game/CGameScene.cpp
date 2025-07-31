@@ -96,17 +96,18 @@ void CGameScene::Load()
 	//リソースの読み込みやクラスの生成を行う
 
 	// ステージ
-	CResourceManager::Load<CModel>("Field",			"Field\\Demo_FieldFloor.obj");
-	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\Demo_FieldWall.obj");
+	CResourceManager::Load<CModel>("Field",			"Field\\FieldFloor.obj");
+	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\FieldWall.obj");
 	CResourceManager::Load<CModel>("FieldWallCol",	"Field\\Object\\Wall\\Demo_FieldWallCol.obj");
 	CResourceManager::Load<CModel>("BackGround",	"Field\\BackGround.obj");
 	// オブジェクト
 	CResourceManager::Load<CModel>("Wall",			"Field\\Object\\Wall\\Wall.obj");
 	CResourceManager::Load<CModel>("WallCol",		"Field\\Object\\Wall\\WallCol.obj");
 	CResourceManager::Load<CModel>("WallNavCol",	"Field\\Object\\Wall\\WallNavCol.obj");
-	// ギミック
 	CResourceManager::Load<CModel>("MoveFloor1",	"Field\\Object\\MoveObject.obj");
 	CResourceManager::Load<CModel>("MoveFloor2",	"Field\\Object\\MoveObject_2.obj");
+	CResourceManager::Load<CModel>("Staircase",		"Field\\Object\\Gimmick\\SpiralStaircase.obj");
+	// ギミック
 	CResourceManager::Load<CModel>("LeverBase",		"Field\\Object\\Gimmick\\LeverBase.obj");
 	CResourceManager::Load<CModel>("Lever",			"Field\\Object\\Gimmick\\Lever.obj");
 	CResourceManager::Load<CModel>("SingleDoor",	"Field\\Object\\Gimmick\\SingleDoor.obj");
@@ -124,7 +125,7 @@ void CGameScene::Load()
 	//CResourceManager::Load<CModel>  ("Slash",         "Effect\\slash.obj");
 
 	// ゲームBGMを読み込み
-	CBGMManager::Instance()->Play(EBGMType::eGame);
+	//CBGMManager::Instance()->Play(EBGMType::eGame);
 
 	// 経路探索管理クラスを作成
 	new CNavManager();
@@ -134,7 +135,7 @@ void CGameScene::Load()
 
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
-	player->Position(0.0f, 1.0f, 300.0f);
+	player->Position(-334.0f, 1.0f, -4.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
 
 	// CGameCamera2のテスト

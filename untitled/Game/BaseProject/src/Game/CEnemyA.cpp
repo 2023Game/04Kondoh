@@ -422,9 +422,11 @@ void CEnemyA::Render()
 	CXCharacter::Render();
 
 	CVector vec = GetHeadForwardVec();
+#if _DEBUG
 	mHeadForwardMtx = CMatrix::LookRotation(vec, CVector::up);
 	mHeadForwardMtx.Position(Position());
 	mpDebugFov->SetMatrix(&mHeadForwardMtx);
+#endif
 
 	// „‰ñ’†‚Å‚ ‚ê‚Î
 	if (mState == (int)EState::ePatrol)

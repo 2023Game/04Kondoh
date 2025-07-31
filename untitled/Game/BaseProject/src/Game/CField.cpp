@@ -102,6 +102,14 @@ void CField::CreateFieldObjects()
 
 	mpMoveFloor1Model = CResourceManager::Get<CModel>("MoveFloor1");
 	mpMoveFloor2Model = CResourceManager::Get<CModel>("MoveFloor2");
+	mpStaircaseModel = CResourceManager::Get<CModel>("Staircase");
+
+	new CMoveFloor
+	(
+		mpStaircaseModel,
+		CVector(0.0f, 5.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 0.0f, 0.0f), 1.0f
+	);
 
 	// 
 	new CMoveFloor
@@ -173,7 +181,7 @@ void CField::CreateFieldObjects()
 void CField::CreateGimmick()
 {
 	// １番目のレバーとドア
-	CLever* lever1 = new CLever(CVector(-300.0f, 0.0f, 98.0f), CVector(0.0f, 10.0f, 0.0f));
+	CLever* lever1 = new CLever(CVector(-189.0f, 14.0f, -1.0f), CVector(90.0f, 270.0f, 0.0f));
 	CSingleDoor* door1 = new CSingleDoor
 	(
 		CVector(-302.0f, 0.0f, 98.0f),
@@ -188,6 +196,7 @@ void CField::CreateGimmick()
 
 
 	// ２番目のレバーとドア
+	// 位置(-270.0f, 175.0f, 90.0f)、角度(90.0f, 163.0f, 0.0f)
 	CLever* lever2 = new CLever(CVector(-270.0f, 175.0f, 90.0f), CVector(90.0f, 163.0f, 0.0f));
 	CDoubleDoors* door2 = new CDoubleDoors
 	(
@@ -197,17 +206,17 @@ void CField::CreateGimmick()
 	);
 	door2->SetAnimPosL
 	(
-		CVector(0.0f, 0.0f, 315.0f),
+		CVector(0.0f, 0.0f, 345.0f),
 		CVector(0.0f, 0.0f, 315.0f)
 	);
 	door2->SetAnimPosR
 	(
-		CVector(0.0f, 0.0f, 262.0f),
+		CVector(0.0f, 0.0f, 226.0f),
 		CVector(0.0f, 0.0f, 262.0f)
 	);
 
 	// ３番目のレバーとドア
-	CLever* lever3 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever3 = new CLever(CVector(105.0f, 15.0f, 344.0f), CVector(90.0f, 335.0f, 0.0f));
 	CSingleDoor* door3 = new CSingleDoor
 	(
 		CVector(0.0f, 154.0f, 307.0f),
@@ -221,7 +230,7 @@ void CField::CreateGimmick()
 	);
 
 	// ４番目のレバーとドア
-	CLever* lever4 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever4 = new CLever(CVector(105.0f, 162.0f, 344.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door4 = new CSingleDoor
 	(
 		CVector(151.0f, 0.0f, 209.0f),
@@ -235,7 +244,7 @@ void CField::CreateGimmick()
 	);
 
 	// ５番目のレバーとドア
-	CLever* lever5 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever5 = new CLever(CVector(158.0f, 14.0f, 103.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door5 = new CSingleDoor
 	(
 		CVector(152.0f, 154.0f, 208.0f),
@@ -249,7 +258,7 @@ void CField::CreateGimmick()
 	);
 
 	// ６番目のレバーとドア
-	CLever* lever6 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever6 = new CLever(CVector(270.0f, 162.0f, 94.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door6 = new CSingleDoor
 	(
 		CVector(295.0f, 0.0f, 85.0f),
@@ -263,26 +272,26 @@ void CField::CreateGimmick()
 	);
 
 	// ７番目のレバーとドア
-	CLever* lever7 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
-	CDoubleDoors* door7 = new CDoubleDoors
-	(
-		CVector(286.0f, 154.0f, -92.0f), CVector(248.0f, 154.0f, -81.0f),
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(1.0f, 1.0f, 1.0f)
-	);
-	door7->SetAnimPosL
-	(
-		CVector(286.0f, 154.0f, -92.0f),
-		CVector(286.0f, 154.0f, -92.0f)
-	);
-	door7->SetAnimPosR
-	(
-		CVector(248.0f, 154.0f, -81.0f),
-		CVector(248.0f, 154.0f, -81.0f)
-	);
+	//CLever* lever7 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	//CDoubleDoors* door7 = new CDoubleDoors
+	//(
+	//	CVector(286.0f, 154.0f, -92.0f), CVector(248.0f, 154.0f, -81.0f),
+	//	CVector(0.0f, 0.0f, 0.0f),
+	//	CVector(1.0f, 1.0f, 1.0f)
+	//);
+	//door7->SetAnimPosL
+	//(
+	//	CVector(286.0f, 154.0f, -92.0f),
+	//	CVector(286.0f, 154.0f, -92.0f)
+	//);
+	//door7->SetAnimPosR
+	//(
+	//	CVector(248.0f, 154.0f, -81.0f),
+	//	CVector(248.0f, 154.0f, -81.0f)
+	//);
 
 	// ８番目のレバーとドア
-	CLever* lever8 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever8 = new CLever(CVector(290.0f, 15.0f, -215.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door8 = new CSingleDoor
 	(
 		CVector(165.0f, 0.0f, -242.0f),
@@ -296,7 +305,7 @@ void CField::CreateGimmick()
 	);
 
 	// ９番目のレバーとドア
-	CLever* lever9 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever9 = new CLever(CVector(-102.0f, 162.0f, -346.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door9 = new CSingleDoor
 	(
 		CVector(-179.0f, 0.0f, -234.0f),
@@ -310,7 +319,7 @@ void CField::CreateGimmick()
 	);
 	
 	// １０番目のレバーとドア
-	CLever* lever10 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever10 = new CLever(CVector(-293.0f, 15.0f, -214.0f), CVector(90.0f, 0.0f, 0.0f));
 	CDoubleDoors* door10 = new CDoubleDoors
 	(
 		CVector(-144.0f, 154.0f, -210.0f), CVector(-174.0f, 154.0f, -253.0f),
@@ -329,7 +338,7 @@ void CField::CreateGimmick()
 	);
 
 	// １１番目のレバーのドア
-	CLever* lever11 = new CLever(CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f));
+	CLever* lever11 = new CLever(CVector(-293.0f, 162.0f, -214.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door11 = new CSingleDoor
 	(
 		CVector(-146.0f, 0.0f, -93.0f),
@@ -349,7 +358,7 @@ void CField::CreateGimmick()
 	door4->AddInputObjs(lever4);
 	door5->AddInputObjs(lever5);
 	door6->AddInputObjs(lever6);
-	door7->AddInputObjs(lever7);
+	//door7->AddInputObjs(lever7);
 	door8->AddInputObjs(lever8);
 	door9->AddInputObjs(lever9);
 	door10->AddInputObjs(lever10);
@@ -363,7 +372,7 @@ void CField::CreateGimmick()
 	lever4->SetDebugName("Lever4");
 	lever5->SetDebugName("Lever5");
 	lever6->SetDebugName("Lever6");
-	lever7->SetDebugName("Lever7");
+	//lever7->SetDebugName("Lever7");
 	lever8->SetDebugName("Lever8");
 	lever9->SetDebugName("Lever9");
 	lever10->SetDebugName("Lever10");

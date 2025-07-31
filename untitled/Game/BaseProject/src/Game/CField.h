@@ -62,6 +62,7 @@ private:
 	// フィールドオブジェクトのモデル
 	CModel* mpMoveFloor1Model;
 	CModel* mpMoveFloor2Model;
+	CModel* mpStaircaseModel;	// 螺旋階段
 
 	TexAnimData mEffectAnimData;
 

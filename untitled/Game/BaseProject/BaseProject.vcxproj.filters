@@ -424,9 +424,6 @@
     <ClCompile Include="src\Game\CSingleDoor.cpp">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\GimmickDoor.cpp">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\CGameOverScene.cpp">
       <Filter>ソース ファイル\Game\Scene</Filter>
     </ClCompile>
@@ -435,12 +432,6 @@
     </ClCompile>
     <ClCompile Include="src\Game\CGameClear.cpp">
       <Filter>ソース ファイル\Game\UI\GameClear</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\CLDoubleDoor.cpp">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\CRDoubleDoor.cpp">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\CDoubleDoors.cpp">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
@@ -780,9 +771,6 @@
     <ClInclude Include="src\Game\CSingleDoor.h">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\GimmickDoor.h">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\CGameOverScene.h">
       <Filter>ソース ファイル\Game\Scene</Filter>
     </ClInclude>
@@ -791,12 +779,6 @@
     </ClInclude>
     <ClInclude Include="src\Game\CGameClear.h">
       <Filter>ソース ファイル\Game\UI\GameClear</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\CLDoubleDoor.h">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\CRDoubleDoor.h">
-      <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\CDoubleDoors.h">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>

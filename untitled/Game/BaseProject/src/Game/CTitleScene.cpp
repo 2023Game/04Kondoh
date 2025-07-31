@@ -5,6 +5,7 @@
 #include "CSound.h"
 #include "CBGMManager.h"
 #include "CTitleUI.h"
+#include "CTaskManager.h"
 
 //コンストラクタ
 CTitleScene::CTitleScene()
@@ -20,6 +21,7 @@ CTitleScene::~CTitleScene()
 //シーン読み込み
 void CTitleScene::Load()
 {
+	CTaskManager::Instance()->UnPause(PAUSE_MENU_OPEN);
 	// タイトル画面はカーソル表示
 	CInput::ShowCursor(true);
 	// 背景色設定

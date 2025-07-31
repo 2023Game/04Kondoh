@@ -78,7 +78,6 @@
     <ClCompile Include="src\Game\CBullet.cpp" />
     <ClCompile Include="src\Game\CClearScene.cpp" />
     <ClCompile Include="src\Game\CDoubleDoors.cpp" />
-    <ClCompile Include="src\Game\CLDoubleDoor.cpp" />
     <ClCompile Include="src\Game\CGameClear.cpp" />
     <ClCompile Include="src\Game\CDebugFieldOfView.cpp" />
     <ClCompile Include="src\Game\CEnemyA.cpp" />
@@ -101,7 +100,6 @@
     <ClCompile Include="src\Game\CLever.cpp" />
     <ClCompile Include="src\Game\CMoveFloor.cpp" />
     <ClCompile Include="src\Game\CPlayer.cpp" />
-    <ClCompile Include="src\Game\CRDoubleDoor.cpp" />
     <ClCompile Include="src\Game\CRideabeObject.cpp" />
     <ClCompile Include="src\Game\CRotateFloor.cpp" />
     <ClCompile Include="src\Game\CSingleDoor.cpp" />
@@ -110,7 +108,6 @@
     <ClCompile Include="src\Game\CTitleUI.cpp" />
     <ClCompile Include="src\Game\CWall.cpp" />
     <ClCompile Include="src\Game\CXCharacter.cpp" />
-    <ClCompile Include="src\Game\GimmickDoor.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Test\CBootMenuScene.cpp" />
     <ClCompile Include="src\Test\CColBase.cpp" />
@@ -199,7 +196,6 @@
     <ClInclude Include="src\Game\CBullet.h" />
     <ClInclude Include="src\Game\CClearScene.h" />
     <ClInclude Include="src\Game\CDoubleDoors.h" />
-    <ClInclude Include="src\Game\CLDoubleDoor.h" />
     <ClInclude Include="src\Game\CGameClear.h" />
     <ClInclude Include="src\Game\CDebugFieldOfView.h" />
     <ClInclude Include="src\Game\CEnemyA.h" />
@@ -222,7 +218,6 @@
     <ClInclude Include="src\Game\CLever.h" />
     <ClInclude Include="src\Game\CMoveFloor.h" />
     <ClInclude Include="src\Game\CPlayer.h" />
-    <ClInclude Include="src\Game\CRDoubleDoor.h" />
     <ClInclude Include="src\Game\CRideableObject.h" />
     <ClInclude Include="src\Game\CRotateFloor.h" />
     <ClInclude Include="src\Game\CSingleDoor.h" />
@@ -231,7 +226,6 @@
     <ClInclude Include="src\Game\CTitleScene.h" />
     <ClInclude Include="src\Game\CWall.h" />
     <ClInclude Include="src\Game\CXCharacter.h" />
-    <ClInclude Include="src\Game\GimmickDoor.h" />
     <ClInclude Include="src\Test\CBootMenuScene.h" />
     <ClInclude Include="src\Test\CColBase.h" />
     <ClInclude Include="src\Test\CColCapsule.h" />
@@ -259,9 +253,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

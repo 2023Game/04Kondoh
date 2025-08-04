@@ -208,34 +208,34 @@ void CGameScene::Update()
 		}
 	}
 
-	RandomRespawn();
+	//RandomRespawn();
 
 }
 
 // ランダムリスポーン
-void CGameScene::RandomRespawn()
-{
-	if (mSpawnCount >= MAX_RESPAWN) return;
-
-	CEnemyManager* enemyMgr = CEnemyManager::Instance();
-
-	if (enemyMgr->GetEnemies().size() < RESPAWN)
-	{
-		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
-		{
-			mRespawnElapsedTime += Times::DeltaTime();
-		}
-		else
-		{
-			int index = Math::Rand(0, RESPAWN_DATA.size() - 1);
-			const RespawnData& data = RESPAWN_DATA[index];
-			CEnemyA* enemyA = new CEnemyA(data.respawnPoint, data.patrolPoints);
-			enemyA->Scale(1.0f, 1.0f, 1.0f);
-			mSpawnCount++;
-			mRespawnElapsedTime -= RESPAWN_INTERVAL;
-		}
-	}
-}
+//void CGameScene::RandomRespawn()
+//{
+//	if (mSpawnCount >= MAX_RESPAWN) return;
+//
+//	CEnemyManager* enemyMgr = CEnemyManager::Instance();
+//
+//	if (enemyMgr->GetEnemies().size() < RESPAWN)
+//	{
+//		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
+//		{
+//			mRespawnElapsedTime += Times::DeltaTime();
+//		}
+//		else
+//		{
+//			int index = Math::Rand(0, RESPAWN_DATA.size() - 1);
+//			const RespawnData& data = RESPAWN_DATA[index];
+//			CEnemyA* enemyA = new CEnemyA(data.respawnPoint, data.patrolPoints);
+//			enemyA->Scale(1.0f, 1.0f, 1.0f);
+//			mSpawnCount++;
+//			mRespawnElapsedTime -= RESPAWN_INTERVAL;
+//		}
+//	}
+//}
 
 //CVector CGameScene::RandomPoint()
 //{

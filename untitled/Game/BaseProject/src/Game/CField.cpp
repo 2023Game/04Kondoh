@@ -180,18 +180,18 @@ void CField::CreateFieldObjects()
 
 void CField::CreateGimmick()
 {
-	// １番目のレバーとドア
-	CLever* lever1 = new CLever(CVector(-189.0f, 14.0f, -1.0f), CVector(90.0f, 270.0f, 0.0f));
+	// １番目のレバーとドア									// CVector(90.0f, 270.0f, 90.0f)
+	CLever* lever1 = new CLever(CVector(-185.0f, 14.0f, -1.0f), CVector(0.0f, 0.0f, -90.0f));
 	CSingleDoor* door1 = new CSingleDoor
 	(
-		CVector(-302.0f, 0.0f, 98.0f),
-		CVector(0.0f, 68.0f, 0.0f),
-		CVector(0.8f, 1.0f, 1.0f)
+		CVector(-290.0f, 0.0f, 98.0f),
+		CVector(0.0f, 72.0f, 0.0f),
+		CVector(1.2f, 1.0f, 1.2f)
 	);
 	door1->SetAnimPos
 	(
-		CVector(-341.0f, 0.0f, 113.0f),
-		CVector(-302.0f, 0.0f, 98.0f)
+		CVector(-341.0f, 0.0f, 111.0f),
+		CVector(-304.0f, 0.0f, 99.0f)
 	);
 
 
@@ -225,22 +225,22 @@ void CField::CreateGimmick()
 	);
 	door3->SetAnimPos
 	(
-		CVector(0.0f, 154.0f, 307.0f),
-		CVector(0.0f, 154.0f, 307.0f)
+		CVector(0.0f, 154.0f, 359.0f),
+		CVector(8.0f, 154.0f, 310.0f)
 	);
 
 	// ４番目のレバーとドア
 	CLever* lever4 = new CLever(CVector(105.0f, 162.0f, 344.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door4 = new CSingleDoor
 	(
-		CVector(151.0f, 0.0f, 209.0f),
-		CVector(0.0f, 0.0f, 0.0f),
-		CVector(1.0f, 1.0f, 1.0f)
+		CVector(154.0f, 0.0f, 209.0f),
+		CVector(0.0f, 143.7f, 0.0f),
+		CVector(0.9f, 1.0f, 0.9f)
 	);
 	door4->SetAnimPos
 	(
-		CVector(151.0f, 0.0f, 209.0f),
-		CVector(151.0f, 0.0f, 209.0f)
+		CVector(129.5f, 0.0f, 178.5f),
+		CVector(153.0f, 0.0f, 209.0f)
 	);
 
 	// ５番目のレバーとドア
@@ -262,13 +262,13 @@ void CField::CreateGimmick()
 	CSingleDoor* door6 = new CSingleDoor
 	(
 		CVector(295.0f, 0.0f, 85.0f),
-		CVector(0.0f, 0.0f, 0.0f),
+		CVector(0.0f, 105.0f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door6->SetAnimPos
 	(
-		CVector(295.0f, 0.0f, 85.0f),
-		CVector(295.0f, 0.0f, 85.0f)
+		CVector(291.0f, 0.0f, 91.0f),
+		CVector(291.0f, 0.0f, 91.0f)
 	);
 
 	// ７番目のレバーとドア
@@ -294,61 +294,61 @@ void CField::CreateGimmick()
 	CLever* lever8 = new CLever(CVector(290.0f, 15.0f, -215.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door8 = new CSingleDoor
 	(
-		CVector(165.0f, 0.0f, -242.0f),
-		CVector(0.0f, 0.0f, 0.0f),
+		CVector(0.0f, 0.0f, -315.0f),
+		CVector(0.0f, 90.0f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door8->SetAnimPos
 	(
-		CVector(165.0f, 0.0f, -242.0f),
-		CVector(165.0f, 0.0f, -242.0f)
+		CVector(0.0f, 0.0f, -315.0f),
+		CVector(0.0f, 0.0f, -315.0f)
 	);
 
 	// ９番目のレバーとドア
 	CLever* lever9 = new CLever(CVector(-102.0f, 162.0f, -346.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door9 = new CSingleDoor
 	(
-		CVector(-179.0f, 0.0f, -234.0f),
-		CVector(0.0f, 0.0f, 0.0f),
+		CVector(-174.0f, 0.0f, -240.0f),
+		CVector(0.0f, 90.0f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door9->SetAnimPos
 	(
-		CVector(-179.0f, 0.0f, -234.0f),
-		CVector(-179.0f, 0.0f, -234.0f)
+		CVector(-174.0f, 0.0f, -240.0f),
+		CVector(-174.0f, 0.0f, -240.0f)
 	);
 	
 	// １０番目のレバーとドア
 	CLever* lever10 = new CLever(CVector(-293.0f, 15.0f, -214.0f), CVector(90.0f, 0.0f, 0.0f));
 	CDoubleDoors* door10 = new CDoubleDoors
 	(
-		CVector(-144.0f, 154.0f, -210.0f), CVector(-174.0f, 154.0f, -253.0f),
+		CVector(-150.0f, 154.0f, -206.0f), CVector(-180.0f, 154.0f, -247.0f),
 		CVector(0.0f, 0.0f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door10->SetAnimPosL
 	(
-		CVector(-144.0f, 154.0f, -210.0f),
-		CVector(-144.0f, 154.0f, -210.0f)
+		CVector(-150.0f, 154.0f, -206.0f),
+		CVector(-150.0f, 154.0f, -206.0f)
 	);
 	door10->SetAnimPosR
 	(
-		CVector(-174.0f, 154.0f, -253.0f),
-		CVector(-174.0f, 154.0f, -253.0f)
+		CVector(-180.0f, 154.0f, -247.0f),
+		CVector(-180.0f, 154.0f, -247.0f)
 	);
 
 	// １１番目のレバーのドア
 	CLever* lever11 = new CLever(CVector(-293.0f, 162.0f, -214.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door11 = new CSingleDoor
 	(
-		CVector(-146.0f, 0.0f, -93.0f),
+		CVector(-131.0f, 0.0f, -123.0f),
 		CVector(0.0f, 0.0f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door11->SetAnimPos
 	(
-		CVector(-146.0f, 0.0f, -93.0f),
-		CVector(-146.0f, 0.0f, -93.0f)
+		CVector(-131.0f, 0.0f, -123.0f),
+		CVector(-131.0f, 0.0f, -123.0f)
 	);
 
 	// 各レバーを各ドアに対応させる

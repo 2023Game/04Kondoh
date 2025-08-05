@@ -6,7 +6,8 @@
 class CMoveFloor : public CRideableObject
 {
 public:
-	CMoveFloor(CModel* model, const CVector& pos, const CVector& scale, const CVector& move, float moveTime);
+	CMoveFloor(CModel* model, const CVector& pos,
+		const CVector& scale, const CVector& move, float moveTime);
 	~CMoveFloor();
 
 	void Update();

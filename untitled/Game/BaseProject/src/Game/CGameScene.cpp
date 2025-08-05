@@ -105,7 +105,7 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>("WallCol",		"Field\\Object\\Wall\\WallCol.obj");
 	CResourceManager::Load<CModel>("WallNavCol",	"Field\\Object\\Wall\\WallNavCol.obj");
 	CResourceManager::Load<CModel>("MoveFloor1",	"Field\\Object\\MoveObject.obj");
-	CResourceManager::Load<CModel>("MoveFloor2",	"Field\\Object\\MoveObject_2.obj");
+	CResourceManager::Load<CModel>("MoveFloor2",	"Field\\Object\\MoveFloor2.obj");
 	CResourceManager::Load<CModel>("Staircase",		"Field\\Object\\Gimmick\\SpiralStaircase.obj");
 	// ÉMÉ~ÉbÉN
 	CResourceManager::Load<CModel>("LeverBase",		"Field\\Object\\Gimmick\\LeverBase.obj");

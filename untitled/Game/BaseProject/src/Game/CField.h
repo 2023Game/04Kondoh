@@ -60,8 +60,8 @@ private:
 	CColliderMesh* mpFieldCol;
 
 	// フィールドオブジェクトのモデル
-	CModel* mpMoveFloor1Model;
-	CModel* mpMoveFloor2Model;
+	CModel* mpMoveFloor1Model;	// 螺旋階段上の動く床
+	CModel* mpMoveFloor2Model;	// 動く床
 	CModel* mpStaircaseModel;	// 螺旋階段
 
 	TexAnimData mEffectAnimData;

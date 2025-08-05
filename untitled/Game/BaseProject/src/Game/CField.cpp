@@ -104,41 +104,56 @@ void CField::CreateFieldObjects()
 	mpMoveFloor2Model = CResourceManager::Get<CModel>("MoveFloor2");
 	mpStaircaseModel = CResourceManager::Get<CModel>("Staircase");
 
+	// —†ùŠK’i
 	new CMoveFloor
 	(
 		mpStaircaseModel,
-		CVector(0.0f, 5.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 5.0f, 0.0f),
+		CVector(1.0f, 1.0f, 1.0f),
 		CVector(0.0f, 0.0f, 0.0f), 1.0f
 	);
 
-	// 
+	// —†ùŠK’i‚Ìã‚Ì“®‚­°
 	new CMoveFloor
 	(
 		mpMoveFloor1Model,
-		CVector(0.0f, 30.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
-		CVector(0.0f, 50.0f, 0.0f), 10.0f
+		CVector(0.0f, 40.0f, 0.0f),
+		CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 40.0f, 0.0f), 10.0f
+	);
+
+	// “®‚­°‚P
+	new CMoveFloor
+	(
+		mpMoveFloor2Model,
+		CVector(0.0f, 25.0f, 0.0f), 
+		CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 25.0f, 0.0f), 7.0f
+	);
+	// “®‚­°‚Q
+	new CMoveFloor
+	(
+		mpMoveFloor2Model,
+		CVector(50.0f, 75.0f, 15.0f),
+		CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 25.0f, 0.0f), 9.0f
+	);
+	// “®‚­°‚R
+	new CMoveFloor
+	(
+		mpMoveFloor2Model,
+		CVector(100.0f, 125.0f, 30.0f),
+		CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 25.0f, 0.0f), 6.0f
 	);
 
 	// 
 	new CMoveFloor
 	(
 		mpMoveFloor2Model,
-		CVector(0.0f, 25.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f),
-		CVector(0.0f,25.0f, 0.0f), 7.0f
-	);
-	// 
-	new CMoveFloor
-	(
-		mpMoveFloor2Model,
-		CVector(50.0f, 75.0f, 15.0f), CVector(1.0f, 1.0f, 1.0f),
-		CVector(0.0f, 25.0f, 0.0f), 9.0f
-	);
-	// 
-	new CMoveFloor
-	(
-		mpMoveFloor2Model,
-		CVector(100.0f, 125.0f, 30.0f), CVector(1.0f, 1.0f, 1.0f),
-		CVector(0.0f, 25.0f, 0.0f), 6.0f
+		CVector(0.0f, 16.0f, 0.0f),
+		CVector(1.0f, 1.0f, 1.0f),
+		CVector(0.0f, 0.0f, 0.0f), 6.0f
 	);
 
 	/*
@@ -294,14 +309,14 @@ void CField::CreateGimmick()
 	CLever* lever8 = new CLever(CVector(290.0f, 15.0f, -215.0f), CVector(90.0f, 0.0f, 0.0f));
 	CSingleDoor* door8 = new CSingleDoor
 	(
-		CVector(0.0f, 0.0f, -315.0f),
-		CVector(0.0f, 90.0f, 0.0f),
+		CVector(0.5f, 0.0f, -309.0f),
+		CVector(0.0f, 179.0f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door8->SetAnimPos
 	(
-		CVector(0.0f, 0.0f, -315.0f),
-		CVector(0.0f, 0.0f, -315.0f)
+		CVector(-0.7f, 0.0f, -359.0f),
+		CVector(-0.5f, 0.0f, -309.0f)
 	);
 
 	// ‚X”Ô–Ú‚ÌƒŒƒo[‚ÆƒhƒA
@@ -309,7 +324,7 @@ void CField::CreateGimmick()
 	CSingleDoor* door9 = new CSingleDoor
 	(
 		CVector(-174.0f, 0.0f, -240.0f),
-		CVector(0.0f, 90.0f, 0.0f),
+		CVector(0.0f, 144.5f, 0.0f),
 		CVector(1.0f, 1.0f, 1.0f)
 	);
 	door9->SetAnimPos

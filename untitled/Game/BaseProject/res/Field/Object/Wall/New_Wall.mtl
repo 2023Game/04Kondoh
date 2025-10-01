@@ -1,7 +1,7 @@
 # Blender 4.1.1 MTL File: 'AllStage.blend'
 # www.blender.org
 
-newmtl BackGround
+newmtl New_Wall
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
@@ -14,4 +14,4 @@ Pc 0.000000
 Pcr 0.030000
 aniso 0.000000
 anisor 0.000000
-map_Kd Texture/Black.png
+map_Kd ../../Texture/DungeonWall.png

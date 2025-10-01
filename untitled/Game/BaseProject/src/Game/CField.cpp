@@ -48,19 +48,20 @@ CField::CField()
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
 	// 壁を作成
-	CreateWalls();
+	//CreateWalls();
 
 	for (CWall* wall : mWalls)
 	{
 		navManager->AddCollider(wall->GetNavCol());
 	}
 
+	// フィールドオブジェクトを作成
+	//CreateFieldObjects();
+	// ギミックオブジェクトを作成
+	//CreateGimmick();
+
 	// 経路探索用のノードを作成
 	CreateNavNodes();
-	// フィールドオブジェクトを作成
-	CreateFieldObjects();
-
-	CreateGimmick();
 }
 
 CField::~CField()

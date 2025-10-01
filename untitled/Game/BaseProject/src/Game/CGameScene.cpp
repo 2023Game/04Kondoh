@@ -96,8 +96,8 @@ void CGameScene::Load()
 	//リソースの読み込みやクラスの生成を行う
 
 	// ステージ
-	CResourceManager::Load<CModel>("Field",			"Field\\FieldFloor.obj");
-	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\FieldWall.obj");
+	CResourceManager::Load<CModel>("Field",			"Field\\New_Floor.obj");
+	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\New_Wall.obj");
 	CResourceManager::Load<CModel>("FieldWallCol",	"Field\\Object\\Wall\\Demo_FieldWallCol.obj");
 	CResourceManager::Load<CModel>("BackGround",	"Field\\BackGround.obj");
 	// オブジェクト
@@ -135,7 +135,7 @@ void CGameScene::Load()
 
 	CPlayer* player = new CPlayer();
 	player->Scale(1.0f, 1.0f, 1.0f);
-	player->Position(-334.0f, 1.0f, -4.0f);
+	player->Position(0.0f, 1.0f, 0.0f);
 	player->Rotation(0.0f, -90.0f, 0.0f);
 
 	// CGameCamera2のテスト
@@ -211,6 +211,8 @@ void CGameScene::Update()
 	//RandomRespawn();
 
 }
+
+
 
 // ランダムリスポーン
 //void CGameScene::RandomRespawn()

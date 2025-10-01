@@ -1,7 +1,7 @@
 #include "CMoveFloor.h"
 #include "Maths.h"
 
-CMoveFloor::CMoveFloor(CModel* model, const CVector& pos, const CVector& angle,
+CMoveFloor::CMoveFloor(CModel* model, const CVector& pos,
 	const CVector& scale, const CVector& move, float moveTime)
 	: mpModel(model)
 	, mDefaultPos(pos)
@@ -10,7 +10,6 @@ CMoveFloor::CMoveFloor(CModel* model, const CVector& pos, const CVector& angle,
 	, mElapsedTime(0.0f)
 {
 	Position(mDefaultPos);
-	Rotation(angle);
 	Scale(scale);
 
 	mpColliderMesh = new CColliderMesh(this, ELayer::eField, mpModel, true);

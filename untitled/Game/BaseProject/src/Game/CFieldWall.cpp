@@ -24,7 +24,7 @@ CFieldWall::CFieldWall()
 
 	mpColliderMesh = new CColliderMesh
 	(
-		this, ELayer::eWall, fieldWallColMesh,
+		this, ELayer::eWall, mpModel,
 		true, 1.0f,
 		8, 2, 8
 	);

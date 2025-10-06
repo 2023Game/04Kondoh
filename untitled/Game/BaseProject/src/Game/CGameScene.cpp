@@ -26,41 +26,41 @@
 const std::vector<RespawnData> RESPAWN_DATA =
 {
 	{ 
-		CVector(140.0f, 0.94f, 0.0f),
+		CVector(500.0f, 0.94f, 4.0f),
 		{
-			CVector( 110.0f, 0.94f,    0.0f),
-			CVector(   0.0f, 0.94f, -110.0f),
-			CVector( 110.0f, 0.94f,  110.0f),
-			CVector(-110.0f, 0.94f, -110.0f),
+			CVector( 300.0f, 0.94f,   80.0f),
+			CVector( 400.0f, 0.94f,  -80.0f),
+			CVector( 270.0f, 0.94f, -105.0f),
+			CVector( 200.0f, 0.94f,   75.0f),
 		}
 	},
-	{
-		CVector(-140.0f, 0.94f, 0.0f),
-		{
-			CVector( 110.0f, 0.94f,    0.0f),
-			CVector(   0.0f, 0.94f, -110.0f),
-			CVector( 110.0f, 0.94f,  110.0f),
-			CVector(-110.0f, 0.94f, -110.0f),
-		}
-	},
-	{
-		CVector(0.0f, 0.94f, 140.0f),
-		{
-			CVector(110.0f, 0.94f,    0.0f),
-			CVector(0.0f, 0.94f, -110.0f),
-			CVector(110.0f, 0.94f,  110.0f),
-			CVector(-110.0f, 0.94f, -110.0f),
-		}
-	},
-	{ 
-		CVector(0.0f, 0.94f, -140.0f),
-		{
-			CVector( 110.0f, 0.94f,    0.0f),
-			CVector(  0.0f,  0.94f, -110.0f),
-			CVector( 110.0f, 0.94f,  110.0f),
-			CVector(-110.0f, 0.94f, -110.0f),
-		}
-	},
+	//{
+	//	CVector(-140.0f, 0.94f, 0.0f),
+	//	{
+	//		CVector( 110.0f, 0.94f,    0.0f),
+	//		CVector(   0.0f, 0.94f, -110.0f),
+	//		CVector( 110.0f, 0.94f,  110.0f),
+	//		CVector(-110.0f, 0.94f, -110.0f),
+	//	}
+	//},
+	//{
+	//	CVector(0.0f, 0.94f, 140.0f),
+	//	{
+	//		CVector(110.0f, 0.94f,    0.0f),
+	//		CVector(0.0f, 0.94f, -110.0f),
+	//		CVector(110.0f, 0.94f,  110.0f),
+	//		CVector(-110.0f, 0.94f, -110.0f),
+	//	}
+	//},
+	//{ 
+	//	CVector(0.0f, 0.94f, -140.0f),
+	//	{
+	//		CVector( 110.0f, 0.94f,    0.0f),
+	//		CVector(  0.0f,  0.94f, -110.0f),
+	//		CVector( 110.0f, 0.94f,  110.0f),
+	//		CVector(-110.0f, 0.94f, -110.0f),
+	//	}
+	//},
 	//{ CVector(0.0f, 0.94f, -140.0f),	false },
 	//{ CVector(110.0f, 0.94f, 110.0f),	false },
 	//{ CVector(110.0f, 0.94f, -110.0f),	false },
@@ -98,15 +98,12 @@ void CGameScene::Load()
 	// ステージ
 	CResourceManager::Load<CModel>("Field",			"Field\\New_Floor.obj");
 	CResourceManager::Load<CModel>("FieldWall",		"Field\\Object\\Wall\\New_Wall.obj");
-	CResourceManager::Load<CModel>("FieldWallCol",	"Field\\Object\\Wall\\Demo_FieldWallCol.obj");
+	CResourceManager::Load<CModel>("FieldWallCol",	"Field\\Object\\Wall\\New_Wall_Col.obj");
 	CResourceManager::Load<CModel>("BackGround",	"Field\\BackGround.obj");
 	// オブジェクト
 	CResourceManager::Load<CModel>("Wall",			"Field\\Object\\Wall\\Wall.obj");
 	CResourceManager::Load<CModel>("WallCol",		"Field\\Object\\Wall\\WallCol.obj");
 	CResourceManager::Load<CModel>("WallNavCol",	"Field\\Object\\Wall\\WallNavCol.obj");
-	CResourceManager::Load<CModel>("MoveFloor1",	"Field\\Object\\MoveObject.obj");
-	CResourceManager::Load<CModel>("MoveFloor2",	"Field\\Object\\MoveFloor2.obj");
-	CResourceManager::Load<CModel>("Staircase",		"Field\\Object\\Gimmick\\SpiralStaircase.obj");
 	// ギミック
 	CResourceManager::Load<CModel>("LeverBase",		"Field\\Object\\Gimmick\\LeverBase.obj");
 	CResourceManager::Load<CModel>("Lever",			"Field\\Object\\Gimmick\\Lever.obj");
@@ -116,13 +113,18 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>("RastDoor",		"Field\\Object\\Gimmick\\RastDoor.obj");
 	// キャラクター
 	CResourceManager::Load<CModelX>("Player",		"Character\\Player\\T_Pose.x");
-	CResourceManager::Load<CModelX>("EnemyA",		"Character\\EnemyA\\enemyA.x");
+	CEnemyA::LoadResources();
 	// サウンド
 	CResourceManager::Load<CSound>("SlashSound",	"Sound\\SE\\slash.wav");
 
-	//CResourceManager::Load<CTexture>("Laser",         "Effect\\laser.png");
-	//CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
-	//CResourceManager::Load<CModel>  ("Slash",         "Effect\\slash.obj");
+	/* 今は不要
+	CResourceManager::Load<CModel>("MoveFloor1", "Field\\Object\\MoveObject.obj");
+	CResourceManager::Load<CModel>("MoveFloor2", "Field\\Object\\MoveFloor2.obj");
+	CResourceManager::Load<CModel>("Staircase", "Field\\Object\\Gimmick\\SpiralStaircase.obj");
+	CResourceManager::Load<CTexture>("Laser",         "Effect\\laser.png");
+	CResourceManager::Load<CTexture>("LightningBolt", "Effect\\lightning_bolt.png");
+	CResourceManager::Load<CModel>  ("Slash",         "Effect\\slash.obj");
+	*/
 
 	// ゲームBGMを読み込み
 	//CBGMManager::Instance()->Play(EBGMType::eGame);
@@ -208,36 +210,35 @@ void CGameScene::Update()
 		}
 	}
 
-	//RandomRespawn();
+	RandomRespawn();
 
 }
 
 
-
 // ランダムリスポーン
-//void CGameScene::RandomRespawn()
-//{
-//	if (mSpawnCount >= MAX_RESPAWN) return;
-//
-//	CEnemyManager* enemyMgr = CEnemyManager::Instance();
-//
-//	if (enemyMgr->GetEnemies().size() < RESPAWN)
-//	{
-//		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
-//		{
-//			mRespawnElapsedTime += Times::DeltaTime();
-//		}
-//		else
-//		{
-//			int index = Math::Rand(0, RESPAWN_DATA.size() - 1);
-//			const RespawnData& data = RESPAWN_DATA[index];
-//			CEnemyA* enemyA = new CEnemyA(data.respawnPoint, data.patrolPoints);
-//			enemyA->Scale(1.0f, 1.0f, 1.0f);
-//			mSpawnCount++;
-//			mRespawnElapsedTime -= RESPAWN_INTERVAL;
-//		}
-//	}
-//}
+void CGameScene::RandomRespawn()
+{
+	if (mSpawnCount >= MAX_RESPAWN) return;
+
+	CEnemyManager* enemyMgr = CEnemyManager::Instance();
+
+	if (enemyMgr->GetEnemies().size() < RESPAWN)
+	{
+		if (mRespawnElapsedTime < RESPAWN_INTERVAL)
+		{
+			mRespawnElapsedTime += Times::DeltaTime();
+		}
+		else
+		{
+			int index = Math::Rand(0, RESPAWN_DATA.size() - 1);
+			const RespawnData& data = RESPAWN_DATA[index];
+			CEnemyA* enemyA = new CEnemyA(data.respawnPoint, data.patrolPoints);
+			enemyA->Scale(1.0f, 1.0f, 1.0f);
+			mSpawnCount++;
+			mRespawnElapsedTime -= RESPAWN_INTERVAL;
+		}
+	}
+}
 
 //CVector CGameScene::RandomPoint()
 //{

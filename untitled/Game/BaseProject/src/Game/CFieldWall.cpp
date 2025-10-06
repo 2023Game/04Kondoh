@@ -20,11 +20,11 @@ CFieldWall::CFieldWall()
 	// ステージ1の壁のモデルデータ取得
 	mpModel = CResourceManager::Get<CModel>("FieldWall");
 	// ステージ壁のコライダを作成
-	CModel* fieldWallColMesh = CResourceManager::Get<CModel>("FieldWallCol");
+	CModel* wallColMesh = CResourceManager::Get<CModel>("FieldWallCol");
 
 	mpColliderMesh = new CColliderMesh
 	(
-		this, ELayer::eWall, mpModel,
+		this, ELayer::eWall, wallColMesh,
 		true, 1.0f,
 		8, 2, 8
 	);

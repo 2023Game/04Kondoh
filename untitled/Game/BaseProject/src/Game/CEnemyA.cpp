@@ -24,7 +24,7 @@
 #define EYE_HEIGHT 10.0f        // 視点の高さ
 #define WALK_SPEED 10.0f        // 歩きの速度
 #define BATTLE_WALK_SPEED 0.01f	// 戦闘時の移動
-#define RUN_SPEED 40.0f         // 走っている時の速度
+#define RUN_SPEED 55.0f         // 走っている時の速度
 #define ROTATE_SPEED 6.0f       // 回転速度
 #define LOOKAT_SPEED 4.0f		// 対象の方向に向く速度
 
@@ -64,6 +64,7 @@
 #define TACKLE_MOVE_DIST	150.0f	// タックル時の移動距離
 #define TACKLE_MOVE_START	0.5f	// タックル時の移動開始フレーム
 #define TACKLE_MOVE_END		55.0f	// タックル時の移動終了フレーム
+#define TACKLE_MOVE_SPEED	150.0f	// 
 #define TACKLE_WAIT_DIST	10.0f	// タックル終了時の予備動作の移動距離
 #define TACKLE_WAIT_START	0.0f	// タックル終了時の予備動作の開始
 #define TACKLE_WAIT_END		60.0f	// タックル終了時の予備動作の終了
@@ -101,15 +102,16 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ ANIM_PATH"Idle.x",					 true,	126.0f,	1.0f},	// 待機
 	{ ANIM_PATH"BattleIdle.x",				 true,	110.0f,	0.5f},	// 戦闘待機		
 	{ ANIM_PATH"Walk.x",					 true,	 42.0f,	1.0f},	// 歩行
-	{ ANIM_PATH"Run.x",						 true,	 23.0f,	1.0f},	// 走る
+	{ ANIM_PATH"Run.x",						 true,	 23.0f,	0.9f},	// 走る
 	{ ANIM_PATH"Stun.x",					false,	 74.0f,	1.0f},	// 混乱
 	{ ANIM_PATH"StunWait.x",				 true,	129.0f, 1.0f},	// 混乱待ち時間
 	{ ANIM_PATH"Death.x",					false,	129.0f,	1.0f},	// 死亡
 
-	{ ATTACK_ANIM_PATH"LeftAttackS.x",		false,	 34.0f,	0.5f},	// 左薙ぎ払い
-	{ ATTACK_ANIM_PATH"RightAttackS.x",		false,	 34.0f,	0.5f},	// 右薙ぎ払い
-	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	 53.0f,	0.5f},	// 左回し蹴り
-	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	 53.0f,	0.5f},	// 右回し蹴り
+	{ ATTACK_ANIM_PATH"LeftBlow.x",			false,	 81.0f,	0.75f},	// 左薙ぎ払い
+	{ ATTACK_ANIM_PATH"RightBlow.x",		false,	 81.0f,	0.75f},	// 右薙ぎ払い
+	{ ATTACK_ANIM_PATH"LeftAttackM.x",		false,	 53.0f,	0.75f},	// 左回し蹴り
+	{ ATTACK_ANIM_PATH"RightAttackM.x",		false,	 53.0f,	0.75f},	// 右回し蹴り
+	{ ATTACK_ANIM_PATH"TackleCharge.x",		false,	 37.0f, 1.0f},	// タックルの溜め
 	{ ATTACK_ANIM_PATH"Tackle.x",			false,	 56.0f,	1.0f},	// タックル
 	{ ATTACK_ANIM_PATH"TackleWait.x",		false,	 71.0f,	1.5f},	// タックル終了の予備動作	
 	{ ATTACK_ANIM_PATH"HeadButt.x",			false,	 68.0f,	1.0f},	// 頭突き攻撃
@@ -123,10 +125,10 @@ const std::vector<CEnemyBase::AnimData> ANIM_DATA =
 	{ DAMAGEHIT_PATH"Damage1.x",			false,	 42.0f,	1.0f},	// 仰け反り1
 	{ DAMAGEHIT_PATH"Damage2.x",			false,	 42.0f,	1.0f},	// 仰け反り2
 	{ DAMAGEHIT_PATH"Damage3.x",			false,	 42.0f,	1.0f},	// 仰け反り3
-	{ CHANCEHIT_PATH"chancehit1.x",			false,	 23.0f,	1.0f},	// チャンス時1
-	{ CHANCEHIT_PATH"chancehit2.x",			false,	 23.0f,	1.0f},	// チャンス時2
-	{ CHANCEHIT_PATH"chancehit3.x",			false,	 23.0f,	1.0f},	// チャンス時3
-	{ CHANCEHIT_PATH"chancehit4.x",			false,	 23.0f,	1.0f},	// チャンス時4
+	{ CHANCEHIT_PATH"ChanceHit1.x",			false,	 23.0f,	1.0f},	// チャンス時1
+	{ CHANCEHIT_PATH"ChanceHit2.x",			false,	 23.0f,	1.0f},	// チャンス時2
+	{ CHANCEHIT_PATH"ChanceHit3.x",			false,	 23.0f,	1.0f},	// チャンス時3
+	{ CHANCEHIT_PATH"ChanceHit4.x",			false,	 23.0f,	1.0f},	// チャンス時4
 
 };
 
@@ -253,7 +255,7 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	);
 	mpHeadCol->SetCollisionTags({ ETag::eField, ETag::ePlayer });
 	mpHeadCol->SetCollisionLayers({ ELayer::eField,ELayer::ePlayer,ELayer::eAttackCol });
-	mpHeadCol-> SetEnable(false);
+	mpHeadCol->SetEnable(false);
 
 	// プレイヤーが存在しない場合は、範囲外とする
 	CPlayer* player = CPlayer::Instance();
@@ -345,6 +347,21 @@ CEnemyA::~CEnemyA()
 	}
 }
 
+void CEnemyA::LoadResources()
+{
+	// モデルデータを読み込み
+	CModelX* model = CResourceManager::Load<CModelX>("EnemyA", "Character\\EnemyA\\enemyA.x");
+
+	// アニメーションデータを読み込み
+	int size = ANIM_DATA.size();
+	for (int i = 0; i < size; i++)
+	{
+		const AnimData& data = ANIM_DATA[i];
+		if (data.path.empty()) continue;
+		model->AddAnimationSet(data.path.c_str());
+	}
+}
+
 // オブジェクト削除処理
 void CEnemyA::DeleteObject(CObjectBase* obj)
 {
@@ -398,6 +415,8 @@ void CEnemyA::Update()
 	{
 		mpNavNode->SetPos(Position());
 	}
+
+	// ↓ デバック表示 ↓
 
 	// 現在の状態に合わせて視野範囲の色を変更
 	mpDebugFov->SetColor(GetStateColor(mState));
@@ -694,7 +713,6 @@ void CEnemyA::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 	}
 }
 
-
 //状態切り替え
 void CEnemyA::ChangeState(int state)
 {
@@ -721,7 +739,6 @@ void CEnemyA::ChangeAttackType(int attacktype)
 	// 攻撃タイプ切り替え
 	CEnemyBase::ChangeAttackType(attacktype);
 }
-
 
 
 // TODO:エネミーベースクラスに移植する
@@ -863,8 +880,7 @@ bool CEnemyA::DetectedPlayerAttack()
 			if (rand < GUARD_PROB)
 			{
 				ChangeState((int)EState::eGuard);
-
-					return true;
+				return true;
 			}
 		}
 	}
@@ -983,13 +999,13 @@ void CEnemyA::AttackPickDetect()
 			if (attackRand < TACKLE_PROB)
 			{
 				mElapsedTime = 0.0f;
-				nextattack = EAttackType::eTackle;
+				nextattack = EAttackType::eTackleStart;
 				nextstate = EState::eAttack;
 			}
 			else
 			{
 				mElapsedTime = 0.0f;
-				nextstate = EState::eChase;
+				//nextstate = EState::eChase;
 			}
 		}
 	}
@@ -1486,8 +1502,9 @@ void CEnemyA::UpdateAttack()
 	case (int)EAttackType::eBlowR:			UpdateBlowR();			break;
 	case (int)EAttackType::eRoundKickL:		UpdateRoundKickL();		break;
 	case (int)EAttackType::eRoundKickR:		UpdateRoundKickR();		break;
+	case (int)EAttackType::eTackleStart:	UpdateTackleStart();	break;
 	case (int)EAttackType::eTackle:			UpdateTackle();			break;
-	case (int)EAttackType::eTackleWait:		UpdateTackleWait();		break;
+	case (int)EAttackType::eTackleEnd:		UpdateTackleEnd();		break;
 	case (int)EAttackType::eHeadButt:		UpdateHeadButt();		break;
 	case (int)EAttackType::eTripleAttack:	UpdateTripleAttack();	break;
 	}
@@ -1954,6 +1971,25 @@ void CEnemyA::UpdateRoundKickR()
 	}
 }
 
+void CEnemyA::UpdateTackleStart()
+{
+	switch (mStateStep)
+	{
+	case 0:
+		ChangeAnimation((int)EAnimType::eTackleStart, false);
+		mStateStep++;
+		break;
+	case 1:
+		if (IsAnimationFinished())
+		{
+			AttackEnd();
+			// タックルの待ち状態に移行する
+			ChangeAttackType((int)EAttackType::eTackle);
+		}
+		break;
+	}
+}
+
 // タックルの更新処理
 void CEnemyA::UpdateTackle()
 {
@@ -1961,12 +1997,11 @@ void CEnemyA::UpdateTackle()
 	switch (mStateStep)
 	{
 	case 0:	// ステップ0 : 攻撃アニメーション
-		// 攻撃開始位置と攻撃終了位置の設定
-		mMoveStartPos = Position();
-		mMoveEndPos = mMoveStartPos + VectorZ() * TACKLE_MOVE_DIST;
+
 		ChangeAnimation((int)EAnimType::eTackle, false);
 		mStateStep++;
 		break;
+
 	case 1:	// ステップ１：攻撃時の移動処理
 	{
 		// 攻撃アニメーションが移動開始フレームを超えた場合
@@ -1978,16 +2013,13 @@ void CEnemyA::UpdateTackle()
 				// 移動終了フレームまで到達してない場合
 				if (frame < TACKLE_MOVE_END)
 				{
-					// 線形補間で移動開始位置から移動終了位置まで移動する
-					float moveFrame = TACKLE_MOVE_END - TACKLE_MOVE_START;
-					float percent = (frame - TACKLE_MOVE_START) / moveFrame;
-					CVector pos = CVector::Lerp(mMoveStartPos, mMoveEndPos, percent);
+					CVector pos = Position();
+					pos += VectorZ() * TACKLE_MOVE_SPEED * Times::DeltaTime();
 					Position(pos);
 				}
 				// 移動終了フレームまで到達した場合
 				else
 				{
-					Position(mMoveEndPos);
 					mStateStep++;
 				}
 			}
@@ -2003,21 +2035,21 @@ void CEnemyA::UpdateTackle()
 		{
 			AttackEnd();
 			// タックルの待ち状態に移行する
-			ChangeAttackType((int)EAttackType::eTackleWait);
+			ChangeAttackType((int)EAttackType::eTackleEnd);
 		}
 		break;
 	}
 }
 
 // タックル終了時の予備動作の更新処理
-void CEnemyA::UpdateTackleWait()
+void CEnemyA::UpdateTackleEnd()
 {
 	switch (mStateStep)
 	{
 	case 0:
 		mMoveStartPos = Position();
 		mMoveEndPos = mMoveStartPos + VectorZ() * TACKLE_WAIT_DIST;
-		ChangeAnimation((int)EAnimType::eTackleWait);
+		ChangeAnimation((int)EAnimType::eTackleEnd);
 		mStateStep++;
 		break;
 	case 1:
@@ -2169,8 +2201,9 @@ std::string CEnemyA::GetAttackTypeStr(int state) const
 	case (int)EAttackType::eBlowR:			return "右薙ぎ払い";
 	case (int)EAttackType::eRoundKickL:		return "左回し蹴り";
 	case (int)EAttackType::eRoundKickR:		return "右回し蹴り";
+	case (int)EAttackType::eTackleStart:	return "タックルの溜め";
 	case (int)EAttackType::eTackle:			return "タックル";
-	case (int)EAttackType::eTackleWait:		return "タックル終了時の予備動作";
+	case (int)EAttackType::eTackleEnd:		return "タックル終了時の予備動作";
 	case (int)EAttackType::eHeadButt:		return "頭突き攻撃";
 	case (int)EAttackType::eTripleAttack:	return "三連攻撃";
 	}

@@ -21,6 +21,10 @@ public:
 	// コンストラクタ
 	CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints);
 	~CEnemyA();
+
+	// 必要なリソースを読み込み
+	static void LoadResources();
+
 	// オブジェクト削除処理
 	void DeleteObject(CObjectBase* obj) override;
 	// 更新処理
@@ -79,8 +83,9 @@ private:
 		eBlowR,			// 右薙ぎ払い
 		eRoundKickL,	// 左回し蹴り
 		eRoundKickR,	// 右回し蹴り
+		eTackleStart,	// タックルの溜め
 		eTackle,		// タックル
-		eTackleWait,	// タックルの待ち時間
+		eTackleEnd,		// タックルの待ち時間
 		eHeadButt,		// 頭突き攻撃
 
 		eBattleWalkL,	// 戦闘時の左歩行
@@ -134,8 +139,9 @@ private:
 		eBlowR,			// 右薙ぎ払い
 		eRoundKickL,	// 左回し蹴り
 		eRoundKickR,	// 右回し蹴り
+		eTackleStart,	// タックルの溜め
 		eTackle,		// タックル
-		eTackleWait,	// タックル終了時の予備動作
+		eTackleEnd,		// タックル終了時の予備動作
 		eHeadButt,		// 頭突き攻撃
 		eTripleAttack,	// 三連攻撃
 	};
@@ -235,9 +241,10 @@ private:
 	void UpdateRoundKickL();
 	void UpdateRoundKickR();
 	// タックル
+	void UpdateTackleStart();
 	void UpdateTackle();
-	// タックル終了時の予備動作
-	void UpdateTackleWait();
+	void UpdateTackleEnd
+	();
 	// 押し出し攻撃
 	void UpdateHeadButt();
 	// 三連攻撃

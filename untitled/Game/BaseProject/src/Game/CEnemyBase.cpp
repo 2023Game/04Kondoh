@@ -243,6 +243,8 @@ void CEnemyBase::ChangeAttackType(int attacktype)
 	if (attacktype == mAttackType) return;
 
 	mAttackType = attacktype;
+	mStateStep = 0;
+	mElapsedTime = 0.0f;
 
 	// UŒ‚‚Ìí—Ş‚©‚çUŒ‚‚Ìƒf[ƒ^‚ğæ“¾
 	const AttackData& data = (*mpAttackData)[mAttackType];

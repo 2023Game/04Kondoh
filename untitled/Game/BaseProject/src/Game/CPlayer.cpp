@@ -25,7 +25,7 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define PLAYER_CAP_DWON		 2.8f	// プレイヤーの底
 #define PLAYER_WIDTH		 3.0f	// プレイヤーの幅
 
-#define ATTACK1_CAP_UP		80.0f	// 攻撃コライダー1の上
+#define ATTACK1_CAP_UP		100.0f	// 攻撃コライダー1の上
 #define ATTACK1_CAP_DWON	0.0f	// 攻撃コライダー1の下
 #define ATTACK2_CAP_UP		0.0f	// 攻撃コライダー2の上
 #define ATTACK2_CAP_DWON	-30.0f	// 攻撃コライダー2の下
@@ -48,9 +48,9 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define DEATH_WAIT_TIME	5.0
 
 #define WALK_SPEED	0.8f
-#define RUN_SPEED	1.2f
+#define RUN_SPEED	1.15f
 #define JUMP_WALK_SPEED 1.0f
-#define JUMP_RUN_SPEED 1.5f
+#define JUMP_RUN_SPEED 1.3f
 #define JUMP_SPEED	1.5f
 #define GRAVITY		0.08f // 0.0625
 #define JUMP_END_Y	1.0f  
@@ -397,7 +397,7 @@ void CPlayer::Update()
 	// 状態に合わせて、更新処理を切り替える
 	switch (mState)
 	{
-		//case EState::eIdle:			UpdateIdle();		break;
+//	case EState::eIdle:			UpdateIdle();		break;
 	case EState::eBattleIdle:	UpdateBattleIdle();	break;
 	case EState::eAttack:		UpdateAttack();		break;
 	case EState::eGuardStart:	UpdateGuardStart();	break;

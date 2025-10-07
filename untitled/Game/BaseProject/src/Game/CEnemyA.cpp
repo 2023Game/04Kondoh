@@ -52,10 +52,10 @@
 #define TACKLE_KNOCKBACK	50.0f	// 
 #define HEADBUTT_KNOCKBACK	50.0f	//
 
-#define BLOWL_PROB	25		// 左薙ぎ払いの確率
-#define BLOWR_PROB	50		// 右薙ぎ払いの確率
-#define KICKL_PROB	65		// 左回し蹴りの確率
-#define KICKR_PROB	80		// 右回し蹴りの確率
+#define BLOWL_PROB	1		// 左薙ぎ払いの確率
+#define BLOWR_PROB	2		// 右薙ぎ払いの確率
+#define KICKL_PROB	3		// 左回し蹴りの確率
+#define KICKR_PROB	4		// 右回し蹴りの確率
 #define TRIPLE_PROB	90		// 三連攻撃の確率
 #define TACKLE_PROB	50		// タックルの確率
 #define GUARD_PROB	10		// 防御の確率
@@ -424,7 +424,7 @@ void CEnemyA::Update()
 	//CDebugPrint::Print("　HP：%d\n", mHp);
 	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
 	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
-	//CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
+	CDebugPrint::Print("　攻撃タイプ：%s\n", GetAttackTypeStr(mAttackType).c_str());
 	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
 	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	//CDebugPrint::Print("　経過時間：%.2f\n", GetAnimationFrame());

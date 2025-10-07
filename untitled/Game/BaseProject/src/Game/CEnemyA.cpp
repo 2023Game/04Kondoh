@@ -52,22 +52,21 @@
 #define TACKLE_KNOCKBACK	50.0f	// 
 #define HEADBUTT_KNOCKBACK	50.0f	//
 
-#define BLOWL_PROB	20		// 左薙ぎ払いの確率
-#define BLOWR_PROB	40		// 右薙ぎ払いの確率
-#define KICKL_PROB	50		// 左回し蹴りの確率
-#define KICKR_PROB	60		// 右回し蹴りの確率
-#define TRIPLE_PROB	65		// 三連攻撃の確率
-#define TACKLE_PROB	90		// タックルの確率
+#define BLOWL_PROB	25		// 左薙ぎ払いの確率
+#define BLOWR_PROB	50		// 右薙ぎ払いの確率
+#define KICKL_PROB	65		// 左回し蹴りの確率
+#define KICKR_PROB	80		// 右回し蹴りの確率
+#define TRIPLE_PROB	90		// 三連攻撃の確率
+#define TACKLE_PROB	50		// タックルの確率
 #define GUARD_PROB	10		// 防御の確率
 #define FIFTY_FIFTY_PROB 50	// 半分の確率
 
-#define TACKLE_MOVE_DIST	150.0f	// タックル時の移動距離
 #define TACKLE_MOVE_START	0.5f	// タックル時の移動開始フレーム
 #define TACKLE_MOVE_END		55.0f	// タックル時の移動終了フレーム
-#define TACKLE_MOVE_SPEED	150.0f	// 
-#define TACKLE_WAIT_DIST	10.0f	// タックル終了時の予備動作の移動距離
+#define TACKLE_MOVE_SPEED	150.0f	// タックル時の移動スピード
 #define TACKLE_WAIT_START	0.0f	// タックル終了時の予備動作の開始
 #define TACKLE_WAIT_END		60.0f	// タックル終了時の予備動作の終了
+#define TACKLE_WAIT_SPEED	10.0f	// タックル終了時の予備動作の移動スピード
 #define TACKLE_COOL_TIME	4.0f	// タックル攻撃のクールタイム
 
 #define BLOW_MOVE_DIST		15.0f	// 薙ぎ払い時の移動距離
@@ -981,6 +980,7 @@ void CEnemyA::AttackPickDetect()
 		}
 		else
 		{
+			nextattack = EAttackType::eNone;
 			nextstate = EState::eBattleIdle;
 		}
 	}
@@ -2047,8 +2047,6 @@ void CEnemyA::UpdateTackleEnd()
 	switch (mStateStep)
 	{
 	case 0:
-		mMoveStartPos = Position();
-		mMoveEndPos = mMoveStartPos + VectorZ() * TACKLE_WAIT_DIST;
 		ChangeAnimation((int)EAnimType::eTackleEnd);
 		mStateStep++;
 		break;
@@ -2059,15 +2057,12 @@ void CEnemyA::UpdateTackleEnd()
 		{
 			if (frame < TACKLE_WAIT_END)
 			{
-				// 線形補間で移動開始位置から移動終了位置まで移動する
-				float moveFrame = TACKLE_WAIT_END - TACKLE_WAIT_START;
-				float percent = (frame - TACKLE_WAIT_START) / moveFrame;
-				CVector pos = CVector::Lerp(mMoveStartPos, mMoveEndPos, percent);
+				CVector pos = Position();
+				pos += VectorZ() * TACKLE_WAIT_SPEED * Times::DeltaTime();
 				Position(pos);
 			}
 			else
 			{
-				Position(mMoveEndPos);
 				mStateStep++;
 			}
 		}

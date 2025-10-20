@@ -2,6 +2,9 @@
 #include "CImage.h"
 #include "Maths.h"
 
+#define BAR_SET_POS 8.0f
+#define BAR_SET_SIZE 16.0f
+
 // コンストラクタ
 CGaugeUI2D::CGaugeUI2D()
 	: CUIBase(ETaskPriority::eUI, 0, ETaskPauseType::eGame)
@@ -94,10 +97,10 @@ void CGaugeUI2D::Render()
 {
 	CVector2 pos = mPosition;
 
-	CVector2 barPos = mPosition + CVector2(8.0f, 8.0f);
+	CVector2 barPos = mPosition + CVector2(BAR_SET_POS, BAR_SET_POS);
 	mpHpWhiteImg->SetPos(barPos);
 
-	CVector2 barSize = mGaugeSize - CVector2(16.0f, 16.0f);
+	CVector2 barSize = mGaugeSize - CVector2(BAR_SET_SIZE, BAR_SET_SIZE);
 	barSize.X(barSize.X() * mPercent);
 	mpHpWhiteImg->SetSize(barSize);
 

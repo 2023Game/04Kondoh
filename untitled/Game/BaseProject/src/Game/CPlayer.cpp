@@ -11,6 +11,7 @@
 #include "CField.h"
 #include "CEnemyManager.h"
 #include "CGaugeUI2D.h"
+#include "CAttackPowerUI.h"
 #include "CInteractObject.h"
 
 #include "CNavNode.h"
@@ -20,7 +21,7 @@
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
 
-#define PLAYER_HP			100	// プレイヤーのHP
+#define PLAYER_HP			10000	// プレイヤーのHP
 #define PLAYER_CAP_UP		13.5f	// プレイヤーの高さ
 #define PLAYER_CAP_DWON		 2.8f	// プレイヤーの底
 #define PLAYER_WIDTH		 3.0f	// プレイヤーの幅
@@ -246,6 +247,10 @@ CPlayer::CPlayer()
 	mpHpUI->SetMaxPoint(mMaxHp);
 	mpHpUI->SetCurrPoint(mHp);
 	mpHpUI->SetPos(CVector2(370.0f, 660.0f));
+
+	mpPowerUI = new CAttackPowerUI();
+	mpPowerUI->SetCurrPower((int)mSelectAttackPower);
+	mpPowerUI->SetPos(CVector2(400.0f, 200.0f));
 
 	mRandDeathAnim = Math::Rand(0, 99);
 }
@@ -488,6 +493,8 @@ void CPlayer::Update()
 
 	mpHpUI->SetMaxPoint(mMaxHp);
 	mpHpUI->SetCurrPoint(mHp);
+
+	mpPowerUI->SetCurrPower((int)mSelectAttackPower);
 
 	CDebugPrint::Print("FPS:%f\n \n", Times::FPS());
 	CVector pos = Position();
@@ -786,8 +793,8 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 	{
 		if (mSelectAttackPower == EAttackPower::eAttackS)
 		{
+			// ダメージと怯み度を加算する
 			*outDamage = DAMAGE_S;
-			// 怯み度を加算する
 			*outStan *= STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackM)

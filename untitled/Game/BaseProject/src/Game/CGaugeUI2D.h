@@ -24,7 +24,7 @@ public:
 	// 更新
 	void Update() override;
 	// 描画
-	void Render() ;
+	void Render();
 
 private:
 
@@ -40,6 +40,4 @@ private:
 	int mMaxPoint;			// 最大値
 	int mCurrPoint;			// 現在値
 	float mPercent;			// ポイント残量の割合
-
-
 };

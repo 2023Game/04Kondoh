@@ -74,7 +74,7 @@ private:
 		eIdle,			// 待機
 		eBattleIdle,	// 戦闘待機
 		eWalk,			// 歩行
-		eRun,			// 走り
+		eRun,			// 走る
 		eStun,			// 混乱
 		eStunWait,		// 混乱待ち時間
 		eDeath,			// 死亡
@@ -92,7 +92,9 @@ private:
 		eBattleWalkR,	// 戦闘時の右歩行
 
 		eGuardIdle,		// 防御待機状態
-		eGuardHit,		// 防御時のヒットアクション
+		eGuardHit,		// 防御時のヒット
+		eLeftAvoid,		// 左回避
+		eRightAvoid,	// 右回避
 
 		eHit1,			// 仰け反り1
 		eHit2,			// 仰け反り2
@@ -104,6 +106,7 @@ private:
 
 		Num
 	};
+	EAnimType mAnimType;
 
 	// 敵の状態
 	enum class EState
@@ -261,13 +264,15 @@ private:
 	// 後退行動(back)
 	void UpdateBackMove();
 
-
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
 	// 攻撃タイプの文字列取得
 	std::string GetAttackTypeStr(int state) const;
 	// 状態の色を取得
 	CColor GetStateColor(int state) const;
+
+	EAnimType GetAnimType() const;
+	int mAvoidAnim;
 
 	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
 	// プレイヤーの攻撃範囲の角度
@@ -309,6 +314,7 @@ private:
 
 	bool mIsBattle;			// 戦闘状態か
 	bool mIsGuard;			// ガード状態か
+	bool mIsAvoid;			// 回避状態か
 	bool mIsTripleAttack;	// 三連攻撃状態か
 
 	int mAttackCount;		// 今の攻撃の回数

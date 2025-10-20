@@ -436,6 +436,9 @@
     <ClCompile Include="src\Game\CDoubleDoors.cpp">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClCompile>
+    <ClCompile Include="src\CAttackPowerUI.cpp">
+      <Filter>ソース ファイル\Game\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -782,6 +785,9 @@
     </ClInclude>
     <ClInclude Include="src\Game\CDoubleDoors.h">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CAttackPowerUI.h">
+      <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

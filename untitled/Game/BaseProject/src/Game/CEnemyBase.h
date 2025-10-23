@@ -89,6 +89,19 @@ protected:
 	// アニメーション切り替え
 	void ChangeAnimation(int type, bool restart = false);
 
+	// プレイヤーが視野範囲内に入ったかどうか
+	bool IsFoundPlayer() const;
+	// 現在位置からプレイヤーが見えているかどうか
+	bool IsLookPlayer() const;
+	// 視野範囲と距離を設定
+	void SetAngLeng(float angle, float length);
+	// 頭の正面方向ベクトルを取得
+	CVector GetHeadForwardVec() const;
+
+	float mFovAngle;	// 視野範囲の角度
+	float mFovLength;	// 視野範囲の距離
+	float mEyeHeight;	// 視野の高さ
+
 	int mState;				// 状態
 	int mAttackType;		// 攻撃タイプ
 	int mStateStep;			// 状態内のステップ管理用
@@ -116,6 +129,8 @@ protected:
 
 	CGaugeUI3D* mpHpGauge;		// HPゲージ
 	CVector mGaugeOffsetPos;	// ゲージのオフセット座標
+
+	const CMatrix* mpHeadMtx;	// 頭の行列を取得
 };
 
 #endif // !CENEMYBASE_H

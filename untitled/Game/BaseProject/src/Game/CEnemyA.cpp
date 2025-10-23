@@ -167,9 +167,7 @@ const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 
 // コンストラクタ
 CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
-	: mFovAngle(FOV_ANGLE)
-	, mFovLength(FOV_LENGTH)
-	, mPlayerAttackAngle(PLAYER_ATTACK_ANGLE)
+	: mPlayerAttackAngle(PLAYER_ATTACK_ANGLE)
 	, mPlayerAttackLength(PLAYER_ATTACK_LENGTH)
 	, mpDebugFov(nullptr)
 	, mpBattleTarget(nullptr)
@@ -193,6 +191,8 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	mpAttackData = &ATTACK_DATA;
 	mMaxHp = ENEMY_HP;
 	mHp = mMaxHp;
+	mEyeHeight = EYE_HEIGHT;
+	SetAngLeng(FOV_ANGLE, FOV_LENGTH);
 
 	// ゲージのオフセット位置を設定
 	mGaugeOffsetPos = CVector(0.0f, GAUGE_OFFSET_Y, 0.0f);
@@ -444,7 +444,7 @@ void CEnemyA::Update()
 	// 現在の状態に合わせて視野範囲の色を変更
 	mpDebugFov->SetColor(GetStateColor(mState));
 
-	//CDebugPrint::Print("■敵の情報\n");
+	CDebugPrint::Print("■敵の情報\n");
 	//CDebugPrint::Print("　HP：%d\n", mHp);
 	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
 	CDebugPrint::Print("　状態：%s\n", GetStateStr(mState).c_str());
@@ -593,6 +593,12 @@ void CEnemyA::AttackEnd()
 	mpHeadCol->SetEnable(false);
 }
 
+bool CEnemyA::IsAvoiding() const
+{
+	if (mState == (int)EState::eAvoid) return true;
+	return false;
+}
+
 bool CEnemyA::IsGuarding() const
 {
 	if (mState == (int)EState::eGuard) return true;
@@ -691,6 +697,7 @@ void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 	}
 }
 
+// ダメージ計算
 void CEnemyA::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const
 {
 	switch (mAttackType)
@@ -733,6 +740,12 @@ void CEnemyA::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 		*outStan *= 0.7f;
 		*outKnockback *= 0.3f;
 	}
+	else if (taker->IsAvoiding())
+	{
+		*outDamage *= 0.0f;
+		*outStan *= 0.0f;
+		*outKnockback *= 0.0f;
+	}
 }
 
 //状態切り替え
@@ -760,77 +773,6 @@ void CEnemyA::ChangeAttackType(int attacktype)
 	}
 	// 攻撃タイプ切り替え
 	CEnemyBase::ChangeAttackType(attacktype);
-}
-
-
-// TODO:エネミーベースクラスに移植する
-// プレイヤーが視野範囲内に入ったかどうか
-bool CEnemyA::IsFoundPlayer() const
-{
-	// プレイヤーが存在しない場合は、範囲外とする
-	CPlayer* player = CPlayer::Instance();
-	if (player == nullptr) return false;
-
-	// プレイヤー座標の取得
-	CVector playerPos = player->Position();
-	// 自分自身の座標を取得
-	CVector pos = Position();
-	// 自身からプレイヤーまでのベクトルを求める
-	CVector vec = playerPos - pos;
-	vec.Y(0.0f);
-
-
-	// 1: 視野角度内か求める
-	// ベクトルを正規化して方向要素のみにするため
-	// 長さを１にする
-	CVector dir = vec.Normalized();
-	// 自身の正面方向のベクトルを取得
-	CVector forward = GetHeadForwardVec();
-	// プレイヤーまでのベクトルと
-	// 自身の正面方向のベクトルの内積を求めて角度を出す
-	float dot = CVector::Dot(dir, forward);
-	// 視野角度のラジアンを求める
-	float angleR = Math::DegreeToRadian(mFovAngle);
-	// 求めた内積と視野角度で、視野範囲か判断する
-	if (dot < cosf(angleR)) return false;
-
-
-	// 2: 視野距離内か求める
-	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
-	float dist = vec.Length();
-	if (dist > mFovLength) return false;
-
-
-	// プレイヤーとの間に遮蔽物がないか判定する
-	if (!IsLookPlayer()) return false;
-
-
-	// 全ての条件をクリアしたので、視野範囲内である
-	return true;
-}
-
-// 現在位置からプレイヤーが見えているかどうか
-bool CEnemyA::IsLookPlayer() const
-{
-	// プライヤーが存在しない場合は、見えていない
-	CPlayer* player = CPlayer::Instance();
-	if (player == nullptr) return false;
-	// フィールドが存在しない場合は、遮蔽物がないので見える
-	CField* field = CField::Instance();
-	if (field == nullptr) return true;
-
-	CVector offsetPos = CVector(0.0f, EYE_HEIGHT, 0.0f);
-	// プレイヤーの座標を取得
-	CVector playerPos = player->Position() + offsetPos;
-	// 自分自身の座標を取得
-	CVector selfPos = Position() + offsetPos;
-
-	CHitInfo hit;
-	// フィールドとレイ判定を行い、遮蔽物が存在した場合は、プレイヤーが見えない
-	if (field->CollisionRay(selfPos, playerPos, &hit)) return false;
-
-	// プレイヤーとの間に遮蔽物がないので、プレイヤーが見えている
-	return true;
 }
 
 // プレイヤーを攻撃出来るかどうか
@@ -1118,18 +1060,6 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 		);
 		Rotation(CQuaternion::LookRotation(forward));
 	}
-}
-
-CVector CEnemyA::GetHeadForwardVec() const
-{
-	if (mpHeadMtx == nullptr) return VectorZ();
-
-	CMatrix m;
-	m.RotateX(-90.0f);
-	m = m * (*mpHeadMtx);
-	CVector vec = m.VectorZ();
-	vec.Y(0.0f);
-	return vec.Normalized();
 }
 
 // 次に巡回するポイントを変更

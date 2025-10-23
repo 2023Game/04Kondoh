@@ -116,17 +116,26 @@ void CCharaBase::TakeDamage(int damage, float stun, float knockback, CObjectBase
 	// 現在HPの方が多い場合は、ダメージ分減らす
 	else
 	{
-		// 防御中ならダメージを受けない
-		if (IsGuarding())
+
+		mHp -= damage;
+		// まだ、生きている場合、怯み度を加算
+		if (mHp <= 0)
 		{
-			mHp -= damage * 0.5f;
-		}
-		else
-		{
-			mHp -= damage;
-			// まだ、生きている場合、怯み度を加算
 			mStunPoints += stun;
 		}
+
+		// 防御中ならダメージを受けない
+		//if (IsGuarding())
+		//{
+		//	mHp -= damage * 0.5f;
+		//}
+		//else if (IsAvoiding())
+		//{
+		//	mHp -= damage * 0.0f;
+		//}
+		//else
+		//{
+		//}
 
 		// 怯み度がしきい値を超えると
 		if (mStunPoints > mStunThreshold)
@@ -184,6 +193,11 @@ void CCharaBase::Stun()
 // 死亡
 void CCharaBase::Death()
 {
+}
+
+bool CCharaBase::IsAvoiding() const
+{
+	return false;
 }
 
 // 防御中か

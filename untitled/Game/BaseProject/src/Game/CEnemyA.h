@@ -41,6 +41,9 @@ public:
 	// 攻撃終了
 	void AttackEnd() override;
 
+	// 回避中かどうか
+	bool IsAvoiding() const override;
+	// 防御中かどうか
 	bool IsGuarding() const override;
 
 	// ダメージを受ける
@@ -156,11 +159,6 @@ private:
 	// ダメージ計算
 	void CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, float* outKnockback) const;
 
-	// プレイヤーが視野範囲内に入ったかどうか
-	bool IsFoundPlayer() const;
-	// 現在位置からプレイヤーが見えているかどうか
-	bool IsLookPlayer() const;
-
 	/// <summary>
 	/// 攻撃出来るかどうか
 	/// </summary>
@@ -192,7 +190,7 @@ private:
 	void LookAtBattleTarget(bool immediate = false);
 
 	// 頭の正面方向ベクトルを取得
-	CVector GetHeadForwardVec() const;
+//	CVector GetHeadForwardVec() const;
 
 	// 次に巡回するポイントを変更
 	bool ChangePatrolPoint();
@@ -281,8 +279,6 @@ private:
 	float mPlayerAttackLength;
 
 	CDebugFieldOfView* mpDebugFov;  // 視野範囲のデバッグ表示
-	float mFovAngle;                // 視野範囲の角度
-	float mFovLength;                // 視野範囲の距離
 
 	float mRandMoveAngle;	// ランダムの移動角度
 	int mRandHitAnim;		// ランダムな仰け反りアニメーション
@@ -302,14 +298,12 @@ private:
 	// 攻撃用のコライダ４（頭の部分）
 	CColliderSphere* mpHeadCol;
 
-	// 頭の行列を取得
-	const CMatrix* mpHeadMtx;
+	// 戦闘相手
+	CObjectBase* mpBattleTarget;
+
 #if _DEBUG
 	CMatrix mHeadForwardMtx;
 #endif
-
-	// 戦闘相手
-	CObjectBase* mpBattleTarget;
 
 
 	bool mIsBattle;			// 戦闘状態か

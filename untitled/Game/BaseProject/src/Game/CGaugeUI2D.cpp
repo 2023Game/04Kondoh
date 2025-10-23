@@ -18,14 +18,12 @@ CGaugeUI2D::CGaugeUI2D()
 
 	mpHpGaugeImg = new CImage
 	(
-		"UI\\gauge3.png",
+		"UI\\gauge.png",
 		ETaskPriority::eUI, 0,
 		ETaskPauseType::eGame,
 		false, false
 	);
 	mGaugeSize = mpHpGaugeImg->GetSize();
-	//CVector2 center = CVector2(-mGaugeSize.X() * 0.5f, 0.0f);
-	//mpHpGaugeImg->SetCenter(center);
 
 	mpHpWhiteImg = new CImage
 	(

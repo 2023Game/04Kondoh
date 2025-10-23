@@ -1,4 +1,6 @@
 #include "CEnemyBase.h"
+#include "CPlayer.h"
+#include "CField.h"
 #include "CEffect.h"
 #include "CCollisionManager.h"
 #include "CColliderCapsule.h"
@@ -224,6 +226,93 @@ void CEnemyBase::ChangeAnimation(int type, bool restart)
 		restart
 	);
 	CXCharacter::SetAnimationSpeed(data.speed);
+}
+
+bool CEnemyBase::IsFoundPlayer() const
+{
+
+	// プレイヤーが存在しない場合は、範囲外とする
+	CPlayer* player = CPlayer::Instance();
+	if (player == nullptr) return false;
+
+	// プレイヤー座標の取得
+	CVector playerPos = player->Position();
+	// 自分自身の座標を取得
+	CVector pos = Position();
+	// 自身からプレイヤーまでのベクトルを求める
+	CVector vec = playerPos - pos;
+	vec.Y(0.0f);
+
+
+	// 1: 視野角度内か求める
+	// ベクトルを正規化して方向要素のみにするため
+	// 長さを１にする
+	CVector dir = vec.Normalized();
+	// 自身の正面方向のベクトルを取得
+	CVector forward = GetHeadForwardVec();
+	// プレイヤーまでのベクトルと
+	// 自身の正面方向のベクトルの内積を求めて角度を出す
+	float dot = CVector::Dot(dir, forward);
+	// 視野角度のラジアンを求める
+	float angleR = Math::DegreeToRadian(mFovAngle);
+	// 求めた内積と視野角度で、視野範囲か判断する
+	if (dot < cosf(angleR)) return false;
+
+
+	// 2: 視野距離内か求める
+	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
+	float dist = vec.Length();
+	if (dist > mFovLength) return false;
+
+
+	// プレイヤーとの間に遮蔽物がないか判定する
+	if (!IsLookPlayer()) return false;
+
+
+	// 全ての条件をクリアしたので、視野範囲内である
+	return true;
+}
+
+// 現在位置からプレイヤーが見えているかどうか
+bool CEnemyBase::IsLookPlayer() const
+{
+	// プライヤーが存在しない場合は、見えていない
+	CPlayer* player = CPlayer::Instance();
+	if (player == nullptr) return false;
+	// フィールドが存在しない場合は、遮蔽物がないので見える
+	CField* field = CField::Instance();
+	if (field == nullptr) return true;
+
+	CVector offsetPos = CVector(0.0f, mEyeHeight, 0.0f);
+	// プレイヤーの座標を取得
+	CVector playerPos = player->Position() + offsetPos;
+	// 自分自身の座標を取得
+	CVector selfPos = Position() + offsetPos;
+
+	CHitInfo hit;
+	// フィールドとレイ判定を行い、遮蔽物が存在した場合は、プレイヤーが見えない
+	if (field->CollisionRay(selfPos, playerPos, &hit)) return false;
+
+	// プレイヤーとの間に遮蔽物がないので、プレイヤーが見えている
+	return true;
+}
+
+void CEnemyBase::SetAngLeng(float angle, float length)
+{
+	mFovAngle = angle;
+	mFovLength = length;
+}
+
+CVector CEnemyBase::GetHeadForwardVec() const
+{
+	if (mpHeadMtx == nullptr) return VectorZ();
+
+	CMatrix m;
+	m.RotateX(-90.0f);
+	m = m * (*mpHeadMtx);
+	CVector vec = m.VectorZ();
+	vec.Y(0.0f);
+	return vec.Normalized();
 }
 
 // 状態切り替え

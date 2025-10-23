@@ -1,5 +1,5 @@
 #pragma once
-#include "CUIBase.h"
+#include "CImage.h"
 
 class CImage;
 
@@ -23,6 +23,7 @@ private:
 	CImage* mpPowerSImg;	// 弱攻撃のUIイメージ
 	CImage* mpPowerMImg;	// 中攻撃のUIイメージ
 	CImage* mpPowerLImg;	// 強攻撃のUIイメージ
+	CImage* mpPowerImg;		// パワーのUIイメージ
 
 	int mCurrPower; // 現在値
 };

@@ -21,7 +21,7 @@
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
 
-#define PLAYER_HP			10000	// プレイヤーのHP
+#define PLAYER_HP			  100	// プレイヤーのHP
 #define PLAYER_CAP_UP		13.5f	// プレイヤーの高さ
 #define PLAYER_CAP_DWON		 2.8f	// プレイヤーの底
 #define PLAYER_WIDTH		 3.0f	// プレイヤーの幅
@@ -250,7 +250,7 @@ CPlayer::CPlayer()
 
 	mpPowerUI = new CAttackPowerUI();
 	mpPowerUI->SetCurrPower((int)mSelectAttackPower);
-	mpPowerUI->SetPos(CVector2(400.0f, 200.0f));
+	mpPowerUI->SetPos(CVector2(100.0f, 600.0f));
 
 	mRandDeathAnim = Math::Rand(0, 99);
 }

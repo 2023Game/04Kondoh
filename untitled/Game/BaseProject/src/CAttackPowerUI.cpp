@@ -1,7 +1,7 @@
 #include "CAttackPowerUI.h"
 #include "CImage.h"
 
-#define UI_SIZE CVector2(64.0f, 64.0f)
+#define UI_SIZE 100.0f
 
 // コンストラクタ
 CAttackPowerUI::CAttackPowerUI()
@@ -19,7 +19,6 @@ CAttackPowerUI::CAttackPowerUI()
 		ETaskPauseType::eGame,
 		false, false
 	);
-	mpPowerSImg->SetEnable(false);
 
 	// 中攻撃のUIイメージ
 	mpPowerMImg = new CImage
@@ -29,7 +28,6 @@ CAttackPowerUI::CAttackPowerUI()
 		ETaskPauseType::eGame,
 		false, false
 	);
-	mpPowerMImg->SetEnable(false);
 
 	// 強攻撃のUIイメージ
 	mpPowerLImg = new CImage
@@ -39,7 +37,15 @@ CAttackPowerUI::CAttackPowerUI()
 		ETaskPauseType::eGame,
 		false, false
 	);
-	mpPowerLImg->SetEnable(false);
+
+	// パワーのUIイメージ
+	mpPowerImg = new CImage
+	(
+		"UI\\powerImg.png",
+		ETaskPriority::eUI, 0,
+		ETaskPauseType::eGame,
+		false, false
+	);
 }
 
 // デストラクタ
@@ -59,24 +65,9 @@ void CAttackPowerUI::SetCurrPower(int power)
 // 更新
 void CAttackPowerUI::Update()
 {
-	if (mCurrPower < 1)
-	{
-		mpPowerSImg->SetEnable(true);
-		mpPowerMImg->SetEnable(false);
-		mpPowerLImg->SetEnable(false);
-	}
-	else if (mCurrPower > 1)
-	{
-		mpPowerSImg->SetEnable(false);
-		mpPowerMImg->SetEnable(false);
-		mpPowerLImg->SetEnable(true);
-	}
-	else
-	{
-		mpPowerSImg->SetEnable(false);
-		mpPowerMImg->SetEnable(true);
-		mpPowerLImg->SetEnable(false);
-	}
+	mpPowerSImg->SetShow(mCurrPower < 1);
+	mpPowerMImg->SetShow(mCurrPower == 1);
+	mpPowerLImg->SetShow(mCurrPower > 1);
 
 	mpPowerSImg->Update();
 	mpPowerMImg->Update();
@@ -87,16 +78,30 @@ void CAttackPowerUI::Update()
 void CAttackPowerUI::Render()
 {
 	CVector2 pos = mPosition;
+
+	mpPowerImg->SetPos(pos - CVector2(UI_SIZE, 0.0f));
+	mpPowerImg->SetSize(CVector2(UI_SIZE, UI_SIZE));
+	mpPowerImg->Render();
+
 	// 弱攻撃のUI描画
-	mpPowerSImg->SetPos(pos);
-	mpPowerSImg->SetSize(UI_SIZE);
-	mpPowerSImg->Render();
+	if (mpPowerSImg->IsShow())
+	{
+		mpPowerSImg->SetPos(pos);
+		mpPowerSImg->SetSize(CVector2(UI_SIZE, UI_SIZE));
+		mpPowerSImg->Render();
+	}
 	// 中攻撃のUI描画
-	mpPowerMImg->SetPos(pos);
-	mpPowerMImg->SetSize(UI_SIZE);
-	mpPowerMImg->Render();
+	if (mpPowerMImg->IsShow())
+	{
+		mpPowerMImg->SetPos(pos);
+		mpPowerMImg->SetSize(CVector2(UI_SIZE, UI_SIZE));
+		mpPowerMImg->Render();
+	}
 	// 強攻撃のUI描画
-	mpPowerLImg->SetPos(pos);
-	mpPowerLImg->SetSize(UI_SIZE);
-	mpPowerLImg->Render();
+	if (mpPowerLImg->IsShow())
+	{
+		mpPowerLImg->SetPos(pos);
+		mpPowerLImg->SetSize(CVector2(UI_SIZE, UI_SIZE));
+		mpPowerLImg->Render();
+	}
 }

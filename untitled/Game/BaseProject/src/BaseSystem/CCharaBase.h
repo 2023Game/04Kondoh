@@ -84,10 +84,11 @@ public:
 	// Ž€–S
 	virtual void Death();
 
-
+	// ‰ñ”ð’†‚©
+	virtual bool IsAvoiding() const;
 	// –hŒä’†‚©
 	virtual bool IsGuarding() const;
-	// 
+	// –hŒäƒpƒŠƒB’†‚©
 	virtual bool IsGuardParry() const;
 	// Ž€‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©
 	bool IsDeath() const;

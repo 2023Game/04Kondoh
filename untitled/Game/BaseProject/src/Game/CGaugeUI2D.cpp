@@ -18,7 +18,7 @@ CGaugeUI2D::CGaugeUI2D()
 
 	mpHpGaugeImg = new CImage
 	(
-		"UI\\gauge.png",
+		"UI\\gauge_2D.png",
 		ETaskPriority::eUI, 0,
 		ETaskPauseType::eGame,
 		false, false

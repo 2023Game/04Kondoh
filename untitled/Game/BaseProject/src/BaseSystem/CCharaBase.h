@@ -62,12 +62,12 @@ public:
 	virtual bool CheckGuardParry() const;
 
 	/// <summary>
-	/// ダメージを受ける
+	/// キャラがダメージを受ける
 	/// </summary>
 	/// <param name="damage">受けるダメージ量</param>
 	/// <param name="stan">加算される怯み度</param>
-	/// <param name="causer">ダメージを与えたもの</param>
-	virtual void TakeDamage(int damage,float stun, float knockback, CObjectBase* causer);
+	/// <param name="causer">ダメージを与えたキャラ</param>
+	virtual void TakeDamage(int damage,float stun, float knockback, CCharaBase* causer);
 
 	// 防御処理
 	virtual void Guard();
@@ -79,8 +79,6 @@ public:
 	virtual void Hit();
 	// 怯み処理
 	virtual void Stun();
-	// 混乱待ち時間
-//	virtual void StunWait();
 	// 死亡
 	virtual void Death();
 

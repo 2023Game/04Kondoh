@@ -21,7 +21,7 @@
 // プレイヤーのインスタンス
 CPlayer* CPlayer::spInstance = nullptr;
 
-#define PLAYER_HP			  100	// プレイヤーのHP
+#define PLAYER_HP			 100	// プレイヤーのHP
 #define PLAYER_CAP_UP		13.5f	// プレイヤーの高さ
 #define PLAYER_CAP_DWON		 2.8f	// プレイヤーの底
 #define PLAYER_WIDTH		 3.0f	// プレイヤーの幅
@@ -41,24 +41,25 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define STAN_VAL_L		30.0f	// 強攻撃のスタン値
 #define STAN_VAL_DIA	2.0f	// スタン値の倍率
 
-#define KNOCKBACK_S		6.0f	// 弱攻撃のノックバック距離
-#define KNOCKBACK_M		8.0f	// 中攻撃のノックバック距離
+#define KNOCKBACK_S		4.0f	// 弱攻撃のノックバック距離
+#define KNOCKBACK_M		7.0f	// 中攻撃のノックバック距離
 #define KNOCKBACK_L		10.0f	// 強攻撃のノックバック距離
 
-#define DEATH_RPOB 40	// 死亡アニメーション確率
-#define DEATH_WAIT_TIME	5.0
+#define DEATH_RPOB 40		// 死亡アニメーション確率
+#define DEATH_WAIT_TIME	5.0	// 死亡の待機時間
 
-#define WALK_SPEED	0.8f
-#define RUN_SPEED	1.15f
-#define JUMP_WALK_SPEED 1.0f
-#define JUMP_RUN_SPEED 1.3f
-#define JUMP_SPEED	1.5f
-#define GRAVITY		0.08f // 0.0625
-#define JUMP_END_Y	1.0f  
+#define WALK_SPEED	0.8f		// 歩きのスピード
+#define RUN_SPEED	1.15f		// 走りのスピード
+#define JUMP_WALK_SPEED 1.0f	// 歩きジャンプの移動スピード
+#define JUMP_RUN_SPEED 1.3f		// 走りジャンプの移動スピード
+#define JUMP_SPEED	1.5f		// ジャンプのスピード
+#define JUMP_END_Y	1.0f		// ジャンプの終わり
+#define GRAVITY		0.08f		// 元の重力 (0.0625)
 
-#define EVA_MOVE_DIST	90.0f  // 回避時の移動速度
-#define EVA_MOVE_START   5.0f  // 回避時の移動開始フレーム 
-#define EVA_MOVE_END    40.0f  // 回避時の移動終了フレーム 
+#define AVO_MOVE_SPEED	70.0f	// 回避時の移動速度
+#define AVO_MOVE_START   5.0f	// 回避時の移動開始フレーム 
+#define AVO_MOVE_END    40.0f	// 回避時の移動終了フレーム 
+#define AVO_COOL_TIME	0.3f	// 回避のクールタイム
 
 #define RUN_INPUT_INTERVAL 0.15f // ダッシュキーの入力インターバル
 
@@ -90,15 +91,15 @@ const CPlayer::AnimData CPlayer::ANIM_DATA[] =
 	{ PLAYER_ANIM_PATH"LeftRun.x",		 true,	 30.0f,	 0.01f},	// 左方向へ走る
 	{ PLAYER_ANIM_PATH"RightRun.x",		 true,	 30.0f,	 0.01f},	// 右方向へ走る
 
-	{ ATTACK_ANIM_PATH"UpAttackS.x",	false,	 54.0f,	 1.0f},	// 弱上攻撃
-	{ ATTACK_ANIM_PATH"UpAttackM.x",	false,	 69.0f,	 0.1f},	// 中上攻撃
+	{ ATTACK_ANIM_PATH"UpAttackS.x",	false,	 54.0f,	 1.3f},	// 弱上攻撃
+	{ ATTACK_ANIM_PATH"UpAttackM.x",	false,	 69.0f,	 0.2f},	// 中上攻撃
 	{ ATTACK_ANIM_PATH"UpAttackL.x",	false,	 92.0f,	 1.0f},	// 強上攻撃
 
-	{ ATTACK_ANIM_PATH"RightAttackS.x",	false,	 60.0f,	 1.0f},	// 弱右攻撃
+	{ ATTACK_ANIM_PATH"RightAttackS.x",	false,	 60.0f,	 1.3f},	// 弱右攻撃
 	{ ATTACK_ANIM_PATH"RightAttackM.x",	false,	 65.0f,	 1.5f},	// 中右攻撃
 	{ ATTACK_ANIM_PATH"RightAttackL.x",	false,	 86.0f,	 1.0f},	// 強右攻撃
 
-	{ ATTACK_ANIM_PATH"LeftAttackS.x",	false,	 50.0f,	 1.0f},	// 弱左攻撃
+	{ ATTACK_ANIM_PATH"LeftAttackS.x",	false,	 50.0f,	 1.3f},	// 弱左攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackM.x",	false,	 60.0f,	 1.0f},	// 中左攻撃
 	{ ATTACK_ANIM_PATH"LeftAttackL.x",	false,	 99.0f,	 1.0f},	// 強左攻撃
 
@@ -128,6 +129,7 @@ CPlayer::CPlayer()
 	, mSelectAttackPower(EAttackPower::eAttackM)
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
+	, mElapsedDemoTime(0.0f)
 	, mMoveSpeedY(0.0f)
 	, mpRideObject(nullptr)
 	, mpSearchCol(nullptr)
@@ -136,6 +138,7 @@ CPlayer::CPlayer()
 	, mIsSpawnedSlashEffect(false)
 	, mIsBattleMode(true)
 	, mIsAvoiding(false)
+	, mTimeStartSwitch(false)
 {
 	//インスタンスの設定
 	spInstance = this;
@@ -313,6 +316,12 @@ void CPlayer::AttackEnd()
 	mpAttackCol3->SetEnable(false);
 }
 
+bool CPlayer::IsAvoiding() const
+{
+	if (mState == EState::eAvoid) return true;
+	return false;
+}
+
 // 防御中か
 bool CPlayer::IsGuarding() const
 {
@@ -337,7 +346,7 @@ bool CPlayer::IsJumping() const
 	return false;
 }
 
-void CPlayer::TakeDamage(int damage, float stan, float knockback, CObjectBase* causer)
+void CPlayer::TakeDamage(int damage, float stan, float knockback, CCharaBase* causer)
 {
 	// ベースクラスのダメージ処理を呼び出す
 	CCharaBase::TakeDamage(damage, stan, knockback, causer);
@@ -500,15 +509,16 @@ void CPlayer::Update()
 	CVector pos = Position();
 
 	CDebugPrint::Print("■プレイヤーの情報\n");
-	//CDebugPrint::Print("　HP：%d\n", (int)mHp);
-	CDebugPrint::Print("　座標：%.2f, %.2f, %.2f\n", pos.X(), pos.Y(), pos.Z());
-	//CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
-	//CDebugPrint::Print("　状態：", GetStateStr(mState).c_str());
-	//CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
-	//CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
-	//CDebugPrint::Print("　ノックバック距離：%f\n", mKnockBack);
-	//CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
-	//CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
+	CDebugPrint::Print("　HP：%d\n", mHp);
+	CDebugPrint::Print("　怯み度：%.2f\n", mStunPoints);
+	CDebugPrint::Print("　回避のクールタイム：%.2f\n", mElapsedDemoTime);
+//	CDebugPrint::Print("　座標：%.2f, %.2f, %.2f\n", pos.X(), pos.Y(), pos.Z());
+//	CDebugPrint::Print("　状態：", GetStateStr(mState).c_str());
+//	CDebugPrint::Print("　Grounded：%s\n", mIsGrounded ? "true" : "false");
+//	CDebugPrint::Print("　選択中の攻撃の強さ：%d\n", (int)mSelectAttackPower);
+//	CDebugPrint::Print("　ノックバック距離：%f\n", mKnockBack);
+//	CDebugPrint::Print("　攻撃の強さ：%s\n", GetAttackPowerStr().c_str());
+//	CDebugPrint::Print("　攻撃の方向：%s\n", GetAttackDirStr().c_str());
 	CDebugPrint::Print("　\n");
 
 	// 調べるオブジェクトのリストをクリア
@@ -773,19 +783,32 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 		// ダメージを与える
 		*outDamage = DAMAGE_S;
 		*outStan = STAN_VAL_S;
-		*outKnockback = 8.0f;
+		*outKnockback = KNOCKBACK_S;
 	}
 	else if (mSelectAttackPower == EAttackPower::eAttackM)
 	{
 		*outDamage = DAMAGE_M;
 		*outStan = STAN_VAL_M;
-		*outKnockback = 8.0f;
+		*outKnockback = KNOCKBACK_M;
 	}
 	else if (mSelectAttackPower == EAttackPower::eAttackL)
 	{
 		*outDamage = DAMAGE_L;
 		*outStan = STAN_VAL_L;
-		*outKnockback = 8.0f;
+		*outKnockback = KNOCKBACK_L;
+	}
+
+	if (taker->IsGuarding())
+	{
+		*outDamage *= 0.7f;
+		*outStan *= 0.7f;
+		*outKnockback *= 0.3f;
+	}
+	else if (taker->IsAvoiding())
+	{
+		*outDamage *= 0.0f;
+		*outStan *= 0.0f;
+		*outKnockback *= 0.0f;
 	}
 
 	// パリィ出来るかどうか、判断する
@@ -794,17 +817,17 @@ void CPlayer::CalcDamage(CCharaBase* taker, int* outDamage, float* outStan, floa
 		if (mSelectAttackPower == EAttackPower::eAttackS)
 		{
 			// ダメージと怯み度を加算する
-			*outDamage = DAMAGE_S;
+			*outDamage = DAMAGE_S * 2;
 			*outStan *= STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackM)
 		{
-			*outDamage = DAMAGE_M;
+			*outDamage = DAMAGE_M * 2.4f;
 			*outStan *= STAN_VAL_DIA;
 		}
 		else if (mSelectAttackPower == EAttackPower::eAttackL)
 		{
-			*outDamage = DAMAGE_L;
+			*outDamage = DAMAGE_L * 3;
 			*outStan *= STAN_VAL_DIA;
 		}
 	}
@@ -854,11 +877,6 @@ void CPlayer::UpdateBattleIdle()
 		{
 			ChangeState(EState::eJumpStart);
 		}
-		// シフトで回避
-		else if (CInput::Key('F'))
-		{
-			ChangeAvoid();
-		}
 		else if (CInput::Key('I'))
 		{
 			CInteractObject* obj = GetNearInteractObj();
@@ -866,6 +884,33 @@ void CPlayer::UpdateBattleIdle()
 			if (obj == nullptr) return;
 
 			obj->Interact();
+		}
+
+		// シフトで回避
+
+		if (mTimeStartSwitch)
+		{
+			// クールタイムを計測
+			if (mElapsedDemoTime > AVO_COOL_TIME)
+			{
+				if (CInput::Key('F'))
+				{
+					mTimeStartSwitch = false;
+					ChangeAvoid();
+					mElapsedDemoTime = 0.0f;
+				}
+			}
+			else
+			{
+				mElapsedDemoTime += Times::DeltaTime();
+			}
+		}
+		else
+		{
+			if (CInput::Key('F'))
+			{
+				ChangeAvoid();
+			}
 		}
 	}
 }
@@ -1006,15 +1051,15 @@ void CPlayer::UpdateAvoid()
 	case 1:
 	{
 		float frame = GetAnimationFrame();
-		if (frame >= EVA_MOVE_START)
+		if (frame >= AVO_MOVE_START)
 		{
-			if (frame < EVA_MOVE_END)
+			if (frame < AVO_MOVE_END)
 			{
 				CVector current = VectorZ();
 				CVector forward = CVector::Slerp(current, mAvoidDir, 0.5);
 				Rotation(CQuaternion::LookRotation(forward));
 				// 回避時の移動速度を求める
-				mMoveSpeed = mAvoidDir * EVA_MOVE_DIST * Times::DeltaTime();
+				mMoveSpeed = mAvoidDir * AVO_MOVE_SPEED * Times::DeltaTime();
 			}
 			else
 			{
@@ -1027,6 +1072,7 @@ void CPlayer::UpdateAvoid()
 		if (IsAnimationFinished())
 		{
 			mIsAvoiding = false;
+			mTimeStartSwitch = true;
 			ChangeState(EState::eBattleIdle);
 		}
 		break;

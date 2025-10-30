@@ -47,7 +47,7 @@ public:
 	bool IsGuarding() const override;
 
 	// ダメージを受ける
-	void TakeDamage(int damage,float stan, float knockback, CObjectBase* causer) override;
+	void TakeDamage(int damage,float stan, float knockback, CCharaBase* causer) override;
 
 	// パリィをされた時の処理
 	void Parry() override;

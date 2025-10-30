@@ -20,7 +20,7 @@ CGaugeUI3D::CGaugeUI3D(CObjectBase* owner)
 	// 3Dのゲージのイメージを読み込み
 	mpGaugeImg3D = new CImage3D
 	(
-		"UI\\gauge.png",
+		"UI\\gauge_3D.png",
 		ETag::eUI,
 		ETaskPriority::eUI3D, 0,
 		ETaskPauseType::eGame,
@@ -40,16 +40,6 @@ CGaugeUI3D::CGaugeUI3D(CObjectBase* owner)
 		false, false
 	);
 	mpWhiteImg3D->SetWorldUnitPerPixel(WORLD_UNIT_PER_PIXEL);
-
-	// 
-	mpGaugeImg = new CImage
-	(
-		"UI\\gauge.png",
-		ETaskPriority::eUI, 0,
-		ETaskPauseType::eGame,
-		false,
-		false
-	);
 
 }
 

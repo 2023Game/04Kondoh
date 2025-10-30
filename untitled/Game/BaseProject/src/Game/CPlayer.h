@@ -60,15 +60,17 @@ public:
 	void AttackStart() override;
 	// 攻撃終了
 	void AttackEnd() override;
+	// 
+	bool IsAvoiding() const override;
 	// 防御中か
 	bool IsGuarding() const override;
-	// 
+	// ガードパリィ中か？
 	bool IsGuardParry() const override;
 	// ジャンプ中か
 	bool IsJumping() const;
 
 	// ダメージを受ける
-	void TakeDamage(int damage, float stan, float knockback, CObjectBase* causer) override;
+	void TakeDamage(int damage, float stan, float knockback, CCharaBase* causer) override;
 
 	// 仰け反り処理
 	void Hit() override;
@@ -245,8 +247,11 @@ private:
 	CGaugeUI2D* mpHpUI;
 	CAttackPowerUI* mpPowerUI;
 
-	int mStateStep;     // 状態内のステップ管理用
-	float mElapsedTime; // 経過時間計測用
+	int mStateStep;			// 状態内のステップ管理用
+	float mElapsedTime;		// 経過時間計測用
+	float mElapsedDemoTime;	// デバッグ用
+
+	bool mTimeStartSwitch;	// 時間計測開始変数
 
 	CVector mAvoidDir;	// 回避方向
 	CVector mMoveStartPos;	// 移動開始の位置

@@ -101,7 +101,7 @@ bool CCharaBase::CheckGuardParry() const
 }
 
 // ダメージを受ける
-void CCharaBase::TakeDamage(int damage, float stun, float knockback, CObjectBase* causer)
+void CCharaBase::TakeDamage(int damage, float stun, float knockback, CCharaBase* causer)
 {
 	// 既に死亡していたら、ダメージを受けない
 	if (IsDeath()) return;
@@ -116,26 +116,9 @@ void CCharaBase::TakeDamage(int damage, float stun, float knockback, CObjectBase
 	// 現在HPの方が多い場合は、ダメージ分減らす
 	else
 	{
-
+		// まだ、生きている場合、怯み値を増加
 		mHp -= damage;
-		// まだ、生きている場合、怯み度を加算
-		if (mHp <= 0)
-		{
-			mStunPoints += stun;
-		}
-
-		// 防御中ならダメージを受けない
-		//if (IsGuarding())
-		//{
-		//	mHp -= damage * 0.5f;
-		//}
-		//else if (IsAvoiding())
-		//{
-		//	mHp -= damage * 0.0f;
-		//}
-		//else
-		//{
-		//}
+		mStunPoints += stun;
 
 		// 怯み度がしきい値を超えると
 		if (mStunPoints > mStunThreshold)
@@ -146,20 +129,24 @@ void CCharaBase::TakeDamage(int damage, float stun, float knockback, CObjectBase
 		}
 		else
 		{
-			if (IsAttacking())
-			{
-				if (mStunPoints > mStunThreshold / 2)
-				{
-					mKnockBack = knockback;
-					// 怯み度がしきい値を超えて無い場合、仰け反り処理
-					Hit();
-				}
+			// 怯み度がしきい値を超えて無く場合、仰け反り処理
+			if (!IsAttacking())
+			{	
+				mKnockBack = knockback;
+				Hit();
 			}
-			else
+			else if (IsAttacking() 
+				&& causer->GetAttackPower() == EAttackPower::eAttackL
+				|| causer->GetAttackPower() == EAttackPower::eAttackM
+				)
 			{
 				mKnockBack = knockback;
-				// 怯み度がしきい値を超えて無い場合、仰け反り処理
 				Hit();
+			}
+			else if (IsAttacking()
+				&& causer->GetAttackPower() == EAttackPower::eAttackS
+				)
+			{
 			}
 		}
 	}

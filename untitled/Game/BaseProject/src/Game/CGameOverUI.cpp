@@ -40,7 +40,7 @@ CGameOverUI::CGameOverUI()
 		false, false
 	);
 	// ボタンの画像を読み込み
-	btn1->LoadButtonImage("UI/title_start2.png", "UI/title_start2.png");
+	btn1->LoadButtonImage("UI/title_start.png", "UI/title_start.png");
 	// ボタンクリック時に呼び出されるコールバック関数を設定
 	btn1->SetOnClickFunc(std::bind(&CGameOverUI::OnClickContinue, this));
 	// ボタンは最初は無効化して、スケール値を0にしておく
@@ -57,7 +57,7 @@ CGameOverUI::CGameOverUI()
 		ETaskPriority::eUI, 0, ETaskPauseType::eGame,
 		false, false
 	);
-	btn2->LoadButtonImage("UI/title_quit2.png", "UI/title_quit2.png");
+	btn2->LoadButtonImage("UI/title_quit.png", "UI/title_quit.png");
 	btn2->SetOnClickFunc(std::bind(&CGameOverUI::OnClickQuit, this));
 	btn2->SetEnable(false);
 	btn2->SetScale(0.0f);

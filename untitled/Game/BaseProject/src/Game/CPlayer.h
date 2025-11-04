@@ -60,7 +60,8 @@ public:
 	void AttackStart() override;
 	// 攻撃終了
 	void AttackEnd() override;
-	// 
+
+	// 回避中か？
 	bool IsAvoiding() const override;
 	// 防御中か
 	bool IsGuarding() const override;
@@ -251,7 +252,7 @@ private:
 	float mElapsedTime;		// 経過時間計測用
 	float mElapsedDemoTime;	// デバッグ用
 
-	bool mTimeStartSwitch;	// 時間計測開始変数
+	bool mIsTimeStart;	// 時間計測開始変数
 
 	CVector mAvoidDir;	// 回避方向
 	CVector mMoveStartPos;	// 移動開始の位置

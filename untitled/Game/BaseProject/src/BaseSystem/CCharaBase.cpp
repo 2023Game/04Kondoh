@@ -199,13 +199,18 @@ bool CCharaBase::IsGuardParry() const
 	return false;
 }
 
+// ‹Â‚¯”½‚è’†‚©
+bool CCharaBase::IsHiting() const
+{
+	return false;
+}
+
 // €‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©
 bool CCharaBase::IsDeath() const
 {
 	// Œ»İHP‚ª0‚È‚ç‚ÎA€–S
 	return mHp <= 0;
 }
-
 
 void CCharaBase::Update()
 {

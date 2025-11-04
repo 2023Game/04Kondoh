@@ -88,6 +88,8 @@ public:
 	virtual bool IsGuarding() const;
 	// –hŒäƒpƒŠƒB’†‚©
 	virtual bool IsGuardParry() const;
+	// ‹Â‚¯”½‚è’†‚©
+	virtual bool IsHiting() const;
 	// Ž€‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©
 	bool IsDeath() const;
 

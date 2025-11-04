@@ -138,7 +138,7 @@ CPlayer::CPlayer()
 	, mIsSpawnedSlashEffect(false)
 	, mIsBattleMode(true)
 	, mIsAvoiding(false)
-	, mTimeStartSwitch(false)
+	, mIsTimeStart(false)
 {
 	//インスタンスの設定
 	spInstance = this;
@@ -888,14 +888,14 @@ void CPlayer::UpdateBattleIdle()
 
 		// シフトで回避
 
-		if (mTimeStartSwitch)
+		if (mIsTimeStart)
 		{
 			// クールタイムを計測
-			if (mElapsedDemoTime > AVO_COOL_TIME)
+			if (mElapsedDemoTime > AVO_COOL_TIME && IsHit())
 			{
 				if (CInput::Key('F'))
 				{
-					mTimeStartSwitch = false;
+					mIsTimeStart = false;
 					ChangeAvoid();
 					mElapsedDemoTime = 0.0f;
 				}
@@ -1072,7 +1072,7 @@ void CPlayer::UpdateAvoid()
 		if (IsAnimationFinished())
 		{
 			mIsAvoiding = false;
-			mTimeStartSwitch = true;
+			mIsTimeStart = true;
 			ChangeState(EState::eBattleIdle);
 		}
 		break;

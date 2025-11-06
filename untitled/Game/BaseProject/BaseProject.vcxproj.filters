@@ -113,6 +113,9 @@
     <Filter Include="ソース ファイル\Game\UI\GameClear">
       <UniqueIdentifier>{952ef8bc-c9b4-467e-b23f-a7bd29c3bb82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\State">
+      <UniqueIdentifier>{d5edd689-3b19-4fdd-8a72-be6c80f03ed5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -438,6 +441,12 @@
     </ClCompile>
     <ClCompile Include="src\CAttackPowerUI.cpp">
       <Filter>ソース ファイル\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CStateMachine.cpp">
+      <Filter>ソース ファイル\Game\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CStateBase.cpp">
+      <Filter>ソース ファイル\Game\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -788,6 +797,12 @@
     </ClInclude>
     <ClInclude Include="src\CAttackPowerUI.h">
       <Filter>ソース ファイル\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CStateMachine.h">
+      <Filter>ソース ファイル\Game\State</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CStateBase.h">
+      <Filter>ソース ファイル\Game\State</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

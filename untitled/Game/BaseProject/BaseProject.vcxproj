@@ -76,6 +76,8 @@
     <ClCompile Include="src\BaseSystem\System.cpp" />
     <ClCompile Include="src\CAttackPowerUI.cpp" />
     <ClCompile Include="src\CStateBase.cpp" />
+    <ClCompile Include="src\CStateIdel.cpp" />
+    <ClCompile Include="src\CStateIdle.cpp" />
     <ClCompile Include="src\CStateMachine.cpp" />
     <ClCompile Include="src\Game\CApplication.cpp" />
     <ClCompile Include="src\Game\CBullet.cpp" />
@@ -196,6 +198,7 @@
     <ClInclude Include="src\BaseSystem\Times.h" />
     <ClInclude Include="src\CAttackPowerUI.h" />
     <ClInclude Include="src\CStateBase.h" />
+    <ClInclude Include="src\CStateIdle.h" />
     <ClInclude Include="src\CStateMachine.h" />
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Game\CApplication.h" />

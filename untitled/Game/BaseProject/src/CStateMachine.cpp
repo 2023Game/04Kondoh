@@ -10,9 +10,12 @@ void CStateMachine::Update()
 
 void CStateMachine::ChangeState(std::shared_ptr<CStateBase> newState)
 {
-	// 現在のステートが nullptrじゃ無かったら
-	if (mCurrentState) return mCurrentState->OnExit();
-
+	// 前のステートを終了
+	if (mCurrentState) return mCurrentState->OnEnd();
+	// 新しいステートを代入
+	mCurrentState = newState;
+	// 新しいステートを開始
+	if (mCurrentState) return mCurrentState->OnStart();
 
 }
 

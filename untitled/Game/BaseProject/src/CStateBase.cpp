@@ -14,6 +14,6 @@ void CStateBase::OnUpdate()
 {
 }
 
-void CStateBase::OnExit()
+void CStateBase::OnEnd()
 {
 }

@@ -113,8 +113,11 @@
     <Filter Include="ソース ファイル\Game\UI\GameClear">
       <UniqueIdentifier>{952ef8bc-c9b4-467e-b23f-a7bd29c3bb82}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Game\State">
+    <Filter Include="ソース ファイル\Game\StateMachine">
       <UniqueIdentifier>{d5edd689-3b19-4fdd-8a72-be6c80f03ed5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\StateMachine\States">
+      <UniqueIdentifier>{64670823-3369-4dc1-9038-a79530477cc3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -443,10 +446,16 @@
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\CStateMachine.cpp">
-      <Filter>ソース ファイル\Game\State</Filter>
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\CStateBase.cpp">
-      <Filter>ソース ファイル\Game\State</Filter>
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CStateIdle.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CStateIdel.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -799,10 +808,13 @@
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\CStateMachine.h">
-      <Filter>ソース ファイル\Game\State</Filter>
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="src\CStateBase.h">
-      <Filter>ソース ファイル\Game\State</Filter>
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CStateIdle.h">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

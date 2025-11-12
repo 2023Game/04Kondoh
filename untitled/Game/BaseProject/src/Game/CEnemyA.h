@@ -192,10 +192,10 @@ private:
 	// 頭の正面方向ベクトルを取得
 //	CVector GetHeadForwardVec() const;
 
-	// 次に巡回するポイントを変更
-	bool ChangePatrolPoint();
-	// 巡回ルートを更新する
-	bool UpdatePatrolRoute();
+	//// 次に巡回するポイントを変更
+	//bool ChangePatrolPoint();
+	//// 巡回ルートを更新する
+	//bool UpdatePatrolRoute();
 
 
 	// ↓ステートベースAI↓
@@ -318,15 +318,15 @@ private:
 	bool mIsDetectedPlayerAttack;
 	
 
-	// プレイヤーを見失った位置のノード
-	CNavNode* mpLostPlayerNode; 
-	// 巡回ポイントのリスト
-	std::vector<CNavNode*> mPatrolPoints;
-	// 求めた最短経路記憶用
-	std::vector<CNavNode*> mMoveRoute;
-	// 次に巡回するポイントの番号
-	int mNextPatrolIndex;
-	// 次に移動するノードのインデックス値
-	int mNextMoveIndex;		
+	//// プレイヤーを見失った位置のノード
+	//CNavNode* mpLostPlayerNode; 
+	//// 巡回ポイントのリスト
+	//std::vector<CNavNode*> mPatrolPoints;
+	//// 求めた最短経路記憶用
+	//std::vector<CNavNode*> mMoveRoute;
+	//// 次に巡回するポイントの番号
+	//int mNextPatrolIndex;
+	//// 次に移動するノードのインデックス値
+	//int mNextMoveIndex;		
 };
 #endif

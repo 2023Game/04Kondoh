@@ -6,9 +6,13 @@
 #include "CColliderCapsule.h"
 #include "CGaugeUI3D.h"
 #include "CEnemyManager.h"
+#include "CNavNode.h"
+#include "CNavManager.h"
 #include "Maths.h"
 
 #define GRAVITY 0.0625f;
+#define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
+#define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
 
 // コンストラクタ
 CEnemyBase::CEnemyBase()
@@ -30,6 +34,8 @@ CEnemyBase::CEnemyBase()
 	, mGroundNormal(CVector::up)
 	, mpBodyCol(nullptr)
 	, mpHpGauge(nullptr)
+	, mNextPatrolIndex(-1)
+	, mNextMoveIndex(0)
 {
 	CEnemyManager* enemy = CEnemyManager::Instance();
 	//　HPゲージを作成
@@ -212,21 +218,6 @@ void CEnemyBase::Parry()
 {
 }
 
-// アニメーション切り替え
-void CEnemyBase::ChangeAnimation(int type, bool restart)
-{
-	if (mpAnimData == nullptr) return;
-	if (!(0 <= type && type < mpAnimData->size())) return;
-	AnimData data = (*mpAnimData)[type];
-	CXCharacter::ChangeAnimation
-	(
-		type,
-		data.loop,
-		data.frameLength,
-		restart
-	);
-	CXCharacter::SetAnimationSpeed(data.speed);
-}
 
 bool CEnemyBase::IsFoundPlayer() const
 {
@@ -315,11 +306,13 @@ CVector CEnemyBase::GetHeadForwardVec() const
 	return vec.Normalized();
 }
 
-// 状態切り替え
+// 状態切り替え処理
 void CEnemyBase::ChangeState(int state)
 {
-	// 同じ状態の場合は切り替えない
-	if (state == mState) return;
+	mStateMachine.ChangeState(state);
+
+	//// 同じ状態の場合は切り替えない
+	//if (state == mState) return;
 
 	// 状態を変更して、状態関連の変数を初期化
 	mState = state;
@@ -327,6 +320,7 @@ void CEnemyBase::ChangeState(int state)
 	mElapsedTime = 0.0f;
 }
 
+// 攻撃タイプ切り替え処理
 void CEnemyBase::ChangeAttackType(int attacktype)
 {
 	if (attacktype == mAttackType) return;
@@ -339,6 +333,94 @@ void CEnemyBase::ChangeAttackType(int attacktype)
 	const AttackData& data = (*mpAttackData)[mAttackType];
 	mAttackDir = data.dir;
 	mAttackPower = data.power;
+}
+
+// アニメーション切り替え処理
+void CEnemyBase::ChangeAnimation(int type, bool restart)
+{
+	if (mpAnimData == nullptr) return;
+	if (!(0 <= type && type < mpAnimData->size())) return;
+	AnimData data = (*mpAnimData)[type];
+	CXCharacter::ChangeAnimation
+	(
+		type,
+		data.loop,
+		data.frameLength,
+		restart
+	);
+	CXCharacter::SetAnimationSpeed(data.speed);
+}
+
+// 次に巡回するポイントを変更
+bool CEnemyBase::ChangePatrolPoint()
+{
+	// 自身の経路探索用ノードが更新中の場合は、処理しない
+	if (mpNavNode->IsUpdaing()) return false;
+	// 巡回ポイントが設定されていない場合は、処理しない
+	int size = mPatrolPoints.size();
+	if (size == 0) return false;
+
+	// 巡回開始時であれば、一番近い巡回ポイントを選択
+	if (mNextPatrolIndex == -1)
+	{
+		int nearIndex = -1;     // 一番近い巡回ポイントの番号
+		float nearDist = 0.0f;  // 一番近い巡回ポイントまでの距離
+		// 全ての巡回ポイントを調べ、一番近い巡回ポイントを探す
+		for (int i = 0; i < size; i++)
+		{
+			CVector point = mPatrolPoints[i]->GetPos();
+			CVector vec = point - Position();
+			vec.Y(0.0f);
+			float dist = vec.Length();
+			// 巡回ポイントが近すぎる場合は、スルー
+			if (dist < PATROL_NEAR_DIST) continue;
+
+			// 一番近い巡回ポイントもしくは、
+			// 現在一番近い巡回ポイントよりさらに近い場合は、
+			// 巡回ポイントの番号を置き換える
+			if (nearIndex < 0 || dist < nearDist)
+			{
+				nearIndex = i;
+				nearDist = dist;
+			}
+		}
+		mNextPatrolIndex = nearIndex;
+	}
+	// 巡回中だった場合、次の巡回ポイントを指定する
+	else
+	{
+		mNextPatrolIndex++;
+		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
+	}
+
+	return mNextPatrolIndex >= 0;
+}
+
+bool CEnemyBase::UpdatePatrolRoute()
+{
+	// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
+	// 各ノードへの接続情報を更新
+	for (CNavNode* node : mPatrolPoints)
+	{
+		node->SetPos(node->GetPos());
+	}
+
+	if (!(0 <= mNextPatrolIndex && mNextPatrolIndex < mPatrolPoints.size())) return false;
+
+	CNavManager* navMgr = CNavManager::Instance();
+	if (navMgr == nullptr) return false;
+
+	// 自身のノードが更新中ならば、経路探索を行わない
+	if (mpNavNode->IsUpdaing()) return false;
+	// 巡回ポイントが更新中ならば、経路探索を行わない
+	CNavNode* patrolPoint = mPatrolPoints[mNextPatrolIndex];
+	if (patrolPoint->IsUpdaing()) return false;
+	// 巡回ポイントまでの最短経路を求める
+	if (navMgr->Navigate(mpNavNode, patrolPoint, mMoveRoute))
+	{
+		// 次の目的地のインデックスを設定
+		mNextMoveIndex = 1;
+	}
 }
 
 

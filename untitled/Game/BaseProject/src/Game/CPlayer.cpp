@@ -891,7 +891,7 @@ void CPlayer::UpdateBattleIdle()
 		if (mIsTimeStart)
 		{
 			// クールタイムを計測
-			if (mElapsedDemoTime > AVO_COOL_TIME && IsHit())
+			if (mElapsedDemoTime > AVO_COOL_TIME )
 			{
 				if (CInput::Key('F'))
 				{

@@ -79,6 +79,7 @@
     <ClCompile Include="src\CStateIdel.cpp" />
     <ClCompile Include="src\CStateIdle.cpp" />
     <ClCompile Include="src\CStateMachine.cpp" />
+    <ClCompile Include="src\CStatePatrol.cpp" />
     <ClCompile Include="src\Game\CApplication.cpp" />
     <ClCompile Include="src\Game\CBullet.cpp" />
     <ClCompile Include="src\Game\CClearScene.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="src\CStateBase.h" />
     <ClInclude Include="src\CStateIdle.h" />
     <ClInclude Include="src\CStateMachine.h" />
+    <ClInclude Include="src\CStatePatrol.h" />
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Game\CApplication.h" />
     <ClInclude Include="src\Game\CBullet.h" />

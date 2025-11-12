@@ -1,23 +1,30 @@
 #pragma once
-#include <memory>
+#include "CStateBase.h"
 
-class CStateBase;
-
-class CStateMachine : public CTask {
+class CStateMachine
+{
 public:
-
-	CStateMachine() = default;
-	~CStateMachine() = default;
+	// コンストラクタ
+	CStateMachine();
+	// デストラクタ
+	~CStateMachine();
 
 	// 更新処理
 	void Update();
+
+	// 状態の登録
+	void RegisterState(int index, CStateBase* state);
 	// 状態を変更する関数
-	void ChangeState(std::shared_ptr<CStateBase> newState);
-	// 現在のステートのゲッタ
-	std::shared_ptr<CStateBase> GetCurrentState() const;
+	void ChangeState(int index);
+
+#if _DEBUG
+	// デバッグ表示
+	void DebugRender();
+#endif
 
 private:
-	// 現在のステート
-	std::shared_ptr<CStateBase> mCurrentState;
-
+	// 現在の状態
+	CStateBase* mpCuttent;
+	// 登録してある状態リスト
+	std::vector<CStateBase*> mStates;
 };

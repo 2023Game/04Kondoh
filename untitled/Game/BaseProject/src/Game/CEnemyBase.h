@@ -3,7 +3,8 @@
 
 #include "CXCharacter.h"
 #include "CCollider.h"
-#include "Cmodel.h"
+#include "CModel.h"
+#include "CStateMachine.h"
 
 class CGaugeUI3D;
 
@@ -53,10 +54,21 @@ public:
 	//オブジェクトを削除を伝える関数
 	void DeleteObject(CObjectBase* obj) override;
 
+	// パリィ
+	virtual void Parry();
+
+
 	// アタックパリィ出来るかどうか
 	bool CheckAttackParry(EAttackDir dir, EAttackPower power) const override;
 	// ガードパリィ出来るかどうか
 	bool CheckGuardParry() const override;
+
+	// 状態切り替え処理
+	virtual void ChangeState(int state);
+	// 攻撃タイプ切り替え処理
+	virtual void ChangeAttackType(int attacktype);
+	// アニメーション切り替え処理
+	void ChangeAnimation(int type, bool restart = false);
 
 	/// <summary>
 	/// 衝突処理
@@ -65,9 +77,6 @@ public:
 	/// <param name="other">衝突した相手のコライダー</param>
 	/// <param name="hit">衝突した時の情報</param>
 	void Collision(CCollider* self, CCollider* other, const CHitInfo& hit) override;
-
-	// パリィ
-	virtual void Parry();
 
 	// 更新
 	void Update() override;
@@ -82,13 +91,6 @@ protected:
 	// 敵の初期化
 	void InitEnemy(std::string path, const std::vector<AnimData>* pAnimData);
 
-	// 状態切り替え
-	virtual void ChangeState(int state);
-	// 攻撃タイプ切り替え
-	virtual void ChangeAttackType(int attacktype);
-	// アニメーション切り替え
-	void ChangeAnimation(int type, bool restart = false);
-
 	// プレイヤーが視野範囲内に入ったかどうか
 	bool IsFoundPlayer() const;
 	// 現在位置からプレイヤーが見えているかどうか
@@ -97,6 +99,11 @@ protected:
 	void SetAngLeng(float angle, float length);
 	// 頭の正面方向ベクトルを取得
 	CVector GetHeadForwardVec() const;
+
+	// 次に巡回するポイントを変更
+	bool ChangePatrolPoint();
+	// 巡回ルートを更新する
+	bool UpdatePatrolRoute();
 
 	float mFovAngle;	// 視野範囲の角度
 	float mFovLength;	// 視野範囲の距離
@@ -131,6 +138,21 @@ protected:
 	CVector mGaugeOffsetPos;	// ゲージのオフセット座標
 
 	const CMatrix* mpHeadMtx;	// 頭の行列を取得
+
+	// 敵の行動を管理するステートマシン
+	CStateMachine mStateMachine;	
+
+
+	// プレイヤーを見失った位置のノード
+	CNavNode* mpLostPlayerNode;
+	// 巡回ポイントのリスト
+	std::vector<CNavNode*> mPatrolPoints;
+	// 求めた最短経路記憶用
+	std::vector<CNavNode*> mMoveRoute;
+	// 次に巡回するポイントの番号
+	int mNextPatrolIndex;
+	// 次に移動するノードのインデックス値
+	int mNextMoveIndex;
 };
 
 #endif // !CENEMYBASE_H

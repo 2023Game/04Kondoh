@@ -183,8 +183,6 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 	, mAvoidAnim(0)
 	, mAttackCount(0)
 	, mTackleCount(0)
-	, mNextPatrolIndex(-1)
-	, mNextMoveIndex(0)
 {
 	Position(pos);
 
@@ -1068,77 +1066,77 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 	}
 }
 
-// 次に巡回するポイントを変更
-bool CEnemyA::ChangePatrolPoint()
-{
-	// 自身の経路探索用ノードが更新中の場合は、処理しない
-	if (mpNavNode->IsUpdaing()) return false;
-	// 巡回ポイントが設定されていない場合は、処理しない
-	int size = mPatrolPoints.size();
-	if (size == 0) return false;
-
-	// 巡回開始時であれば、一番近い巡回ポイントを選択
-	if (mNextPatrolIndex == -1)
-	{
-		int nearIndex = -1;     // 一番近い巡回ポイントの番号
-		float nearDist = 0.0f;  // 一番近い巡回ポイントまでの距離
-		// 全ての巡回ポイントを調べ、一番近い巡回ポイントを探す
-		for (int i = 0; i < size; i++)
-		{
-			CVector point = mPatrolPoints[i]->GetPos();
-			CVector vec = point - Position();
-			vec.Y(0.0f);
-			float dist = vec.Length();
-			// 巡回ポイントが近すぎる場合は、スルー
-			if (dist < PATROL_NEAR_DIST) continue;
-
-			// 一番近い巡回ポイントもしくは、
-			// 現在一番近い巡回ポイントよりさらに近い場合は、
-			// 巡回ポイントの番号を置き換える
-			if (nearIndex < 0 || dist < nearDist)
-			{
-				nearIndex = i;
-				nearDist = dist;
-			}
-		}
-		mNextPatrolIndex = nearIndex;
-	}
-	// 巡回中だった場合、次の巡回ポイントを指定する
-	else 
-	{
-		mNextPatrolIndex++;
-		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
-	}
-
-	return mNextPatrolIndex >= 0;
-}
-
-bool CEnemyA::UpdatePatrolRoute()
-{
-	// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
-	// 各ノードへの接続情報を更新
-	for (CNavNode* node : mPatrolPoints)
-	{
-		node->SetPos(node->GetPos());
-	}
-
-	if (!(0 <= mNextPatrolIndex && mNextPatrolIndex < mPatrolPoints.size())) return false;
-
-	CNavManager* navMgr = CNavManager::Instance();
-	if (navMgr == nullptr) return false;
-
-	// 自身のノードが更新中ならば、経路探索を行わない
-	if (mpNavNode->IsUpdaing()) return false;
-	// 巡回ポイントが更新中ならば、経路探索を行わない
-	CNavNode* patrolPoint = mPatrolPoints[mNextPatrolIndex];
-	if (patrolPoint->IsUpdaing()) return false;
-	// 巡回ポイントまでの最短経路を求める
-	if (navMgr->Navigate(mpNavNode, patrolPoint, mMoveRoute))
-	{
-		// 次の目的地のインデックスを設定
-		mNextMoveIndex = 1;
-	}
-}
+//// 次に巡回するポイントを変更
+//bool CEnemyA::ChangePatrolPoint()
+//{
+//	// 自身の経路探索用ノードが更新中の場合は、処理しない
+//	if (mpNavNode->IsUpdaing()) return false;
+//	// 巡回ポイントが設定されていない場合は、処理しない
+//	int size = mPatrolPoints.size();
+//	if (size == 0) return false;
+//
+//	// 巡回開始時であれば、一番近い巡回ポイントを選択
+//	if (mNextPatrolIndex == -1)
+//	{
+//		int nearIndex = -1;     // 一番近い巡回ポイントの番号
+//		float nearDist = 0.0f;  // 一番近い巡回ポイントまでの距離
+//		// 全ての巡回ポイントを調べ、一番近い巡回ポイントを探す
+//		for (int i = 0; i < size; i++)
+//		{
+//			CVector point = mPatrolPoints[i]->GetPos();
+//			CVector vec = point - Position();
+//			vec.Y(0.0f);
+//			float dist = vec.Length();
+//			// 巡回ポイントが近すぎる場合は、スルー
+//			if (dist < PATROL_NEAR_DIST) continue;
+//
+//			// 一番近い巡回ポイントもしくは、
+//			// 現在一番近い巡回ポイントよりさらに近い場合は、
+//			// 巡回ポイントの番号を置き換える
+//			if (nearIndex < 0 || dist < nearDist)
+//			{
+//				nearIndex = i;
+//				nearDist = dist;
+//			}
+//		}
+//		mNextPatrolIndex = nearIndex;
+//	}
+//	// 巡回中だった場合、次の巡回ポイントを指定する
+//	else 
+//	{
+//		mNextPatrolIndex++;
+//		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
+//	}
+//
+//	return mNextPatrolIndex >= 0;
+//}
+//
+//bool CEnemyA::UpdatePatrolRoute()
+//{
+//	// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
+//	// 各ノードへの接続情報を更新
+//	for (CNavNode* node : mPatrolPoints)
+//	{
+//		node->SetPos(node->GetPos());
+//	}
+//
+//	if (!(0 <= mNextPatrolIndex && mNextPatrolIndex < mPatrolPoints.size())) return false;
+//
+//	CNavManager* navMgr = CNavManager::Instance();
+//	if (navMgr == nullptr) return false;
+//
+//	// 自身のノードが更新中ならば、経路探索を行わない
+//	if (mpNavNode->IsUpdaing()) return false;
+//	// 巡回ポイントが更新中ならば、経路探索を行わない
+//	CNavNode* patrolPoint = mPatrolPoints[mNextPatrolIndex];
+//	if (patrolPoint->IsUpdaing()) return false;
+//	// 巡回ポイントまでの最短経路を求める
+//	if (navMgr->Navigate(mpNavNode, patrolPoint, mMoveRoute))
+//	{
+//		// 次の目的地のインデックスを設定
+//		mNextMoveIndex = 1;
+//	}
+//}
 
 // 待機状態の更新処理
 void CEnemyA::UpdateIdle()

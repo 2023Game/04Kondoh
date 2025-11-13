@@ -6,9 +6,9 @@ class CStatePatrol : public CStateBase
 public:
 	CStatePatrol(CEnemyBase* owner);
 
-	//void Enter() override;
+	void Enter() override;
 
-	//void Update() override;
+	void Update() override;
 
 private:
 

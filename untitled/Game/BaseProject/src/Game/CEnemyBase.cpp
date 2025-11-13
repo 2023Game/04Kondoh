@@ -336,7 +336,7 @@ void CEnemyBase::ChangeAttackType(int attacktype)
 }
 
 // アニメーション切り替え処理
-void CEnemyBase::ChangeAnimation(int type, bool restart)
+void CEnemyBase::ChangeAnimation(int type, int no, bool restart)
 {
 	if (mpAnimData == nullptr) return;
 	if (!(0 <= type && type < mpAnimData->size())) return;
@@ -346,7 +346,8 @@ void CEnemyBase::ChangeAnimation(int type, bool restart)
 		type,
 		data.loop,
 		data.frameLength,
-		restart
+		restart,
+		no
 	);
 	CXCharacter::SetAnimationSpeed(data.speed);
 }

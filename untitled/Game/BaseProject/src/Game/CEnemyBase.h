@@ -68,7 +68,7 @@ public:
 	// 攻撃タイプ切り替え処理
 	virtual void ChangeAttackType(int attacktype);
 	// アニメーション切り替え処理
-	void ChangeAnimation(int type, bool restart = false);
+	void ChangeAnimation(int type, int no = 0, bool restart = false);
 
 	/// <summary>
 	/// 衝突処理

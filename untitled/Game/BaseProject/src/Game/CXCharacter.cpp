@@ -51,7 +51,7 @@ loop:true:繰り返す
 framesize:最後まで再生するのに使用されるフレーム数
 */
 void CXCharacter::ChangeAnimation(int index, bool loop,
-	float framesize, bool restart)
+	float framesize, bool restart, int no)
 {
 	//最初から開始しない場合かつ、同じアニメーションの場合は切り替えない
 	if (!restart && mAnimationIndex == index) return;

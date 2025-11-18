@@ -57,7 +57,6 @@ public:
 	// パリィ
 	virtual void Parry();
 
-
 	// アタックパリィ出来るかどうか
 	bool CheckAttackParry(EAttackDir dir, EAttackPower power) const override;
 	// ガードパリィ出来るかどうか
@@ -82,6 +81,11 @@ public:
 	void Update() override;
 	// 描画
 	void Render() override;
+
+	// 指定した位置まで移動する
+	bool MoveTo(const CVector& targetPos, float speed);
+	// ナビゲーションで移動するノードを決める
+	void NavMove(float speed);
 
 protected:
 

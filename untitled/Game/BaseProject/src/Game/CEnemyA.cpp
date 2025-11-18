@@ -26,7 +26,6 @@
 #define WALK_SPEED 10.0f        // 歩きの速度
 #define BATTLE_WALK_SPEED 0.01f	// 戦闘時の移動
 #define RUN_SPEED 55.0f         // 走っている時の速度
-#define ROTATE_SPEED 6.0f       // 回転速度
 #define LOOKAT_SPEED 4.0f		// 対象の方向に向く速度
 
 #define IDLE_TIME 5.0f          // 待機状態の時間
@@ -994,47 +993,47 @@ void CEnemyA::AttackPickDetect()
 }
 
 
-// 指定した位置まで移動する
-bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
-{
-	// 目的地までのベクトルを求める
-	CVector pos = Position();
-	CVector vec = targetPos - pos;
-	vec.Y(0.0f);
-
-	// 移動方向ベクトルを求める
-	CVector moveDir = vec.Normalized();
-
-	// 徐々に移動方向へ向ける
-	CVector forward = CVector::Slerp
-	(
-		VectorZ(), // 現在の正面
-		moveDir,   // 移動方向
-		ROTATE_SPEED * Times::DeltaTime()
-	);
-	Rotation(CQuaternion::LookRotation(forward));
-
-	// 今回の移動距離を求める
-	float moveDist = speed * Times::DeltaTime();
-	// 目的地までの残りの距離
-	float remainDist = vec.Length();
-	// 残りの距離が移動距離より短い場合
-	if (remainDist <= moveDist)
-	{
-		// 目的地まで移動する
-		pos = CVector(targetPos.X(), pos.Y(), targetPos.Z());
-		Position(pos);
-		return true;    // 目的地に到着したので、trueを返す
-	}
-
-	// 残りの距離が移動距離より長い場合は、
-	// 移動距離分目的地へ移動
-	pos += moveDir * moveDist;
-	Position(pos);
-
-	// 目的地には到着しなかった
-	return false;
-}
+//// 指定した位置まで移動する
+//bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
+//{
+//	// 目的地までのベクトルを求める
+//	CVector pos = Position();
+//	CVector vec = targetPos - pos;
+//	vec.Y(0.0f);
+//
+//	// 移動方向ベクトルを求める
+//	CVector moveDir = vec.Normalized();
+//
+//	// 徐々に移動方向へ向ける
+//	CVector forward = CVector::Slerp
+//	(
+//		VectorZ(), // 現在の正面
+//		moveDir,   // 移動方向
+//		ROTATE_SPEED * Times::DeltaTime()
+//	);
+//	Rotation(CQuaternion::LookRotation(forward));
+//
+//	// 今回の移動距離を求める
+//	float moveDist = speed * Times::DeltaTime();
+//	// 目的地までの残りの距離
+//	float remainDist = vec.Length();
+//	// 残りの距離が移動距離より短い場合
+//	if (remainDist <= moveDist)
+//	{
+//		// 目的地まで移動する
+//		pos = CVector(targetPos.X(), pos.Y(), targetPos.Z());
+//		Position(pos);
+//		return true;    // 目的地に到着したので、trueを返す
+//	}
+//
+//	// 残りの距離が移動距離より長い場合は、
+//	// 移動距離分目的地へ移動
+//	pos += moveDir * moveDist;
+//	Position(pos);
+//
+//	// 目的地には到着しなかった
+//	return false;
+//}
 
 
 

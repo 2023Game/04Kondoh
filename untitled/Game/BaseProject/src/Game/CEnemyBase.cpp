@@ -13,6 +13,8 @@
 #define GRAVITY 0.0625f;
 #define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
+#define ROTATE_SPEED 6.0f       // 回転速度
+
 
 // コンストラクタ
 CEnemyBase::CEnemyBase()
@@ -216,6 +218,63 @@ void CEnemyBase::Collision(CCollider* self, CCollider* other, const CHitInfo& hi
 
 void CEnemyBase::Parry()
 {
+}
+
+bool CEnemyBase::MoveTo(const CVector& targetPos, float speed)
+{
+	// 目的地までのベクトルを求める
+	CVector pos = Position();
+	CVector vec = targetPos - pos;
+	vec.Y(0.0f);
+
+	// 移動方向ベクトルを求める
+	CVector moveDir = vec.Normalized();
+
+	// 徐々に移動方向へ向ける
+	CVector forward = CVector::Slerp
+	(
+		VectorZ(), // 現在の正面
+		moveDir,   // 移動方向
+		ROTATE_SPEED * Times::DeltaTime()
+	);
+	Rotation(CQuaternion::LookRotation(forward));
+
+	// 今回の移動距離を求める
+	float moveDist = speed * Times::DeltaTime();
+	// 目的地までの残りの距離
+	float remainDist = vec.Length();
+	// 残りの距離が移動距離より短い場合
+	if (remainDist <= moveDist)
+	{
+		// 目的地まで移動する
+		pos = CVector(targetPos.X(), pos.Y(), targetPos.Z());
+		Position(pos);
+		return true;    // 目的地に到着したので、trueを返す
+	}
+
+	// 残りの距離が移動距離より長い場合は、
+	// 移動距離分目的地へ移動
+	pos += moveDir * moveDist;
+	Position(pos);
+
+	// 目的地には到着しなかった
+	return false;
+}
+
+void CEnemyBase::NavMove(float speed)
+{
+	// 最短経路の次のノードまで移動
+	CNavNode* moveNode = mMoveRoute[mNextMoveIndex];
+	if (MoveTo(moveNode->GetPos(), speed))
+	{
+		// 移動が終われば、次のノードへ切り替え
+		mNextMoveIndex++;
+		// 最後のノード（目的地のノード）だった場合は、次のステップへ進める
+		if (mNextMoveIndex >= mMoveRoute.size())
+		{
+			mStateStep++;
+		}
+	}
 }
 
 

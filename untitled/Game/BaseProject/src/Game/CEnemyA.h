@@ -183,8 +183,8 @@ private:
 	// どの攻撃をするか判定する
 	void AttackPickDetect();
 
-	// 指定した位置まで移動する
-	bool MoveTo(const CVector& targetPos, float speed);
+	//// 指定した位置まで移動する
+	//bool MoveTo(const CVector& targetPos, float speed);
 
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);

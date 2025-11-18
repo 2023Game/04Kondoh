@@ -36,18 +36,7 @@ void CStatePatrol::Update()
 	case 0:
 	{
 		ChangeAnimation((int)EAnimType::eWalk);
-		// 最短経路の次のノードまで移動
-		CNavNode* moveNode = mMoveRoute[mNextMoveIndex];
-		if (MoveTo(moveNode->GetPos(), WALK_SPEED))
-		{
-			// 移動が終われば、次のノードへ切り替え
-			mNextMoveIndex++;
-			// 最後のノード（目的地のノード）だった場合は、次のステップへ進める
-			if (mNextMoveIndex >= mMoveRoute.size())
-			{
-				mStateStep++;
-			}
-		}
+
 		break;
 	}
 	// ステップ3：移動後の待機

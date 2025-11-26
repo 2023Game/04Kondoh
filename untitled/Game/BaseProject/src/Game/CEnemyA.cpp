@@ -1392,12 +1392,12 @@ void CEnemyA::UpdateLost()
 		mElapsedTime = 0.0f;
 		mStateStep++;
 		break;
-		// ステップ1：見失った位置までの最短経路を求める
-	case 1:
+
+	case 1:	// ステップ1：見失った位置までの最短経路を求める
 		// 
 		mpLostPlayerNode->SetPos(target->Position());
 
-		// 自身のノードと見失った位置のノードが更新中でなければ
+		// 自身のノードと見失った位置のノードが更新中でなければ（更新が終わってたら）
 		if (!mpNavNode->IsUpdaing() && !mpLostPlayerNode->IsUpdaing())
 		{
 			if (!navMgr->Navigate(mpNavNode, mpLostPlayerNode, mMoveRoute))

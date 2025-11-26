@@ -5,14 +5,12 @@ class CStatePatrol : public CStateBase
 {
 public:
 	CStatePatrol(CEnemyBase* owner);
-	// 
+
 	void Enter() override;
 
 	void Update() override;
 
 private:
 
-	int mStateStep;	// ステートステップ
-	
-	float mElapsedTime;	// 経過時間計測用
+	int mStateStep;	// ステート
 };

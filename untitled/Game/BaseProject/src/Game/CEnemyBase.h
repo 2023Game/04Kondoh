@@ -82,10 +82,18 @@ public:
 	// 描画
 	void Render() override;
 
+	// 次に巡回するポイントを変更
+	bool ChangePatrolPoint();
+	// 巡回ルートを更新する
+	bool UpdatePatrolRoute();
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
-	// ナビゲーションで移動するノードを決める
-	void NavMove(float speed);
+	// 巡回時の移動
+	bool PatrolMove(const CVector& targetPos, float speed, bool cheace);
+	// 巡回ポイントの
+
+	// 次に巡回するポイント番号の設定
+	int SetNextIndex(int index);
 
 protected:
 
@@ -103,11 +111,6 @@ protected:
 	void SetAngLeng(float angle, float length);
 	// 頭の正面方向ベクトルを取得
 	CVector GetHeadForwardVec() const;
-
-	// 次に巡回するポイントを変更
-	bool ChangePatrolPoint();
-	// 巡回ルートを更新する
-	bool UpdatePatrolRoute();
 
 	float mFovAngle;	// 視野範囲の角度
 	float mFovLength;	// 視野範囲の距離

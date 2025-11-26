@@ -12,14 +12,14 @@ void CStatePatrol::Enter()
 	switch (mStateStep)
 	{
 	case 0:
-		mpOwner->SetNextIndex(-1);
-		if (mpOwner->ChangePatrolPoint())
+		mpOwner->mNextPatrolIndex = -1;
+		if (ChangePatrolPoint())
 		{
 			mStateStep++;
 		}
 		break;
 	case 1:
-		if (mpOwner->UpdatePatrolRoute())
+		if (UpdatePatrolRoute())
 		{
 			return;
 		}
@@ -36,11 +36,7 @@ void CStatePatrol::Update()
 	case 0:
 	{
 		ChangeAnimation((int)EAnimType::eWalk);
-		// 
-		if (mpOwner->PatrolMove(20))
-		{
-			mStateStep++;
-		}
+
 		break;
 	}
 	// ステップ3：移動後の待機

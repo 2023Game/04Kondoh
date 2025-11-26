@@ -75,10 +75,6 @@
     <ClCompile Include="src\BaseSystem\Maths.cpp" />
     <ClCompile Include="src\BaseSystem\System.cpp" />
     <ClCompile Include="src\CAttackPowerUI.cpp" />
-    <ClCompile Include="src\CStateBase.cpp" />
-    <ClCompile Include="src\CStateIdel.cpp" />
-    <ClCompile Include="src\CStateIdle.cpp" />
-    <ClCompile Include="src\CStateMachine.cpp" />
     <ClCompile Include="src\CStatePatrol.cpp" />
     <ClCompile Include="src\Game\CApplication.cpp" />
     <ClCompile Include="src\Game\CBullet.cpp" />
@@ -110,10 +106,14 @@
     <ClCompile Include="src\Game\CRotateFloor.cpp" />
     <ClCompile Include="src\Game\CSingleDoor.cpp" />
     <ClCompile Include="src\Game\CSlash.cpp" />
+    <ClCompile Include="src\Game\CStateBase.cpp" />
+    <ClCompile Include="src\Game\CStateIdle.cpp" />
+    <ClCompile Include="src\Game\CStateMachine.cpp" />
     <ClCompile Include="src\Game\CTitleScene.cpp" />
     <ClCompile Include="src\Game\CTitleUI.cpp" />
     <ClCompile Include="src\Game\CWall.cpp" />
     <ClCompile Include="src\Game\CXCharacter.cpp" />
+    <ClCompile Include="src\Game\CStateBTIdle.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Test\CBootMenuScene.cpp" />
     <ClCompile Include="src\Test\CColBase.cpp" />
@@ -198,9 +198,6 @@
     <ClInclude Include="src\BaseSystem\ObjectTag.h" />
     <ClInclude Include="src\BaseSystem\Times.h" />
     <ClInclude Include="src\CAttackPowerUI.h" />
-    <ClInclude Include="src\CStateBase.h" />
-    <ClInclude Include="src\CStateIdle.h" />
-    <ClInclude Include="src\CStateMachine.h" />
     <ClInclude Include="src\CStatePatrol.h" />
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Game\CApplication.h" />
@@ -233,6 +230,10 @@
     <ClInclude Include="src\Game\CRotateFloor.h" />
     <ClInclude Include="src\Game\CSingleDoor.h" />
     <ClInclude Include="src\Game\CSlash.h" />
+    <ClInclude Include="src\Game\CStateBase.h" />
+    <ClInclude Include="src\Game\CStateBTIdle.h" />
+    <ClInclude Include="src\Game\CStateIdle.h" />
+    <ClInclude Include="src\Game\CStateMachine.h" />
     <ClInclude Include="src\Game\CTitleUI.h" />
     <ClInclude Include="src\Game\CTitleScene.h" />
     <ClInclude Include="src\Game\CWall.h" />

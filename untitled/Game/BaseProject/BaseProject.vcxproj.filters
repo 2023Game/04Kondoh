@@ -445,20 +445,20 @@
     <ClCompile Include="src\CAttackPowerUI.cpp">
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\CStateMachine.cpp">
-      <Filter>ソース ファイル\Game\StateMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CStateBase.cpp">
-      <Filter>ソース ファイル\Game\StateMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CStateIdle.cpp">
-      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CStateIdel.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\CStatePatrol.cpp">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CStateBTIdle.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CStateIdle.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CStateMachine.cpp">
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CStateBase.cpp">
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -810,17 +810,20 @@
     <ClInclude Include="src\CAttackPowerUI.h">
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\CStateMachine.h">
-      <Filter>ソース ファイル\Game\StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CStateBase.h">
-      <Filter>ソース ファイル\Game\StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CStateIdle.h">
-      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
-    </ClInclude>
     <ClInclude Include="src\CStatePatrol.h">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStateBTIdle.h">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStateIdle.h">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStateMachine.h">
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStateBase.h">
+      <Filter>ソース ファイル\Game\StateMachine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

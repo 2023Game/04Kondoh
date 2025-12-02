@@ -659,6 +659,10 @@ void CEnemyA::Death()
 	ChangeState((int)EState::eDeath);
 }
 
+void CEnemyA::ChangeStateAnimation(int stateIndex, int no)
+{
+}
+
 // Õ“Ëˆ—
 void CEnemyA::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 {

@@ -262,7 +262,7 @@ bool CEnemyBase::MoveTo(const CVector& targetPos, float speed)
 }
 
 // 巡回
-bool CEnemyBase::PatrolMove(const CVector& targetPos, float speed, )
+bool CEnemyBase::PatrolMove(const CVector& targetPos, float speed)
 {
 	// 最短経路の次のノードまで移動
 	// CNavNode* moveNode = mMoveRoute[mNextMoveIndex]; moveNode->GetPos()
@@ -415,6 +415,10 @@ void CEnemyBase::ChangeAnimation(int type, int no, bool restart)
 		no
 	);
 	CXCharacter::SetAnimationSpeed(data.speed);
+}
+
+void CEnemyBase::ChangeStateAnimation(int stateIndex, int no)
+{
 }
 
 // 次に巡回するポイントを変更

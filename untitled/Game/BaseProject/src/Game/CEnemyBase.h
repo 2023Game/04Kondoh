@@ -68,6 +68,8 @@ public:
 	virtual void ChangeAttackType(int attacktype);
 	// アニメーション切り替え処理
 	void ChangeAnimation(int type, int no = 0, bool restart = false);
+	// ステートから呼び出すアニメーション切り替え処理
+	virtual void ChangeStateAnimation(int stateIndex, int no = 0);
 
 	/// <summary>
 	/// 衝突処理
@@ -89,7 +91,7 @@ public:
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
 	// 巡回時の移動
-	bool PatrolMove(const CVector& targetPos, float speed, bool cheace);
+	bool PatrolMove(const CVector& targetPos, float speed);
 	// 巡回ポイントの
 
 	// 次に巡回するポイント番号の設定

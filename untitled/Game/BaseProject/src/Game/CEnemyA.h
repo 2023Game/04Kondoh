@@ -58,6 +58,8 @@ public:
 	// 死亡処理
 	void Death() override;
 
+	void ChangeStateAnimation(int stateIndex, int no = 0) override;
+
 	/// <summary>
 	/// 衝突処理
 	/// </summary>
@@ -183,19 +185,11 @@ private:
 	// どの攻撃をするか判定する
 	void AttackPickDetect();
 
-	//// 指定した位置まで移動する
-	//bool MoveTo(const CVector& targetPos, float speed);
-
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);
 
 	// 頭の正面方向ベクトルを取得
 //	CVector GetHeadForwardVec() const;
-
-	//// 次に巡回するポイントを変更
-	//bool ChangePatrolPoint();
-	//// 巡回ルートを更新する
-	//bool UpdatePatrolRoute();
 
 
 	// ↓ステートベースAI↓

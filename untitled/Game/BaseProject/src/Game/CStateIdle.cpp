@@ -14,11 +14,13 @@ void CStateIdle::Enter()
 	CStateBase::Enter();
 
 	// 待機アニメーションを再生
-	/*ChangeAnimation((int)EAnimType::eIdle);*/
-	mpOwner->ChangeAnimation(mIndex);
+	mpOwner->ChangeStateAnimation(mIndex);
+
+	// 移動停止
+	mpOwner->SetMoveSpeed(CVector::zero);
 
 	// 経過時間初期化
-	//mElapsedTime = 0.0f;
+	mElapsedTime = 0.0f;
 }
 
 void CStateIdle::Update()
@@ -43,8 +45,6 @@ void CStateIdle::Update()
 	{
 		// 状態の処理を終了
 		mIsEnd = true;
-		// 待機時間が経過したら、巡回状態へ移行
-		/*ChangeState((int)EState::ePatrol);*/
 	}
 }
 

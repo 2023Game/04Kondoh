@@ -9,8 +9,14 @@ public:
 	// デストラクタ
 	~CStateMachine();
 
+	// 持ち主を設定
+	void SetOwner(CEnemyBase* owner);
+
 	// 更新処理
 	void Update();
+
+	// 現在のステートを取得
+	CStateBase* GetCurrentState() const;
 
 	// 状態の登録
 	void RegisterState(int index, CStateBase* state);
@@ -23,8 +29,11 @@ public:
 #endif
 
 private:
+	// このステートマシンの持ち主
+	CEnemyBase* mpOwner;
+
 	// 現在の状態
-	CStateBase* mpCuttent;
+	CStateBase* mpCurrent;
 	// 登録してある状態リスト
 	std::vector<CStateBase*> mStates;
 };

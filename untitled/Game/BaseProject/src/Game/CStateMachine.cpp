@@ -1,8 +1,10 @@
 #include "CStateMachine.h"
 #include "CStateBase.h"
+#include "CEnemyBase.h"
 
 CStateMachine::CStateMachine()
-	: mpCuttent(nullptr)
+	: mpOwner(nullptr)
+	, mpCurrent(nullptr)
 {
 }
 
@@ -23,18 +25,39 @@ CStateMachine::~CStateMachine()
 	}
 }
 
+// 持ち主を設定
+void CStateMachine::SetOwner(CEnemyBase* owner)
+{
+	mpOwner = owner;
+}
+
 void CStateMachine::Update()
 {
 	// 実行中の状態が存在する場合
-	if (mpCuttent != nullptr)
+	if (mpCurrent != nullptr)
 	{
 		// 実行中の状態の処理が終了してなければ
-		if (!mpCuttent->IsEnd())
+		if (!mpCurrent->IsEnd())
 		{
 			// 更新処理を呼び出す
-			mpCuttent->Update();
+			mpCurrent->Update();
+		}
+
+		// 他の状態への遷移条件を満たしているか
+		int nextStateId = mpCurrent->CheckTransition();
+		if (nextStateId >= 0)
+		{
+			// 遷移条件を満たしていたら、次の状態へ遷移
+			if (mpOwner != nullptr) mpOwner->ChangeState(nextStateId);
+			else ChangeState(nextStateId);
 		}
 	}
+}
+
+// 現在のステートを取得
+CStateBase* CStateMachine::GetCurrentState() const
+{
+	return mpCurrent;
 }
 
 // 状態の登録
@@ -59,22 +82,22 @@ void CStateMachine::RegisterState(int index, CStateBase* state)
 void CStateMachine::ChangeState(int index)
 {
 	// 既に実行中の状態が存在する場合
-	if (mpCuttent != nullptr)
+	if (mpCurrent != nullptr)
 	{
 		// 実行中の状態の終了処理を呼び出す
-		mpCuttent->Exit();
-		mpCuttent = nullptr;
+		mpCurrent->Exit();
+		mpCurrent = nullptr;
 	}
 
 	// 指定されたインデクス値が範囲外であれば、処理しない
 	if (!(0 <= index && index < mStates.size())) return;
 
 	// 指定された状態を、現在の状態に設定
-	mpCuttent = mStates[index];
+	mpCurrent = mStates[index];
 	// 現在の状態が存在する場合は、開始処理を呼び出す
-	if (mpCuttent != nullptr)
+	if (mpCurrent != nullptr)
 	{
-		mpCuttent->Enter();
+		mpCurrent->Enter();
 	}
 }
 
@@ -83,7 +106,7 @@ void CStateMachine::DebugRender()
 {
 	// 現在の状態をデバッグ表示
 	std::string str = "なし";
-	if (mpCuttent != nullptr) str = mpCuttent->GetName();
+	if (mpCurrent != nullptr) str = mpCurrent->GetName();
 	CDebugPrint::Print("状態：%S", str.c_str());
 }
 #endif

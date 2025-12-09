@@ -11,16 +11,18 @@
 #include "Maths.h"
 
 #define GRAVITY 0.0625f;
-#define PATROL_INTERVAL 3.0f    // 次の巡回に移動開始するまでの時間
-#define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
-#define ROTATE_SPEED 6.0f       // 回転速度
+#define PATROL_INTERVAL 3.0f		// 次の巡回に移動開始するまでの時間
+#define PATROL_NEAR_DIST 10.0f		// 巡回開始時に選択される巡回ポイントの最短距離
+#define ROTATE_SPEED 6.0f			// 回転速度
+#define DEFAULT_WALK_SPEED 10.0f	// 歩きの速度
+#define DEFAULT_RUN_SPEED 55.0f		// 走っている時の速度
 
+#define NAVMOVE_STOP_DIST 0.05f		// 経路探索での移動時に停止する距離
+#define UPDATE_MOVE_NODE_DIST 2.0f	// 移動用の経路探索ノードの更新処理
 
 // コンストラクタ
 CEnemyBase::CEnemyBase()
 	:CXCharacter(ETag::eEnemy, ETaskPriority::eEnemy)
-	, mState(0)
-	, mStateStep(0)
 	, mElapsedTime(0.0f)
 	, mBattleElapsedTime(0.0f)
 	, mIdleTime(0.0f)
@@ -29,6 +31,8 @@ CEnemyBase::CEnemyBase()
 	, mpAttackData(nullptr)
 	, mMoveSpeed(CVector::zero)
 	, mMoveSpeedY(0.0f)
+	, mWalkSpeed(DEFAULT_WALK_SPEED)
+	, mRunSpeed(DEFAULT_RUN_SPEED)
 	, mIsAttackParry(false)
 	, mIsGuardParry(false)
 	, mIsGrounded(false)
@@ -36,8 +40,9 @@ CEnemyBase::CEnemyBase()
 	, mGroundNormal(CVector::up)
 	, mpBodyCol(nullptr)
 	, mpHpGauge(nullptr)
-	, mNextPatrolIndex(-1)
+	, mpMoveNavNode(nullptr)
 	, mNextMoveIndex(0)
+	, mIsUpdateMoveRoute(false)
 {
 	CEnemyManager* enemy = CEnemyManager::Instance();
 	//　HPゲージを作成
@@ -47,6 +52,11 @@ CEnemyBase::CEnemyBase()
 
 	// エネミー管理クラスに自身を追加
 	enemy->Add(this);
+
+	// 移動用の経路探索ノードを作成
+	mpMoveNavNode = new CNavNode(CVector::zero, true);
+	// 移動用の経路探索ノードは最初は無効化しておく
+	mpMoveNavNode->SetEnable(false);
 }
 
 //デストラクタ
@@ -64,6 +74,9 @@ CEnemyBase::~CEnemyBase()
 		mpHpGauge->SetOwner(nullptr);
 		mpHpGauge->Kill();
 	}
+
+	// 移動用の経路探索ノードを削除
+	mpMoveNavNode->Kill();
 }
 
 //オブジェクトを削除を伝える関数
@@ -109,11 +122,9 @@ bool CEnemyBase::CheckGuardParry() const
 	return true;
 }
 
-// 指定のステートか
-bool CEnemyBase::IsState(int state)
+CStateBase* CEnemyBase::GetCurrentState() const
 {
-	if ((int)mState == state) return true;
-	return false;
+	return mStateMachine.GetCurrentState();
 }
 
 // 敵の初期化
@@ -261,26 +272,48 @@ bool CEnemyBase::MoveTo(const CVector& targetPos, float speed)
 	return false;
 }
 
-// 巡回
-bool CEnemyBase::PatrolMove(const CVector& targetPos, float speed)
+// 指定した位置まで経路探索で移動する
+bool CEnemyBase::NavMoveTo(const CVector& targetPos, float speed)
 {
-	// 最短経路の次のノードまで移動
-	// CNavNode* moveNode = mMoveRoute[mNextMoveIndex]; moveNode->GetPos()
-	if (MoveTo(targetPos, speed))
+	// 自分自身のノードが存在しなければ
+	if (mpNavNode == nullptr)
 	{
-		// 移動が終われば、次のノードへ切り替え
-		mNextMoveIndex++;
-		// 最後のノード（目的地のノード）だった場合は、次のステップへ進める
-		if (mNextMoveIndex >= mMoveRoute.size())
-		{
-			return true;
-		}
+		// 普通の移動処理を行う
+		return MoveTo(targetPos, speed);
 	}
+
+	// 目的地までの残りの距離
+	float remain = (targetPos - Position()).LengthSqr();
+	if (remain < NAVMOVE_STOP_DIST * NAVMOVE_STOP_DIST) return true;
+
+	// 次の目的地まで一定距離離れてたら、移動経路を更新
+	float dist = (mpMoveNavNode->GetPos() - targetPos).LengthSqr();
+	if (dist >= UPDATE_MOVE_NODE_DIST * UPDATE_MOVE_NODE_DIST)
+	{
+		// 移動先ノードをオンにして、目的地に設定
+		mpMoveNavNode->SetEnable(true);
+		mpMoveNavNode->SetPos(targetPos);
+		// 移動経路再計算用の初期化
+		mNextMoveIndex = -1;
+		mIsUpdateMoveRoute = true;
+	}
+
+	// 移動経路再計算フラグが立っているか
+
+	return false;
 }
 
-int CEnemyBase::SetNextIndex(int index)
+
+// 移動速度を設定
+void CEnemyBase::SetMoveSpeed(const CVector& moveSpeed)
 {
-	return mNextPatrolIndex = index;
+	mMoveSpeed = moveSpeed;
+}
+
+// 移動速度を取得
+const CVector& CEnemyBase::GetMoveSpeed() const
+{
+	return mMoveSpeed;
 }
 
 
@@ -375,14 +408,6 @@ CVector CEnemyBase::GetHeadForwardVec() const
 void CEnemyBase::ChangeState(int state)
 {
 	mStateMachine.ChangeState(state);
-
-	//// 同じ状態の場合は切り替えない
-	//if (state == mState) return;
-
-	// 状態を変更して、状態関連の変数を初期化
-	mState = state;
-	mStateStep = 0;
-	mElapsedTime = 0.0f;
 }
 
 // 攻撃タイプ切り替え処理
@@ -391,7 +416,7 @@ void CEnemyBase::ChangeAttackType(int attacktype)
 	if (attacktype == mAttackType) return;
 
 	mAttackType = attacktype;
-	mStateStep = 0;
+	//mStateStep = 0;
 	mElapsedTime = 0.0f;
 
 	// 攻撃の種類から攻撃のデータを取得
@@ -421,82 +446,13 @@ void CEnemyBase::ChangeStateAnimation(int stateIndex, int no)
 {
 }
 
-// 次に巡回するポイントを変更
-bool CEnemyBase::ChangePatrolPoint()
-{
-	// 自身の経路探索用ノードが更新中の場合は、処理しない
-	if (mpNavNode->IsUpdaing()) return false;
-	// 巡回ポイントが設定されていない場合は、処理しない
-	int size = mPatrolPoints.size();
-	if (size == 0) return false;
-
-	// 巡回開始時であれば、一番近い巡回ポイントを選択
-	if (mNextPatrolIndex == -1)
-	{
-		int nearIndex = -1;     // 一番近い巡回ポイントの番号
-		float nearDist = 0.0f;  // 一番近い巡回ポイントまでの距離
-		// 全ての巡回ポイントを調べ、一番近い巡回ポイントを探す
-		for (int i = 0; i < size; i++)
-		{
-			CVector point = mPatrolPoints[i]->GetPos();
-			CVector vec = point - Position();
-			vec.Y(0.0f);
-			float dist = vec.Length();
-			// 巡回ポイントが近すぎる場合は、スルー
-			if (dist < PATROL_NEAR_DIST) continue;
-
-			// 一番近い巡回ポイントもしくは、
-			// 現在一番近い巡回ポイントよりさらに近い場合は、
-			// 巡回ポイントの番号を置き換える
-			if (nearIndex < 0 || dist < nearDist)
-			{
-				nearIndex = i;
-				nearDist = dist;
-			}
-		}
-		mNextPatrolIndex = nearIndex;
-	}
-	// 巡回中だった場合、次の巡回ポイントを指定する
-	else
-	{
-		mNextPatrolIndex++;
-		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
-	}
-
-	return mNextPatrolIndex >= 0;
-}
-
-bool CEnemyBase::UpdatePatrolRoute()
-{
-	// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
-	// 各ノードへの接続情報を更新
-	for (CNavNode* node : mPatrolPoints)
-	{
-		node->SetPos(node->GetPos());
-	}
-
-	if (!(0 <= mNextPatrolIndex && mNextPatrolIndex < mPatrolPoints.size())) return false;
-
-	CNavManager* navMgr = CNavManager::Instance();
-	if (navMgr == nullptr) return false;
-
-	// 自身のノードが更新中ならば、経路探索を行わない
-	if (mpNavNode->IsUpdaing()) return false;
-	// 巡回ポイントが更新中ならば、経路探索を行わない
-	CNavNode* patrolPoint = mPatrolPoints[mNextPatrolIndex];
-	if (patrolPoint->IsUpdaing()) return false;
-	// 巡回ポイントまでの最短経路を求める
-	if (navMgr->Navigate(mpNavNode, patrolPoint, mMoveRoute))
-	{
-		// 次の目的地のインデックスを設定
-		mNextMoveIndex = 1;
-	}
-}
-
 
 // 更新
 void CEnemyBase::Update()
 {
+	// ステートマシンを更新
+	mStateMachine.Update();
+
 	// 重力
 	mMoveSpeedY -= GRAVITY;
 
@@ -520,6 +476,16 @@ void CEnemyBase::Update()
 void CEnemyBase::Render()
 {
 	CXCharacter::Render();
+}
+
+float CEnemyBase::GetWalkSpeed() const
+{
+	return mWalkSpeed;
+}
+
+float CEnemyBase::GetRunSpeed() const
+{
+	return mRunSpeed;
 }
 
 

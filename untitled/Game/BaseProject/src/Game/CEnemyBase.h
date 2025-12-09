@@ -84,23 +84,25 @@ public:
 	// 描画
 	void Render() override;
 
-	// 次に巡回するポイントを変更
-	bool ChangePatrolPoint();
-	// 巡回ルートを更新する
-	bool UpdatePatrolRoute();
+	// 歩く速度を返す
+	float GetWalkSpeed() const;
+	// 走る速度を返す
+	float GetRunSpeed() const;
+
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
-	// 巡回時の移動
-	bool PatrolMove(const CVector& targetPos, float speed);
-	// 巡回ポイントの
+	// 指定した位置まで経路探索で移動する
+	bool NavMoveTo(const CVector& targetPos, float speed);
 
-	// 次に巡回するポイント番号の設定
-	int SetNextIndex(int index);
+	// 移動速度を設定
+	void SetMoveSpeed(const CVector& moveSpeed);
+	// 移動速度を取得
+	const CVector& GetMoveSpeed() const;
 
 protected:
 
-	// 指定のステートか
-	virtual bool IsState(int state);
+	// 現在のステートを取得
+	CStateBase* GetCurrentState() const;
 
 	// 敵の初期化
 	void InitEnemy(std::string path, const std::vector<AnimData>* pAnimData);
@@ -118,9 +120,7 @@ protected:
 	float mFovLength;	// 視野範囲の距離
 	float mEyeHeight;	// 視野の高さ
 
-	int mState;				// 状態
 	int mAttackType;		// 攻撃タイプ
-	int mStateStep;			// 状態内のステップ管理用
 	float mElapsedTime;			// 経過時間計測用
 	float mBattleElapsedTime;	// 攻撃用経過時間
 	float mIdleTime;		// 待機時間
@@ -133,6 +133,8 @@ protected:
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
+	float mWalkSpeed;	// 歩く速度
+	float mRunSpeed;	// 走る速度
 
 	bool mIsAttackParry;	// 攻撃パリィ
 	bool mIsGuardParry;		// 防御パリィ
@@ -155,13 +157,16 @@ protected:
 	// プレイヤーを見失った位置のノード
 	CNavNode* mpLostPlayerNode;
 	// 巡回ポイントのリスト
-	std::vector<CNavNode*> mPatrolPoints;
+	std::vector<CVector> mPatrolPoints;
+	
+	// 移動先の経路探索用のノード
+	CNavNode* mpMoveNavNode;
 	// 求めた最短経路記憶用
 	std::vector<CNavNode*> mMoveRoute;
-	// 次に巡回するポイントの番号
-	int mNextPatrolIndex;
 	// 次に移動するノードのインデックス値
 	int mNextMoveIndex;
+	// 移動経路を更新するかどうか
+	bool mIsUpdateMoveRoute;
 };
 
 #endif // !CENEMYBASE_H

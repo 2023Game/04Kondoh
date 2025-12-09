@@ -442,12 +442,6 @@
     <ClCompile Include="src\Game\CDoubleDoors.cpp">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClCompile>
-    <ClCompile Include="src\CAttackPowerUI.cpp">
-      <Filter>ソース ファイル\Game\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CStatePatrol.cpp">
-      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\CStateBTIdle.cpp">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClCompile>
@@ -459,6 +453,15 @@
     </ClCompile>
     <ClCompile Include="src\Game\CStateBase.cpp">
       <Filter>ソース ファイル\Game\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CAttackPowerUI.cpp">
+      <Filter>ソース ファイル\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CEnemyAAI.cpp">
+      <Filter>ソース ファイル\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CStatePatrol.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -807,12 +810,6 @@
     <ClInclude Include="src\Game\CDoubleDoors.h">
       <Filter>ソース ファイル\Game\Field\Object\Gimmick\GimmickDoors</Filter>
     </ClInclude>
-    <ClInclude Include="src\CAttackPowerUI.h">
-      <Filter>ソース ファイル\Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CStatePatrol.h">
-      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\CStateBTIdle.h">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClInclude>
@@ -824,6 +821,12 @@
     </ClInclude>
     <ClInclude Include="src\Game\CStateBase.h">
       <Filter>ソース ファイル\Game\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CAttackPowerUI.h">
+      <Filter>ソース ファイル\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStatePatrol.h">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

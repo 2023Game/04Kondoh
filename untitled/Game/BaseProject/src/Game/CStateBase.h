@@ -1,6 +1,18 @@
 #pragma once
+#include <functional>
 
 class CEnemyBase;
+
+// 遷移条件の関数ポインタをCondFuncと命名
+using CondFunc = std::function<bool()>;
+
+// 状態の遷移情報
+struct Transition
+{
+	int nextStateId = -1;			// 次に遷移するステート番号 
+	bool isWaitEnd = false;			// 遷移条件を満たしても、現在のステートが終了するまで待つかどうか
+	CondFunc condition = nullptr;	// 遷移条件の関数ポインタ
+};
 
 // 書く状態のベースクラス
 class CStateBase {
@@ -16,9 +28,24 @@ public:
 
 	// 状態番号を設定
 	void SetIndex(int index);
+	// 状態番号を取得
+	int GetIndex() const;
 
 	// 状態の名前を取得
 	const std::string& GetName() const;
+
+	/// <summary>
+	/// 他の状態への遷移条件を追加
+	/// </summary>
+	/// <param name="nextStateId">遷移先の状態の番号</param>
+	/// <param name="isWaitEnd">現在の状態が終了するのを待つか</param>
+	/// <param name="func">遷移条件の関数ポインタ</param>
+	void AddTransition(int nextStateId, bool isWaitEnd = true, CondFunc func = nullptr);
+	/// <summary>
+	/// 他の状態へ遷移する条件を満たしているか
+	/// </summary>
+	/// <returns>遷移条件を満たしていた場合は、遷移先の状態の番号を返す</returns>
+	int CheckTransition() const;
 
 	// 開始処理（継承先で実装）
 	virtual void Enter();
@@ -35,4 +62,7 @@ protected:
 
 	std::string mStateName;	// この状態の名前
 	CEnemyBase* mpOwner;	// この状態の持ち主
+
+	// 他の状態への遷移条件のリスト
+	std::vector<Transition> mTransitions;
 };

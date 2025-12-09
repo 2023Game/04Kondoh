@@ -18,8 +18,9 @@ CNavNode::CNavNode(const CVector& pos, bool isDestNode)
 	, mCalcMoveCost(-1.0f)
 	, mpCalcFromNode(nullptr)
 	, mIsUpdateConnectNode(false)
-	, mIsUpdaingConnectNode(false)
+	, mIsUpdatingConnectNode(false)
 	, mColor(0.0f, 1.0f, 0.0f, 1.0f)
+	, mName("")
 {
 	// 管理クラスのリストに自身を追加
 	CNavManager* navMgr = CNavManager::Instance();
@@ -285,7 +286,7 @@ void CNavNode::UpdateConnectNode(bool immediate)
 	}
 	else
 	{
-		if (mIsUpdaingConnectNode) return;
+		if (mIsUpdatingConnectNode) return;
 		navMgr->FindConnectNavNodes(this, FIND_NODE_DISTANCE);
 	}
 
@@ -296,25 +297,39 @@ void CNavNode::UpdateConnectNode(bool immediate)
 // 接続ノードの更新開始時の呼び出す
 void CNavNode::StartUpdateConnectNode()
 {
-	mIsUpdaingConnectNode = true;
+	mIsUpdatingConnectNode = true;
 }
 
 // 接続ノードの更新終了時の呼び出す
 void CNavNode::EndUpdateConnectNode()
 {
-	mIsUpdaingConnectNode = false;
+	mIsUpdatingConnectNode = false;
 }
 
 // ノード更新中か
-bool CNavNode::IsUpdaing() const
+bool CNavNode::IsUpdating() const
 {
-	return mIsUpdaingConnectNode;
+	if (mIsUpdateConnectNode) return true;
+	if (mIsUpdatingConnectNode) return true;
+	return false;
 }
 
 // ノードの色設定（デバッグ用）
 void CNavNode::SetColor(const CColor& color)
 {
 	mColor.Set(color.R(), color.G(), color.B());
+}
+
+// ノードの名前設定（デバッグ用）
+void CNavNode::SetName(std::string name)
+{
+	mName = name;
+}
+
+// ノードの名前取得（デバッグ用）
+std::string CNavNode::GetName() const
+{
+	return mName;
 }
 
 // ノードを更新

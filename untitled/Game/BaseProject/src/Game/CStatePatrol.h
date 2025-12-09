@@ -6,11 +6,20 @@ class CStatePatrol : public CStateBase
 public:
 	CStatePatrol(CEnemyBase* owner);
 
-	void Enter() override;
+	// 巡回するポイントのリストを設定
+	void SetPatrolPoints(std::vector<CVector> patrolPoints);
 
+	void Enter() override;
 	void Update() override;
 
 private:
+	// 巡回ポイントを切り替え
+	bool ChangePatrolPoint();
 
-	int mStateStep;	// ステート
+	int mStateStep;	// ステートステップ
+	float mElapsedTime;	// 経過時間計測用
+
+	// 巡回ポイントのリスト
+	std::vector<CVector> mPatrolPoints;
+	int mNextPatrolIndex;	// 次の巡回ポイントのインデクス
 };

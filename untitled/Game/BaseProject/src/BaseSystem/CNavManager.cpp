@@ -1,6 +1,6 @@
 #include "CNavManager.h"
 #include "CNavNode.h"
-#include "CInput.h"
+#include "CDebugInput.h"
 #include "Primitive.h"
 #include <assert.h>
 
@@ -96,6 +96,7 @@ void CNavManager::FindConnectNavNodes(CNavNode* node, float distance)
 	{
 		// 更新待ちリストに追加
 		AddUpdateConnectNavNode(node, distance);
+		mpUpdateNode->StartUpdateConnectNode();
 		return;
 	}
 
@@ -390,7 +391,7 @@ void CNavManager::Render()
 {
 #if _DEBUG
 	// [SPACE]キーで経路探索ノードの描画モードを切り替え
-	if (CInput::PushKey('N'))
+	if (CDebugInput::PushKey('N'))
 	{
 		mIsRender = !mIsRender;
 	}

@@ -18,7 +18,7 @@ public:
 	void Init(CModelX* model);
 	//アニメーションの変更
 	void ChangeAnimation(int index, bool loop, float framesize,
-		bool restart = false);
+		bool restart = false, int no = 0);
 	//更新処理
 	void Update(const CMatrix& m);
 	void Update();

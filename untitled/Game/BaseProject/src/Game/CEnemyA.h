@@ -32,8 +32,6 @@ public:
 	// 描画
 	void Render() override;
 
-	// 指定のステートか
-	bool IsState(int state) override;
 	// 攻撃中か
 	bool IsAttacking() const override;
 	// 攻撃開始
@@ -57,6 +55,8 @@ public:
 	void Stun() override;
 	// 死亡処理
 	void Death() override;
+
+	void ChangeStateAnimation(int stateIndex, int no = 0) override;
 
 	/// <summary>
 	/// 衝突処理
@@ -183,84 +183,78 @@ private:
 	// どの攻撃をするか判定する
 	void AttackPickDetect();
 
-	// 指定した位置まで移動する
-	bool MoveTo(const CVector& targetPos, float speed);
-
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);
 
 	// 頭の正面方向ベクトルを取得
 //	CVector GetHeadForwardVec() const;
 
-	// 次に巡回するポイントを変更
-	bool ChangePatrolPoint();
-	// 巡回ルートを更新する
-	bool UpdatePatrolRoute();
-
 
 	// ↓ステートベースAI↓
 
-	// 待機状態の更新処理
-	void UpdateIdle();
-	// 巡回中の更新処理
-	void UpdatePatrol();
+	void SetupStateAI();
 
-	// 戦闘待機状態の更新処理
-	void UpdateBattleIdle();
-	// 追跡中の更新処理
-	void UpdateChase();
-	// 見失った時の更新処理
-	void UpdateLost();
+	//// 待機状態の更新処理
+	//void UpdateIdle();
+	//// 巡回中の更新処理
+	//void UpdatePatrol();
 
-	// 攻撃時の更新処理
-	void UpdateAttack();
+	//// 戦闘待機状態の更新処理
+	//void UpdateBattleIdle();
+	//// 追跡中の更新処理
+	//void UpdateChase();
+	//// 見失った時の更新処理
+	//void UpdateLost();
 
-	// 防御時の更新処理
-	void UpdateGuard();
-	// 回避時の更新処理
-	void UpdateAvoid();
+	//// 攻撃時の更新処理
+	//void UpdateAttack();
 
-
-	// 仰け反り時の更新処理
-	void UpdateHit();
-	// 混乱時の更新処理
-	void UpdateStun();
-	// 混乱待ちの更新処理
-	void UpdateStunWait();
-	// パリィされた時の更新処理
-	void UpdateParried();
-	// 死亡時の更新処理
-	void UpdateDeath();
+	//// 防御時の更新処理
+	//void UpdateGuard();
+	//// 回避時の更新処理
+	//void UpdateAvoid();
 
 
-	// ↓攻撃ごとの更新処理↓
-
-	// 薙ぎ払い攻撃
-	void UpdateBlowL();
-	void UpdateBlowR();
-	// 回し蹴り攻撃
-	void UpdateRoundKickL();
-	void UpdateRoundKickR();
-	// タックル
-	void UpdateTackleStart();
-	void UpdateTackle();
-	void UpdateTackleEnd
-	();
-	// 押し出し攻撃
-	void UpdateHeadButt();
-	// 三連攻撃
-	void UpdateTripleAttack();
+	//// 仰け反り時の更新処理
+	//void UpdateHit();
+	//// 混乱時の更新処理
+	//void UpdateStun();
+	//// 混乱待ちの更新処理
+	//void UpdateStunWait();
+	//// パリィされた時の更新処理
+	//void UpdateParried();
+	//// 死亡時の更新処理
+	//void UpdateDeath();
 
 
-	// 待機行動の更新処理
-	// ↓行動を自然にする為の更新処理↓
+	//// ↓攻撃ごとの更新処理↓
 
-	// 横移動(horizontal)
-	void UpdateHorizonMove();
-	// 前進行動(forward)
-	void UpdateForwardMove();
-	// 後退行動(back)
-	void UpdateBackMove();
+	//// 薙ぎ払い攻撃
+	//void UpdateBlowL();
+	//void UpdateBlowR();
+	//// 回し蹴り攻撃
+	//void UpdateRoundKickL();
+	//void UpdateRoundKickR();
+	//// タックル
+	//void UpdateTackleStart();
+	//void UpdateTackle();
+	//void UpdateTackleEnd
+	//();
+	//// 押し出し攻撃
+	//void UpdateHeadButt();
+	//// 三連攻撃
+	//void UpdateTripleAttack();
+
+
+	//// 待機行動の更新処理
+	//// ↓行動を自然にする為の更新処理↓
+
+	//// 横移動(horizontal)
+	//void UpdateHorizonMove();
+	//// 前進行動(forward)
+	//void UpdateForwardMove();
+	//// 後退行動(back)
+	//void UpdateBackMove();
 
 	// 状態の文字列を取得
 	std::string GetStateStr(int state) const;
@@ -318,15 +312,15 @@ private:
 	bool mIsDetectedPlayerAttack;
 	
 
-	// プレイヤーを見失った位置のノード
-	CNavNode* mpLostPlayerNode; 
-	// 巡回ポイントのリスト
-	std::vector<CNavNode*> mPatrolPoints;
-	// 求めた最短経路記憶用
-	std::vector<CNavNode*> mMoveRoute;
-	// 次に巡回するポイントの番号
-	int mNextPatrolIndex;
-	// 次に移動するノードのインデックス値
-	int mNextMoveIndex;		
+	//// プレイヤーを見失った位置のノード
+	//CNavNode* mpLostPlayerNode; 
+	//// 巡回ポイントのリスト
+	//std::vector<CNavNode*> mPatrolPoints;
+	//// 求めた最短経路記憶用
+	//std::vector<CNavNode*> mMoveRoute;
+	//// 次に巡回するポイントの番号
+	//int mNextPatrolIndex;
+	//// 次に移動するノードのインデックス値
+	//int mNextMoveIndex;		
 };
 #endif

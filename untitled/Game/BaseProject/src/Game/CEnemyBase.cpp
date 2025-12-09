@@ -6,15 +6,23 @@
 #include "CColliderCapsule.h"
 #include "CGaugeUI3D.h"
 #include "CEnemyManager.h"
+#include "CNavNode.h"
+#include "CNavManager.h"
 #include "Maths.h"
 
 #define GRAVITY 0.0625f;
+#define PATROL_INTERVAL 3.0f		// 次の巡回に移動開始するまでの時間
+#define PATROL_NEAR_DIST 10.0f		// 巡回開始時に選択される巡回ポイントの最短距離
+#define ROTATE_SPEED 6.0f			// 回転速度
+#define DEFAULT_WALK_SPEED 10.0f	// 歩きの速度
+#define DEFAULT_RUN_SPEED 55.0f		// 走っている時の速度
+
+#define NAVMOVE_STOP_DIST 0.05f		// 経路探索での移動時に停止する距離
+#define UPDATE_MOVE_NODE_DIST 2.0f	// 移動用の経路探索ノードの更新処理
 
 // コンストラクタ
 CEnemyBase::CEnemyBase()
 	:CXCharacter(ETag::eEnemy, ETaskPriority::eEnemy)
-	, mState(0)
-	, mStateStep(0)
 	, mElapsedTime(0.0f)
 	, mBattleElapsedTime(0.0f)
 	, mIdleTime(0.0f)
@@ -23,6 +31,8 @@ CEnemyBase::CEnemyBase()
 	, mpAttackData(nullptr)
 	, mMoveSpeed(CVector::zero)
 	, mMoveSpeedY(0.0f)
+	, mWalkSpeed(DEFAULT_WALK_SPEED)
+	, mRunSpeed(DEFAULT_RUN_SPEED)
 	, mIsAttackParry(false)
 	, mIsGuardParry(false)
 	, mIsGrounded(false)
@@ -30,6 +40,9 @@ CEnemyBase::CEnemyBase()
 	, mGroundNormal(CVector::up)
 	, mpBodyCol(nullptr)
 	, mpHpGauge(nullptr)
+	, mpMoveNavNode(nullptr)
+	, mNextMoveIndex(0)
+	, mIsUpdateMoveRoute(false)
 {
 	CEnemyManager* enemy = CEnemyManager::Instance();
 	//　HPゲージを作成
@@ -39,6 +52,11 @@ CEnemyBase::CEnemyBase()
 
 	// エネミー管理クラスに自身を追加
 	enemy->Add(this);
+
+	// 移動用の経路探索ノードを作成
+	mpMoveNavNode = new CNavNode(CVector::zero, true);
+	// 移動用の経路探索ノードは最初は無効化しておく
+	mpMoveNavNode->SetEnable(false);
 }
 
 //デストラクタ
@@ -56,6 +74,9 @@ CEnemyBase::~CEnemyBase()
 		mpHpGauge->SetOwner(nullptr);
 		mpHpGauge->Kill();
 	}
+
+	// 移動用の経路探索ノードを削除
+	mpMoveNavNode->Kill();
 }
 
 //オブジェクトを削除を伝える関数
@@ -101,11 +122,9 @@ bool CEnemyBase::CheckGuardParry() const
 	return true;
 }
 
-// 指定のステートか
-bool CEnemyBase::IsState(int state)
+CStateBase* CEnemyBase::GetCurrentState() const
 {
-	if ((int)mState == state) return true;
-	return false;
+	return mStateMachine.GetCurrentState();
 }
 
 // 敵の初期化
@@ -212,21 +231,91 @@ void CEnemyBase::Parry()
 {
 }
 
-// アニメーション切り替え
-void CEnemyBase::ChangeAnimation(int type, bool restart)
+bool CEnemyBase::MoveTo(const CVector& targetPos, float speed)
 {
-	if (mpAnimData == nullptr) return;
-	if (!(0 <= type && type < mpAnimData->size())) return;
-	AnimData data = (*mpAnimData)[type];
-	CXCharacter::ChangeAnimation
+	// 目的地までのベクトルを求める
+	CVector pos = Position();
+	CVector vec = targetPos - pos;
+	vec.Y(0.0f);
+
+	// 移動方向ベクトルを求める
+	CVector moveDir = vec.Normalized();
+
+	// 徐々に移動方向へ向ける
+	CVector forward = CVector::Slerp
 	(
-		type,
-		data.loop,
-		data.frameLength,
-		restart
+		VectorZ(), // 現在の正面
+		moveDir,   // 移動方向
+		ROTATE_SPEED * Times::DeltaTime()
 	);
-	CXCharacter::SetAnimationSpeed(data.speed);
+	Rotation(CQuaternion::LookRotation(forward));
+
+	// 今回の移動距離を求める
+	float moveDist = speed * Times::DeltaTime();
+	// 目的地までの残りの距離
+	float remainDist = vec.Length();
+	// 残りの距離が移動距離より短い場合
+	if (remainDist <= moveDist)
+	{
+		// 目的地まで移動する
+		pos = CVector(targetPos.X(), pos.Y(), targetPos.Z());
+		Position(pos);
+		return true;    // 目的地に到着したので、trueを返す
+	}
+
+	// 残りの距離が移動距離より長い場合は、
+	// 移動距離分目的地へ移動
+	pos += moveDir * moveDist;
+	Position(pos);
+
+	// 目的地には到着しなかった
+	return false;
 }
+
+// 指定した位置まで経路探索で移動する
+bool CEnemyBase::NavMoveTo(const CVector& targetPos, float speed)
+{
+	// 自分自身のノードが存在しなければ
+	if (mpNavNode == nullptr)
+	{
+		// 普通の移動処理を行う
+		return MoveTo(targetPos, speed);
+	}
+
+	// 目的地までの残りの距離
+	float remain = (targetPos - Position()).LengthSqr();
+	if (remain < NAVMOVE_STOP_DIST * NAVMOVE_STOP_DIST) return true;
+
+	// 次の目的地まで一定距離離れてたら、移動経路を更新
+	float dist = (mpMoveNavNode->GetPos() - targetPos).LengthSqr();
+	if (dist >= UPDATE_MOVE_NODE_DIST * UPDATE_MOVE_NODE_DIST)
+	{
+		// 移動先ノードをオンにして、目的地に設定
+		mpMoveNavNode->SetEnable(true);
+		mpMoveNavNode->SetPos(targetPos);
+		// 移動経路再計算用の初期化
+		mNextMoveIndex = -1;
+		mIsUpdateMoveRoute = true;
+	}
+
+	// 移動経路再計算フラグが立っているか
+
+	return false;
+}
+
+
+// 移動速度を設定
+void CEnemyBase::SetMoveSpeed(const CVector& moveSpeed)
+{
+	mMoveSpeed = moveSpeed;
+}
+
+// 移動速度を取得
+const CVector& CEnemyBase::GetMoveSpeed() const
+{
+	return mMoveSpeed;
+}
+
 
 bool CEnemyBase::IsFoundPlayer() const
 {
@@ -315,24 +404,19 @@ CVector CEnemyBase::GetHeadForwardVec() const
 	return vec.Normalized();
 }
 
-// 状態切り替え
+// 状態切り替え処理
 void CEnemyBase::ChangeState(int state)
 {
-	// 同じ状態の場合は切り替えない
-	if (state == mState) return;
-
-	// 状態を変更して、状態関連の変数を初期化
-	mState = state;
-	mStateStep = 0;
-	mElapsedTime = 0.0f;
+	mStateMachine.ChangeState(state);
 }
 
+// 攻撃タイプ切り替え処理
 void CEnemyBase::ChangeAttackType(int attacktype)
 {
 	if (attacktype == mAttackType) return;
 
 	mAttackType = attacktype;
-	mStateStep = 0;
+	//mStateStep = 0;
 	mElapsedTime = 0.0f;
 
 	// 攻撃の種類から攻撃のデータを取得
@@ -341,10 +425,34 @@ void CEnemyBase::ChangeAttackType(int attacktype)
 	mAttackPower = data.power;
 }
 
+// アニメーション切り替え処理
+void CEnemyBase::ChangeAnimation(int type, int no, bool restart)
+{
+	if (mpAnimData == nullptr) return;
+	if (!(0 <= type && type < mpAnimData->size())) return;
+	AnimData data = (*mpAnimData)[type];
+	CXCharacter::ChangeAnimation
+	(
+		type,
+		data.loop,
+		data.frameLength,
+		restart,
+		no
+	);
+	CXCharacter::SetAnimationSpeed(data.speed);
+}
+
+void CEnemyBase::ChangeStateAnimation(int stateIndex, int no)
+{
+}
+
 
 // 更新
 void CEnemyBase::Update()
 {
+	// ステートマシンを更新
+	mStateMachine.Update();
+
 	// 重力
 	mMoveSpeedY -= GRAVITY;
 
@@ -368,6 +476,16 @@ void CEnemyBase::Update()
 void CEnemyBase::Render()
 {
 	CXCharacter::Render();
+}
+
+float CEnemyBase::GetWalkSpeed() const
+{
+	return mWalkSpeed;
+}
+
+float CEnemyBase::GetRunSpeed() const
+{
+	return mRunSpeed;
 }
 
 

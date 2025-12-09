@@ -3,7 +3,8 @@
 
 #include "CXCharacter.h"
 #include "CCollider.h"
-#include "Cmodel.h"
+#include "CModel.h"
+#include "CStateMachine.h"
 
 class CGaugeUI3D;
 
@@ -53,10 +54,22 @@ public:
 	//オブジェクトを削除を伝える関数
 	void DeleteObject(CObjectBase* obj) override;
 
+	// パリィ
+	virtual void Parry();
+
 	// アタックパリィ出来るかどうか
 	bool CheckAttackParry(EAttackDir dir, EAttackPower power) const override;
 	// ガードパリィ出来るかどうか
 	bool CheckGuardParry() const override;
+
+	// 状態切り替え処理
+	virtual void ChangeState(int state);
+	// 攻撃タイプ切り替え処理
+	virtual void ChangeAttackType(int attacktype);
+	// アニメーション切り替え処理
+	void ChangeAnimation(int type, int no = 0, bool restart = false);
+	// ステートから呼び出すアニメーション切り替え処理
+	virtual void ChangeStateAnimation(int stateIndex, int no = 0);
 
 	/// <summary>
 	/// 衝突処理
@@ -66,28 +79,33 @@ public:
 	/// <param name="hit">衝突した時の情報</param>
 	void Collision(CCollider* self, CCollider* other, const CHitInfo& hit) override;
 
-	// パリィ
-	virtual void Parry();
-
 	// 更新
 	void Update() override;
 	// 描画
 	void Render() override;
 
+	// 歩く速度を返す
+	float GetWalkSpeed() const;
+	// 走る速度を返す
+	float GetRunSpeed() const;
+
+	// 指定した位置まで移動する
+	bool MoveTo(const CVector& targetPos, float speed);
+	// 指定した位置まで経路探索で移動する
+	bool NavMoveTo(const CVector& targetPos, float speed);
+
+	// 移動速度を設定
+	void SetMoveSpeed(const CVector& moveSpeed);
+	// 移動速度を取得
+	const CVector& GetMoveSpeed() const;
+
 protected:
 
-	// 指定のステートか
-	virtual bool IsState(int state);
+	// 現在のステートを取得
+	CStateBase* GetCurrentState() const;
 
 	// 敵の初期化
 	void InitEnemy(std::string path, const std::vector<AnimData>* pAnimData);
-
-	// 状態切り替え
-	virtual void ChangeState(int state);
-	// 攻撃タイプ切り替え
-	virtual void ChangeAttackType(int attacktype);
-	// アニメーション切り替え
-	void ChangeAnimation(int type, bool restart = false);
 
 	// プレイヤーが視野範囲内に入ったかどうか
 	bool IsFoundPlayer() const;
@@ -102,9 +120,7 @@ protected:
 	float mFovLength;	// 視野範囲の距離
 	float mEyeHeight;	// 視野の高さ
 
-	int mState;				// 状態
 	int mAttackType;		// 攻撃タイプ
-	int mStateStep;			// 状態内のステップ管理用
 	float mElapsedTime;			// 経過時間計測用
 	float mBattleElapsedTime;	// 攻撃用経過時間
 	float mIdleTime;		// 待機時間
@@ -117,6 +133,8 @@ protected:
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
+	float mWalkSpeed;	// 歩く速度
+	float mRunSpeed;	// 走る速度
 
 	bool mIsAttackParry;	// 攻撃パリィ
 	bool mIsGuardParry;		// 防御パリィ
@@ -131,6 +149,24 @@ protected:
 	CVector mGaugeOffsetPos;	// ゲージのオフセット座標
 
 	const CMatrix* mpHeadMtx;	// 頭の行列を取得
+
+	// 敵の行動を管理するステートマシン
+	CStateMachine mStateMachine;	
+
+
+	// プレイヤーを見失った位置のノード
+	CNavNode* mpLostPlayerNode;
+	// 巡回ポイントのリスト
+	std::vector<CVector> mPatrolPoints;
+	
+	// 移動先の経路探索用のノード
+	CNavNode* mpMoveNavNode;
+	// 求めた最短経路記憶用
+	std::vector<CNavNode*> mMoveRoute;
+	// 次に移動するノードのインデックス値
+	int mNextMoveIndex;
+	// 移動経路を更新するかどうか
+	bool mIsUpdateMoveRoute;
 };
 
 #endif // !CENEMYBASE_H

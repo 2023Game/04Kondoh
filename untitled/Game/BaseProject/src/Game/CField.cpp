@@ -404,17 +404,20 @@ void CField::CreateNavNodes()
 	CNavManager* navMgr = CNavManager::Instance();
 	if (navMgr != nullptr)
 	{
-		// •Ç‚P‚Ìü‚è‚ÌŒo˜H’Tõ
-		new CNavNode(CVector(30.0f, 0.0f,  35.0f));
-		new CNavNode(CVector(10.0f, 0.0f,  35.0f));
-		new CNavNode(CVector(10.0f, 0.0f, -35.0f));
-		new CNavNode(CVector(30.0f, 0.0f, -35.0f));
+		//// •Ç‚P‚Ìü‚è‚ÌŒo˜H’Tõ
+		//new CNavNode(CVector(30.0f, 0.0f,  35.0f));
+		//new CNavNode(CVector(10.0f, 0.0f,  35.0f));
+		//new CNavNode(CVector(10.0f, 0.0f, -35.0f));
+		//new CNavNode(CVector(30.0f, 0.0f, -35.0f));
 
-		// •Ç‚Q‚Ìü‚è‚ÌŒo˜H’Tõ
-		new CNavNode(CVector(-15.0f, 0.0f, -40.0f));
-		new CNavNode(CVector(-15.0f, 0.0f, -60.0f));
-		new CNavNode(CVector(-85.0f, 0.0f, -60.0f));
-		new CNavNode(CVector(-85.0f, 0.0f, -40.0f));
+		//// •Ç‚Q‚Ìü‚è‚ÌŒo˜H’Tõ
+		//new CNavNode(CVector(-15.0f, 0.0f, -40.0f));
+		//new CNavNode(CVector(-15.0f, 0.0f, -60.0f));
+		//new CNavNode(CVector(-85.0f, 0.0f, -60.0f));
+		//new CNavNode(CVector(-85.0f, 0.0f, -40.0f));
+
+		new CNavNode(CVector(105.0f, 0.0f, -5.0f));
+		new CNavNode(CVector( 60.0f, 0.0f, -5.0f));
 
 	}
 

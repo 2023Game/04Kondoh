@@ -92,6 +92,11 @@ public:
 	// 描画
 	void Render();
 
+	// プレイヤーの攻撃範囲の角度を取得
+	float GetAngle() const;
+	// プレイヤーの攻撃範囲の距離を取得
+	float GetLength() const;
+
 private:
 
 	// アニメーションの種類
@@ -229,6 +234,12 @@ private:
 
 	bool mIsGrounded;	// 接地しているかどうか
 	CVector mGroundNormal;	// 接地している地面の法線
+
+	// プレイヤーの攻撃範囲の角度
+	float mAttackAngle;
+	// プレイヤーの攻撃範囲の距離
+	float mAttackLength;
+	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
 
 	bool mIsHittingWall;	// 壁に当たっているかどうか？
 	CVector mHitWallPos;	// 壁に当たった時の座標

@@ -78,9 +78,6 @@
 #define KICK_MOVE_SPEED		40.0f	// 回し蹴り時の移動スピード
 #define TRIPLE_WAIT_TIME	0.005f	// 三連攻撃の間の攻撃終了時の待ち時間
 
-#define PLAYER_ATTACK_ANGLE		35.0f	// 攻撃範囲の角度
-#define PLAYER_ATTACK_LENGTH	25.0f	// 攻撃範囲の距離
-
 #define AVOID_XMOVE_SPEED	22.0f	// 回避時のX軸の移動スピード
 #define AVOID_ZMOVE_SPEED	17.0f	// 回避時のZ軸の移動スピード
 #define AVOID_MOVE_START	1.0f	// 回避時の移動開始フレーム
@@ -163,16 +160,9 @@ const std::vector<CEnemyBase::AttackData> ATTACK_DATA =
 
 // コンストラクタ
 CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
-	: mPlayerAttackAngle(PLAYER_ATTACK_ANGLE)
-	, mPlayerAttackLength(PLAYER_ATTACK_LENGTH)
-	, mpDebugFov(nullptr)
-	, mpBattleTarget(nullptr)
+	: mpDebugFov(nullptr)
 	, mMoveStartPos(CVector::zero)
 	, mMoveEndPos(CVector::zero)
-	, mIsBattle(false)
-	, mIsGuard(false)
-	, mIsAvoid(false)
-	, mIsTripleAttack(false)
 	, mRandMoveAngle(0.0f)
 	, mRandHitAnim(0)
 	, mAvoidAnim(0)
@@ -271,8 +261,6 @@ CEnemyA::CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints)
 
 	// 視野範囲のデバッグ表示を作成
 	mpDebugFov = new CDebugFieldOfView(this, mFovAngle, mFovLength);
-	// 攻撃範囲のデバッグ表示を作成
-	mpDebugAttack = new CDebugFieldOfView(player, mPlayerAttackAngle, mPlayerAttackLength);
 
 	// 経路探索用のノードを作成
 	mpNavNode = new CNavNode(Position(), true);
@@ -610,9 +598,9 @@ void CEnemyA::TakeDamage(int damage, float stan, float knockback, CCharaBase* ca
 	if (!IsDeath())
 	{
 		// 攻撃を加えた相手を戦闘相手に設定
-		mpBattleTarget = causer;
+		SetBattleTarget(causer);
 		// 戦闘状態を切り替える
-		mIsBattle = true;
+		SetIsBattle(true);
 
 		// 攻撃を加えた相手の方向へ向く
 		CVector targetPos = causer->Position();
@@ -829,97 +817,59 @@ bool CEnemyA::IsMoveAttackRange()
 	return true;
 }
 
-// プレイヤーの攻撃を検知したか？
-bool CEnemyA::IsPlayerAttackDetected() const
-{
-	// プレイヤーが存在しない場合は、範囲外とする
-	CPlayer* player = CPlayer::Instance();
-	if (player == nullptr) return false;
-
-	if (!player->IsAttacking()) return false;
-	// プレイヤーの攻撃範囲か？
-	if (IsPlayerAttackRange()) return true;
-}
-
-// プレイヤーの攻撃を検知時の処理
-bool CEnemyA::DetectedPlayerAttack()
-{
-	CPlayer* player = CPlayer::Instance();
-
-	// プレイヤーの攻撃が検知済みでなければ
-	if (!mIsDetectedPlayerAttack)
-	{
-		// プレイヤーの攻撃を検知したかどうか
-		if (IsPlayerAttackDetected())
-		{
-			mIsDetectedPlayerAttack = true;
-
-			int rand = Math::Rand(0, 99);
-
-			if (rand < GUARD_PROB)
-			{
-				ChangeState((int)EState::eGuard);
-				return true;
-			}
-			else if (rand < AVOID_PROB)
-			{
-				ChangeState((int)EState::eAvoid);
-				mIsAvoid = true;
-				return true;
-			}
-		}
-	}
-	// プレイヤーの攻撃を検知済み
-	else
-	{
-		// プレイヤーの攻撃が終わったら、検知フラグを初期化
-		if (!player->IsAttacking())
-		{
-			mIsDetectedPlayerAttack = false;
-		}
-	}
-	return false;
-}
-
-// プレイヤーの攻撃範囲内か？
-bool CEnemyA::IsPlayerAttackRange() const
-{
-	CPlayer* player = CPlayer::Instance();
-	// プレイヤー座標の取得
-	CVector playerPos = player->Position();
-	// 自分自身の座標を取得
-	CVector pos = Position();
-	// プレイヤーから自身までのベクトルを求める
-	CVector vec = pos - playerPos;
-	vec.Y(0.0f);
+//// プレイヤーの攻撃を検知したか？
+//bool CEnemyA::IsPlayerAttackDetected() const
+//{
+//	// プレイヤーが存在しない場合は、範囲外とする
+//	CPlayer* player = CPlayer::Instance();
+//	if (player == nullptr) return false;
+//
+//	if (!player->IsAttacking()) return false;
+//	// プレイヤーの攻撃範囲か？
+//	if (IsPlayerAttackRange()) return true;
+//}
 
 
-	// 1: 視野角度内か求める
-	// ベクトルを正規化して方向要素のみにするため
-	// 長さを１にする
-	CVector dir = vec.Normalized();
-	// プレイヤーの正面方向のベクトルを取得
-	CVector forward = player->VectorZ();
-	// 自身までのベクトルと
-	// プレイヤーの正面方向のベクトルの内積を求めて角度を出す
-	float dot = CVector::Dot(dir, forward);
-	// 視野角度のラジアンを求める
-	float angleR = Math::DegreeToRadian(mPlayerAttackAngle);
-	// 求めた内積と視野角度で、視野範囲か判断する
-	if (dot < cosf(angleR)) return false;
 
-
-	// 2: 攻撃距離内か求める
-	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
-	float dist = vec.Length();
-	if (dist > mPlayerAttackLength) return false;
-
-	// プレイヤーとの間に遮蔽物がないか判定する
-	if (!IsLookPlayer()) return false;
-
-	// 全ての条件をクリアしたので、視野範囲内である
-	return true;
-}
+//// プレイヤーの攻撃範囲内か？
+//bool CEnemyA::IsPlayerAttackRange() const
+//{
+//	CPlayer* player = CPlayer::Instance();
+//	// プレイヤー座標の取得
+//	CVector playerPos = player->Position();
+//	// 自分自身の座標を取得
+//	CVector pos = Position();
+//	// プレイヤーから自身までのベクトルを求める
+//	CVector vec = pos - playerPos;
+//	vec.Y(0.0f);
+//
+//
+//	// 1: 視野角度内か求める
+//	// ベクトルを正規化して方向要素のみにするため
+//	// 長さを１にする
+//	CVector dir = vec.Normalized();
+//	// プレイヤーの正面方向のベクトルを取得
+//	CVector forward = player->VectorZ();
+//	// 自身までのベクトルと
+//	// プレイヤーの正面方向のベクトルの内積を求めて角度を出す
+//	float dot = CVector::Dot(dir, forward);
+//	// 視野角度のラジアンを求める
+//	float angleR = Math::DegreeToRadian(mPlayerAttackAngle);
+//	// 求めた内積と視野角度で、視野範囲か判断する
+//	if (dot < cosf(angleR)) return false;
+//
+//
+//	// 2: 攻撃距離内か求める
+//	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
+//	float dist = vec.Length();
+//	if (dist > mPlayerAttackLength) return false;
+//
+//	// プレイヤーとの間に遮蔽物がないか判定する
+//	if (!IsLookPlayer()) return false;
+//
+//	// 全ての条件をクリアしたので、視野範囲内である
+//	return true;
+//}
 
 // どの攻撃をするか判定する
 void CEnemyA::AttackPickDetect()
@@ -1004,58 +954,14 @@ void CEnemyA::AttackPickDetect()
 }
 
 
-//// 指定した位置まで移動する
-//bool CEnemyA::MoveTo(const CVector& targetPos, float speed)
-//{
-//	// 目的地までのベクトルを求める
-//	CVector pos = Position();
-//	CVector vec = targetPos - pos;
-//	vec.Y(0.0f);
-//
-//	// 移動方向ベクトルを求める
-//	CVector moveDir = vec.Normalized();
-//
-//	// 徐々に移動方向へ向ける
-//	CVector forward = CVector::Slerp
-//	(
-//		VectorZ(), // 現在の正面
-//		moveDir,   // 移動方向
-//		ROTATE_SPEED * Times::DeltaTime()
-//	);
-//	Rotation(CQuaternion::LookRotation(forward));
-//
-//	// 今回の移動距離を求める
-//	float moveDist = speed * Times::DeltaTime();
-//	// 目的地までの残りの距離
-//	float remainDist = vec.Length();
-//	// 残りの距離が移動距離より短い場合
-//	if (remainDist <= moveDist)
-//	{
-//		// 目的地まで移動する
-//		pos = CVector(targetPos.X(), pos.Y(), targetPos.Z());
-//		Position(pos);
-//		return true;    // 目的地に到着したので、trueを返す
-//	}
-//
-//	// 残りの距離が移動距離より長い場合は、
-//	// 移動距離分目的地へ移動
-//	pos += moveDir * moveDist;
-//	Position(pos);
-//
-//	// 目的地には到着しなかった
-//	return false;
-//}
-
-
-
 // 戦闘相手の方へ向く
 void CEnemyA::LookAtBattleTarget(bool immediate)
 {
 	// 戦闘相手がいなければ、処理しない
-	if (mpBattleTarget == nullptr) return;
+	if (GetBattleTarget == nullptr) return;
 
 	// 戦闘相手までの方向ベクトルを求める
-	CVector targetPos = mpBattleTarget->Position();
+	CVector targetPos = GetBattleTarget()->Position();
 	CVector vec = targetPos - Position();
 	vec.Y(0.0f);
 	vec.Normalize();
@@ -1075,78 +981,6 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 		Rotation(CQuaternion::LookRotation(forward));
 	}
 }
-
-//// 次に巡回するポイントを変更
-//bool CEnemyA::ChangePatrolPoint()
-//{
-//	// 自身の経路探索用ノードが更新中の場合は、処理しない
-//	if (mpNavNode->IsUpdaing()) return false;
-//	// 巡回ポイントが設定されていない場合は、処理しない
-//	int size = mPatrolPoints.size();
-//	if (size == 0) return false;
-//
-//	// 巡回開始時であれば、一番近い巡回ポイントを選択
-//	if (mNextPatrolIndex == -1)
-//	{
-//		int nearIndex = -1;     // 一番近い巡回ポイントの番号
-//		float nearDist = 0.0f;  // 一番近い巡回ポイントまでの距離
-//		// 全ての巡回ポイントを調べ、一番近い巡回ポイントを探す
-//		for (int i = 0; i < size; i++)
-//		{
-//			CVector point = mPatrolPoints[i]->GetPos();
-//			CVector vec = point - Position();
-//			vec.Y(0.0f);
-//			float dist = vec.Length();
-//			// 巡回ポイントが近すぎる場合は、スルー
-//			if (dist < PATROL_NEAR_DIST) continue;
-//
-//			// 一番近い巡回ポイントもしくは、
-//			// 現在一番近い巡回ポイントよりさらに近い場合は、
-//			// 巡回ポイントの番号を置き換える
-//			if (nearIndex < 0 || dist < nearDist)
-//			{
-//				nearIndex = i;
-//				nearDist = dist;
-//			}
-//		}
-//		mNextPatrolIndex = nearIndex;
-//	}
-//	// 巡回中だった場合、次の巡回ポイントを指定する
-//	else 
-//	{
-//		mNextPatrolIndex++;
-//		if (mNextPatrolIndex >= size) mNextPatrolIndex -= size;
-//	}
-//
-//	return mNextPatrolIndex >= 0;
-//}
-//
-//bool CEnemyA::UpdatePatrolRoute()
-//{
-//	// 巡回ポイントの経路探索ノードの位置を設定し直すことで、
-//	// 各ノードへの接続情報を更新
-//	for (CNavNode* node : mPatrolPoints)
-//	{
-//		node->SetPos(node->GetPos());
-//	}
-//
-//	if (!(0 <= mNextPatrolIndex && mNextPatrolIndex < mPatrolPoints.size())) return false;
-//
-//	CNavManager* navMgr = CNavManager::Instance();
-//	if (navMgr == nullptr) return false;
-//
-//	// 自身のノードが更新中ならば、経路探索を行わない
-//	if (mpNavNode->IsUpdaing()) return false;
-//	// 巡回ポイントが更新中ならば、経路探索を行わない
-//	CNavNode* patrolPoint = mPatrolPoints[mNextPatrolIndex];
-//	if (patrolPoint->IsUpdaing()) return false;
-//	// 巡回ポイントまでの最短経路を求める
-//	if (navMgr->Navigate(mpNavNode, patrolPoint, mMoveRoute))
-//	{
-//		// 次の目的地のインデックスを設定
-//		mNextMoveIndex = 1;
-//	}
-//}
 
 //// 待機状態の更新処理
 //void CEnemyA::UpdateIdle()
@@ -1172,7 +1006,7 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 //		ChangeState((int)EState::ePatrol);
 //	}
 //}
-//
+
 //// 巡回中の更新処理
 //void CEnemyA::UpdatePatrol()
 //{
@@ -1238,7 +1072,7 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 //		break;
 //	}
 //}
-//
+
 //// 戦闘待機状態の更新処理
 //void CEnemyA::UpdateBattleIdle()
 //{
@@ -1313,7 +1147,7 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 //		break;
 //	}
 //}
-//
+
 //// 追跡中の更新処理
 //void CEnemyA::UpdateChase()
 //{
@@ -1372,7 +1206,8 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 //		AttackPickDetect();
 //	}
 //}
-//
+
+
 //// 見失った時の更新処理
 //void CEnemyA::UpdateLost()
 //{

@@ -169,25 +169,11 @@ private:
 	// 移動する攻撃範囲か？
 	bool IsMoveAttackRange();
 
-	// プレイヤーの攻撃を検知したか？
-	bool IsPlayerAttackDetected() const;
-	// プレイヤーの攻撃範囲内か？
-	bool IsPlayerAttackRange() const;
-
-	/// <summary>
-	/// プレイヤーの攻撃を検知時の処理
-	/// </summary>
-	/// <returns>trueの場合は、状態が変わった</returns>
-	bool DetectedPlayerAttack();
-
 	// どの攻撃をするか判定する
 	void AttackPickDetect();
 
 	// 戦闘相手の方へ向く
 	void LookAtBattleTarget(bool immediate = false);
-
-	// 頭の正面方向ベクトルを取得
-//	CVector GetHeadForwardVec() const;
 
 
 	// ↓ステートベースAI↓
@@ -266,12 +252,6 @@ private:
 	EAnimType GetAnimType() const;
 	int mAvoidAnim;
 
-	CDebugFieldOfView* mpDebugAttack;  // 攻撃範囲のデバッグ表示
-	// プレイヤーの攻撃範囲の角度
-	float mPlayerAttackAngle;
-	// プレイヤーの攻撃範囲の距離
-	float mPlayerAttackLength;
-
 	CDebugFieldOfView* mpDebugFov;  // 視野範囲のデバッグ表示
 
 	float mRandMoveAngle;	// ランダムの移動角度
@@ -292,24 +272,13 @@ private:
 	// 攻撃用のコライダ４（頭の部分）
 	CColliderSphere* mpHeadCol;
 
-	// 戦闘相手
-	CObjectBase* mpBattleTarget;
 
 #if _DEBUG
 	CMatrix mHeadForwardMtx;
 #endif
 
-
-	bool mIsBattle;			// 戦闘状態か
-	bool mIsGuard;			// ガード状態か
-	bool mIsAvoid;			// 回避状態か
-	bool mIsTripleAttack;	// 三連攻撃状態か
-
 	int mAttackCount;		// 今の攻撃の回数
 	int mTackleCount;		// タックルが出来るまでのカウント
-
-	// プレイヤーの攻撃を既に検知済みである
-	bool mIsDetectedPlayerAttack;
 	
 
 	//// プレイヤーを見失った位置のノード

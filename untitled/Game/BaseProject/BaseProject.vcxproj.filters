@@ -463,6 +463,9 @@
     <ClCompile Include="src\Game\CStatePatrol.cpp">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\CStateChase.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseSystem\CCollider.h">
@@ -826,6 +829,9 @@
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\CStatePatrol.h">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStateChase.h">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
     </ClInclude>
   </ItemGroup>

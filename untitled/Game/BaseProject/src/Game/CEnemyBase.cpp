@@ -35,12 +35,17 @@ CEnemyBase::CEnemyBase()
 	, mRunSpeed(DEFAULT_RUN_SPEED)
 	, mIsAttackParry(false)
 	, mIsGuardParry(false)
+	, mIsBattle(false)
+	, mIsGuard(false)
+	, mIsAvoid(false)
+	, mIsTripleAttack(false)
 	, mIsGrounded(false)
 	, mIsHitWall(false)
 	, mGroundNormal(CVector::up)
 	, mpBodyCol(nullptr)
 	, mpHpGauge(nullptr)
 	, mpMoveNavNode(nullptr)
+	, mpBattleTarget(nullptr)
 	, mNextMoveIndex(0)
 	, mIsUpdateMoveRoute(false)
 {
@@ -299,6 +304,43 @@ bool CEnemyBase::NavMoveTo(const CVector& targetPos, float speed)
 	}
 
 	// 移動経路再計算フラグが立っているか
+	if (mIsUpdateMoveRoute)
+	{
+		// 自身のノードと目的地のノードが更新中でなければ
+		if (!mpNavNode->IsUpdating() && !mpMoveNavNode->IsUpdating())
+		{
+			// 移動経路を計算
+			bool success = CNavManager::Instance()->Navigate(mpNavNode, mpMoveNavNode, mMoveRoute);
+			if (success)
+			{
+				// 移動開始
+				mIsUpdateMoveRoute = false;
+				mNextMoveIndex = 1;
+			}
+			else
+			{
+				mNextMoveIndex = -1;
+			}
+		}
+	}
+
+	// 次の移動先のインデックス値が設定されてたら
+	if (mNextMoveIndex > 0)
+	{
+		CNavNode* nextNode = mMoveRoute[mNextMoveIndex];
+		if (MoveTo(nextNode->GetPos(), speed))
+		{
+			// 移動が終われば、次のノードへ切り替え
+			mNextMoveIndex++;
+			// 移動が終わったノードが目的地ノードだった場合は、移動終了
+			if (mNextMoveIndex >= mMoveRoute.size())
+			{
+				// 移動用のノードをオフ
+				mpMoveNavNode->SetEnable(false);
+				return true;
+			}
+		}
+	}
 
 	return false;
 }
@@ -316,10 +358,30 @@ const CVector& CEnemyBase::GetMoveSpeed() const
 	return mMoveSpeed;
 }
 
+// 戦闘状態か
+bool CEnemyBase::GetIsBattle() const
+{
+	return mIsBattle;
+}
 
+CObjectBase* CEnemyBase::GetBattleTarget() const
+{
+	return mpBattleTarget;
+}
+
+bool CEnemyBase::SetIsBattle(bool isbattle)
+{
+	mIsBattle = isbattle;
+}
+
+void CEnemyBase::SetBattleTarget(CObjectBase* target)
+{
+	mpBattleTarget = target;
+}
+
+// プレイヤーが視野範囲内に入ったかどうか
 bool CEnemyBase::IsFoundPlayer() const
 {
-
 	// プレイヤーが存在しない場合は、範囲外とする
 	CPlayer* player = CPlayer::Instance();
 	if (player == nullptr) return false;
@@ -386,6 +448,98 @@ bool CEnemyBase::IsLookPlayer() const
 	return true;
 }
 
+// プレイヤーの攻撃を検知したか？
+bool CEnemyBase::IsPlayerAttackDetected() const
+{
+	// プレイヤーが存在しない場合は、範囲外とする
+	CPlayer* player = CPlayer::Instance();
+	if (player == nullptr) return false;
+
+	if (!player->IsAttacking()) return false;
+	// プレイヤーの攻撃範囲か？
+	if (IsPlayerAttackRange()) return true;
+}
+
+// プレイヤーの攻撃範囲内か？
+bool CEnemyBase::IsPlayerAttackRange() const
+{
+	CPlayer* player = CPlayer::Instance();
+	// プレイヤー座標の取得
+	CVector playerPos = player->Position();
+	// 自分自身の座標を取得
+	CVector pos = Position();
+	// プレイヤーから自身までのベクトルを求める
+	CVector vec = pos - playerPos;
+	vec.Y(0.0f);
+
+
+	// 1: 視野角度内か求める
+	// ベクトルを正規化して方向要素のみにするため
+	// 長さを１にする
+	CVector dir = vec.Normalized();
+	// プレイヤーの正面方向のベクトルを取得
+	CVector forward = player->VectorZ();
+	// 自身までのベクトルと
+	// プレイヤーの正面方向のベクトルの内積を求めて角度を出す
+	float dot = CVector::Dot(dir, forward);
+	// 視野角度のラジアンを求める
+	float angleR = Math::DegreeToRadian(player->GetAngle());
+	// 求めた内積と視野角度で、視野範囲か判断する
+	if (dot < cosf(angleR)) return false;
+
+
+	// 2: 攻撃距離内か求める
+	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
+	float dist = vec.Length();
+	if (dist > player->GetLength()) return false;
+
+	// プレイヤーとの間に遮蔽物がないか判定する
+	if (!IsLookPlayer()) return false;
+
+	// 全ての条件をクリアしたので、視野範囲内である
+	return true;
+}
+
+// プレイヤーの攻撃を検知時の処理
+bool CEnemyBase::DetectedPlayerAttack()
+{
+	CPlayer* player = CPlayer::Instance();
+
+	// プレイヤーの攻撃が検知済みでなければ
+	if (!mIsDetectedPlayerAttack)
+	{
+		// プレイヤーの攻撃を検知したかどうか
+		if (IsPlayerAttackDetected())
+		{
+			mIsDetectedPlayerAttack = true;
+
+			int rand = Math::Rand(0, 99);
+
+			//if (rand < GUARD_PROB)
+			//{
+			//	ChangeState((int)EState::eGuard);
+			//	return true;
+			//}
+			//else if (rand < AVOID_PROB)
+			//{
+			//	ChangeState((int)EState::eAvoid);
+			//	mIsAvoid = true;
+			//	return true;
+			//}
+		}
+	}
+	// プレイヤーの攻撃を検知済み
+	else
+	{
+		// プレイヤーの攻撃が終わったら、検知フラグを初期化
+		if (!player->IsAttacking())
+		{
+			mIsDetectedPlayerAttack = false;
+		}
+	}
+	return false;
+}
+
 void CEnemyBase::SetAngLeng(float angle, float length)
 {
 	mFovAngle = angle;
@@ -450,6 +604,17 @@ void CEnemyBase::ChangeStateAnimation(int stateIndex, int no)
 // 更新
 void CEnemyBase::Update()
 {
+	// 自身のノードの更新処理
+	if (mpNavNode != nullptr)
+	{
+		mpNavNode->Update();
+	}
+	// 移動先のノードの更新処理
+	if (mpMoveNavNode != nullptr)
+	{
+		mpMoveNavNode->Update();
+	}
+
 	// ステートマシンを更新
 	mStateMachine.Update();
 

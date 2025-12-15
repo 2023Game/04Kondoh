@@ -107,6 +107,7 @@
     <ClCompile Include="src\Game\CSingleDoor.cpp" />
     <ClCompile Include="src\Game\CSlash.cpp" />
     <ClCompile Include="src\Game\CStateBase.cpp" />
+    <ClCompile Include="src\Game\CStateChase.cpp" />
     <ClCompile Include="src\Game\CStateIdle.cpp" />
     <ClCompile Include="src\Game\CStateMachine.cpp" />
     <ClCompile Include="src\Game\CStatePatrol.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="src\Game\CSlash.h" />
     <ClInclude Include="src\Game\CStateBase.h" />
     <ClInclude Include="src\Game\CStateBTIdle.h" />
+    <ClInclude Include="src\Game\CStateChase.h" />
     <ClInclude Include="src\Game\CStateIdle.h" />
     <ClInclude Include="src\Game\CStateMachine.h" />
     <ClInclude Include="src\Game\CStatePatrol.h" />

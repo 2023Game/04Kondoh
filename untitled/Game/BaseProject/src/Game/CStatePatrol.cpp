@@ -83,7 +83,7 @@ void CStatePatrol::Update()
 			break;
 		case 1:
 			mpOwner->ChangeStateAnimation(mIndex, 1);
-			if(mpOwner->MoveTo(mPatrolPoints[mNextPatrolIndex], mpOwner->GetWalkSpeed()))
+			if(mpOwner->NavMoveTo(mPatrolPoints[mNextPatrolIndex], mpOwner->GetWalkSpeed()))
 			{
 				mStateStep++;
 			}

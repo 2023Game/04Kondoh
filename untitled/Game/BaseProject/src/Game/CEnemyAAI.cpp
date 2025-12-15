@@ -15,7 +15,8 @@ void CEnemyA::SetupStateAI()
 
 		// ‘Ò‹@ó‘Ô‚ªI—¹‚µ‚½‚çA„‰ñó‘Ô‚Ö‘JˆÚ
 		state->AddTransition((int)EState::ePatrol);
-		
+		state->AddTransition((int)EState::eChase, false, 
+			[this]() {return IsFoundPlayer(); });
 	}
 
 	// „‰ñó‘Ô

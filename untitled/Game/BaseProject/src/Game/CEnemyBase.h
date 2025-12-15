@@ -84,6 +84,21 @@ public:
 	// 描画
 	void Render() override;
 
+	// プレイヤーが視野範囲内に入ったかどうか
+	bool IsFoundPlayer() const;
+	// 現在位置からプレイヤーが見えているかどうか
+	bool IsLookPlayer() const;
+
+	// プレイヤーの攻撃を検知したか？
+	bool IsPlayerAttackDetected() const;
+	// プレイヤーの攻撃範囲内か？
+	bool IsPlayerAttackRange() const;
+	/// <summary>
+	/// プレイヤーの攻撃を検知時の処理
+	/// </summary>
+	/// <returns>trueの場合は、状態が変わった</returns>
+	bool DetectedPlayerAttack();
+
 	// 歩く速度を返す
 	float GetWalkSpeed() const;
 	// 走る速度を返す
@@ -99,6 +114,16 @@ public:
 	// 移動速度を取得
 	const CVector& GetMoveSpeed() const;
 
+	// 戦闘状態を取得
+	bool GetIsBattle() const;
+	// 戦闘相手を取得
+	CObjectBase* GetBattleTarget() const;
+
+	// 戦闘状態を設定
+	bool SetIsBattle(bool isbattle);
+	// 戦闘相手を設定
+	void SetBattleTarget(CObjectBase* target);
+
 protected:
 
 	// 現在のステートを取得
@@ -107,10 +132,6 @@ protected:
 	// 敵の初期化
 	void InitEnemy(std::string path, const std::vector<AnimData>* pAnimData);
 
-	// プレイヤーが視野範囲内に入ったかどうか
-	bool IsFoundPlayer() const;
-	// 現在位置からプレイヤーが見えているかどうか
-	bool IsLookPlayer() const;
 	// 視野範囲と距離を設定
 	void SetAngLeng(float angle, float length);
 	// 頭の正面方向ベクトルを取得
@@ -136,6 +157,14 @@ protected:
 	float mWalkSpeed;	// 歩く速度
 	float mRunSpeed;	// 走る速度
 
+	// プレイヤーの攻撃を既に検知済みである
+	bool mIsDetectedPlayerAttack;
+
+	bool mIsBattle;			// 戦闘状態か
+	bool mIsGuard;			// ガード状態か
+	bool mIsAvoid;			// 回避状態か
+	bool mIsTripleAttack;	// 三連攻撃状態か
+
 	bool mIsAttackParry;	// 攻撃パリィ
 	bool mIsGuardParry;		// 防御パリィ
 
@@ -153,6 +182,8 @@ protected:
 	// 敵の行動を管理するステートマシン
 	CStateMachine mStateMachine;	
 
+	// 戦闘相手
+	CObjectBase* mpBattleTarget;
 
 	// プレイヤーを見失った位置のノード
 	CNavNode* mpLostPlayerNode;

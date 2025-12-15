@@ -26,6 +26,9 @@ CPlayer* CPlayer::spInstance = nullptr;
 #define PLAYER_CAP_DWON		 2.8f	// プレイヤーの底
 #define PLAYER_WIDTH		 3.0f	// プレイヤーの幅
 
+#define PLAYER_ATTACK_ANGLE		35.0f	// 攻撃範囲の角度
+#define PLAYER_ATTACK_LENGTH	25.0f	// 攻撃範囲の距離
+
 #define ATTACK1_CAP_UP		100.0f	// 攻撃コライダー1の上
 #define ATTACK1_CAP_DWON	0.0f	// 攻撃コライダー1の下
 #define ATTACK2_CAP_UP		0.0f	// 攻撃コライダー2の上
@@ -139,6 +142,8 @@ CPlayer::CPlayer()
 	, mIsBattleMode(true)
 	, mIsAvoiding(false)
 	, mIsTimeStart(false)
+	, mAttackAngle(PLAYER_ATTACK_ANGLE)
+	, mAttackLength(PLAYER_ATTACK_LENGTH)
 {
 	//インスタンスの設定
 	spInstance = this;
@@ -256,6 +261,9 @@ CPlayer::CPlayer()
 	mpPowerUI->SetPos(CVector2(100.0f, 600.0f));
 
 	mRandDeathAnim = Math::Rand(0, 99);
+
+	// 攻撃範囲のデバッグ表示を作成
+	mpDebugAttack = new CDebugFieldOfView(this, mAttackAngle, mAttackLength);
 }
 
 CPlayer::~CPlayer()
@@ -659,6 +667,16 @@ void CPlayer::Collision(CCollider* self, CCollider* other, const CHitInfo& hit)
 void CPlayer::Render()
 {
 	CXCharacter::Render();
+}
+
+float CPlayer::GetAngle() const
+{
+	return mAttackAngle;
+}
+
+float CPlayer::GetLength() const
+{
+	return mAttackLength;
 }
 
 

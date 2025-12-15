@@ -31,6 +31,7 @@ const std::vector<RespawnData> RESPAWN_DATA =
 			CVector( 300.0f, 0.94f,   80.0f),
 			CVector( 400.0f, 0.94f,  -80.0f),
 			CVector( 270.0f, 0.94f, -105.0f),
+			CVector(  50.0f, 0.94f,  -50.0f),
 			CVector( 200.0f, 0.94f,   75.0f),
 		}
 	},

@@ -39,7 +39,7 @@ void CStateChase::Update()
 	}
 	
 	// 走るアニメーションを再生
-	ChangeAnimation((int)EAnimType::eRun);
+	/*ChangeAnimation((int)EAnimType::eRun);*/
 	
 	// 経路探索管理クラスが存在すれば、
 	CNavManager* navMgr = CNavManager::Instance();

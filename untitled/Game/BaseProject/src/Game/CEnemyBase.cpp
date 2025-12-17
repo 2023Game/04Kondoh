@@ -370,7 +370,7 @@ CObjectBase* CEnemyBase::GetBattleTarget() const
 	return mpBattleTarget;
 }
 
-bool CEnemyBase::SetIsBattle(bool isbattle)
+void CEnemyBase::SetIsBattle(bool isbattle)
 {
 	mIsBattle = isbattle;
 }

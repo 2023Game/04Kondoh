@@ -7,6 +7,7 @@
 #include "CRideableObject.h"
 #include "CSound.h"
 
+class CDebugFieldOfView;
 class CFlamethrower;
 class CGaugeUI2D;
 class CAttackPowerUI;

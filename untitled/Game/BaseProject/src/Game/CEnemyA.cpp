@@ -958,7 +958,7 @@ void CEnemyA::AttackPickDetect()
 void CEnemyA::LookAtBattleTarget(bool immediate)
 {
 	// 戦闘相手がいなければ、処理しない
-	if (GetBattleTarget == nullptr) return;
+	if (GetBattleTarget() == nullptr) return;
 
 	// 戦闘相手までの方向ベクトルを求める
 	CVector targetPos = GetBattleTarget()->Position();

@@ -120,7 +120,7 @@ public:
 	CObjectBase* GetBattleTarget() const;
 
 	// í“¬ó‘Ô‚ğİ’è
-	bool SetIsBattle(bool isbattle);
+	void SetIsBattle(bool isbattle);
 	// í“¬‘Šè‚ğİ’è
 	void SetBattleTarget(CObjectBase* target);
 

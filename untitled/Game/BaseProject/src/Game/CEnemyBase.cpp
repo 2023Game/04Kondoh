@@ -13,7 +13,7 @@
 #define GRAVITY 0.0625f;
 #define PATROL_INTERVAL 3.0f		// 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f		// 巡回開始時に選択される巡回ポイントの最短距離
-#define ROTATE_SPEED 6.0f			// 回転速度
+#define ROTATE_SPEED 10.0f			// 回転速度
 #define DEFAULT_WALK_SPEED 10.0f	// 歩きの速度
 #define DEFAULT_RUN_SPEED 55.0f		// 走っている時の速度
 
@@ -447,6 +447,12 @@ bool CEnemyBase::IsLookPlayer() const
 
 	// プレイヤーとの間に遮蔽物がないので、プレイヤーが見えている
 	return true;
+}
+
+bool CEnemyBase::IsChase() const
+{
+
+	return false;
 }
 
 // プレイヤーの攻撃を検知したか？

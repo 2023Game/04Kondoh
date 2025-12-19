@@ -89,6 +89,9 @@ public:
 	// 現在位置からプレイヤーが見えているかどうか
 	bool IsLookPlayer() const;
 
+
+	bool IsChase() const;
+
 	// プレイヤーの攻撃を検知したか？
 	bool IsPlayerAttackDetected() const;
 	// プレイヤーの攻撃範囲内か？

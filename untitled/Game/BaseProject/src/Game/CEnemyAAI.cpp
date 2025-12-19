@@ -1,6 +1,7 @@
 #include "CEnemyA.h"
 #include "CStateIdle.h"
 #include "CStatePatrol.h"
+#include "CStateChase.h"
 
 #define IDLE_TIME 5.0f          // 待機状態の時間
 
@@ -15,17 +16,22 @@ void CEnemyA::SetupStateAI()
 
 		// 待機状態が終了したら、巡回状態へ遷移
 		state->AddTransition((int)EState::ePatrol);
+		// プレイヤーが視界に入ったら、追跡状態へ遷移
 		state->AddTransition((int)EState::eChase, false, 
 			[this]() {return IsFoundPlayer(); });
 	}
 
 	// 巡回状態
 	{
+		// 巡回状態の生成とステートマシンへの登録
 		CStatePatrol* state = new CStatePatrol(this);
 		mStateMachine.RegisterState((int)EState::ePatrol, state);
 
 		// 巡回が終われば、待機状態へ遷移
 		state->AddTransition((int)EState::eIdle);
+		// プレイヤーが視界に入ったら、追跡状態へ遷移
+		state->AddTransition((int)EState::eChase, false,
+			[this]() {return IsFoundPlayer(); });
 
 		// 巡回ポイントのリストを設定
 		state->SetPatrolPoints(mPatrolPoints);
@@ -37,6 +43,9 @@ void CEnemyA::SetupStateAI()
 
 	// 追跡状態
 	{
+		// 待機状態の生成とステートマシンへの登録
+		CStateChase* state = new CStateChase(this);
+		mStateMachine.RegisterState((int)EState::eChase, state);
 	}
 
 	// 見失った状態

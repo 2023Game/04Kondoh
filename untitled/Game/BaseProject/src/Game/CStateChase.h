@@ -6,7 +6,7 @@ class CStateChase : public CStateBase
 {
 public:
 	// コンストラクタ
-	CStateChase(CEnemyBase* owner, float time);
+	CStateChase(CEnemyBase* owner);
 
 	// 開始処理
 	void Enter() override;

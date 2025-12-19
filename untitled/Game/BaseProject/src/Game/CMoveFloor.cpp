@@ -1,12 +1,7 @@
 #include "CMoveFloor.h"
 #include "Maths.h"
 
-<<<<<<< Updated upstream
-CMoveFloor::CMoveFloor(CModel* model, const CVector& pos,
-	const CVector& scale, const CVector& move, float moveTime)
-=======
 CMoveFloor::CMoveFloor(CModel* model, const CVector& pos, const CVector& scale, const CVector& move, float moveTime)
->>>>>>> Stashed changes
 	: mpModel(model)
 	, mDefaultPos(pos)
 	, mMoveVec(move)

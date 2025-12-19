@@ -1299,7 +1299,7 @@ void CEnemyA::LookAtBattleTarget(bool immediate)
 //		break;
 //	}
 //}
-//
+
 //// UŒ‚‚ÌXVˆ—
 //void CEnemyA::UpdateAttack()
 //{

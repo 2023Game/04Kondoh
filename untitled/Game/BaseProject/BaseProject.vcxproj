@@ -109,6 +109,7 @@
     <ClCompile Include="src\Game\CStateBase.cpp" />
     <ClCompile Include="src\Game\CStateChase.cpp" />
     <ClCompile Include="src\Game\CStateIdle.cpp" />
+    <ClCompile Include="src\Game\CStateLost.cpp" />
     <ClCompile Include="src\Game\CStateMachine.cpp" />
     <ClCompile Include="src\Game\CStatePatrol.cpp" />
     <ClCompile Include="src\Game\CTitleScene.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="src\Game\CStateBTIdle.h" />
     <ClInclude Include="src\Game\CStateChase.h" />
     <ClInclude Include="src\Game\CStateIdle.h" />
+    <ClInclude Include="src\Game\CStateLost.h" />
     <ClInclude Include="src\Game\CStateMachine.h" />
     <ClInclude Include="src\Game\CStatePatrol.h" />
     <ClInclude Include="src\Game\CTitleUI.h" />

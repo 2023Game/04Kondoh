@@ -2,7 +2,7 @@
 #include "CEnemyBase.h"
 #include "CPlayer.h"
 
-CStateChase::CStateChase(CEnemyBase* owner, float time)
+CStateChase::CStateChase(CEnemyBase* owner)
 	: CStateBase("’ÇÕ", owner)
 	, mElapsedTime(0.0f)
 {
@@ -33,6 +33,8 @@ void CStateChase::Update()
 		mpOwner->SetIsBattle(true);
 		mpOwner->SetBattleTarget(player);
 	}
+
+	mpOwner->ChangeStateAnimation(mIndex);
 	
 	if (mpOwner->NavMoveTo(targetPos, mpOwner->GetRunSpeed()))
 	{

@@ -1,0 +1,370 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinUser.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBackGraund.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CBackGraund.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CPlayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CPlayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CEnemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CEnemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CApplication.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CApplication.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CEnemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CEnemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCamera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CCamera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCamera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CCamera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollider.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CCollider.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollisionManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CCollisionManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CApplication.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CApplication.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBackGround.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CBackGround.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CColliderMesh.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CColliderMesh.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBullet.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CBullet.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CBullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CTransform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CTransform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CMatrix.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CMatrix.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CTransform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CTransform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollisionManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8802AF2F-2920-4700-89F2-CA6778727283}|GameProgramming\\GameProgramming.vcxproj|solutionrelative:GameProgramming\\src\\CCollisionManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 14,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CApplication.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CApplication.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CApplication.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CApplication.h",
+              "RelativeToolTip": "GameProgramming\\src\\CApplication.h",
+              "ViewState": "AQIAADMAAAAAAAAAAAAAAB4AAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-17T04:40:46.96Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CApplication.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CApplication.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CApplication.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CApplication.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CApplication.cpp",
+              "ViewState": "AQIAABkAAAAAAAAAAAAiwDYAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-17T04:40:49.935Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CBackGround.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBackGround.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CBackGround.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBackGround.h",
+              "RelativeToolTip": "GameProgramming\\src\\CBackGround.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-21T02:28:09.76Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CBackGraund.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBackGraund.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CBackGraund.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBackGraund.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CBackGraund.cpp",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-21T02:28:35.367Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CPlayer.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CPlayer.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CPlayer.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CPlayer.h",
+              "RelativeToolTip": "GameProgramming\\src\\CPlayer.h",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAAAYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-17T04:41:13.805Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CPlayer.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CPlayer.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CPlayer.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CPlayer.cpp*",
+              "RelativeToolTip": "GameProgramming\\src\\CPlayer.cpp*",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAAAF8AAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-17T04:41:16.774Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CCamera.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCamera.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CCamera.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCamera.h",
+              "RelativeToolTip": "GameProgramming\\src\\CCamera.h",
+              "ViewState": "AQIAACoAAAAAAAAAAAAAABEAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-23T05:33:51.739Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CCamera.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCamera.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CCamera.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCamera.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CCamera.cpp",
+              "ViewState": "AQIAAJIAAAAAAAAAAAAnwKEAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-23T05:33:54.881Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CEnemy.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CEnemy.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CEnemy.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CEnemy.h",
+              "RelativeToolTip": "GameProgramming\\src\\CEnemy.h",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAAACgAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-24T06:07:50.829Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CEnemy.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CEnemy.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CEnemy.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CEnemy.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CEnemy.cpp",
+              "ViewState": "AQIAAD8AAAAAAAAAAAAAAEoAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-06-24T06:07:54.3Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CBullet.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBullet.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CBullet.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBullet.h",
+              "RelativeToolTip": "GameProgramming\\src\\CBullet.h",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAnwBEAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-03T05:07:49.456Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CBullet.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBullet.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CBullet.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CBullet.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CBullet.cpp",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAAIAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-06-03T05:08:40.138Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CCollider.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollider.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CCollider.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollider.h",
+              "RelativeToolTip": "GameProgramming\\src\\CCollider.h",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAnwBQAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-07-30T02:43:26.713Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CCollider.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollider.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CCollider.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollider.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CCollider.cpp",
+              "ViewState": "AQIAAOQAAAAAAAAAAAAlwPkAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-06-17T05:53:24.786Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WinUser.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinUser.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinUser.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinUser.h",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinUser.h",
+              "ViewState": "AQIAAK0IAAAAAAAAAAAnwNoIAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-09-19T06:01:56.651Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CCollisionManager.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollisionManager.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CCollisionManager.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollisionManager.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CCollisionManager.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-08-01T05:08:25.927Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CColliderMesh.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CColliderMesh.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CColliderMesh.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CColliderMesh.h",
+              "RelativeToolTip": "GameProgramming\\src\\CColliderMesh.h",
+              "ViewState": "AQIAAAIAAAAAAAAAAAAnwBEAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-07-29T06:39:19.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CMatrix.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CMatrix.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CMatrix.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CMatrix.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CMatrix.cpp",
+              "ViewState": "AQIAACEAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-07-16T03:00:29.907Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "CTransform.cpp",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CTransform.cpp",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CTransform.cpp",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CTransform.cpp",
+              "RelativeToolTip": "GameProgramming\\src\\CTransform.cpp",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAAAkAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-07-16T02:25:46.784Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "CCollisionManager.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollisionManager.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CCollisionManager.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CCollisionManager.h",
+              "RelativeToolTip": "GameProgramming\\src\\CCollisionManager.h",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAMAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-24T03:07:10.156Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "CTransform.h",
+              "DocumentMoniker": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CTransform.h",
+              "RelativeDocumentMoniker": "GameProgramming\\src\\CTransform.h",
+              "ToolTip": "C:\\Users\\kndu8\\Git\\04Kondoh\\GHODT WATCHER\\\u30B2\u30FC\u30E0\u5236\u4F5C\\3DLv1_vs2019_00\\GameProgramming\\src\\CTransform.h",
+              "RelativeToolTip": "GameProgramming\\src\\CTransform.h",
+              "ViewState": "AQIAABcAAAAAAAAAAAAnwCYAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-13T05:51:40.573Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

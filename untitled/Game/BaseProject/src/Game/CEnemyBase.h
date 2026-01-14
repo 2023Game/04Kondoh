@@ -89,9 +89,6 @@ public:
 	// 現在位置からプレイヤーが見えているかどうか
 	bool IsLookPlayer() const;
 
-
-	bool IsChase() const;
-
 	// プレイヤーの攻撃を検知したか？
 	bool IsPlayerAttackDetected() const;
 	// プレイヤーの攻撃範囲内か？
@@ -102,30 +99,36 @@ public:
 	/// <returns>trueの場合は、状態が変わった</returns>
 	bool DetectedPlayerAttack();
 
-	// 歩く速度を返す
+	// 歩く速度を取得
 	float GetWalkSpeed() const;
-	// 走る速度を返す
+	// 走る速度を取得
 	float GetRunSpeed() const;
+
+	// プレイヤーを見失った位置ノードを取得
+	CNavNode* GetLostPlayerNode() const;
+	// プレイヤーを見失った位置ノードの座標を取得
+	CVector GetLostPlayerNodePos() const;
 
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);
 	// 指定した位置まで経路探索で移動する
 	bool NavMoveTo(const CVector& targetPos, float speed);
 
-	// 移動速度を設定
-	void SetMoveSpeed(const CVector& moveSpeed);
 	// 移動速度を取得
 	const CVector& GetMoveSpeed() const;
+	// 移動速度を設定
+	void SetMoveSpeed(const CVector& moveSpeed);
 
 	// 戦闘状態を取得
 	bool GetIsBattle() const;
-	// 戦闘相手を取得
-	CObjectBase* GetBattleTarget() const;
-
 	// 戦闘状態を設定
 	void SetIsBattle(bool isbattle);
+
+	// 戦闘相手を取得
+	CObjectBase* GetBattleTarget() const;
 	// 戦闘相手を設定
 	void SetBattleTarget(CObjectBase* target);
+
 
 protected:
 
@@ -192,7 +195,7 @@ protected:
 	CNavNode* mpLostPlayerNode;
 	// 巡回ポイントのリスト
 	std::vector<CVector> mPatrolPoints;
-	
+
 	// 移動先の経路探索用のノード
 	CNavNode* mpMoveNavNode;
 	// 求めた最短経路記憶用

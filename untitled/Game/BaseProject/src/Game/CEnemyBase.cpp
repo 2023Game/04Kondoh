@@ -449,12 +449,6 @@ bool CEnemyBase::IsLookPlayer() const
 	return true;
 }
 
-bool CEnemyBase::IsChase() const
-{
-
-	return false;
-}
-
 // プレイヤーの攻撃を検知したか？
 bool CEnemyBase::IsPlayerAttackDetected() const
 {
@@ -659,6 +653,17 @@ float CEnemyBase::GetRunSpeed() const
 {
 	return mRunSpeed;
 }
+
+CNavNode* CEnemyBase::GetLostPlayerNode() const
+{
+	return mpLostPlayerNode;
+}
+
+CVector CEnemyBase::GetLostPlayerNodePos() const
+{
+	return mpLostPlayerNode->GetPos();
+}
+
 
 
 

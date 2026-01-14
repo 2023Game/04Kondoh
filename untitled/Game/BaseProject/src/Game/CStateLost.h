@@ -12,4 +12,9 @@ public:
 	// XVˆ—
 	void Update() override;
 
+private:
+
+	int mStateStep;
+	float mElapsedTime;
+
 };

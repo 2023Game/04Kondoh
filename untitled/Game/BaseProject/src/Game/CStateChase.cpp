@@ -36,45 +36,11 @@ void CStateChase::Update()
 
 	mpOwner->ChangeStateAnimation(mIndex);
 	
+	// プレイヤーの位置まで経路探索して移動する
 	if (mpOwner->NavMoveTo(targetPos, mpOwner->GetRunSpeed()))
 	{
 	}
 
-	//// プレイヤーが見えなくなったら、見失った状態に戻す
-	//if (!mpOwner->IsLookPlayer())
-	//{
-	//	見失い状態のEnter関数で指定する
-	//	mpLostPlayerNode->SetPos(targetPos);
-	//	ChangeState((int)EState::eLost);
-	//	return;
-	//}
-	
-	// 走るアニメーションを再生
-	/*ChangeAnimation((int)EAnimType::eRun);*/
-	
-	// 経路探索管理クラスが存在すれば、
-	//CNavManager* navMgr = CNavManager::Instance();
-	//if (navMgr != nullptr)
-	//{
-	//	// 自身のノードとプレイヤーのノードが更新中でなければ、
-	//	// 自身のノードからプレイヤーのノードまでの最短距離を求める
-	//	CNavNode* playerNode = player->GetNavNode();
-	//	if (!mpNavNode->IsUpdaing() && 
-	//		playerNode != nullptr && !playerNode->IsUpdaing())
-	//	{
-	//		if (navMgr->Navigate(mpNavNode, playerNode, mMoveRoute))
-	//		{
-	//			// 自身のノードからプレイヤーのノードまで繋がっていたら、
-	//			// 移動する位置を次のノードの位置に設定
-	//			targetPos = mMoveRoute[1]->GetPos();
-	//		}
-	//	}
-	//}
-	// 移動処理
-	//if (MoveTo(targetPos, RUN_SPEED))
-	//{
-	//}
-	
 	//if (CanAttackPlayer(DISTANT_ATTACK_RANGE))
 	//{
 	//	// プレイヤーに攻撃できるならば、攻撃状態へ移行

@@ -651,9 +651,18 @@ void CEnemyA::ChangeStateAnimation(int stateIndex, int no)
 		case (int)EState::eIdle:
 			ChangeAnimation((int)EAnimType::eIdle);
 			break;
+
 		case (int)EState::ePatrol:
 			if (no == 0) ChangeAnimation((int)EAnimType::eIdle);
 			else if (no == 1) ChangeAnimation((int)EAnimType::eWalk);
+			break;
+
+		case (int)EState::eBattleIdle:
+			ChangeAnimation((int)EAnimType::eBattleIdle);
+			break;
+
+		case (int)EState::eChase:
+			ChangeAnimation((int)EAnimType::eRun);
 			break;
 	}
 }

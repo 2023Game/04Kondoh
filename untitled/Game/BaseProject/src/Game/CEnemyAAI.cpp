@@ -46,6 +46,9 @@ void CEnemyA::SetupStateAI()
 		// 待機状態の生成とステートマシンへの登録
 		CStateChase* state = new CStateChase(this);
 		mStateMachine.RegisterState((int)EState::eChase, state);
+
+		//state->AddTransition((int)EState::eLost, false,
+		//	[this]() {return !IsFoundPlayer(); });
 	}
 
 	// 見失った状態

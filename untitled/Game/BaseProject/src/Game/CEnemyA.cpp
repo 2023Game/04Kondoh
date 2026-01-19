@@ -87,7 +87,6 @@
 #define IDLE_TIME_MAX 5.0f			// 待機時の最長待機時間
 #define BATTLE_IDLE_TIME_MIN 0.5f	// 戦闘待機時の最短待機時間
 #define BATTLE_IDLE_TIME_MAX 3.5f	// 戦闘待機時の最長待機時間
-#define LOST_TIME 5.0f				// 壁に引っかかった時の追跡処理有効時間
 
 #define EATTACKWAY CPlayer::EAttackDir		// プレイヤーの攻撃方向
 #define EATTACKPWOER CPlayer::EAttackPower	// プレイヤーの攻撃威力

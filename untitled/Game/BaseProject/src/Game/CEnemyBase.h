@@ -105,9 +105,11 @@ public:
 	float GetRunSpeed() const;
 
 	// プレイヤーを見失った位置ノードを取得
-	CNavNode* GetLostPlayerNode() const;
+	void LostPlayerNodeEnable(bool on) const;
 	// プレイヤーを見失った位置ノードの座標を取得
 	CVector GetLostPlayerNodePos() const;
+	// プレイヤーを見失った位置ノードの座標を取得
+	void SetLostPlayerNodePos(const CVector& pos) const;
 
 	// 指定した位置まで移動する
 	bool MoveTo(const CVector& targetPos, float speed);

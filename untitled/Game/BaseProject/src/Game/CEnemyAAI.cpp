@@ -2,6 +2,7 @@
 #include "CStateIdle.h"
 #include "CStatePatrol.h"
 #include "CStateChase.h"
+#include "CStateLost.h"
 
 #define IDLE_TIME 5.0f          // 待機状態の時間
 
@@ -47,12 +48,21 @@ void CEnemyA::SetupStateAI()
 		CStateChase* state = new CStateChase(this);
 		mStateMachine.RegisterState((int)EState::eChase, state);
 
-		//state->AddTransition((int)EState::eLost, false,
-		//	[this]() {return !IsFoundPlayer(); });
+		// プレイヤーが視界外に出たら、見失い状態へ遷移
+		state->AddTransition((int)EState::eLost, false,
+			[this]() {return !IsFoundPlayer(); });
 	}
 
 	// 見失った状態
 	{
+		CStateLost* state = new CStateLost(this);
+		mStateMachine.RegisterState((int)EState::eLost, state);
+
+		// プレイヤーが視界に入ったら、追跡状態へ遷移
+		state->AddTransition((int)EState::eChase, false,
+			[this]() {return IsFoundPlayer(); });
+		// 見失った状態が指定時間まで続くと待機状態へ遷移
+		//state->AddTransition((int)EState::eIdle);
 	}
 
 	// 攻撃状態

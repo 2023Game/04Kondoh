@@ -13,9 +13,9 @@
 #define GRAVITY 0.0625f;
 #define PATROL_INTERVAL 3.0f		// 次の巡回に移動開始するまでの時間
 #define PATROL_NEAR_DIST 10.0f		// 巡回開始時に選択される巡回ポイントの最短距離
-#define ROTATE_SPEED 10.0f			// 回転速度
-#define DEFAULT_WALK_SPEED 10.0f	// 歩きの速度
-#define DEFAULT_RUN_SPEED 55.0f		// 走っている時の速度
+#define ROTATE_SPEED 6.0f			// 回転速度
+#define DEFAULT_WALK_SPEED 20.0f	// 歩きの速度
+#define DEFAULT_RUN_SPEED 60.0f		// 走っている時の速度
 
 #define NAVMOVE_STOP_DIST 0.05f		// 経路探索での移動時に停止する距離
 #define UPDATE_MOVE_NODE_DIST 2.0f	// 移動用の経路探索ノードの更新処理
@@ -324,7 +324,7 @@ bool CEnemyBase::NavMoveTo(const CVector& targetPos, float speed)
 		}
 	}
 
-	// 次の移動先のインデックス値が設定されてたら
+	// 次の移動先のインデックス値が設定されてたら（不正値でなければ）
 	if (mNextMoveIndex > 0)
 	{
 		CNavNode* nextNode = mMoveRoute[mNextMoveIndex];
@@ -654,14 +654,19 @@ float CEnemyBase::GetRunSpeed() const
 	return mRunSpeed;
 }
 
-CNavNode* CEnemyBase::GetLostPlayerNode() const
+void CEnemyBase::LostPlayerNodeEnable(bool on) const
 {
-	return mpLostPlayerNode;
+	return mpLostPlayerNode->SetEnable(on);
 }
 
 CVector CEnemyBase::GetLostPlayerNodePos() const
 {
 	return mpLostPlayerNode->GetPos();
+}
+
+void CEnemyBase::SetLostPlayerNodePos(const CVector& pos) const
+{
+	return mpLostPlayerNode->SetPos(pos);
 }
 
 

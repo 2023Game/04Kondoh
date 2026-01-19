@@ -62,6 +62,7 @@ protected:
 
 	std::string mStateName;	// ‚±‚Ìó‘Ô‚Ì–¼‘O
 	CEnemyBase* mpOwner;	// ‚±‚Ìó‘Ô‚Ì‚¿å
+	CNavNode* mpNavNode;
 
 	// ‘¼‚Ìó‘Ô‚Ö‚Ì‘JˆÚğŒ‚ÌƒŠƒXƒg
 	std::vector<Transition> mTransitions;

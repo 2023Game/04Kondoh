@@ -1,8 +1,6 @@
 #pragma once
 #include "CStateBase.h"
 
-class CNavNode;
-
 class CStateLost : public CStateBase
 {
 public:
@@ -18,8 +16,5 @@ private:
 
 	int mStateStep;
 	float mElapsedTime;
-
-	// プレイヤーを見失った位置のノード
-	CNavNode* mpLostPlayerNode;
 
 };

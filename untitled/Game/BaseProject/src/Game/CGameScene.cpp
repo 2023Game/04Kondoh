@@ -14,7 +14,7 @@
 #include "CWall.h"
 #include "CPlayer.h"
 #include "CEnemyManager.h"
-#include "CEnemyA.h"
+#include "CBarbarian.h"
 #include "CBGMManager.h"
 
 #define GAMEOVER_WAIT_TIME 0.5f // ゲームオーバーシーン移行待機時間
@@ -114,7 +114,7 @@ void CGameScene::Load()
 	CResourceManager::Load<CModel>("RastDoor",		"Field\\Object\\Gimmick\\RastDoor.obj");
 	// キャラクター
 	CResourceManager::Load<CModelX>("Player",		"Character\\Player\\T_Pose.x");
-	CEnemyA::LoadResources();
+	CBarbarian::LoadResources();
 	// サウンド
 	CResourceManager::Load<CSound>("SlashSound",	"Sound\\SE\\slash.wav");
 
@@ -233,7 +233,7 @@ void CGameScene::RandomRespawn()
 		{
 			int index = Math::Rand(0, RESPAWN_DATA.size() - 1);
 			const RespawnData& data = RESPAWN_DATA[index];
-			CEnemyA* enemyA = new CEnemyA(data.respawnPoint, data.patrolPoints);
+			CBarbarian* enemyA = new CBarbarian(data.respawnPoint, data.patrolPoints);
 			enemyA->Scale(1.0f, 1.0f, 1.0f);
 			mSpawnCount++;
 			mRespawnElapsedTime -= RESPAWN_INTERVAL;

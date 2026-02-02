@@ -38,7 +38,6 @@ CEnemyBase::CEnemyBase()
 	, mIsBattle(false)
 	, mIsGuard(false)
 	, mIsAvoid(false)
-	, mIsTripleAttack(false)
 	, mIsGrounded(false)
 	, mIsHitWall(false)
 	, mGroundNormal(CVector::up)
@@ -299,7 +298,7 @@ bool CEnemyBase::NavMoveTo(const CVector& targetPos, float speed)
 		mpMoveNavNode->SetEnable(true);
 		mpMoveNavNode->SetPos(targetPos);
 		// 移動経路再計算用の初期化
-		mNextMoveIndex = -1;
+		/*mNextMoveIndex = -1;*/
 		mIsUpdateMoveRoute = true;
 	}
 
@@ -380,6 +379,34 @@ void CEnemyBase::SetBattleTarget(CObjectBase* target)
 	mpBattleTarget = target;
 }
 
+// 戦闘相手の方へ向く
+void CEnemyBase::LookAtBattleTarget(bool immediate)
+{
+	// 戦闘相手がいなければ、処理しない
+	if (GetBattleTarget() == nullptr) return;
+
+	// 戦闘相手までの方向ベクトルを求める
+	CVector targetPos = GetBattleTarget()->Position();
+	CVector vec = targetPos - Position();
+	vec.Y(0.0f);
+	vec.Normalize();
+	// すぐに戦闘相手の方向へ向く
+	if (immediate)
+	{
+		Rotation(CQuaternion::LookRotation(vec));
+	}
+	// 徐々に戦闘相手の方向へ向く
+	else
+	{
+		CVector forward = CVector::Slerp
+		(
+			VectorZ(), vec,
+			mLookAtSpeed * Times::DeltaTime()
+		);
+		Rotation(CQuaternion::LookRotation(forward));
+	}
+}
+
 // プレイヤーが視野範囲内に入ったかどうか
 bool CEnemyBase::IsFoundPlayer() const
 {
@@ -458,46 +485,62 @@ bool CEnemyBase::IsPlayerAttackDetected() const
 
 	if (!player->IsAttacking()) return false;
 	// プレイヤーの攻撃範囲か？
-	if (IsPlayerAttackRange()) return true;
+	if (CanAttackPlayer(player->GetAttackLength())) return true;
 }
 
-// プレイヤーの攻撃範囲内か？
-bool CEnemyBase::IsPlayerAttackRange() const
+// 攻撃範囲を追加（敵によって違うので）
+void CEnemyBase::AddAttackRange(float closeRng, float nearRng, float middleRng, float longRng, float detectRng)
 {
+	mRangeData.emplace_back(closeRng, nearRng, middleRng, longRng, detectRng);
+}
+
+// 
+const CEnemyBase::AttackRangeData& CEnemyBase::GetRangeData(int index) const
+{
+	// インデックスが範囲外なら、０番目を返す処理
+	if (index < 0 || index >= mRangeData.size()) {
+		return mRangeData[0];
+	}
+	return mRangeData[index];
+}
+
+// プレイヤーを攻撃出来るかどうか
+bool CEnemyBase::CanAttackPlayer(float range) const
+{
+	// プレイヤーがいない場合は、攻撃できない
 	CPlayer* player = CPlayer::Instance();
-	// プレイヤー座標の取得
+	if (player == nullptr) return false;
+
+	if (!IsFoundPlayer()) return false;
+
 	CVector playerPos = player->Position();
-	// 自分自身の座標を取得
-	CVector pos = Position();
-	// プレイヤーから自身までのベクトルを求める
-	CVector vec = pos - playerPos;
+	CVector vec = playerPos - Position();
 	vec.Y(0.0f);
-
-
-	// 1: 視野角度内か求める
-	// ベクトルを正規化して方向要素のみにするため
-	// 長さを１にする
-	CVector dir = vec.Normalized();
-	// プレイヤーの正面方向のベクトルを取得
-	CVector forward = player->VectorZ();
-	// 自身までのベクトルと
-	// プレイヤーの正面方向のベクトルの内積を求めて角度を出す
-	float dot = CVector::Dot(dir, forward);
-	// 視野角度のラジアンを求める
-	float angleR = Math::DegreeToRadian(player->GetAngle());
-	// 求めた内積と視野角度で、視野範囲か判断する
-	if (dot < cosf(angleR)) return false;
-
-
-	// 2: 攻撃距離内か求める
-	// プレイヤーまでの距離と視野距離で、視野範囲内か判断する
 	float dist = vec.Length();
-	if (dist > player->GetLength()) return false;
+	// 攻撃範囲より外にいたら、攻撃しない
+	if (dist > range) return false;
 
-	// プレイヤーとの間に遮蔽物がないか判定する
-	if (!IsLookPlayer()) return false;
+	// 全ての条件をみたした
+	return true;
+}
 
-	// 全ての条件をクリアしたので、視野範囲内である
+//攻撃時に移動する距離か
+bool CEnemyBase::IsMoveAttackRange(const AttackRangeData& range)
+{
+
+	// プレイヤーがいない場合は、攻撃できない
+	CPlayer* player = CPlayer::Instance();
+
+	if (player == nullptr) return false;
+
+	CVector playerPos = player->Position();
+	CVector vec = playerPos - Position();
+	vec.Y(0.0f);
+	float dist = vec.Length();
+
+	if (dist > range.detectRange) return false;
+
+	// 全ての条件をみたした
 	return true;
 }
 
@@ -541,10 +584,13 @@ bool CEnemyBase::DetectedPlayerAttack()
 	return false;
 }
 
-void CEnemyBase::SetAngLeng(float angle, float length)
+// 視野に関する情報を設定
+void CEnemyBase::SetFovs(float angle, float length, float eyeHeight, float lookAtSpeed)
 {
 	mFovAngle = angle;
 	mFovLength = length;
+	mEyeHeight = eyeHeight;
+	mLookAtSpeed = lookAtSpeed;
 }
 
 CVector CEnemyBase::GetHeadForwardVec() const
@@ -644,6 +690,12 @@ void CEnemyBase::Render()
 	CXCharacter::Render();
 }
 
+void CEnemyBase::SelectAttack(float range, int rand)
+{
+
+	if (CanAttackPlayer())
+}
+
 float CEnemyBase::GetWalkSpeed() const
 {
 	return mWalkSpeed;
@@ -654,10 +706,17 @@ float CEnemyBase::GetRunSpeed() const
 	return mRunSpeed;
 }
 
-void CEnemyBase::LostPlayerNodeEnable(bool on) const
+int CEnemyBase::GetAttackType() const
 {
-	return mpLostPlayerNode->SetEnable(on);
+	return mAttackType;
 }
+
+const std::vector<CEnemyBase::AttackData>* CEnemyBase::GetAttackData() const
+{
+	return mpAttackData;
+}
+
+
 
 CVector CEnemyBase::GetLostPlayerNodePos() const
 {

@@ -20,8 +20,12 @@ public:
 
 	// ó‘Ô‚Ì“o˜^
 	void RegisterState(int index, CStateBase* state);
+	// UŒ‚ó‘Ô‚Ì“o˜^
+	void RegisterAttackState(int index, CStateBase* state);
 	// ó‘Ô‚ğ•ÏX‚·‚éŠÖ”
 	void ChangeState(int index);
+	// UŒ‚ó‘Ô‚ğ•ÏX‚·‚éŠÖ”
+	void ChangeAttack(int index);
 
 #if _DEBUG
 	// ƒfƒoƒbƒO•\¦
@@ -34,6 +38,10 @@ private:
 
 	// Œ»İ‚Ìó‘Ô
 	CStateBase* mpCurrent;
+	// Œ»İ‚ÌUŒ‚ó‘Ô
+	CStateBase* mpAttackCurrent;
 	// “o˜^‚µ‚Ä‚ ‚éó‘ÔƒŠƒXƒg
 	std::vector<CStateBase*> mStates;
+	// “o˜^‚µ‚Ä‚ ‚éUŒ‚ó‘ÔƒŠƒXƒg
+	std::vector<CStateBase*> mAttackStates;
 };

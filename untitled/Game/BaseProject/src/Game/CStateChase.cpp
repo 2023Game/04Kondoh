@@ -3,7 +3,7 @@
 #include "CPlayer.h"
 
 CStateChase::CStateChase(CEnemyBase* owner)
-	: CStateBase("í«ê’", owner)
+	: CStateBase(owner, "í«ê’")
 	, mElapsedTime(0.0f)
 {
 }

@@ -48,7 +48,7 @@ CField::CField()
 	navManager->AddCollider(fieldWall->GetFieldWallCol());
 
 	// ï«ÇçÏê¨
-	//CreateWalls();
+	CreateWalls();
 
 	for (CWall* wall : mWalls)
 	{
@@ -80,7 +80,7 @@ void CField::CreateWalls()
 	// ï«ÇPçÏê¨
 	CWall* wall = new CWall
 	(
-		CVector(-369.0f, 0.0f, 0.0f),
+		CVector(450.0f, 0.0f, 0.0f),
 		CVector(0.0f, 90.0f, 0.0f),
 		CVector(7.0f, 8.0f, 6.0f)
 
@@ -90,7 +90,7 @@ void CField::CreateWalls()
 	// ï«ÇQê∂ê¨
 	wall = new CWall
 	(
-		CVector(-50.0f, 0.94f, -50.0f),
+		CVector(290.0f, 0.94f, 40.0f),
 		CVector(  0.0f,  0.0f,  0.0f),
 		CVector(  5.0f,  5.0f,  5.0f)
 	);

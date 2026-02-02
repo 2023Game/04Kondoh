@@ -94,9 +94,9 @@ public:
 	void Render();
 
 	// プレイヤーの攻撃範囲の角度を取得
-	float GetAngle() const;
+	float GetAttackAngle() const;
 	// プレイヤーの攻撃範囲の距離を取得
-	float GetLength() const;
+	float GetAttackLength() const;
 
 private:
 

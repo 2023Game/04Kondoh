@@ -2,7 +2,7 @@
 #include "CEnemyBase.h"
 
 CStateIdle::CStateIdle(CEnemyBase* owner, float time)
-	: CStateBase("待機", owner)
+	: CStateBase(owner, "待機")
 	, mIdleTime(time)
 	, mElapsedTime(0.0f)
 {
@@ -13,12 +13,13 @@ void CStateIdle::Enter()
 	// ベースクラスの処理を呼び出す
 	CStateBase::Enter();
 
+	mpOwner->SetIsBattle(false);
+	mpOwner->SetBattleTarget(nullptr);
+
 	// 待機アニメーションを再生
 	mpOwner->ChangeStateAnimation(mIndex);
-
 	// 移動停止
 	mpOwner->SetMoveSpeed(CVector::zero);
-
 	// 経過時間初期化
 	mElapsedTime = 0.0f;
 }

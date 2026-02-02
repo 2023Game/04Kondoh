@@ -14,13 +14,13 @@ class CNavNode;
 エネミークラス
 キャラクタクラスを継承
 */
-class CEnemyA : public CEnemyBase
+class CBarbarian : public CEnemyBase
 {
 
 public:
 	// コンストラクタ
-	CEnemyA(const CVector& pos, std::vector<CVector> patrolPoints);
-	~CEnemyA();
+	CBarbarian(const CVector& pos, std::vector<CVector> patrolPoints);
+	~CBarbarian();
 
 	// 必要なリソースを読み込み
 	static void LoadResources();
@@ -71,7 +71,7 @@ private:
 	// アニメーションの種類
 	enum class EAnimType
 	{
-		None = -1,
+		None = -1,		
 
 		eTPose,			// Tポーズ
 		eIdle,			// 待機
@@ -114,6 +114,8 @@ private:
 	// 敵の状態
 	enum class EState
 	{
+		eNone = -1,		// 指定なし
+
 		eIdle,			// 待機
 		ePatrol,		// 巡回中
 
@@ -139,7 +141,7 @@ private:
 	// 攻撃タイプ
 	enum class EAttackType
 	{
-		eNone,			// 指定なし
+		eNone = -1,		// 指定なし
 
 		eBlowL,			// 左薙ぎ払い
 		eBlowR,			// 右薙ぎ払い
@@ -164,16 +166,16 @@ private:
 	/// </summary>
 	/// <param name="range">攻撃範囲を設定</param>
 	/// <returns>攻撃範囲より内側：true</returns>
-	bool CanAttackPlayer(float range) const;
+	//bool CanAttackPlayer(float range) const;
 
-	// 移動する攻撃範囲か？
-	bool IsMoveAttackRange();
+	//// 移動する攻撃範囲か？
+	//bool IsMoveAttackRange(float range);
 
 	// どの攻撃をするか判定する
 	void AttackPickDetect();
 
-	// 戦闘相手の方へ向く
-	void LookAtBattleTarget(bool immediate = false);
+	//// 戦闘相手の方へ向く
+	//void LookAtBattleTarget(bool immediate = false);
 
 
 	// ↓ステートベースAI↓

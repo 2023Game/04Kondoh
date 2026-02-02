@@ -5,6 +5,7 @@
 #include "CCollider.h"
 #include "CModel.h"
 #include "CStateMachine.h"
+#include "CStateAttack.h"
 
 class CGaugeUI3D;
 
@@ -34,7 +35,7 @@ public:
 
 	// 攻撃データ
 	struct AttackData
-	{
+	{						
 		EAttackDir dir;					// 攻撃の方向
 		EAttackPower power;				// 攻撃の強さ
 		bool attackParry;				// アタックパリィ出来るかどうか
@@ -43,8 +44,18 @@ public:
 		float attackParryEndFrame;		// アタックパリィ出来るアニメーション終了フレーム数
 		float guardParryStartFrame;		// ガードパリィ出来るアニメーション開始フレーム
 		float guardParryEndFrame;		// ガードパリィ出来るアニメーション終了フレーム
+		int rangeNamber;
 	};
 
+	// 攻撃範囲データ
+	struct AttackRangeData
+	{
+		float closeRange = 0.0f;	// 至近距離	
+		float nearRange = 0.0f;		// 近距離
+		float middleRange = 0.0f;	// 中距離
+		float longRange = 0.0f;		// 遠距離
+		float detectRange = 0.0f;	// 判定距離
+	};
 
 	// コンストラクタ
 	CEnemyBase();
@@ -84,6 +95,8 @@ public:
 	// 描画
 	void Render() override;
 
+	// 戦闘相手の方へ向く
+	void LookAtBattleTarget(bool immediate = false);
 	// プレイヤーが視野範囲内に入ったかどうか
 	bool IsFoundPlayer() const;
 	// 現在位置からプレイヤーが見えているかどうか
@@ -91,24 +104,49 @@ public:
 
 	// プレイヤーの攻撃を検知したか？
 	bool IsPlayerAttackDetected() const;
-	// プレイヤーの攻撃範囲内か？
-	bool IsPlayerAttackRange() const;
+
+	// 攻撃範囲を追加（敵によって違うので）
+	void AddAttackRange(float closeRng, float nearRng,float middleRng, float longRng, float detectRng);
+	
+	/// <summary>
+	/// 攻撃範囲データの取得
+	/// </summary>
+	/// <param name="index">攻撃範囲のリストの要素数</param>
+	/// <returns></returns>
+	const AttackRangeData& GetRangeData(int index) const;
+
+	/// <summary>
+	/// 攻撃出来るかどうか
+	/// </summary>
+	/// <param name="range">攻撃範囲を設定</param>
+	/// <returns>攻撃範囲より内側：true</returns>
+	bool CanAttackPlayer(float range) const;
+	// 移動する攻撃範囲か？
+	bool IsMoveAttackRange(const AttackRangeData& range);
+
 	/// <summary>
 	/// プレイヤーの攻撃を検知時の処理
 	/// </summary>
 	/// <returns>trueの場合は、状態が変わった</returns>
 	bool DetectedPlayerAttack();
 
+	// 攻撃を攻撃範囲と確率で決めるための関数
+	// TODO：ゆくゆくは、複数の条件で決めれるように成りたい
+	void SelectAttack(float range, int rand);
+
 	// 歩く速度を取得
 	float GetWalkSpeed() const;
 	// 走る速度を取得
 	float GetRunSpeed() const;
 
-	// プレイヤーを見失った位置ノードを取得
-	void LostPlayerNodeEnable(bool on) const;
+	// 攻撃状態を取得
+	int GetAttackType() const;
+	// アタックデータを取得
+	const std::vector<AttackData>* GetAttackData() const;
+ 
 	// プレイヤーを見失った位置ノードの座標を取得
 	CVector GetLostPlayerNodePos() const;
-	// プレイヤーを見失った位置ノードの座標を取得
+	// プレイヤーを見失った位置ノードの座標を設定
 	void SetLostPlayerNodePos(const CVector& pos) const;
 
 	// 指定した位置まで移動する
@@ -140,14 +178,21 @@ protected:
 	// 敵の初期化
 	void InitEnemy(std::string path, const std::vector<AnimData>* pAnimData);
 
-	// 視野範囲と距離を設定
-	void SetAngLeng(float angle, float length);
+	/// <summary>
+	/// 視野に関する情報を設定
+	/// </summary>
+	/// <param name="angle">視野範囲の角度</param>
+	/// <param name="length">視野範囲の距離</param>
+	/// <param name="eyeHeight">視野の高さ</param>
+	/// <param name="lookAtSpeed">対象に向く速度</param>
+	void SetFovs(float angle, float length, float eyeHeight, float lookAtSpeed);
 	// 頭の正面方向ベクトルを取得
 	CVector GetHeadForwardVec() const;
 
 	float mFovAngle;	// 視野範囲の角度
 	float mFovLength;	// 視野範囲の距離
 	float mEyeHeight;	// 視野の高さ
+	float mLookAtSpeed;	// 対象に向く速度
 
 	int mAttackType;		// 攻撃タイプ
 	float mElapsedTime;			// 経過時間計測用
@@ -159,6 +204,8 @@ protected:
 	const std::vector<AnimData>* mpAnimData;
 	// 攻撃データのテーブル
 	const std::vector<AttackData>* mpAttackData;
+	// 攻撃範囲
+	std::vector<AttackRangeData> mRangeData;
 
 	CVector mMoveSpeed;	// 前後左右の移動速度
 	float mMoveSpeedY;	// 重力やジャンプによる上下の移動速度
@@ -171,7 +218,6 @@ protected:
 	bool mIsBattle;			// 戦闘状態か
 	bool mIsGuard;			// ガード状態か
 	bool mIsAvoid;			// 回避状態か
-	bool mIsTripleAttack;	// 三連攻撃状態か
 
 	bool mIsAttackParry;	// 攻撃パリィ
 	bool mIsGuardParry;		// 防御パリィ
@@ -192,6 +238,8 @@ protected:
 
 	// 戦闘相手
 	CObjectBase* mpBattleTarget;
+	// 攻撃ステートを取得
+	CStateAttack* mpAttackState;
 
 	// プレイヤーを見失った位置のノード
 	CNavNode* mpLostPlayerNode;

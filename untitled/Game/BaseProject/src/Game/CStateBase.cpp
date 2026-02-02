@@ -1,7 +1,7 @@
 #include "CStateBase.h"
 
 
-CStateBase::CStateBase(const std::string& name, CEnemyBase* owner)
+CStateBase::CStateBase(CEnemyBase* owner, const std::string& name)
 	: mpOwner(owner)
 	, mStateName(name)
 	, mIndex(-1)
@@ -39,6 +39,12 @@ void CStateBase::AddTransition(int nextStateId, bool isWaitEnd, CondFunc func)
 	mTransitions.push_back(trans);
 }
 
+void CStateBase::AddAttackTrans(int nextAttackId, bool isWaitEnd, CondFunc func)
+{
+	AttackTrans trans{ nextAttackId, isWaitEnd, func };
+	mAttackTrans.push_back(trans);
+}
+
 // 他の状態へ遷移する条件を満たしているか
 int CStateBase::CheckTransition() const
 {
@@ -72,7 +78,40 @@ int CStateBase::CheckTransition() const
 	}
 
 	// 全ての遷移条件を満たしていない
-	return -1;
+	return -2;
+}
+
+int CStateBase::CheckAttackTrans() const
+{
+	for (const AttackTrans& trans : mAttackTrans)
+	{
+		if (trans.condition == nullptr)
+		{
+			// 以下の2つを満たしていたら、遷移先の状態へ遷移する
+			// ①現在の状態が終了時に遷移する
+			// ②現在の状態が終了している
+			if (trans.isWaitEnd && IsEnd())
+			{
+				return trans.nextAttackId;
+			}
+		}
+		// 遷移条件の関数が設定されている場合
+		else
+		{
+			// 現在の設定の終了待ち設定かつ、現在の状態が終了していなければ、
+			// 遷移条件を満たしていない
+			if (trans.isWaitEnd && !IsEnd()) continue;
+
+			// 設定されている遷移条件を満たしていたら、次の状態へ遷移する
+			if (trans.condition())
+			{
+				return trans.nextAttackId;
+			}
+		}
+	}
+
+	// 全ての遷移条件を満たしていない
+	return -2;
 }
 
 // ステートが始まる時に一度だけ呼ばれる関数

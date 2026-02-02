@@ -1,6 +1,6 @@
 //プレイヤークラスのインクルード
 #include "CPlayer.h"
-#include "CEnemyA.h"
+#include "CBarbarian.h"
 #include "CInput.h"
 #include "CCamera.h"
 #include "CGameCamera2.h"
@@ -669,12 +669,12 @@ void CPlayer::Render()
 	CXCharacter::Render();
 }
 
-float CPlayer::GetAngle() const
+float CPlayer::GetAttackAngle() const
 {
 	return mAttackAngle;
 }
 
-float CPlayer::GetLength() const
+float CPlayer::GetAttackLength() const
 {
 	return mAttackLength;
 }

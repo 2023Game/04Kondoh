@@ -34,24 +34,33 @@ void CStateMachine::SetOwner(CEnemyBase* owner)
 void CStateMachine::Update()
 {
 	// 実行中の状態が存在する場合
-	if (mpCurrent != nullptr)
+	if (mpCurrent != nullptr || mpAttackCurrent != nullptr)
 	{
 		// 実行中の状態の処理が終了してなければ
-		if (!mpCurrent->IsEnd())
+		if (!mpCurrent->IsEnd() || !mpAttackCurrent->IsEnd())
 		{
 			// 更新処理を呼び出す
 			mpCurrent->Update();
+			mpAttackCurrent->Update();
 		}
 
 		// 他の状態への遷移条件を満たしているか
 		int nextStateId = mpCurrent->CheckTransition();
-		if (nextStateId >= 0)
+		int nextAttackId = mpAttackCurrent->CheckAttackTrans();
+
+		if (nextStateId >= -1)
 		{
 			// 遷移条件を満たしていたら、次の状態へ遷移
 			if (mpOwner != nullptr) mpOwner->ChangeState(nextStateId);
 			else ChangeState(nextStateId);
 		}
+		if (nextAttackId >= -1)
+		{
+			if (mpOwner != nullptr) mpOwner->ChangeState(nextAttackId);
+			else ChangeAttack(nextAttackId);
+		}
 	}
+
 }
 
 // 現在のステートを取得
@@ -78,6 +87,23 @@ void CStateMachine::RegisterState(int index, CStateBase* state)
 
 }
 
+// 攻撃状態の登録
+void CStateMachine::RegisterAttackState(int index, CStateBase* state)
+{
+	// 不正なインデクス値の場合、処理しない
+	if (index < 0) return;
+	// 指定されたインデクス値が、リストのサイズより大きい場合
+	if (index >= mAttackStates.size())
+	{
+		// リストの要素数を追加（追加した要素はnullptrで初期化）
+		mAttackStates.resize(index + 1, nullptr);
+	}
+	// 指定した状態に番号を設定
+	state->SetIndex(index);
+	// 指定したインデクス値に、指定した状態を登録
+	mAttackStates[index] = state;
+}
+
 // 状態の切り替え
 void CStateMachine::ChangeState(int index)
 {
@@ -94,10 +120,34 @@ void CStateMachine::ChangeState(int index)
 
 	// 指定された状態を、現在の状態に設定
 	mpCurrent = mStates[index];
+
 	// 現在の状態が存在する場合は、開始処理を呼び出す
 	if (mpCurrent != nullptr)
 	{
 		mpCurrent->Enter();
+	}
+}
+
+void CStateMachine::ChangeAttack(int index)
+{
+	// 既に実行中の攻撃状態が存在する場合
+	if (mpAttackCurrent != nullptr)
+	{
+		// 実行中の攻撃状態の終了処理を呼び出す
+		mpAttackCurrent->Exit();
+		mpAttackCurrent = nullptr;
+	}
+
+	// 指定されたインデクス値が範囲外であれば、処理しない
+	if (!(0 <= index && index < mAttackStates.size())) return;
+
+	// 指定された攻撃状態を、現在の攻撃状態に設定
+	mpCurrent = mAttackStates[index];
+
+	// 現在の攻撃状態が存在する場合は、開始処理を呼び出す
+	if (mpAttackCurrent != nullptr)
+	{
+		mpAttackCurrent->Enter();
 	}
 }
 

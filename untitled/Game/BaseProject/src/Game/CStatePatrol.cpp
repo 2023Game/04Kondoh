@@ -5,7 +5,7 @@
 #define PATROL_NEAR_DIST 10.0f  // 巡回開始時に選択される巡回ポイントの最短距離
 
 CStatePatrol::CStatePatrol(CEnemyBase* owner)
-	: CStateBase("巡回", owner)
+	: CStateBase(owner, "巡回")
 	, mStateStep(0)
 	, mElapsedTime(0.0f)
 	, mNextPatrolIndex(-1)

@@ -119,6 +119,9 @@
     <Filter Include="ソース ファイル\Game\StateMachine\States">
       <UniqueIdentifier>{64670823-3369-4dc1-9038-a79530477cc3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\StateMachine\States\CBarbarianAttack">
+      <UniqueIdentifier>{45102a8f-f102-44a1-a42d-e5779070bc19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -388,7 +391,7 @@
     <ClCompile Include="src\BaseSystem\CImage3D.cpp">
       <Filter>ソース ファイル\BaseSystem\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\CEnemyA.cpp">
+    <ClCompile Include="src\Game\CBarbarian.cpp">
       <Filter>ソース ファイル\Game\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\CPlayer.cpp">
@@ -457,7 +460,7 @@
     <ClCompile Include="src\Game\CAttackPowerUI.cpp">
       <Filter>ソース ファイル\Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\CEnemyAAI.cpp">
+    <ClCompile Include="src\Game\CBarbarianAI.cpp">
       <Filter>ソース ファイル\Game\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\CStatePatrol.cpp">
@@ -468,6 +471,12 @@
     </ClCompile>
     <ClCompile Include="src\Game\CStateLost.cpp">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CStateAttack.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\CAttackBlow.cpp">
+      <Filter>ソース ファイル\Game\StateMachine\States\CBarbarianAttack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -762,7 +771,7 @@
     <ClInclude Include="src\BaseSystem\CImage3D.h">
       <Filter>ソース ファイル\BaseSystem\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\CEnemyA.h">
+    <ClInclude Include="src\Game\CBarbarian.h">
       <Filter>ソース ファイル\Game\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\CPlayer.h">
@@ -839,6 +848,12 @@
     </ClInclude>
     <ClInclude Include="src\Game\CStateLost.h">
       <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CStateAttack.h">
+      <Filter>ソース ファイル\Game\StateMachine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\CAttackBlow.h">
+      <Filter>ソース ファイル\Game\StateMachine\States\CBarbarianAttack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

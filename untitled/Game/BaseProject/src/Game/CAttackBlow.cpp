@@ -64,7 +64,7 @@ void CAttackBlow::Update()
 	case 2:
 		if (mpOwner->IsAnimationFinished()) {
 			mpOwner->AttackEnd();
-			if()
+			if(mIsTripleAttack)
 		}
 
 

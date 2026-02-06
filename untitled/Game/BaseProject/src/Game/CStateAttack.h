@@ -17,6 +17,8 @@ protected:
 	// アニメーション用ランダムナンバー
 	int mRandAnimNum;
 
+	bool mIsTripleAttack;	// 三連攻撃状態か
+
 private:
 
 

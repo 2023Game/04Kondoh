@@ -17,6 +17,4 @@ private:
 	int mStateStep;
 	float mElapsedTime;
 
-	bool mIsTripleAttack;	// O˜AUŒ‚ó‘Ô‚©
-
 };

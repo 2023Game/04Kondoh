@@ -690,10 +690,12 @@ void CEnemyBase::Render()
 	CXCharacter::Render();
 }
 
-void CEnemyBase::SelectAttack(float range, int rand)
+void CEnemyBase::SelectAttack(const AttackRangeData& range, int rand)
 {
 
-	if (CanAttackPlayer())
+	if (CanAttackPlayer(range.closeRange)) {
+		if ()
+	}
 }
 
 float CEnemyBase::GetWalkSpeed() const

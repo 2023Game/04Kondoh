@@ -132,7 +132,7 @@ public:
 
 	// 攻撃を攻撃範囲と確率で決めるための関数
 	// TODO：ゆくゆくは、複数の条件で決めれるように成りたい
-	void SelectAttack(float range, int rand);
+	void SelectAttack(const AttackRangeData& range, int rand);
 
 	// 歩く速度を取得
 	float GetWalkSpeed() const;
